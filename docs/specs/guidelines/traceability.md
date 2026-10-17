@@ -171,6 +171,7 @@ Add a row before you create the file or the directory.
 | Key        | Directory            | Context    | Feature                                                        | Status |
 | ---------- | -------------------- | ---------- | -------------------------------------------------------------- | ------ |
 | `PLATFORM` | `features/platform/` | `platform` | The layout of the server, its shared parts, and their wiring.  | Approved |
+| `NBGRATE`  | `features/nbgrate/`  | `rates`    | The official exchange rates of the NBG, on a date and over a period. | Approved |
 
 ## Retired identifiers
 
