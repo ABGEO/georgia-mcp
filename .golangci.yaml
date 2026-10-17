@@ -1,0 +1,152 @@
+version: "2"
+
+run:
+  concurrency: 4
+  modules-download-mode: readonly
+  issues-exit-code: 2
+  allow-parallel-runners: true
+  relative-path-mode: gitroot
+
+linters:
+  default: all
+  disable:
+    - exhaustruct
+    - exhaustruct_v5
+    - gomodguard
+    - wsl
+    - noinlineerr
+
+  settings:
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: math/rand$
+              desc: use math/rand/v2
+            - pkg: github.com/pkg/errors
+              desc: use the errors package of the standard library
+        domain:
+          files:
+            - "**/internal/app/georgia-mcp/*/domain/**"
+          deny:
+            - pkg: github.com/modelcontextprotocol
+              desc: the domain imports no adapter dependency
+            - pkg: github.com/go-resty
+              desc: the domain imports no adapter dependency
+            - pkg: github.com/abgeo/georgia-mcp/pkg
+              desc: a vendor shape never enters the domain
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/buildinfo
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/cache
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/config
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/httpclient
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/httpserver
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/logger
+              desc: the domain imports the standard library and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/mcpserver
+              desc: the domain imports the standard library and the kernel only
+        app:
+          files:
+            - "**/internal/app/georgia-mcp/*/app/**"
+          deny:
+            - pkg: github.com/modelcontextprotocol
+              desc: a use case knows no protocol
+            - pkg: github.com/go-resty
+              desc: a use case knows no vendor
+            - pkg: github.com/abgeo/georgia-mcp/pkg
+              desc: a vendor shape never enters app
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/buildinfo
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/cache
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/config
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/httpclient
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/httpserver
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/logger
+              desc: a use case imports the domain and the kernel only
+            - pkg: github.com/abgeo/georgia-mcp/internal/pkg/mcpserver
+              desc: a use case imports the domain and the kernel only
+        shared:
+          files:
+            - "**/internal/pkg/**"
+          deny:
+            - pkg: github.com/abgeo/georgia-mcp/internal/app
+              desc: a shared library never imports the application
+        clients:
+          files:
+            - "**/pkg/**"
+            - "!**/internal/pkg/**"
+          deny:
+            - pkg: github.com/abgeo/georgia-mcp/internal
+              desc: a vendor client imports no package of the server
+            - pkg: github.com/modelcontextprotocol
+              desc: a vendor client imports no MCP package
+
+    ireturn:
+      allow:
+        - anon
+        - error
+        - empty
+        - stdlib
+        - generic
+
+    wrapcheck:
+      ignore-package-globs:
+        - github.com/abgeo/georgia-mcp/*
+
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+
+    varnamelen:
+      min-name-length: 2
+      ignore-names:
+        - i
+      ignore-type-assert-ok: true
+      ignore-map-index-ok: true
+      ignore-chan-recv-ok: true
+      ignore-decls:
+        - w http.ResponseWriter
+        - r *http.Request
+        - r chi.Router
+
+  exclusions:
+    rules:
+      - path: ^pkg/
+        linters:
+          - tagliatelle
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+
+  settings:
+    gci:
+      custom-order: true
+      sections:
+        - standard
+        - default
+        - prefix(github.com/abgeo/georgia-mcp)
+
+    golines:
+      reformat-tags: false
+
+    gofmt:
+      rewrite-rules:
+        - pattern: "interface{}"
+          replacement: "any"
+        - pattern: "a[b:len(a)]"
+          replacement: "a[b:]"

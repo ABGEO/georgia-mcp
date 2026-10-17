@@ -1,0 +1,91 @@
+---
+id: CLT
+title: Vendor clients
+type: guideline
+status: active
+created: 2026-10-17
+updated: 2026-10-17
+scope: [pkg/]
+related: [ARC, DOM, PKG, RSL, BLD]
+---
+
+# Vendor clients
+
+A vendor client is a Go module that calls the API of one vendor. Another project
+can import it with no part of the server.
+
+## CLT-001
+
+A vendor client lives in `pkg/<vendor>`, with its own `go.mod`.
+The module path is `github.com/abgeo/georgia-mcp/pkg/<vendor>`.
+The package name is the vendor name: `nbg`, `ttc`.
+
+## CLT-002
+
+A client imports the standard library and resty only.
+It imports no package of the server module, no other client, and no MCP package.
+
+**Why:** A dependency of a client is a dependency of every project that uses it.
+
+## CLT-003
+
+A client mirrors the API of the vendor. Its types carry the field names of the
+vendor in their JSON tags. A client does not interpret the data.
+
+**Why:** The server interprets the data in its adapter. See `DOM-005`.
+
+## CLT-004
+
+The HTTP library is resty v2, `github.com/go-resty/resty/v2`.
+Resty v3 replaces it after a stable release, through an ADR.
+
+## CLT-005
+
+The constructor is `New(opts ...Option) *Client`. An option sets one value:
+
+| Option            | Default                                      |
+| ----------------- | -------------------------------------------- |
+| `WithBaseURL`     | The production address of the vendor.        |
+| `WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
+| `WithUserAgent`   | `georgia-mcp-<vendor>/<version>`.            |
+| `WithAPIKey`      | None. Only a client whose vendor needs a key. |
+
+The client sets `Accept: application/json` once, at construction.
+
+## CLT-006
+
+Every method takes a `context.Context` as the first parameter.
+Every request carries that context.
+
+## CLT-007
+
+A status that is not a success is an error. It is never an empty result.
+The client returns `*APIError`, with the status code and the first 1 KiB of the body.
+`APIError` wraps the sentinel `ErrUnexpectedStatus`, so `errors.Is` finds it.
+
+## CLT-008
+
+A client does not retry and does not cache. The caller decides both. See `RSL`.
+
+**Why:** A retry inside a library hides the latency from the caller.
+
+## CLT-009
+
+A client holds no key in its source. The caller passes the key with `WithAPIKey`.
+A vendor that publishes no API is "unofficial". The package comment and the
+`README.md` of such a client say so.
+
+## CLT-010
+
+A client has a `README.md` with one example, and an `example_test.go` with an
+`Example` function. A test of the client uses `httptest` and a recorded response
+in `testdata/`. See `TST-005`.
+
+## CLT-011
+
+A client release is a tag `pkg/<vendor>/v<semver>`. A client stays at `v0`
+while its vendor publishes no API documentation.
+
+## Retired identifiers
+
+This file has no retired identifier.

@@ -1,0 +1,12 @@
+name: georgia-mcp
+
+services:
+  georgia-mcp:
+    build:
+      context: ..
+      dockerfile: build/package/Dockerfile
+    env_file:
+      - path: ../.env
+        required: false
+    ports:
+      - "8080:8080"

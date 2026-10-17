@@ -1,0 +1,71 @@
+version: "3"
+
+vars:
+  MODULE: '{{.MODULE | default "."}}'
+  IMAGE: georgia-mcp:dev
+  COMPOSE: docker compose -f deployments/compose.yaml
+  VERSION:
+    sh: git describe --tags --always --dirty 2>/dev/null || echo dev
+  REVISION:
+    sh: git rev-parse HEAD 2>/dev/null || echo unknown
+
+tasks:
+  lint:
+    desc: Run the linter in one module. MODULE=pkg/<vendor> selects a vendor client.
+    dir: "{{.MODULE}}"
+    cmds:
+      - golangci-lint run ./...
+
+  test:
+    desc: Run the tests with the race detector in one module.
+    dir: "{{.MODULE}}"
+    cmds:
+      - go test -race ./...
+
+  build:
+    desc: Build one module. In the server module, also check the build with no workspace.
+    dir: "{{.MODULE}}"
+    cmds:
+      - go build ./...
+      - cmd: GOWORK=off go build ./...
+        platforms: [linux, darwin]
+
+  vuln:
+    desc: Check one module for a known vulnerability.
+    dir: "{{.MODULE}}"
+    cmds:
+      - go tool govulncheck ./...
+
+  run:
+    desc: Run the server over HTTP with Go and the local configuration.
+    cmds:
+      - go run ./cmd/georgia-mcp serve
+
+  compose-up:
+    desc: Build and start the server in a container, with the local configuration.
+    cmds:
+      - "{{.COMPOSE}} up -d --build"
+
+  compose-start:
+    desc: Start the stopped container.
+    cmds:
+      - "{{.COMPOSE}} start"
+
+  compose-stop:
+    desc: Stop the container and keep it.
+    cmds:
+      - "{{.COMPOSE}} stop"
+
+  compose-down:
+    desc: Stop and remove the container and its network.
+    cmds:
+      - "{{.COMPOSE}} down"
+
+  build-image:
+    desc: Build the container image.
+    cmds:
+      - >-
+        docker build -f build/package/Dockerfile
+        --build-arg VERSION={{.VERSION}}
+        --build-arg REVISION={{.REVISION}}
+        -t {{.IMAGE}} .
