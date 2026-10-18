@@ -21,3 +21,23 @@ type RateSetResult struct {
 type OfficialRateSource interface {
 	RateSet(ctx context.Context, date domain.Date, language kernel.Language) (RateSetResult, error)
 }
+
+// CommercialRatesResult holds the commercial rates of one bank for the requested
+// codes, and the facts of their read. The server reads each currency on its own, so
+// ReadAt is the oldest read instant of the codes, and Stale is true when one code or
+// more was read before an outage of the bank.
+type CommercialRatesResult struct {
+	// Rates holds the requested codes that the bank quotes, sorted by currency.
+	Rates []domain.CommercialRate
+	// Missing holds the requested codes that the bank does not quote, sorted.
+	Missing []domain.CurrencyCode
+	ReadAt  time.Time
+	Stale   bool
+}
+
+// CommercialRateSource reads the current commercial rates of one bank.
+type CommercialRateSource interface {
+	Bank() domain.Bank
+	// CommercialRates takes 1 to MaxCommercialCurrencies distinct codes.
+	CommercialRates(ctx context.Context, codes []domain.CurrencyCode) (CommercialRatesResult, error)
+}
