@@ -1,4 +1,5 @@
-// Package cache keeps the rate sets of the NBG in memory, in front of the port.
+// Package cache keeps the official rate sets and the commercial rates in memory, in
+// front of their ports.
 package cache
 
 import (

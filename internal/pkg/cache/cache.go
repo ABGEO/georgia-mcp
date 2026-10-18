@@ -6,6 +6,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
+	"slices"
+	"strings"
 	"time"
 
 	"github.com/maypok86/otter/v2"
@@ -19,6 +22,7 @@ var (
 	ErrInvalidConfig = errors.New("cache: invalid configuration")
 
 	errUnexpectedValue = errors.New("cache: unexpected value type")
+	errMissingValue    = errors.New("cache: the load returned no value for a key")
 )
 
 // Config is the configuration of one cache. A context builds it from its own variables.
@@ -42,10 +46,11 @@ type entry[V any] struct {
 
 // Cache keeps the values of one source. A TTL of zero turns the cache off.
 type Cache[V any] struct {
-	store    *otter.Cache[string, entry[V]]
-	group    singleflight.Group
-	ttl      time.Duration
-	maxStale time.Duration
+	store     *otter.Cache[string, entry[V]]
+	group     singleflight.Group
+	groupMany singleflight.Group
+	ttl       time.Duration
+	maxStale  time.Duration
 }
 
 // New returns an empty cache.
@@ -120,17 +125,16 @@ func (c *Cache[V]) Get(
 	return Result[V]{}, err
 }
 
-// The shared load ignores the cancel of the first caller, so the other callers
-// still get the value. The timeout of the vendor client still ends it.
+// load runs the load of one key, shared between the concurrent calls for the key.
 func (c *Cache[V]) load(
 	ctx context.Context,
 	key string,
 	load func(context.Context) (V, error),
 ) (entry[V], error) {
-	shared := c.group.DoChan(key, func() (any, error) {
-		value, err := load(context.WithoutCancel(ctx))
+	return share(ctx, &c.group, key, func(ctx context.Context) (entry[V], error) {
+		value, err := load(ctx)
 		if err != nil {
-			return nil, err
+			return entry[V]{}, err
 		}
 
 		loaded := entry[V]{value: value, fetchedAt: time.Now()}
@@ -138,20 +142,188 @@ func (c *Cache[V]) load(
 
 		return loaded, nil
 	})
+}
+
+// GetMany returns the fresh value of each key, and loads the other keys in one call of
+// load. Concurrent calls for the same set of keys share one load. load must return a
+// value for each key it gets. When the load fails with kernel.ErrSourceUnavailable,
+// GetMany returns the stale value of each key it loaded, if every one of them is
+// inside the maximum stale age.
+func (c *Cache[V]) GetMany(
+	ctx context.Context,
+	keys []string,
+	load func(ctx context.Context, keys []string) (map[string]V, error),
+) (map[string]Result[V], error) {
+	if c.store == nil {
+		loaded, err := loadAll(ctx, keys, load)
+		if err != nil {
+			return nil, err
+		}
+
+		return toResults(loaded, false), nil
+	}
+
+	results, held, pending := c.split(keys)
+	if len(pending) == 0 {
+		return results, nil
+	}
+
+	loaded, err := c.loadMany(ctx, pending, load)
+	if err != nil {
+		if !errors.Is(err, kernel.ErrSourceUnavailable) {
+			return nil, err
+		}
+
+		loaded, err = c.stale(pending, held, err)
+		if err != nil {
+			return nil, err
+		}
+
+		maps.Copy(results, toResults(loaded, true))
+
+		return results, nil
+	}
+
+	maps.Copy(results, toResults(loaded, false))
+
+	return results, nil
+}
+
+// split returns the fresh keys as results, the expired entries that the store holds,
+// and every key that is not fresh.
+func (c *Cache[V]) split(keys []string) (map[string]Result[V], map[string]entry[V], []string) {
+	results := make(map[string]Result[V], len(keys))
+	held := make(map[string]entry[V])
+
+	var pending []string
+
+	for _, key := range keys {
+		cached, found := c.store.GetIfPresent(key)
+		if found && time.Since(cached.fetchedAt) < c.ttl {
+			results[key] = Result[V]{Value: cached.value, FetchedAt: cached.fetchedAt}
+
+			continue
+		}
+
+		if found {
+			held[key] = cached
+		}
+
+		pending = append(pending, key)
+	}
+
+	return results, held, pending
+}
+
+// stale returns the held entry of each key, or the error of the load when one key has
+// no entry inside the maximum stale age.
+func (c *Cache[V]) stale(
+	keys []string,
+	held map[string]entry[V],
+	loadErr error,
+) (map[string]entry[V], error) {
+	entries := make(map[string]entry[V], len(keys))
+
+	for _, key := range keys {
+		cached, found := held[key]
+		if !found || time.Since(cached.fetchedAt) >= c.ttl+c.maxStale {
+			return nil, loadErr
+		}
+
+		entries[key] = cached
+	}
+
+	return entries, nil
+}
+
+func toResults[V any](entries map[string]entry[V], stale bool) map[string]Result[V] {
+	results := make(map[string]Result[V], len(entries))
+	for key, value := range entries {
+		results[key] = Result[V]{Value: value.value, FetchedAt: value.fetchedAt, Stale: stale}
+	}
+
+	return results
+}
+
+func (c *Cache[V]) loadMany(
+	ctx context.Context,
+	keys []string,
+	load func(ctx context.Context, keys []string) (map[string]V, error),
+) (map[string]entry[V], error) {
+	sorted := slices.Sorted(slices.Values(keys))
+
+	return share(
+		ctx,
+		&c.groupMany,
+		strings.Join(sorted, ","),
+		func(ctx context.Context) (map[string]entry[V], error) {
+			loaded, err := loadAll(ctx, sorted, load)
+			if err != nil {
+				return nil, err
+			}
+
+			for key, value := range loaded {
+				c.store.Set(key, value)
+			}
+
+			return loaded, nil
+		},
+	)
+}
+
+func loadAll[V any](
+	ctx context.Context,
+	keys []string,
+	load func(ctx context.Context, keys []string) (map[string]V, error),
+) (map[string]entry[V], error) {
+	values, err := load(ctx, keys)
+	if err != nil {
+		return nil, err
+	}
+
+	fetchedAt := time.Now()
+	loaded := make(map[string]entry[V], len(keys))
+
+	for _, key := range keys {
+		value, found := values[key]
+		if !found {
+			return nil, fmt.Errorf("%w: %q", errMissingValue, key)
+		}
+
+		loaded[key] = entry[V]{value: value, fetchedAt: fetchedAt}
+	}
+
+	return loaded, nil
+}
+
+// share runs fn once for the concurrent calls of one key. The shared run ignores the
+// cancel of the first caller, so the other callers still get the value. The timeout of
+// the vendor client still ends it.
+func share[T any](
+	ctx context.Context,
+	group *singleflight.Group,
+	key string,
+	fn func(context.Context) (T, error),
+) (T, error) {
+	var zero T
+
+	shared := group.DoChan(key, func() (any, error) {
+		return fn(context.WithoutCancel(ctx))
+	})
 
 	select {
 	case <-ctx.Done():
-		return entry[V]{}, fmt.Errorf("waiting for the cache: %w", ctx.Err())
+		return zero, fmt.Errorf("waiting for the cache: %w", ctx.Err())
 	case result := <-shared:
 		if result.Err != nil {
-			return entry[V]{}, result.Err
+			return zero, result.Err
 		}
 
-		loaded, ok := result.Val.(entry[V])
+		value, ok := result.Val.(T)
 		if !ok {
-			return entry[V]{}, fmt.Errorf("%w: %T", errUnexpectedValue, result.Val)
+			return zero, fmt.Errorf("%w: %T", errUnexpectedValue, result.Val)
 		}
 
-		return loaded, nil
+		return value, nil
 	}
 }
