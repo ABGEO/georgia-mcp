@@ -4,7 +4,7 @@ title: The domain model
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-19
 scope: [internal/app/georgia-mcp/*/domain/, internal/app/georgia-mcp/*/app/, internal/pkg/kernel/]
 related: [ARC, PKG, CLT, GLO]
 ---
@@ -72,8 +72,9 @@ An instant carries a zone. A domain type never holds a time without a zone.
 ## DOM-008
 
 `internal/pkg/kernel` is the shared kernel. It holds a type only when two contexts need it.
-The kernel starts with two members: the language of a text (`ka` or `en`), and
-the sentinel `ErrSourceUnavailable` of `DOM-011`.
+The kernel holds three members: the language of a text (`ka` or `en`), the civil
+date in Tbilisi of `DOM-007` (`ADR-0002`), and the sentinel `ErrSourceUnavailable`
+of `DOM-011`.
 
 **Why:** A large kernel couples every context. Each type in it is a cost that the
 second user pays for.

@@ -35,3 +35,4 @@ The file name holds the slug only. See `TRC-008`.
 | ID         | Title                                        | File                                      | Status   | Date       | Rules that change |
 | ---------- | -------------------------------------------- | ----------------------------------------- | -------- | ---------- | ----------------- |
 | `ADR-0001` | Bounded contexts with ports and adapters     | `bounded-contexts-with-ports-and-adapters.md` | accepted | 2026-10-17 | None. It founds `ARC`, `DOM`, `PKG`. |
+| `ADR-0002` | The civil date in the shared kernel          | `civil-date-in-the-shared-kernel.md`      | accepted | 2026-10-19 | `DOM-008` |
