@@ -42,3 +42,34 @@ type officialHistoryOutput struct {
 	Name     string               `json:"name"     jsonschema:"The name of the currency in the requested language."`
 	Points   []officialRateOutput `json:"points"   jsonschema:"One official rate for each set in force in the period, ascending by valid_from."`
 }
+
+type getCommercialRatesInput struct {
+	Currencies []string `json:"currencies"      jsonschema:"1 to 10 ISO 4217 codes, for example USD and EUR."`
+	Banks      []string `json:"banks,omitempty" jsonschema:"Bank codes. Empty asks every bank. The description of the tool lists the codes."`
+}
+
+type commercialRatesOutput struct {
+	Meaning     string            `json:"meaning"               jsonschema:"How to read buy and sell."`
+	Banks       []bankRatesOutput `json:"banks"                 jsonschema:"The rates of each bank that answered, sorted by bank code."`
+	Unavailable []bankOutput      `json:"unavailable,omitempty" jsonschema:"The banks that did not answer."`
+}
+
+type bankRatesOutput struct {
+	Bank    string                 `json:"bank"              jsonschema:"The bank code."`
+	Source  string                 `json:"source"            jsonschema:"The name of the bank."`
+	AsOf    string                 `json:"as_of"             jsonschema:"The oldest instant at which the server read a rate of this bank, RFC 3339. The bank publishes no instant."`
+	Stale   bool                   `json:"stale"             jsonschema:"True when the bank did not answer and the server returns rates it read before."`
+	Rates   []commercialRateOutput `json:"rates"             jsonschema:"The commercial rates, sorted by currency."`
+	Missing []string               `json:"missing,omitempty" jsonschema:"The requested codes that the bank does not quote."`
+}
+
+type commercialRateOutput struct {
+	Currency string `json:"currency" jsonschema:"The ISO 4217 code."`
+	Buy      string `json:"buy"      jsonschema:"The price in GEL that the bank pays for one unit, as a decimal string."`
+	Sell     string `json:"sell"     jsonschema:"The price in GEL that the bank asks for one unit, as a decimal string."`
+}
+
+type bankOutput struct {
+	Bank   string `json:"bank"   jsonschema:"The bank code."`
+	Source string `json:"source" jsonschema:"The name of the bank."`
+}

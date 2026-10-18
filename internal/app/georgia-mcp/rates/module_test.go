@@ -86,26 +86,33 @@ func connect(t *testing.T, vendor http.Handler) *mcp.ClientSession {
 		t.Fatal(err)
 	}
 
-	cfg := rates.Config{NBG: rates.NBGConfig{
-		BaseURL:      *baseURL,
+	cfg := rates.Config{NBG: nbgConfig(*baseURL)}
+
+	return serve(t, cfg, slog.New(slog.DiscardHandler))
+}
+
+func nbgConfig(baseURL url.URL) rates.NBGConfig {
+	return rates.NBGConfig{
+		BaseURL:      baseURL,
 		CacheEntries: 512,
 		HTTP:         httpclient.Config{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
-	}}
+	}
+}
+
+// serve builds the module with the clock of now, and connects a client to its tools.
+func serve(t *testing.T, cfg rates.Config, logger *slog.Logger) *mcp.ClientSession {
+	t.Helper()
 
 	instant, _ := time.Parse(time.RFC3339, now)
 
-	module, err := rates.NewWithClock(
-		cfg,
-		slog.New(slog.DiscardHandler),
-		func() time.Time { return instant },
-	)
+	module, err := rates.NewWithClock(cfg, logger, func() time.Time { return instant })
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Cleanup(func() { _ = module.Close() })
 
-	registry := mcpserver.New(buildinfo.Info{Version: "v0"}, slog.New(slog.DiscardHandler))
+	registry := mcpserver.New(buildinfo.Info{Version: "v0"}, logger)
 	if err := registry.Register(module); err != nil {
 		t.Fatal(err)
 	}

@@ -3,6 +3,7 @@ package tool
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
@@ -86,5 +87,36 @@ func toolError(err error) error {
 			Message: "The server failed to read the official rates.",
 			Cause:   err,
 		}
+	}
+}
+
+func currencyCount(count int, cause error) error {
+	if count == 0 {
+		return &mcpserver.ToolError{
+			Message: "currencies: name at least one code, for example USD.",
+			Cause:   cause,
+		}
+	}
+
+	return &mcpserver.ToolError{
+		Message: fmt.Sprintf(
+			"currencies: %d codes. Ask for %d or fewer.", count, app.MaxCommercialCurrencies,
+		),
+		Cause: cause,
+	}
+}
+
+func unknownBank(text string, banks []domain.Bank, cause error) error {
+	codes := make([]string, 0, len(banks))
+	for _, bank := range banks {
+		codes = append(codes, string(bank.Code))
+	}
+
+	return &mcpserver.ToolError{
+		Message: fmt.Sprintf(
+			"banks: %q is not a bank of this server. Use one of: %s.",
+			text, strings.Join(codes, ", "),
+		),
+		Cause: cause,
 	}
 }

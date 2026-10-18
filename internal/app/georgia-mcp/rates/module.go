@@ -1,31 +1,39 @@
-// Package rates is the bounded context of the exchange rates. Its first source is the
-// official rate of the National Bank of Georgia.
+// Package rates is the bounded context of the exchange rates: the official rates of
+// the National Bank of Georgia, and the commercial rates of the banks.
 package rates
 
 import (
+	"errors"
 	"fmt"
 	"log/slog"
 	"time"
 
 	ratecache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/cache"
 	nbgadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/nbg"
+	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/tbc"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/tool"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	nbgclient "github.com/abgeo/georgia-mcp/pkg/nbg"
+	tbcclient "github.com/abgeo/georgia-mcp/pkg/tbc"
 )
 
-// Module holds the use cases of the context and the cache they share.
+const tbcKeyVariable = "GEOMCP_RATES_TBC_API_KEY"
+
+// Module holds the use cases of the context and their caches.
 type Module struct {
-	getRates *app.GetOfficialRates
-	history  *app.ListOfficialHistory
-	rateSets *ratecache.RateSetCache
+	getRates   *app.GetOfficialRates
+	history    *app.ListOfficialHistory
+	commercial *app.GetCommercialRates
+	rateSets   *ratecache.RateSetCache
+	banks      []*ratecache.CommercialRateCache
 }
 
 var _ mcpserver.Module = (*Module)(nil)
 
-// New builds the NBG client, the adapter, the cache, and the use cases.
+// New builds the clients, the adapters, the caches, and the use cases. A bank with no
+// key is left out, with a warning.
 func New(cfg Config, logger *slog.Logger) (*Module, error) {
 	return newModule(cfg, logger, time.Now)
 }
@@ -41,25 +49,85 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		return nil, fmt.Errorf("building the cache of the rates: %w", err)
 	}
 
+	banks, err := commercialSources(cfg, logger, now)
+	if err != nil {
+		_ = rateSets.Close()
+
+		return nil, err
+	}
+
+	sources := make([]app.CommercialRateSource, 0, len(banks))
+	for _, bank := range banks {
+		sources = append(sources, bank)
+	}
+
 	logger.Debug("built the context",
 		slog.String("component", "context"),
 		slog.String("context", "rates"),
 		slog.String("nbg", cfg.NBG.BaseURL.String()),
+		slog.Int("banks", len(banks)),
 	)
 
 	return &Module{
-		getRates: app.NewGetOfficialRates(rateSets, now),
-		history:  app.NewListOfficialHistory(rateSets, now),
-		rateSets: rateSets,
+		getRates:   app.NewGetOfficialRates(rateSets, now),
+		history:    app.NewListOfficialHistory(rateSets, now),
+		commercial: app.NewGetCommercialRates(sources),
+		rateSets:   rateSets,
+		banks:      banks,
 	}, nil
 }
 
-// Register adds the tools of the context.
-func (m *Module) Register(registry *mcpserver.Registry) error {
-	return tool.Register(registry, m.getRates, m.history)
+// commercialSources builds the cached source of each bank that has a key.
+func commercialSources(
+	cfg Config,
+	logger *slog.Logger,
+	now func() time.Time,
+) ([]*ratecache.CommercialRateCache, error) {
+	if cfg.TBC.APIKey == "" {
+		logger.Warn("TBC Bank is off: no API key",
+			slog.String("component", "context"),
+			slog.String("context", "rates"),
+			slog.String("variable", tbcKeyVariable),
+		)
+
+		return nil, nil
+	}
+
+	client := tbcclient.New(
+		tbcclient.WithBaseURL(cfg.TBC.BaseURL.String()),
+		tbcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.TBC.HTTP))),
+		tbcclient.WithAPIKey(cfg.TBC.APIKey),
+	)
+
+	tbc, err := ratecache.NewCommercial(tbcadapter.NewAdapter(client, now))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of TBC Bank: %w", err)
+	}
+
+	return []*ratecache.CommercialRateCache{tbc}, nil
 }
 
-// Close stops the cache.
+// Register adds the tools of the context. The commercial tool needs one bank or more.
+func (m *Module) Register(registry *mcpserver.Registry) error {
+	if err := tool.Register(registry, m.getRates, m.history); err != nil {
+		return err
+	}
+
+	if len(m.banks) == 0 {
+		return nil
+	}
+
+	return tool.RegisterCommercial(registry, m.commercial)
+}
+
+// Close stops every cache.
 func (m *Module) Close() error {
-	return m.rateSets.Close()
+	errs := make([]error, 0, 1+len(m.banks))
+	errs = append(errs, m.rateSets.Close())
+
+	for _, bank := range m.banks {
+		errs = append(errs, bank.Close())
+	}
+
+	return errors.Join(errs...)
 }

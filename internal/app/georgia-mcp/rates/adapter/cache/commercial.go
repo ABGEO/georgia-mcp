@@ -17,11 +17,13 @@ const (
 	commercialEntries  = 256
 )
 
-// commercialQuote is the answer of a bank for one code. A code that the bank does not
-// quote is a quote too, with Quoted false, so the next request does not ask again.
+// commercialQuote is the answer of a bank for one code, and the instant the source
+// read it. A code that the bank does not quote is a quote too, with Quoted false, so
+// the next request does not ask again.
 type commercialQuote struct {
 	Rate   domain.CommercialRate
 	Quoted bool
+	ReadAt time.Time
 }
 
 // CommercialRateCache implements app.CommercialRateSource in front of the source of one
@@ -79,8 +81,8 @@ func (c *CommercialRateCache) CommercialRates(
 			result.Missing = append(result.Missing, code)
 		}
 
-		if result.ReadAt.IsZero() || quote.FetchedAt.Before(result.ReadAt) {
-			result.ReadAt = quote.FetchedAt
+		if result.ReadAt.IsZero() || quote.Value.ReadAt.Before(result.ReadAt) {
+			result.ReadAt = quote.Value.ReadAt
 		}
 
 		result.Stale = result.Stale || quote.Stale
@@ -113,11 +115,15 @@ func (c *CommercialRateCache) load(
 	quotes := make(map[string]commercialQuote, len(keys))
 
 	for _, rate := range read.Rates {
-		quotes[string(rate.Currency)] = commercialQuote{Rate: rate, Quoted: true}
+		quotes[string(rate.Currency)] = commercialQuote{
+			Rate:   rate,
+			Quoted: true,
+			ReadAt: read.ReadAt,
+		}
 	}
 
 	for _, code := range read.Missing {
-		quotes[string(code)] = commercialQuote{}
+		quotes[string(code)] = commercialQuote{ReadAt: read.ReadAt}
 	}
 
 	return quotes, nil

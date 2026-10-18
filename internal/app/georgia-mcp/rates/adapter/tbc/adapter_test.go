@@ -2,10 +2,12 @@ package tbc_test
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -180,5 +182,25 @@ func TestBank(t *testing.T) {
 	want := domain.Bank{Code: "tbc", Name: "TBC Bank"}
 	if got := adapterFor(t, answer("{}")).Bank(); got != want {
 		t.Errorf("Bank() = %+v, want %+v", got, want)
+	}
+}
+
+// TBCRATE-SC-019: The error of a failed call holds no key.
+func TestCommercialRatesKeepTheKeyOutOfTheError(t *testing.T) {
+	t.Parallel()
+
+	const key = "secret-tbc-key"
+
+	server := httptest.NewServer(recorded(t, http.StatusUnauthorized, "problem-401.json"))
+	t.Cleanup(server.Close)
+
+	adapter := tbc.NewAdapter(
+		tbcclient.New(tbcclient.WithBaseURL(server.URL), tbcclient.WithAPIKey(key)),
+		time.Now,
+	)
+
+	_, err := adapter.CommercialRates(t.Context(), []domain.CurrencyCode{dollar})
+	if err == nil || strings.Contains(fmt.Sprintf("%+v", err), key) {
+		t.Errorf("CommercialRates() error = %v, want an error with no key", err)
 	}
 }

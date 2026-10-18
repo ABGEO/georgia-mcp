@@ -252,8 +252,9 @@ says that the rates are of today, with no history.
 | `pkg/tbc` | `GET /v1/exchange-rates/commercial?currency=USD,EUR`  | Header `apikey` | Yes, documented     | `TBCRATE-FR-001`            |
 
 **Cache.** One store for each bank. One key for each currency code. The value is
-`commercialQuote{Rate domain.CommercialRate; Quoted bool}`: a code that the bank does
-not quote is an entry too, with `Quoted` false.
+`commercialQuote{Rate domain.CommercialRate; Quoted bool; ReadAt time.Time}`: a code that
+the bank does not quote is an entry too, with `Quoted` false. `ReadAt` is the read
+instant that the source gave.
 
 | Port method                         | Key           | Time to live | Maximum stale | Entries | Realizes                              |
 | ----------------------------------- | ------------- | ------------ | ------------- | ------- | ------------------------------------- |
@@ -261,7 +262,7 @@ not quote is an entry too, with `Quoted` false.
 
 A stale value is younger than the time to live and the maximum stale: 1 hour.
 `CommercialRateCache` builds `CommercialRatesResult` from the entries: `ReadAt` is the
-oldest `FetchedAt`, and `Stale` is true when one entry or more is stale.
+oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is stale.
 
 **Configuration.**
 
@@ -274,7 +275,9 @@ oldest `FetchedAt`, and `Stale` is true when one entry or more is stale.
 | `GEOMCP_RATES_TBC_BURST`      | int      | `1`                      | No     | `TBCRATE-NFR-002` |
 
 `rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` holds `APIKey`,
-`BaseURL url.URL`, and `HTTP httpclient.Config`, as `NBGConfig` does.
+`BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `TBCHTTPConfig` has the fields of
+`httpclient.Config` with the defaults of this table, and converts to it. A default lives
+in a struct tag, so `httpclient.Config` cannot carry a second set.
 
 ### 4.4 Flow
 
@@ -450,8 +453,8 @@ One more field for the model to read, for a short outage.
 | 5   | `adapter/tbc`.                                                               | `TBCRATE-FR-004`, `TBCRATE-FR-005`, `TBCRATE-INV-003` | [x]  |
 | 6   | `internal/pkg/cache`: `GetMany`.                                             | `TBCRATE-NFR-002`                              | [x]  |
 | 7   | `adapter/cache`: `CommercialRateCache`.                                      | `TBCRATE-FR-009`, `TBCRATE-NFR-001`, `TBCRATE-NFR-002` | [x]  |
-| 8   | `adapter/tool`: `RegisterCommercial`.                                        | `TBCRATE-FR-006`, `TBCRATE-FR-007`             | [ ]  |
-| 9   | `module.go`, `config.go`, `configs/.env.example`.                            | `TBCRATE-FR-010`                               | [ ]  |
+| 8   | `adapter/tool`: `RegisterCommercial`.                                        | `TBCRATE-FR-006`, `TBCRATE-FR-007`             | [x]  |
+| 9   | `module.go`, `config.go`, `configs/.env.example`.                            | `TBCRATE-FR-010`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

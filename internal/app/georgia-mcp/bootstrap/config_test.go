@@ -92,3 +92,18 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 		})
 	}
 }
+
+// TBCRATE-SC-024: With the key only, the calls to TBC default to 1 each second, burst 1.
+func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_RATES_TBC_API_KEY", "test-key")
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	if http := cfg.Rates.TBC.HTTP; http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("TBC.HTTP = rate %v burst %d, want rate 1 burst 1", http.Rate, http.Burst)
+	}
+}
