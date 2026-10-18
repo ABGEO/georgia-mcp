@@ -17,6 +17,7 @@ const (
 	// DefaultBaseURL is the production address of the API of the NBG.
 	DefaultBaseURL = "https://nbg.gov.ge/gw/api/ct/monetarypolicy"
 
+	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
 	modulePath     = "github.com/abgeo/georgia-mcp/pkg/nbg"
 	defaultTimeout = 10 * time.Second
 
@@ -57,7 +58,8 @@ func WithHTTPClient(httpClient *http.Client) Option {
 	return func(c *Client) { c.httpClient = httpClient }
 }
 
-// WithUserAgent sets the User-Agent header. The default is georgia-mcp-nbg/<version>.
+// WithUserAgent sets the User-Agent header. The default is
+// georgia-mcp-nbg/<version> (+https://github.com/abgeo/georgia-mcp).
 func WithUserAgent(userAgent string) Option {
 	return func(c *Client) { c.userAgent = userAgent }
 }
@@ -67,7 +69,7 @@ func New(opts ...Option) *Client {
 	client := &Client{
 		baseURL:    DefaultBaseURL,
 		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-nbg/" + version(),
+		userAgent:  "georgia-mcp-nbg/" + version() + " (+" + repositoryURL + ")",
 	}
 
 	for _, opt := range opts {

@@ -53,7 +53,7 @@ The constructor is `New(opts ...Option) *Client`. An option sets one value:
 | ----------------- | -------------------------------------------- |
 | `WithBaseURL`     | The production address of the vendor.        |
 | `WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
-| `WithUserAgent`   | `georgia-mcp-<vendor>/<version>`.            |
+| `WithUserAgent`   | `georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp)`. |
 | `WithAPIKey`      | None. Only a client whose vendor needs a key. |
 
 The client sets `Accept: application/json` once, at construction.

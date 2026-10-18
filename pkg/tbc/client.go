@@ -16,6 +16,7 @@ const (
 	// DefaultBaseURL is the production address of the API of TBC.
 	DefaultBaseURL = "https://api.tbcbank.ge"
 
+	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
 	modulePath     = "github.com/abgeo/georgia-mcp/pkg/tbc"
 	defaultTimeout = 10 * time.Second
 
@@ -44,7 +45,8 @@ func WithHTTPClient(httpClient *http.Client) Option {
 	return func(c *Client) { c.httpClient = httpClient }
 }
 
-// WithUserAgent sets the User-Agent header. The default is georgia-mcp-tbc/<version>.
+// WithUserAgent sets the User-Agent header. The default is
+// georgia-mcp-tbc/<version> (+https://github.com/abgeo/georgia-mcp).
 func WithUserAgent(userAgent string) Option {
 	return func(c *Client) { c.userAgent = userAgent }
 }
@@ -60,7 +62,7 @@ func New(opts ...Option) *Client {
 	client := &Client{
 		baseURL:    DefaultBaseURL,
 		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-tbc/" + version(),
+		userAgent:  "georgia-mcp-tbc/" + version() + " (+" + repositoryURL + ")",
 	}
 
 	for _, opt := range opts {

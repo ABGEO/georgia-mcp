@@ -85,13 +85,10 @@ func TestRateSetsSendsTheRequest(t *testing.T) {
 				t.Errorf("Accept = %q, want application/json", accept)
 			}
 
-			if agent := got.Header.Get(
-				"User-Agent",
-			); !strings.HasPrefix(
-				agent,
-				"georgia-mcp-nbg/",
-			) {
-				t.Errorf("User-Agent = %q, want the prefix georgia-mcp-nbg/", agent)
+			agent := got.Header.Get("User-Agent")
+			if !strings.HasPrefix(agent, "georgia-mcp-nbg/") ||
+				!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
+				t.Errorf("User-Agent = %q, want georgia-mcp-nbg/<version> (+<repository>)", agent)
 			}
 		})
 	}
