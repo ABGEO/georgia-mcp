@@ -4,14 +4,14 @@ FROM golang:1.27.2 AS build
 
 WORKDIR /src
 
-COPY go.mod go.sum ./
-RUN go mod download
-
+# The whole repository, so go.work resolves each module of pkg/ before it has a tag.
 COPY . .
 
 # The repository belongs to another user in the build stage. Git refuses it, and
 # the toolchain then cannot write the commit into the binary.
-RUN git config --global --add safe.directory /src \
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    git config --global --add safe.directory /src \
     && CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp
 
 FROM gcr.io/distroless/static-debian13:nonroot

@@ -81,9 +81,13 @@ linters:
             - pkg: github.com/abgeo/georgia-mcp/internal/app
               desc: a shared library never imports the application
         clients:
+          list-mode: strict
           files:
             - "**/pkg/**"
             - "!**/internal/pkg/**"
+          allow:
+            - $gostd
+            - github.com/abgeo/georgia-mcp/pkg
           deny:
             - pkg: github.com/abgeo/georgia-mcp/internal
               desc: a vendor client imports no package of the server
@@ -124,6 +128,9 @@ linters:
       - path: ^pkg/
         linters:
           - tagliatelle
+      - source: 'jsonschema:"'
+        linters:
+          - lll
 
 formatters:
   enable:

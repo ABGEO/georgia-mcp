@@ -23,12 +23,17 @@ tasks:
       - go test -race ./...
 
   build:
-    desc: Build one module. In the server module, also check the build with no workspace.
+    desc: Build one module with the workspace.
     dir: "{{.MODULE}}"
     cmds:
       - go build ./...
+
+  release-check:
+    desc: Check a release of the server. The build without the workspace needs a tag of each client.
+    cmds:
       - cmd: GOWORK=off go build ./...
         platforms: [linux, darwin]
+      - task: vuln
 
   vuln:
     desc: Check one module for a known vulnerability.

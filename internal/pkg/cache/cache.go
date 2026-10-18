@@ -66,12 +66,9 @@ func New[V any](cfg Config) (*Cache[V], error) {
 		)
 	}
 
-	// The store keeps an entry past its time to live, so a stale value exists when
-	// the source fails. Get decides freshness from the fetch time.
-	store, err := otter.New(&otter.Options[string, entry[V]]{
-		MaximumSize:      cfg.MaxEntries,
-		ExpiryCalculator: otter.ExpiryWriting[string, entry[V]](cfg.TTL + cfg.MaxStale),
-	})
+	// The store has no expiry of its own: Get decides freshness and the stale age from
+	// the fetch time. An expiry in otter starts a goroutine that ticks each second.
+	store, err := otter.New(&otter.Options[string, entry[V]]{MaximumSize: cfg.MaxEntries})
 	if err != nil {
 		return nil, fmt.Errorf("building the cache store: %w", err)
 	}
@@ -81,7 +78,7 @@ func New[V any](cfg Config) (*Cache[V], error) {
 	return values, nil
 }
 
-// Close stops the goroutine that the store runs to remove expired entries.
+// Close stops each goroutine of the store.
 func (c *Cache[V]) Close() {
 	if c.store != nil {
 		c.store.StopAllGoroutines()

@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpserver"
 	"github.com/abgeo/georgia-mcp/internal/pkg/logger"
@@ -8,8 +9,9 @@ import (
 
 // Config is the configuration of the process. A context adds its own struct here.
 type Config struct {
-	Log  logger.Config     `envPrefix:"LOG_"`
-	HTTP httpserver.Config `envPrefix:"HTTP_"`
+	Log   logger.Config     `envPrefix:"LOG_"`
+	HTTP  httpserver.Config `envPrefix:"HTTP_"`
+	Rates rates.Config      `envPrefix:"RATES_"`
 }
 
 // LoadConfig reads and validates the configuration.

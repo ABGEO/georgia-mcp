@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"io"
 
 	"github.com/spf13/cobra"
@@ -50,7 +51,7 @@ func newAppCommand(
 			return err
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			return run(cmd, app)
+			return errors.Join(run(cmd, app), app.Close())
 		},
 	}
 }
