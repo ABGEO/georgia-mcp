@@ -173,6 +173,7 @@ Add a row before you create the file or the directory.
 | `PLATFORM` | `features/platform/` | `platform` | The layout of the server, its shared parts, and their wiring.  | Approved |
 | `NBGRATE`  | `features/nbgrate/`  | `rates`    | The official exchange rates of the NBG, on a date and over a period. | Approved |
 | `TBCRATE`  | `features/tbcrate/`  | `rates`    | The commercial exchange rates of TBC Bank, and the tool of every bank. | Approved |
+| `BOGRATE`  | `features/bograte/`  | `rates`    | The commercial exchange rates of Bank of Georgia.               | Approved |
 
 ## Retired identifiers
 
