@@ -443,8 +443,8 @@ One more field for the model to read, for a short outage.
 
 | #   | Step                                                                         | Realizes                                       | Done |
 | --- | ---------------------------------------------------------------------------- | ---------------------------------------------- | ---- |
-| 1   | Correct `MCP-005` as section 3 gives.                                        | `TBCRATE-FR-007`                               | [ ]  |
-| 2   | `pkg/tbc` module, recorded answers, README, example. `go.work`.             | `TBCRATE-FR-001`, `TBCRATE-INV-001`            | [ ]  |
+| 1   | Correct `MCP-005` as section 3 gives.                                        | `TBCRATE-FR-007`                               | [x]  |
+| 2   | `pkg/tbc` module, recorded answers, README, example. `go.work`.             | `TBCRATE-FR-001`, `TBCRATE-INV-001`            | [x]  |
 | 3   | `domain`: `BankCode`, `Bank`, `CommercialRate`.                              | `TBCRATE-FR-001`, `TBCRATE-INV-003`            | [ ]  |
 | 4   | `app`: port, `GetCommercialRates`.                                           | `TBCRATE-FR-002` to `TBCRATE-FR-004`, `TBCRATE-FR-008`, `TBCRATE-FR-011` | [ ]  |
 | 5   | `adapter/tbc`.                                                               | `TBCRATE-FR-004`, `TBCRATE-FR-005`, `TBCRATE-INV-003` | [ ]  |

@@ -1,0 +1,8 @@
+{
+  "type": "https://developers.tbcbank.ge/docs/error-type-401",
+  "title": "Invalid Api Key",
+  "status": 401,
+  "detail": "Please make sure api key is valid",
+  "systemCode": "System code for problem is exchange-rates.401.001",
+  "code": ""
+}

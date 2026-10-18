@@ -4,7 +4,7 @@ title: The MCP server and its tools
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-18
 scope: [internal/pkg/mcpserver/, internal/app/georgia-mcp/*/adapter/tool/]
 related: [ARC, DOM, API, LOG, RSL]
 ---
@@ -65,7 +65,8 @@ the unit of each number, and the source of the data.
 
 A tool returns structured content that matches its output schema.
 The output carries `source` (the name of the vendor) and `as_of` (the instant that
-the source published the data, or that the server read it).
+the source published the data, or that the server read it). An output that joins
+several sources carries `source` and `as_of` for each source.
 
 **Why:** A model that cites a rate must cite its source and its date.
 
