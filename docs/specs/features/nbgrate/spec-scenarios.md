@@ -22,6 +22,9 @@ The recorded answers in `pkg/nbg/testdata/` are real answers of the NBG:
 | `ka-2026-10-17.json`       | `ka`, 2026-10-17.                         |
 | `en-2026-10-11.json`       | `en`, Sunday 2026-10-11. Valid from 2026-10-10. |
 | `en-1990-01-01.json`       | `en`, 1990-01-01. An empty list.          |
+| `en-2026-10-17.xml`        | `en`, 2026-10-17, the RSS feed.           |
+| `codes.json`               | The codes, with Georgian names. 43 codes. |
+| `en-2026-10-12.json` to `en-2026-10-16.json` | `en`, each day. The sets of 10-12 and 10-15 are valid from 10-10 and 10-14. |
 
 An integration test serves these files from `httptest` and calls a tool through the
 in-memory MCP transport. A unit test of `app` uses a fake source. `now` is a fixed instant.
@@ -255,9 +258,10 @@ The adapter wraps both with `kernel.ErrSourceUnavailable`.
 **Layer:** unit
 
 **Given** an `httptest` server that records the request.
-**When** `RateSets` runs for `ka` and 2026-10-17.
-**Then** the path is `/currencies/ka/json/`, the query is `date=2026-10-17`, `Accept` is
-`application/json`, and `User-Agent` starts with `georgia-mcp-nbg/`.
+**When** `RateSets` runs for `ka`, 2026-10-17, and the currencies `USD` and `GBP`.
+**Then** the path is `/currencies/ka/json/`, the query holds `date=2026-10-17` and
+`currencies=USD,GBP`, `Accept` is `application/json`, and `User-Agent` starts with
+`georgia-mcp-nbg/`. With no date and no currencies, the query is empty.
 
 ### `NBGRATE-SC-023`
 
@@ -267,6 +271,34 @@ The adapter wraps both with `kernel.ErrSourceUnavailable`.
 **Given** the real NBG.
 **When** `RateSets` runs for `en` and a zero date.
 **Then** it returns one set with 40 currencies or more, and `USD` is among them.
+
+### `NBGRATE-SC-035`
+
+**Verifies:** `NBGRATE-FR-001`
+**Layer:** unit
+
+**Given** the vendor serves `en-2026-10-17.xml`.
+**When** `RSS` runs for `en` and 2026-10-17.
+**Then** the path is `/currencies/en/rss/`, the channel title is `RSS NBG Currency Rates`,
+the feed holds one item titled `Currency Rates 2026-10-17`, and its description holds `USD`.
+
+### `NBGRATE-SC-036`
+
+**Verifies:** `NBGRATE-FR-001`
+**Layer:** unit
+
+**Given** the vendor serves `codes.json`.
+**When** `Codes` runs.
+**Then** the path is `/currencies/codes`, and the answer holds 43 codes, `USD` among them.
+
+### `NBGRATE-SC-037`
+
+**Verifies:** `NBGRATE-FR-014`
+**Layer:** unit
+
+**Given** the vendor answers 500.
+**When** `RSS` runs, then `Codes`.
+**Then** each returns an `*APIError` with 500.
 
 ## The limits
 

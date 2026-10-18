@@ -81,7 +81,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 
 | Layer          | Path                          | Types and functions                                                    |
 | -------------- | ----------------------------- | ---------------------------------------------------------------------- |
-| Vendor client  | `pkg/nbg/`                    | `Client`, `New`, `Option`, `Language`, `RateSet`, `Currency`, `APIError`, `ErrUnexpectedStatus`. |
+| Vendor client  | `pkg/nbg/`                    | `Client`, `New`, `Option`, `Language`, `RateSetsQuery`, `RateSet`, `Currency`, `RSS`, `RSSChannel`, `RSSItem`, `Code`, `APIError`, `ErrUnexpectedStatus`. |
 | Domain         | `R/domain/`                   | `CurrencyCode`, `Date`, `OfficialRate`, `RateSet`. 4.2.                |
 | Use case       | `R/app/`                      | `OfficialRateSource`, `GetOfficialRates`, `ListOfficialHistory`. 4.2.  |
 | Driven adapter | `R/adapter/nbg/`              | `Adapter`, `NewAdapter`.                                               |
@@ -90,7 +90,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | Module         | `R/module.go`, `R/config.go`  | `Module`, `New`, `Register`, `Close`, `Config`.                        |
 | Wiring         | `bootstrap/` (change)         | `Config.Rates`, `modules` adds `rates.New`, `App.Close`.               |
 | Commands       | `cli/root.go` (change)        | `RunE` calls `App.Close` after the run.                                |
-| Workspace      | `go.work`, `go.mod` (change)  | `use ./pkg/nbg`. The server requires `pkg/nbg` and `shopspring/decimal v1.5.0`. |
+| Workspace      | `go.work`, `go.mod` (change)  | `use ./pkg/nbg`. The server requires `shopspring/decimal v1.5.0`. The workspace gives `pkg/nbg` until its first tag (`BLD-003`). |
 
 **`pkg/nbg`.**
 
@@ -100,7 +100,20 @@ const DefaultBaseURL = "https://nbg.gov.ge/gw/api/ct/monetarypolicy"
 type Language string // LanguageEnglish "en", LanguageGeorgian "ka"
 
 func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
-func (c *Client) RateSets(ctx context.Context, language Language, date time.Time) ([]RateSet, error)
+
+type RateSetsQuery struct {
+    Date       time.Time // zero: the newest set
+    Currencies []string  // empty: every currency. Sent as the NBG takes it: USD,GBP
+}
+
+func (c *Client) RateSets(ctx context.Context, language Language, query RateSetsQuery) ([]RateSet, error)
+func (c *Client) RSS(ctx context.Context, language Language, query RateSetsQuery) (*RSS, error)
+func (c *Client) Codes(ctx context.Context) ([]Code, error)
+
+type Code struct {
+    Code string `json:"code"`
+    Name string `json:"name"` // in Georgian: the NBG ignores a language here
+}
 
 type RateSet struct {
     Date       string     `json:"date"`
@@ -120,9 +133,22 @@ type Currency struct {
 }
 ```
 
-`RateSets` sends `GET /currencies/{language}/json/?date=YYYY-MM-DD`. A zero date sends no
-`date`. The client exposes no `currencies` filter (`NBGRATE-DD-011`). The field names keep
-the spelling of the vendor (`CLT-003`). The README says that the API is not documented.
+The client covers every address of the API (`NBGRATE-DD-013`):
+
+| Method     | Request                                                        | Answer                    |
+| ---------- | -------------------------------------------------------------- | ------------------------- |
+| `RateSets` | `GET /currencies/{language}/json/?date=YYYY-MM-DD&currencies=…` | `[]RateSet`               |
+| `RSS`      | `GET /currencies/{language}/rss/?date=YYYY-MM-DD&currencies=…`  | `RSS`, decoded from XML   |
+| `Codes`    | `GET /currencies/codes`                                        | `[]Code`                  |
+
+A zero date sends no `date`. An empty list sends no `currencies`. The client sends a list
+joined with commas, as the NBG takes it, and changes nothing. The README warns that the
+NBG answers most lists of two or more codes with an empty list. `RSSItem.Description`
+holds the HTML table of the NBG as a string: the client does not parse it (`CLT-003`).
+The field names keep the spelling of the vendor. The README says that the API is not
+documented.
+
+The adapter of the server calls `RateSets` with a date and no currencies (`NBGRATE-DD-001`).
 
 ### 4.2 Domain model
 
@@ -276,6 +302,8 @@ publication at about 17:00 Tbilisi time, and that the rate is indicative.
 | Client    | Method and path                                    | Key  | Official                 | Realizes                   |
 | --------- | -------------------------------------------------- | ---- | ------------------------ | -------------------------- |
 | `pkg/nbg` | `GET /currencies/{en,ka}/json/?date=YYYY-MM-DD`    | None | Yes, linked, undocumented | `NBGRATE-FR-001` to `NBGRATE-FR-012` |
+| `pkg/nbg` | `GET /currencies/{en,ka}/rss/?date=YYYY-MM-DD`     | None | Yes, linked, undocumented | None in the server. `NBGRATE-DD-013` |
+| `pkg/nbg` | `GET /currencies/codes`                            | None | No link, undocumented    | None in the server. `NBGRATE-DD-013` |
 
 **Cache.** One store for each row. The key is `<date>/<language>`.
 
@@ -435,18 +463,10 @@ publication no later than 17:00 Tbilisi time.
 **Realizes:** `PLATFORM-FR-022`, `BLD-003`
 **Decision:** The Dockerfile copies the repository, then builds with cache mounts for the
 module cache and the build cache. `task release-check` holds the build with `GOWORK=off`.
-**Rationale:** The server requires `pkg/nbg` before a tag of it exists. Only the workspace
+**Rationale:** The server imports `pkg/nbg` before a tag of it exists. Only the workspace
 resolves it. A layer of `go mod download` from `go.mod` alone cannot. A build with the
 workspace off passes only after the tag, so it belongs to the release.
 **Alternatives:** A `replace` in `go.mod`. `go install …@latest` refuses a module with one.
-
-### `NBGRATE-DD-011`
-
-**Realizes:** `NBGRATE-FR-001`, `CLT-003`
-**Decision:** `pkg/nbg` offers no `currencies` filter.
-**Rationale:** The filter is undocumented and wrong for most combinations. A user of the
-client must not trust it.
-**Alternatives:** Expose it with a warning. A warning does not stop a wrong answer.
 
 ### `NBGRATE-DD-012`
 
@@ -456,23 +476,36 @@ calls `Close` on each module that has it, and joins the errors.
 **Rationale:** The store of the cache runs a goroutine (`PLATFORM` section 4.1).
 **Alternatives:** A `Close` in `mcpserver.Module`. Every context must then write one.
 
+### `NBGRATE-DD-013`
+
+**Realizes:** `CLT-001`, `CLT-003`
+**Decision:** `pkg/nbg` covers every address of the API: the JSON rates, the RSS feed, and
+the codes, with `date` and `currencies`. It sends `currencies` as the NBG takes it.
+**Rationale:** `pkg/nbg` is a client for other projects, so it offers what the API offers.
+A client that mirrors the vendor does not correct it. The README names the defect of the
+NBG, and the server avoids it (`NBGRATE-DD-001`). The language stays a parameter of the method,
+not a field of `RateSetsQuery`: it is a path segment that the API requires, so the
+compiler enforces it, and it changes the names, not the rates that the query selects.
+**Alternatives:** One call for the full set, filtered in the client, for a list of two or
+more codes. It hides the behavior of the vendor from the caller.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `NBGRATE-SC-001` to `NBGRATE-SC-034`.
+`spec-scenarios.md` holds `NBGRATE-SC-001` to `NBGRATE-SC-037`.
 
 ## 7. Build plan
 
 | #   | Step                                                                                 | Realizes                                     | Done |
 | --- | ------------------------------------------------------------------------------------ | -------------------------------------------- | ---- |
-| 1   | Correct `ARC-007`, `DOM-006`, `BLD-003`, `BLD-005`, and `PLATFORM` 4.1, as section 3 gives. | `NBGRATE-DD-010`                      | [ ]  |
-| 2   | `pkg/nbg` module, recorded answers in `testdata/`, README, example. `go.work`.       | `NBGRATE-FR-001`, `NBGRATE-FR-014`           | [ ]  |
-| 3   | `domain`: `CurrencyCode`, `Date`, `OfficialRate`, `RateSet`, with fuzz tests.        | `NBGRATE-FR-006`, `NBGRATE-FR-008`, `NBGRATE-INV-003` | [ ]  |
-| 4   | `app`: port, `GetOfficialRates`, `ListOfficialHistory`.                               | `NBGRATE-FR-002` to `NBGRATE-FR-007`, `NBGRATE-FR-012` | [ ]  |
-| 5   | `adapter/nbg`.                                                                       | `NBGRATE-FR-009`, `NBGRATE-FR-011`           | [ ]  |
-| 6   | `adapter/cache`.                                                                     | `NBGRATE-FR-013`, `NBGRATE-NFR-001`, `NBGRATE-NFR-002` | [ ]  |
-| 7   | `adapter/tool`.                                                                      | `NBGRATE-FR-010`, `NBGRATE-FR-014`, `NBGRATE-INV-001` | [ ]  |
-| 8   | `module.go`, `config.go`, `bootstrap`, `cli`, `configs/.env.example`.                | `NBGRATE-NFR-003`                            | [ ]  |
-| 9   | Dockerfile, Taskfile.                                                                | `NBGRATE-DD-010`                             | [ ]  |
+| 1   | Correct `ARC-007`, `DOM-006`, `BLD-003`, `BLD-005`, and `PLATFORM` 4.1, as section 3 gives. | `NBGRATE-DD-010`                      | [x]  |
+| 2   | `pkg/nbg` module, recorded answers in `testdata/`, README, example. `go.work`.       | `NBGRATE-FR-001`, `NBGRATE-FR-014`           | [x]  |
+| 3   | `domain`: `CurrencyCode`, `Date`, `OfficialRate`, `RateSet`, with fuzz tests.        | `NBGRATE-FR-006`, `NBGRATE-FR-008`, `NBGRATE-INV-003` | [x]  |
+| 4   | `app`: port, `GetOfficialRates`, `ListOfficialHistory`.                               | `NBGRATE-FR-002` to `NBGRATE-FR-007`, `NBGRATE-FR-012` | [x]  |
+| 5   | `adapter/nbg`.                                                                       | `NBGRATE-FR-009`, `NBGRATE-FR-011`           | [x]  |
+| 6   | `adapter/cache`.                                                                     | `NBGRATE-FR-013`, `NBGRATE-NFR-001`, `NBGRATE-NFR-002` | [x]  |
+| 7   | `adapter/tool`.                                                                      | `NBGRATE-FR-010`, `NBGRATE-FR-014`, `NBGRATE-INV-001` | [x]  |
+| 8   | `module.go`, `config.go`, `bootstrap`, `cli`, `configs/.env.example`.                | `NBGRATE-NFR-003`                            | [x]  |
+| 9   | Dockerfile, Taskfile.                                                                | `NBGRATE-DD-010`                             | [x]  |
 
 ## 8. Out of scope for this specification
 
@@ -480,4 +513,6 @@ Nothing that the requirements demand.
 
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID               | Retired    | Reason                                                         |
+| ---------------- | ---------- | -------------------------------------------------------------- |
+| `NBGRATE-DD-011` | 2026-10-18 | The client covers the whole API. `NBGRATE-DD-013` replaces it. |

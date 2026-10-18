@@ -59,7 +59,7 @@ object with a validating constructor is the one tactical pattern that every cont
 uses, because each tool validates the input of a model.
 
 **A vendor client as a module.** A client with its own `go.mod` has its own version
-and imports only resty. Another project imports it with no MCP dependency.
+and imports only the standard library. Another project imports it with no MCP dependency.
 The client mirrors the vendor. The server interprets the data in its adapter.
 
 ## Alternatives

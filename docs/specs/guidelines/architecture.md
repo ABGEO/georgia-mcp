@@ -85,8 +85,8 @@ flowchart LR
 
 | Layer               | Imports                                                         |
 | ------------------- | --------------------------------------------------------------- |
-| `domain`            | The standard library and `internal/pkg/kernel`.                 |
-| `app`               | `domain`, `internal/pkg/kernel`.                                |
+| `domain`            | The standard library, `internal/pkg/kernel`, a pure library.    |
+| `app`               | `domain`, `internal/pkg/kernel`, a pure library.                |
 | `adapter/tool`      | `app`, `domain`, the MCP SDK, `internal/pkg/mcpserver`.         |
 | `adapter/<vendor>`  | `app`, `domain`, `pkg/<vendor>`.                                |
 | `adapter/cache`     | `app`, `domain`, `internal/pkg/cache`.                          |
@@ -95,6 +95,9 @@ flowchart LR
 | `bootstrap`         | Every context module, `internal/pkg`.                           |
 
 `internal/pkg` never imports `internal/app`.
+
+A pure library is a third-party library that does no I/O and knows no protocol and no
+vendor, for example `github.com/shopspring/decimal`.
 
 **Why:** The domain changes when Georgia changes. An adapter changes when a vendor
 or a protocol changes. The direction keeps each change in its own layer.

@@ -215,10 +215,11 @@ func (c *Cache[V]) Get(ctx context.Context, key string, load func(context.Contex
 func (c *Cache[V]) Close()
 ```
 
-- `Close` stops the goroutine of otter that removes expired entries. The owner of a
-  cache calls it at the shutdown. A test calls it before `synctest.Test` returns.
+- `Close` stops each goroutine of the store. The store of today runs none, because it
+  has no expiry. The owner of a cache calls it at the shutdown.
 
-- The store holds an entry for `TTL + MaxStale`, and at most `MaxEntries` entries.
+- The store holds at most `MaxEntries` entries. It has no expiry of its own. `Get`
+  ignores an entry older than `TTL + MaxStale`.
 - `Get` returns a fresh entry. Else it calls `load` through `singleflight` with the key.
 - When `load` fails with `kernel.ErrSourceUnavailable` and an entry exists, `Get`
   returns it with `Stale: true`. Any other error returns as it is.
@@ -248,10 +249,10 @@ A context passes the client to a vendor client with `WithHTTPClient` (`CLT-005`)
 | ------------------ | ----------------------------------------------------------------------------------------- |
 | `go.mod`           | The libraries of 4.1 at the versions of 4.6. `tool golang.org/x/vuln/cmd/govulncheck`.     |
 | `configs/.env.example` | Every variable of 4.3 with its default.                                                |
-| `build/package/Dockerfile` | Stage `build`: `golang:1.27.2`, `go mod download`, `CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp`. Stage final: `gcr.io/distroless/static-debian13:nonroot`, the labels of `BLD-005` from `ARG VERSION=dev` and `ARG REVISION=unknown`, `EXPOSE 8080`, `ENTRYPOINT ["/georgia-mcp"]`, `CMD ["serve"]`. |
+| `build/package/Dockerfile` | Stage `build`: `golang:1.27.2`, `COPY . .`, `CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp` with cache mounts for the module cache and the build cache (`NBGRATE-DD-010`). Stage final: `gcr.io/distroless/static-debian13:nonroot`, the labels of `BLD-005` from `ARG VERSION=dev` and `ARG REVISION=unknown`, `EXPOSE 8080`, `ENTRYPOINT ["/georgia-mcp"]`, `CMD ["serve"]`. |
 | `build/package/Dockerfile.dockerignore` | `.env`, `bin/`, `dist/`, `docs/specs/`. It keeps `.git` (`BLD-005`). |
 | `deployments/compose.yaml` | Service `georgia-mcp`: builds `..` with `build/package/Dockerfile`, `env_file: ../.env` with `required: false`, port `8080:8080`. |
-| `Taskfile.yml`     | Tasks `lint`, `test`, `build`, `vuln`: take `MODULE`, default `.`, and run in that directory. `run`: `go run ./cmd/georgia-mcp serve`. `compose-up`, `compose-start`, `compose-stop`, `compose-down`: the compose file. `build-image`: the image with its build arguments. |
+| `Taskfile.yml`     | Tasks `lint`, `test`, `build`, `vuln`: take `MODULE`, default `.`, and run in that directory. `release-check`: the build with `GOWORK=off` and `vuln` (`BLD-003`). `run`: `go run ./cmd/georgia-mcp serve`. `compose-up`, `compose-start`, `compose-stop`, `compose-down`: the compose file. `build-image`: the image with its build arguments. |
 | `test/e2e/`        | The tests that build and start the binary: `PLATFORM-SC-029`, `PLATFORM-SC-031`, `PLATFORM-SC-032`. |
 
 ### 4.2 Domain model
@@ -399,10 +400,11 @@ from `PLATFORM-FR-008`.
 ### `PLATFORM-DD-006`
 
 **Realizes:** `PLATFORM-FR-017`, `PLATFORM-FR-019`, `PLATFORM-FR-020`
-**Decision:** otter v2 stores each entry for `TTL + MaxStale` with `MaximumSize`.
-`Cache` decides freshness from the fetch time in the entry.
-**Rationale:** otter gives the size bound and the expiry. A stale value must outlive
-its time to live, so the store keeps it and the cache labels it.
+**Decision:** otter v2 bounds the store with `MaximumSize`, and has no expiry. `Cache`
+decides freshness and the stale age from the fetch time in the entry.
+**Rationale:** otter gives the size bound. Its expiry starts a goroutine that ticks each
+second: a test of 37 days in `synctest` then wakes it 3 million times and takes 20
+seconds. An entry past its stale age costs one slot until the size bound evicts it.
 **Alternatives:** A map with an eviction list: about 150 more lines to test.
 
 ### `PLATFORM-DD-007`

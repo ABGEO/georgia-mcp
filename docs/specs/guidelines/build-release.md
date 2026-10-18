@@ -35,9 +35,14 @@ upgrade. The server is a binary, so it takes the newest release.
 
 ## BLD-003
 
-The `go.mod` of the server requires each vendor client at a tagged version or a
-pseudo-version. `go.work` replaces it with the local copy during development.
-Before a release of the server, `GOWORK=off go build ./...` passes in the server module.
+`go.work` gives the server the local copy of each vendor client during development.
+Before the first tag of a client, the `go.mod` of the server holds no requirement of it:
+Go checks a required pseudo-version against the repository, even in the workspace. A
+release tags the client first (`GIT-007`), then requires that tag in the `go.mod` of the
+server.
+Before a release of the server, `task release-check` passes. It runs
+`GOWORK=off go build ./...` in the server module, and `BLD-007`. `task build` keeps the
+workspace, so it passes before a tag of a client exists.
 
 **Why:** `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest` reads
 `go.mod`, not `go.work`. Only a build with the workspace off proves that `go.mod` is
@@ -53,8 +58,9 @@ passes no version with `-ldflags`.
 ## BLD-005
 
 The container image builds with `CGO_ENABLED=0` and `-trimpath` in a multi-stage
-`build/package/Dockerfile`, from the repository root. The build stage receives `.git`,
-so Go writes the version of `BLD-004`. The final stage is a distroless static image
+`build/package/Dockerfile`, from the repository root. The build stage copies the whole
+repository, `.git` and `go.work` included, so the workspace resolves every module and Go
+writes the version of `BLD-004`. Cache mounts keep the module cache and the build cache. The final stage is a distroless static image
 that runs as a user that is not root. Its command is `georgia-mcp serve`.
 
 The final stage carries the OpenContainers labels `title`, `description`, `source`,

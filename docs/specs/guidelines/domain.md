@@ -60,7 +60,7 @@ anti-corruption layer of the context.
 ## DOM-006
 
 A monetary amount, a price, or an exchange rate never uses a binary floating point
-type. It uses an exact decimal type.
+type. It uses `decimal.Decimal` of `github.com/shopspring/decimal`.
 
 **Why:** 0.1 has no exact binary form. A rate of 2.5982 must stay 2.5982.
 

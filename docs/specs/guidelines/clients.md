@@ -4,7 +4,7 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-18
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
@@ -22,8 +22,10 @@ The package name is the vendor name: `nbg`, `ttc`.
 
 ## CLT-002
 
-A client imports the standard library and resty only.
-It imports no package of the server module, no other client, and no MCP package.
+A client imports the standard library only. It imports no package of the server
+module, no other client, and no MCP package. A third-party library needs a requirement
+that the API of the vendor demands, for example a protocol that the standard library
+does not offer.
 
 **Why:** A dependency of a client is a dependency of every project that uses it.
 
@@ -36,8 +38,12 @@ vendor in their JSON tags. A client does not interpret the data.
 
 ## CLT-004
 
-The HTTP library is resty v2, `github.com/go-resty/resty/v2`.
-Resty v3 replaces it after a stable release, through an ADR.
+The HTTP client is `net/http`. The client builds the address with `net/url`, and decodes
+the body with `encoding/json` or `encoding/xml`. It reads at most a fixed count of bytes
+from a body.
+
+**Why:** A GET with a query and two headers needs no library. The standard library has
+no major version to migrate.
 
 ## CLT-005
 
