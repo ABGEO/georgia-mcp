@@ -1,10 +1,16 @@
 package bootstrap_test
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"testing"
+	"testing/synctest"
+	"time"
+
+	"golang.org/x/time/rate"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/bootstrap"
 )
@@ -106,4 +112,68 @@ func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 	if http := cfg.Rates.TBC.HTTP; http.Rate != 1 || http.Burst != 1 {
 		t.Errorf("TBC.HTTP = rate %v burst %d, want rate 1 burst 1", http.Rate, http.Burst)
 	}
+}
+
+// BOGRATE-SC-009: With no variable of Bank of Georgia, the bank is on, at its production
+// address, with 0.8 calls each second and a burst of 10.
+func TestLoadConfigGivesTheDefaultsOfBankOfGeorgia(t *testing.T) {
+	t.Chdir(t.TempDir())
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	bog := cfg.Rates.BOG
+	if !bog.Enabled {
+		t.Error("BOG.Enabled = false, want true")
+	}
+
+	if got := bog.BaseURL.String(); got != "https://api.businessonline.ge" {
+		t.Errorf("BOG.BaseURL = %q, want %q", got, "https://api.businessonline.ge")
+	}
+
+	if bog.HTTP.Rate != 0.8 || bog.HTTP.Burst != 10 {
+		t.Errorf(
+			"BOG.HTTP = rate %v burst %d, want rate 0.8 burst 10",
+			bog.HTTP.Rate,
+			bog.HTTP.Burst,
+		)
+	}
+}
+
+// BOGRATE-SC-010: The default limit of Bank of Georgia lets at most 58 calls pass in
+// the first 60 seconds, under the 60 calls in a minute that the bank allows.
+func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
+	t.Chdir(t.TempDir())
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	synctest.Test(t, func(t *testing.T) {
+		limiter := rate.NewLimiter(rate.Limit(cfg.Rates.BOG.HTTP.Rate), cfg.Rates.BOG.HTTP.Burst)
+		ctx, cancel := context.WithCancel(t.Context())
+
+		var passed atomic.Int32
+
+		for range 100 {
+			go func() {
+				if limiter.Wait(ctx) == nil {
+					passed.Add(1)
+				}
+			}()
+		}
+
+		time.Sleep(time.Minute)
+		synctest.Wait()
+
+		if got := passed.Load(); got < 10 || got > 58 {
+			t.Errorf("calls in the first 60 seconds = %d, want 10 to 58", got)
+		}
+
+		cancel()
+		synctest.Wait()
+	})
 }

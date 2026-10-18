@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"time"
 
+	bogadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/bog"
 	ratecache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/cache"
 	nbgadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/nbg"
 	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/tbc"
@@ -15,11 +16,15 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	bogclient "github.com/abgeo/georgia-mcp/pkg/bog"
 	nbgclient "github.com/abgeo/georgia-mcp/pkg/nbg"
 	tbcclient "github.com/abgeo/georgia-mcp/pkg/tbc"
 )
 
-const tbcKeyVariable = "GEOMCP_RATES_TBC_API_KEY"
+const (
+	tbcKeyVariable    = "GEOMCP_RATES_TBC_API_KEY"
+	bogSwitchVariable = "GEOMCP_RATES_BOG_ENABLED"
+)
 
 // Module holds the use cases of the context and their caches.
 type Module struct {
@@ -33,7 +38,7 @@ type Module struct {
 var _ mcpserver.Module = (*Module)(nil)
 
 // New builds the clients, the adapters, the caches, and the use cases. A bank with no
-// key is left out, with a warning.
+// key is left out, with a warning. A bank that the operator turned off is left out.
 func New(cfg Config, logger *slog.Logger) (*Module, error) {
 	return newModule(cfg, logger, time.Now)
 }
@@ -77,26 +82,50 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}, nil
 }
 
-// commercialSources builds the cached source of each bank that has a key.
+// commercialSources builds the cached source of each bank that the server can read.
 func commercialSources(
 	cfg Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) ([]*ratecache.CommercialRateCache, error) {
-	if cfg.TBC.APIKey == "" {
-		logger.Warn("TBC Bank is off: no API key",
-			slog.String("component", "context"),
-			slog.String("context", "rates"),
-			slog.String("variable", tbcKeyVariable),
-		)
+	logger = logger.With(slog.String("component", "context"), slog.String("context", "rates"))
 
-		return nil, nil
+	var banks []*ratecache.CommercialRateCache
+
+	if cfg.TBC.APIKey == "" {
+		logger.Warn("TBC Bank is off: no API key", slog.String("variable", tbcKeyVariable))
+	} else {
+		tbc, err := tbcSource(cfg.TBC, now)
+		if err != nil {
+			return nil, err
+		}
+
+		banks = append(banks, tbc)
 	}
 
+	if !cfg.BOG.Enabled {
+		logger.Info("Bank of Georgia is off", slog.String("variable", bogSwitchVariable))
+
+		return banks, nil
+	}
+
+	bog, err := bogSource(cfg.BOG, now)
+	if err != nil {
+		for _, bank := range banks {
+			_ = bank.Close()
+		}
+
+		return nil, err
+	}
+
+	return append(banks, bog), nil
+}
+
+func tbcSource(cfg TBCConfig, now func() time.Time) (*ratecache.CommercialRateCache, error) {
 	client := tbcclient.New(
-		tbcclient.WithBaseURL(cfg.TBC.BaseURL.String()),
-		tbcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.TBC.HTTP))),
-		tbcclient.WithAPIKey(cfg.TBC.APIKey),
+		tbcclient.WithBaseURL(cfg.BaseURL.String()),
+		tbcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		tbcclient.WithAPIKey(cfg.APIKey),
 	)
 
 	tbc, err := ratecache.NewCommercial(tbcadapter.NewAdapter(client, now))
@@ -104,7 +133,21 @@ func commercialSources(
 		return nil, fmt.Errorf("building the cache of TBC Bank: %w", err)
 	}
 
-	return []*ratecache.CommercialRateCache{tbc}, nil
+	return tbc, nil
+}
+
+func bogSource(cfg BOGConfig, now func() time.Time) (*ratecache.CommercialRateCache, error) {
+	client := bogclient.New(
+		bogclient.WithBaseURL(cfg.BaseURL.String()),
+		bogclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	bog, err := ratecache.NewCommercial(bogadapter.NewAdapter(client, now))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Bank of Georgia: %w", err)
+	}
+
+	return bog, nil
 }
 
 // Register adds the tools of the context. The commercial tool needs one bank or more.

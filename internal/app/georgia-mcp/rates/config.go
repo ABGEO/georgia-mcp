@@ -12,6 +12,7 @@ import (
 type Config struct {
 	NBG NBGConfig `envPrefix:"NBG_"`
 	TBC TBCConfig `envPrefix:"TBC_"`
+	BOG BOGConfig `envPrefix:"BOG_"`
 }
 
 // NBGConfig is the configuration of the calls to the NBG. HTTP takes the prefix of
@@ -58,6 +59,33 @@ type TBCHTTPConfig struct {
 
 // Validate checks each value as httpclient.Config does.
 func (c TBCHTTPConfig) Validate() error {
+	return httpclient.Config(c).Validate()
+}
+
+// BOGConfig is the configuration of the calls to Bank of Georgia. The bank needs no key,
+// so Enabled turns it off. A Config built in Go leaves the bank off.
+type BOGConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
+	BaseURL url.URL `env:"BASE_URL" envDefault:"https://api.businessonline.ge"`
+	HTTP    BOGHTTPConfig
+}
+
+// Validate checks the address.
+func (c BOGConfig) Validate() error {
+	return validateBaseURL(c.BaseURL)
+}
+
+// BOGHTTPConfig holds the fields of httpclient.Config with the defaults of Bank of
+// Georgia: a burst of 10 serves the 10 codes of one request at once, and 0.8 calls each
+// second keep any 60 seconds at 58 calls or fewer, under the 60 that the bank allows.
+type BOGHTTPConfig struct {
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
+	Rate    float64       `env:"RATE"    envDefault:"0.8"`
+	Burst   int           `env:"BURST"   envDefault:"10"`
+}
+
+// Validate checks each value as httpclient.Config does.
+func (c BOGHTTPConfig) Validate() error {
 	return httpclient.Config(c).Validate()
 }
 

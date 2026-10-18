@@ -412,10 +412,10 @@ clock, `buy` is `2.565`, and `sell` is `2.629`.
 
 | #   | Step                                                                     | Realizes                                           | Done |
 | --- | ------------------------------------------------------------------------ | -------------------------------------------------- | ---- |
-| 1   | `pkg/bog` module, recorded answers, README, example. `go.work`.         | `BOGRATE-FR-001`, `BOGRATE-FR-002`                 | [ ]  |
-| 2   | `adapter/bog`.                                                           | `BOGRATE-FR-001`, `BOGRATE-FR-002`, `BOGRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `BOGConfig`, `BOGHTTPConfig`. `configs/.env.example`.       | `BOGRATE-FR-003`, `BOGRATE-NFR-001`                | [ ]  |
-| 4   | `module.go`: the source of Bank of Georgia, and the info record.         | `BOGRATE-FR-001`, `BOGRATE-FR-003`                 | [ ]  |
+| 1   | `pkg/bog` module, recorded answers, README, example. `go.work`.         | `BOGRATE-FR-001`, `BOGRATE-FR-002`                 | [x]  |
+| 2   | `adapter/bog`.                                                           | `BOGRATE-FR-001`, `BOGRATE-FR-002`, `BOGRATE-INV-001` | [x]  |
+| 3   | `config.go`: `BOGConfig`, `BOGHTTPConfig`. `configs/.env.example`.       | `BOGRATE-FR-003`, `BOGRATE-NFR-001`                | [x]  |
+| 4   | `module.go`: the source of Bank of Georgia, and the info record.         | `BOGRATE-FR-001`, `BOGRATE-FR-003`                 | [x]  |
 
 ## 8. Out of scope for this specification
 
