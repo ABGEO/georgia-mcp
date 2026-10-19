@@ -7,5 +7,6 @@ use (
 	./pkg/rompetrol
 	./pkg/socar
 	./pkg/tbc
+	./pkg/ttc
 	./pkg/wissol
 )
