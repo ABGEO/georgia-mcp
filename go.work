@@ -4,6 +4,7 @@ use (
 	.
 	./pkg/bog
 	./pkg/nbg
+	./pkg/rompetrol
 	./pkg/tbc
 	./pkg/wissol
 )

@@ -85,9 +85,23 @@ linters:
           files:
             - "**/pkg/**"
             - "!**/internal/pkg/**"
+            - "!**/pkg/rompetrol/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg
+          deny:
+            - pkg: github.com/abgeo/georgia-mcp/internal
+              desc: a vendor client imports no package of the server
+            - pkg: github.com/modelcontextprotocol
+              desc: a vendor client imports no MCP package
+        web-page-clients:
+          list-mode: strict
+          files:
+            - "**/pkg/rompetrol/**"
+          allow:
+            - $gostd
+            - github.com/abgeo/georgia-mcp/pkg/rompetrol
+            - golang.org/x/net/html
           deny:
             - pkg: github.com/abgeo/georgia-mcp/internal
               desc: a vendor client imports no package of the server
