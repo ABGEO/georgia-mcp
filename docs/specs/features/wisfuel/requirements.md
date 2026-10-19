@@ -165,7 +165,7 @@ names one grade or more. It must answer every grade when the request names none.
 
 - Normal case: `diesel` at `wissol`. The answer holds the three diesel products.
 - Limit case: no grade. The answer holds the 8 products.
-- Unwanted case: the grade `lpg`. The server refuses it, and the message lists the grades.
+- Unwanted case: the grade `kerosene`. The server refuses it, and the message lists the grades.
 
 ### `WISFUEL-FR-009`
 

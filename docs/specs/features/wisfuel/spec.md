@@ -365,7 +365,7 @@ and names the companies.
 
 | Condition                                  | Sentinel                        | Tool message                                                                          |
 | ------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------- |
-| A grade that is not in requirements 5.1    | `domain.ErrInvalidGrade`        | `grades: "lpg" is not a grade. Use one of: regular, premium, super, super_100, diesel, cng, other.` |
+| A grade that is not in requirements 5.1    | `domain.ErrInvalidGrade`        | `grades: "kerosene" is not a grade. Use one of: regular, premium, super, super_100, diesel, cng, lpg, other.` |
 | A text that is not a company code          | `domain.ErrInvalidCompanyCode`  | `companies: "Wissol" is not a company code. Use one of: wissol.`                      |
 | A company code that the server lacks       | `app.ErrUnknownCompany`         | `companies: "gulf" is not a fuel company of this server. Use one of: wissol.`         |
 | A language other than `ka` and `en`        | `kernel.ErrUnknownLanguage`     | `language: "ru" is not a language of this tool. Use ka or en.`                        |

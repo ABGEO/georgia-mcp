@@ -81,7 +81,7 @@ A fuzz test of `ParseCompanyCode` finds no input that panics.
 | `cng`        | `GradeCNG`, unit `cubic_metre` |
 | `super_100`  | `GradeSuper100`, unit `litre`  |
 | `Diesel`     | `ErrInvalidGrade`              |
-| `lpg`        | `ErrInvalidGrade`              |
+| `kerosene`   | `ErrInvalidGrade`              |
 
 A fuzz test of `ParseGrade` finds no input that panics.
 
@@ -236,7 +236,7 @@ Regular the unit `litre`. Euro Regular has `self_service_price` `3.93`.
 
 | Input                    | Tool error                                                                       |
 | ------------------------ | -------------------------------------------------------------------------------- |
-| grades `lpg`             | `grades: "lpg" is not a grade. Use one of: regular, premium, super, super_100, diesel, cng, other.` |
+| grades `kerosene`        | `grades: "kerosene" is not a grade. Use one of: regular, premium, super, super_100, diesel, cng, lpg, other.` |
 | companies `gulf`         | `companies: "gulf" is not a fuel company of this server. Use one of: wissol.`    |
 
 ### `WISFUEL-SC-019`

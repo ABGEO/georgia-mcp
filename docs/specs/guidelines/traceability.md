@@ -176,6 +176,7 @@ Add a row before you create the file or the directory.
 | `BOGRATE`  | `features/bograte/`  | `rates`    | The commercial exchange rates of Bank of Georgia.               | Approved |
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
+| `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |
 
 ## Retired identifiers
 
