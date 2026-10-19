@@ -309,7 +309,8 @@ GET https://api.wissol.ge/FuelPrice
 ```
 
 **Cache.** One store for each fuel company, with one key: `prices`. The value is the
-`PriceList` of every active product. `ReadAt` is the instant that the cache gives.
+`PriceList` of every active product. `ReadAt` is the read instant that the source gave, as
+`TBCRATE` 4.3 does. `Stale` comes from the cache.
 
 | Port method               | Key      | Time to live | Maximum stale | Entries | Realizes                                                    |
 | ------------------------- | -------- | ------------ | ------------- | ------- | ----------------------------------------------------------- |
@@ -467,15 +468,15 @@ language in each call. Wissol answers both.
 
 | #   | Step                                                                          | Realizes                                         | Done |
 | --- | ----------------------------------------------------------------------------- | ------------------------------------------------ | ---- |
-| 1   | `ADR-0002`: move `Date` to the kernel. Change `DOM-008`.                      | `WISFUEL-FR-005`                                 | [ ]  |
-| 2   | `pkg/wissol` module, recorded answer, README, example. `go.work`.             | `WISFUEL-FR-001`                                 | [ ]  |
-| 3   | `domain`: `CompanyCode`, `Company`, `Grade`, `Unit`, `ProductName`, `ProductPrice`. | `WISFUEL-FR-001` to `WISFUEL-FR-005`, `WISFUEL-INV-001` | [ ]  |
-| 4   | `app`: port, `GetPrices`.                                                     | `WISFUEL-FR-006` to `WISFUEL-FR-009`, `WISFUEL-FR-014` | [ ]  |
-| 5   | `adapter/wissol`.                                                             | `WISFUEL-FR-002`, `WISFUEL-FR-003`, `WISFUEL-FR-010` | [ ]  |
-| 6   | `adapter/cache`: `PriceCache`.                                                | `WISFUEL-FR-015`, `WISFUEL-NFR-001`, `WISFUEL-NFR-002` | [ ]  |
-| 7   | `adapter/tool`: `Register`.                                                   | `WISFUEL-FR-011` to `WISFUEL-FR-013`, `WISFUEL-INV-002` | [ ]  |
-| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`.                | `WISFUEL-FR-016`                                 | [ ]  |
-| 9   | Move the terms of requirements 5 to the glossary.                             | `DOM-002`                                        | [ ]  |
+| 1   | `ADR-0002`: move `Date` to the kernel. Change `DOM-008`.                      | `WISFUEL-FR-005`                                 | [x]  |
+| 2   | `pkg/wissol` module, recorded answer, README, example. `go.work`.             | `WISFUEL-FR-001`                                 | [x]  |
+| 3   | `domain`: `CompanyCode`, `Company`, `Grade`, `Unit`, `ProductName`, `ProductPrice`. | `WISFUEL-FR-001` to `WISFUEL-FR-005`, `WISFUEL-INV-001` | [x]  |
+| 4   | `app`: port, `GetPrices`.                                                     | `WISFUEL-FR-006` to `WISFUEL-FR-009`, `WISFUEL-FR-014` | [x]  |
+| 5   | `adapter/wissol`.                                                             | `WISFUEL-FR-002`, `WISFUEL-FR-003`, `WISFUEL-FR-010` | [x]  |
+| 6   | `adapter/cache`: `PriceCache`.                                                | `WISFUEL-FR-015`, `WISFUEL-NFR-001`, `WISFUEL-NFR-002` | [x]  |
+| 7   | `adapter/tool`: `Register`.                                                   | `WISFUEL-FR-011` to `WISFUEL-FR-013`, `WISFUEL-INV-002` | [x]  |
+| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`.                | `WISFUEL-FR-016`                                 | [x]  |
+| 9   | Move the terms of requirements 5 to the glossary.                             | `DOM-002`                                        | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/shopspring/decimal"
+
+	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
 const decimalBase = 10
@@ -65,13 +67,13 @@ func powerOfTen(quantity int64) (int32, bool) {
 
 // RateSet is every official rate that the NBG publishes for one valid date.
 type RateSet struct {
-	ValidFrom   Date
+	ValidFrom   kernel.Date
 	PublishedAt time.Time
 	Rates       []OfficialRate
 }
 
 // NewRateSet returns a rate set with its rates sorted by currency.
-func NewRateSet(validFrom Date, publishedAt time.Time, rates []OfficialRate) RateSet {
+func NewRateSet(validFrom kernel.Date, publishedAt time.Time, rates []OfficialRate) RateSet {
 	sorted := slices.Clone(rates)
 	slices.SortFunc(
 		sorted,

@@ -85,7 +85,7 @@ func assertPublished(
 	t *testing.T,
 	got app.OfficialRates,
 	err error,
-	requested domain.Date,
+	requested kernel.Date,
 	wantNewest string,
 ) {
 	t.Helper()
@@ -144,7 +144,7 @@ func TestGetRefusesASetAfterTheRequestedDate(t *testing.T) {
 	t.Parallel()
 
 	requested := mustDate(t, "2026-10-10")
-	source := &fakeSource{override: func(domain.Date) (domain.RateSet, bool) {
+	source := &fakeSource{override: func(kernel.Date) (domain.RateSet, bool) {
 		return setOf(mustDate(t, "2026-10-12"), usd), true
 	}}
 

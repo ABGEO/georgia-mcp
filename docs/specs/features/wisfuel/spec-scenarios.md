@@ -19,7 +19,7 @@ requirements: features/wisfuel/requirements.md
 | File                 | Content                                                                          |
 | -------------------- | -------------------------------------------------------------------------------- |
 | `fuelprice.json`     | The real answer of `GET /FuelPrice`, recorded on 2026-10-19. 8 active products, two with no `priceSelfService`. |
-| `fuelprice-edge.json` | A copy of `fuelprice.json` with one product not active, one with an unknown code `99`, and one with `"priceSelfService":0`. |
+| `fuelprice-edge.json` | A copy of `fuelprice.json` with Eko Super not active, Wissol Gas under the unknown code `99`, and Eko Premium with `"priceSelfService":0`. |
 
 A unit test of `app` uses fake sources. An integration test serves the files from
 `httptest` and calls the tool through the in-memory MCP transport.

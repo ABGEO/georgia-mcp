@@ -167,10 +167,10 @@ func toHistoryQuery(in listOfficialHistoryInput) (app.OfficialHistoryQuery, erro
 	return app.OfficialHistoryQuery{Currency: code, From: from, To: to, Language: language}, nil
 }
 
-func parseDate(field, text string) (domain.Date, error) {
-	date, err := domain.ParseDate(text)
+func parseDate(field, text string) (kernel.Date, error) {
+	date, err := kernel.ParseDate(text)
 	if err != nil {
-		return domain.Date{}, invalidDate(field, text, err)
+		return kernel.Date{}, invalidDate(field, text, err)
 	}
 
 	return date, nil
@@ -232,7 +232,7 @@ func toHistoryOutput(history app.OfficialHistory) officialHistoryOutput {
 	return out
 }
 
-func toRateOutput(rate domain.OfficialRate, validFrom domain.Date) officialRateOutput {
+func toRateOutput(rate domain.OfficialRate, validFrom kernel.Date) officialRateOutput {
 	return officialRateOutput{
 		Currency:    string(rate.Currency),
 		Name:        rate.Name,
@@ -254,5 +254,5 @@ func instant(t time.Time) string {
 		return ""
 	}
 
-	return t.In(domain.TbilisiZone()).Format(time.RFC3339Nano)
+	return t.In(kernel.TbilisiZone()).Format(time.RFC3339Nano)
 }

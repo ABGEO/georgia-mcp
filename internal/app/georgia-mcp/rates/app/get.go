@@ -14,7 +14,7 @@ type OfficialRatesQuery struct {
 	// Currencies is empty to ask for every currency.
 	Currencies []domain.CurrencyCode
 	// Date is nil to ask for the Tbilisi date of the request.
-	Date     *domain.Date
+	Date     *kernel.Date
 	Language kernel.Language
 }
 
@@ -41,7 +41,7 @@ func (u *GetOfficialRates) Get(
 	ctx context.Context,
 	query OfficialRatesQuery,
 ) (OfficialRates, error) {
-	date := domain.Today(u.now())
+	date := kernel.Today(u.now())
 	if query.Date != nil {
 		date = *query.Date
 	}
@@ -79,7 +79,7 @@ func (u *GetOfficialRates) Get(
 func readInForce(
 	ctx context.Context,
 	source OfficialRateSource,
-	date domain.Date,
+	date kernel.Date,
 	language kernel.Language,
 	now time.Time,
 ) (RateSetResult, error) {
@@ -92,7 +92,7 @@ func readInForce(
 		return result, nil
 	}
 
-	if date.After(domain.Today(now)) && result.Set.ValidFrom.Before(date) {
+	if date.After(kernel.Today(now)) && result.Set.ValidFrom.Before(date) {
 		return RateSetResult{}, &NotPublishedError{Requested: date, Newest: result.Set.ValidFrom}
 	}
 

@@ -16,7 +16,7 @@ const concurrentReads = 4
 // OfficialHistoryQuery asks for the official rates of one currency over a period.
 type OfficialHistoryQuery struct {
 	Currency domain.CurrencyCode
-	From, To domain.Date
+	From, To kernel.Date
 	Language kernel.Language
 }
 
@@ -33,7 +33,7 @@ type OfficialHistory struct {
 
 // HistoryPoint is the official rate of one rate set.
 type HistoryPoint struct {
-	ValidFrom   domain.Date
+	ValidFrom   kernel.Date
 	PublishedAt time.Time
 	Rate        domain.OfficialRate
 }
@@ -60,7 +60,7 @@ func (u *ListOfficialHistory) List(
 	}
 
 	now := u.now()
-	today := domain.Today(now)
+	today := kernel.Today(now)
 
 	if query.To.After(today) {
 		if _, err := readInForce(ctx, u.source, query.To, query.Language, now); err != nil {
@@ -76,12 +76,12 @@ func (u *ListOfficialHistory) List(
 	return collect(query.Currency, results), nil
 }
 
-func validatePeriod(from, to domain.Date) error {
+func validatePeriod(from, to kernel.Date) error {
 	if to.Before(from) {
 		return ErrPeriodReversed
 	}
 
-	if days := domain.DaysBetween(from, to) + 1; days > MaxHistoryDays {
+	if days := kernel.DaysBetween(from, to) + 1; days > MaxHistoryDays {
 		return &PeriodTooLongError{Days: days, Max: MaxHistoryDays}
 	}
 
@@ -92,7 +92,7 @@ func (u *ListOfficialHistory) readDays(
 	ctx context.Context,
 	query OfficialHistoryQuery,
 	now time.Time,
-	lastReadable domain.Date,
+	lastReadable kernel.Date,
 ) ([]RateSetResult, error) {
 	last := query.To
 	if last.After(lastReadable) {
@@ -103,7 +103,7 @@ func (u *ListOfficialHistory) readDays(
 		return nil, nil
 	}
 
-	results := make([]RateSetResult, domain.DaysBetween(query.From, last)+1)
+	results := make([]RateSetResult, kernel.DaysBetween(query.From, last)+1)
 
 	group, groupCtx := errgroup.WithContext(ctx)
 	group.SetLimit(concurrentReads)
@@ -132,7 +132,7 @@ func (u *ListOfficialHistory) readDays(
 
 func collect(currency domain.CurrencyCode, results []RateSetResult) OfficialHistory {
 	history := OfficialHistory{Currency: currency}
-	byDate := map[domain.Date]HistoryPoint{}
+	byDate := map[kernel.Date]HistoryPoint{}
 
 	for _, result := range results {
 		rate, ok := result.Set.Find(currency)

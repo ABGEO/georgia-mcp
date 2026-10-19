@@ -60,11 +60,11 @@ func New(
 // RateSet returns the cached set of the date and the language, or reads it.
 func (c *RateSetCache) RateSet(
 	ctx context.Context,
-	date domain.Date,
+	date kernel.Date,
 	language kernel.Language,
 ) (app.RateSetResult, error) {
 	store := c.current
-	if date.Before(domain.Today(c.now())) {
+	if date.Before(kernel.Today(c.now())) {
 		store = c.past
 	}
 

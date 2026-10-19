@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpserver"
@@ -12,6 +13,7 @@ type Config struct {
 	Log   logger.Config     `envPrefix:"LOG_"`
 	HTTP  httpserver.Config `envPrefix:"HTTP_"`
 	Rates rates.Config      `envPrefix:"RATES_"`
+	Fuel  fuel.Config       `envPrefix:"FUEL_"`
 }
 
 // LoadConfig reads and validates the configuration.

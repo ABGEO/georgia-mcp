@@ -48,7 +48,7 @@ func recorded(t *testing.T, name string) http.HandlerFunc {
 func readSet(t *testing.T, name string) app.RateSetResult {
 	t.Helper()
 
-	date, _ := domain.ParseDate("2026-10-17")
+	date, _ := kernel.ParseDate("2026-10-17")
 
 	result, err := adapterFor(
 		t,
@@ -87,7 +87,7 @@ func TestRateSetReadsThePublicationInTbilisiTime(t *testing.T) {
 
 	result := readSet(t, "en-2026-10-17.json")
 
-	want := time.Date(2026, 10, 16, 17, 1, 1, 982_000_000, domain.TbilisiZone())
+	want := time.Date(2026, 10, 16, 17, 1, 1, 982_000_000, kernel.TbilisiZone())
 	if !result.Set.PublishedAt.Equal(want) {
 		t.Errorf("PublishedAt = %v, want %v", result.Set.PublishedAt, want)
 	}
@@ -150,7 +150,7 @@ func TestRateSetWrapsAFailure(t *testing.T) {
 		},
 	}
 
-	date, _ := domain.ParseDate("2026-10-17")
+	date, _ := kernel.ParseDate("2026-10-17")
 
 	for name, handler := range tests {
 		t.Run(name, func(t *testing.T) {

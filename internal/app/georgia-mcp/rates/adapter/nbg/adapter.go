@@ -42,7 +42,7 @@ func NewAdapter(client *nbgclient.Client, now func() time.Time) *Adapter {
 // kernel.ErrSourceUnavailable.
 func (a *Adapter) RateSet(
 	ctx context.Context,
-	date domain.Date,
+	date kernel.Date,
 	language kernel.Language,
 ) (app.RateSetResult, error) {
 	sets, err := a.client.RateSets(
@@ -81,7 +81,7 @@ func toRateSet(answer nbgclient.RateSet) (domain.RateSet, error) {
 		return domain.RateSet{}, fmt.Errorf("%w: valid date %q", errMalformed, answer.Date)
 	}
 
-	validFrom, err := domain.ParseDate(answer.Date[:dateLength])
+	validFrom, err := kernel.ParseDate(answer.Date[:dateLength])
 	if err != nil {
 		return domain.RateSet{}, fmt.Errorf("%w: %w", errMalformed, err)
 	}
@@ -150,7 +150,7 @@ func toPublishedAt(text string) (time.Time, error) {
 	published, err := time.ParseInLocation(
 		publishedLayout,
 		strings.TrimSuffix(text, "Z"),
-		domain.TbilisiZone(),
+		kernel.TbilisiZone(),
 	)
 	if err != nil {
 		return time.Time{}, fmt.Errorf("%w: publication instant %q: %w", errMalformed, text, err)

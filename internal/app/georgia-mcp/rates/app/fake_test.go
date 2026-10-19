@@ -18,17 +18,17 @@ const newestDate = "2026-10-17"
 // fakeSource answers like the NBG: a set for each day except Sunday from first to
 // newest, the newest set for a later date, and an empty set before first.
 type fakeSource struct {
-	first, newest domain.Date
+	first, newest kernel.Date
 	codes         []domain.CurrencyCode
-	override      func(date domain.Date) (domain.RateSet, bool)
+	override      func(date kernel.Date) (domain.RateSet, bool)
 
 	mu        sync.Mutex
-	requested []domain.Date
+	requested []kernel.Date
 }
 
 func (f *fakeSource) RateSet(
 	_ context.Context,
-	date domain.Date,
+	date kernel.Date,
 	_ kernel.Language,
 ) (app.RateSetResult, error) {
 	f.mu.Lock()
@@ -57,18 +57,18 @@ func (f *fakeSource) RateSet(
 	return app.RateSetResult{Set: setOf(valid, f.codes...)}, nil
 }
 
-func (f *fakeSource) dates() []domain.Date {
+func (f *fakeSource) dates() []kernel.Date {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	return append([]domain.Date(nil), f.requested...)
+	return append([]kernel.Date(nil), f.requested...)
 }
 
-func weekday(date domain.Date) time.Weekday {
+func weekday(date kernel.Date) time.Weekday {
 	return date.Time().Weekday()
 }
 
-func setOf(validFrom domain.Date, codes ...domain.CurrencyCode) domain.RateSet {
+func setOf(validFrom kernel.Date, codes ...domain.CurrencyCode) domain.RateSet {
 	rates := make([]domain.OfficialRate, 0, len(codes))
 
 	for _, code := range codes {
@@ -85,10 +85,10 @@ func setOf(validFrom domain.Date, codes ...domain.CurrencyCode) domain.RateSet {
 	return domain.NewRateSet(validFrom, time.Time{}, rates)
 }
 
-func mustDate(t *testing.T, value string) domain.Date {
+func mustDate(t *testing.T, value string) kernel.Date {
 	t.Helper()
 
-	date, err := domain.ParseDate(value)
+	date, err := kernel.ParseDate(value)
 	if err != nil {
 		t.Fatal(err)
 	}

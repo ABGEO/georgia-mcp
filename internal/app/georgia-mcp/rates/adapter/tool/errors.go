@@ -45,7 +45,7 @@ func invalidLanguage(text string, cause error) error {
 	}
 }
 
-func periodReversed(from, to domain.Date, cause error) error {
+func periodReversed(from, to kernel.Date, cause error) error {
 	return &mcpserver.ToolError{
 		Message: fmt.Sprintf("to: %s is before from %s.", to, from),
 		Cause:   cause,

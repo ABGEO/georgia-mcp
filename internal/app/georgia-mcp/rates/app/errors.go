@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
+	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
 // MaxHistoryDays is the longest period of a history, both ends included.
@@ -21,8 +22,8 @@ var (
 
 // NotPublishedError names the requested date and the valid date of the newest set.
 type NotPublishedError struct {
-	Requested domain.Date
-	Newest    domain.Date
+	Requested kernel.Date
+	Newest    kernel.Date
 }
 
 // Error returns the two dates.

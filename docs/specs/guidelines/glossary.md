@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-19
 ---
 
 # Glossary
@@ -53,3 +53,15 @@ define it. The identifier of a term is `GLO-<term>`.
 | TTC                | The Tbilisi Transport Company. It runs the buses, the metro, and the cable cars of Tbilisi.           |
 | lari               | The currency of Georgia. Code `GEL`.                                                                   |
 | language           | The language of a text that a source publishes: `ka` (Georgian) or `en` (English). See `MCP-007`.      |
+
+## Fuel
+
+| Term               | Meaning                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| fuel company       | A company that sells fuel at its own network of stations in Georgia, for example Wissol.              |
+| company code       | The short lowercase name of a fuel company in a request: `wissol`.                                     |
+| product            | One fuel that a fuel company sells under its own name: "Eko Premium".                                  |
+| grade              | The class of a product that every fuel company shares. `WISFUEL` 5.1 lists the grades and their units. |
+| standard price     | The price in lari of one unit of a product at a station with an attendant.                             |
+| self-service price | The price in lari of one unit of a product at a self-service station of the company.                   |
+| effective date     | The date from which a fuel company applies a price.                                                    |

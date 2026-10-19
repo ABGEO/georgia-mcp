@@ -177,3 +177,27 @@ func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
 		synctest.Wait()
 	})
 }
+
+// WISFUEL-SC-020: With no variable of fuel, Wissol is on, at 1 call each second and a
+// burst of 1.
+func TestLoadConfigGivesTheDefaultsOfWissol(t *testing.T) {
+	t.Chdir(t.TempDir())
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	wissol := cfg.Fuel.Wissol
+	if !wissol.Enabled {
+		t.Error("Wissol.Enabled = false, want true")
+	}
+
+	if got := wissol.BaseURL.String(); got != "https://api.wissol.ge" {
+		t.Errorf("Wissol.BaseURL = %q, want https://api.wissol.ge", got)
+	}
+
+	if http := wissol.HTTP; http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Wissol.HTTP = rate %v burst %d, want rate 1 burst 1", http.Rate, http.Burst)
+	}
+}

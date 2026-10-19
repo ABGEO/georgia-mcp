@@ -15,6 +15,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/buildinfo"
+	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 )
 
@@ -139,10 +140,10 @@ func rateOf(
 	return officialRate
 }
 
-func dateOf(t *testing.T, value string) domain.Date {
+func dateOf(t *testing.T, value string) kernel.Date {
 	t.Helper()
 
-	date, err := domain.ParseDate(value)
+	date, err := kernel.ParseDate(value)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -241,7 +242,7 @@ type ratesOutput struct {
 func setOf(t *testing.T, rates ...domain.OfficialRate) app.OfficialRates {
 	t.Helper()
 
-	published := time.Date(2026, 10, 16, 17, 1, 1, 982_000_000, domain.TbilisiZone())
+	published := time.Date(2026, 10, 16, 17, 1, 1, 982_000_000, kernel.TbilisiZone())
 
 	return app.OfficialRates{
 		Set:    domain.NewRateSet(dateOf(t, "2026-10-17"), published, rates),

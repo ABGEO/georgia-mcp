@@ -19,7 +19,7 @@ type RateSetResult struct {
 // OfficialRateSource reads the rate set in force on a date. For a date after the
 // newest set, it returns the newest set. Before the first set, it returns an empty set.
 type OfficialRateSource interface {
-	RateSet(ctx context.Context, date domain.Date, language kernel.Language) (RateSetResult, error)
+	RateSet(ctx context.Context, date kernel.Date, language kernel.Language) (RateSetResult, error)
 }
 
 // CommercialRatesResult holds the commercial rates of one bank for the requested

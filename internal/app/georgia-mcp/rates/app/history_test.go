@@ -49,7 +49,7 @@ func TestListStartsWithTheSetInForce(t *testing.T) {
 		t.Fatalf("first point = %v, want the set valid from 2026-10-03", got.Points)
 	}
 
-	seen := map[domain.Date]bool{}
+	seen := map[kernel.Date]bool{}
 
 	for i, point := range got.Points {
 		if seen[point.ValidFrom] {

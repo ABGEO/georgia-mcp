@@ -25,7 +25,7 @@ type countingSource struct {
 
 func (s *countingSource) RateSet(
 	_ context.Context,
-	date domain.Date,
+	date kernel.Date,
 	_ kernel.Language,
 ) (app.RateSetResult, error) {
 	s.calls.Add(1)
@@ -53,7 +53,7 @@ func newCache(t *testing.T, source app.OfficialRateSource) *cache.RateSetCache {
 func ask(
 	t *testing.T,
 	rateSets *cache.RateSetCache,
-	date domain.Date,
+	date kernel.Date,
 	language kernel.Language,
 ) app.RateSetResult {
 	t.Helper()
@@ -73,7 +73,7 @@ func TestRateSetReturnsAStaleSet(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		source := &countingSource{}
 		rateSets := newCache(t, source)
-		today := domain.Today(time.Now())
+		today := kernel.Today(time.Now())
 		readAt := time.Now()
 
 		ask(t, rateSets, today, kernel.LanguageEnglish)
@@ -101,7 +101,7 @@ func TestRateSetKeepsTheSetOfTodayFifteenMinutes(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		source := &countingSource{}
 		rateSets := newCache(t, source)
-		today := domain.Today(time.Now())
+		today := kernel.Today(time.Now())
 
 		for _, wait := range []time.Duration{0, 14 * time.Minute, 2 * time.Minute} {
 			time.Sleep(wait)
@@ -116,11 +116,11 @@ func TestRateSetKeepsTheSetOfTodayFifteenMinutes(t *testing.T) {
 
 type callCase struct {
 	name string
-	run  func(t *testing.T, rateSets *cache.RateSetCache, today domain.Date)
+	run  func(t *testing.T, rateSets *cache.RateSetCache, today kernel.Date)
 	want int32
 }
 
-func concurrentAsks(t *testing.T, rateSets *cache.RateSetCache, today domain.Date) {
+func concurrentAsks(t *testing.T, rateSets *cache.RateSetCache, today kernel.Date) {
 	t.Helper()
 
 	var wg sync.WaitGroup
@@ -131,14 +131,14 @@ func concurrentAsks(t *testing.T, rateSets *cache.RateSetCache, today domain.Dat
 	wg.Wait()
 }
 
-func pastDateAfter(wait time.Duration) func(*testing.T, *cache.RateSetCache, domain.Date) {
-	return func(t *testing.T, rateSets *cache.RateSetCache, today domain.Date) {
+func pastDateAfter(wait time.Duration) func(*testing.T, *cache.RateSetCache, kernel.Date) {
+	return func(t *testing.T, rateSets *cache.RateSetCache, today kernel.Date) {
 		t.Helper()
 		askTwice(t, rateSets, today.AddDays(-5), wait)
 	}
 }
 
-func twoLanguages(t *testing.T, rateSets *cache.RateSetCache, today domain.Date) {
+func twoLanguages(t *testing.T, rateSets *cache.RateSetCache, today kernel.Date) {
 	t.Helper()
 	ask(t, rateSets, today, kernel.LanguageEnglish)
 	ask(t, rateSets, today, kernel.LanguageGeorgian)
@@ -164,7 +164,7 @@ func TestRateSetLimitsTheCalls(t *testing.T) {
 				source := &countingSource{}
 				rateSets := newCache(t, source)
 
-				tt.run(t, rateSets, domain.Today(time.Now()))
+				tt.run(t, rateSets, kernel.Today(time.Now()))
 
 				if got := source.calls.Load(); got != tt.want {
 					t.Errorf("the source counted %d calls, want %d", got, tt.want)
@@ -174,7 +174,7 @@ func TestRateSetLimitsTheCalls(t *testing.T) {
 	}
 }
 
-func askTwice(t *testing.T, rateSets *cache.RateSetCache, date domain.Date, wait time.Duration) {
+func askTwice(t *testing.T, rateSets *cache.RateSetCache, date kernel.Date, wait time.Duration) {
 	t.Helper()
 
 	ask(t, rateSets, date, kernel.LanguageEnglish)
@@ -189,7 +189,7 @@ func TestRateSetDropsAPastSetAfterItsStaleAge(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		source := &countingSource{}
 		rateSets := newCache(t, source)
-		past := domain.Today(time.Now()).AddDays(-5)
+		past := kernel.Today(time.Now()).AddDays(-5)
 		readAt := time.Now()
 
 		ask(t, rateSets, past, kernel.LanguageEnglish)
