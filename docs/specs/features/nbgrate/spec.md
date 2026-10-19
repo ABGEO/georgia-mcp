@@ -4,7 +4,7 @@ title: The official exchange rates of the NBG
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-18
+updated: 2026-10-19
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -54,7 +54,7 @@ the scenarios.
 | `ARC-007`, `DOM-005`   | `adapter/nbg` converts the vendor shape. `domain` and `app` import no client.     |
 | `DOM-003`, `TST-009`   | `ParseCurrencyCode` and `ParseDate` validate, and each has a fuzz test.           |
 | `DOM-006`, `MCP-009`   | Every rate is a `decimal.Decimal`, and a string in the output.                    |
-| `DOM-007`              | `domain.Date` is a civil date in Tbilisi. `NBGRATE-DD-008`.                       |
+| `DOM-007`              | `kernel.Date` is a civil date in Tbilisi. `NBGRATE-DD-008`, `ADR-0002`.           |
 | `DOM-009`, `DOM-011`   | `app.OfficialRateSource` is the port. The adapter wraps `kernel.ErrSourceUnavailable`. |
 | `MCP-002` to `MCP-009` | 4.3 tools.                                                                        |
 | `CLT-002` to `CLT-011` | 4.1 `pkg/nbg`.                                                                    |
@@ -82,7 +82,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | Layer          | Path                          | Types and functions                                                    |
 | -------------- | ----------------------------- | ---------------------------------------------------------------------- |
 | Vendor client  | `pkg/nbg/`                    | `Client`, `New`, `Option`, `Language`, `RateSetsQuery`, `RateSet`, `Currency`, `RSS`, `RSSChannel`, `RSSItem`, `Code`, `APIError`, `ErrUnexpectedStatus`. |
-| Domain         | `R/domain/`                   | `CurrencyCode`, `Date`, `OfficialRate`, `RateSet`. 4.2.                |
+| Domain         | `R/domain/`                   | `CurrencyCode`, `OfficialRate`, `RateSet`. 4.2. `Date` is in `internal/pkg/kernel` (`ADR-0002`). |
 | Use case       | `R/app/`                      | `OfficialRateSource`, `GetOfficialRates`, `ListOfficialHistory`. 4.2.  |
 | Driven adapter | `R/adapter/nbg/`              | `Adapter`, `NewAdapter`.                                               |
 | Cache          | `R/adapter/cache/`            | `RateSetCache`, `New`.                                                 |
@@ -153,11 +153,8 @@ The adapter of the server calls `RateSets` with a date and no currencies (`NBGRA
 ### 4.2 Domain model
 
 ```go
-// domain
-type CurrencyCode string
-func ParseCurrencyCode(s string) (CurrencyCode, error) // three letters, any case, stored upper case
-
-type Date struct{ /* t time.Time: midnight in Tbilisi */ }
+// kernel (ADR-0002)
+type Date struct{ /* year, month, day: a civil date in Tbilisi */ }
 func ParseDate(s string) (Date, error)       // YYYY-MM-DD, a real calendar date
 func Today(now time.Time) Date               // the Tbilisi date of now
 func (d Date) AddDays(n int) Date
@@ -165,6 +162,10 @@ func (d Date) Before(o Date) bool
 func (d Date) After(o Date) bool
 func (d Date) String() string                // YYYY-MM-DD
 func DaysBetween(from, to Date) int          // to minus from, in days
+
+// domain
+type CurrencyCode string
+func ParseCurrencyCode(s string) (CurrencyCode, error) // three letters, any case, stored upper case
 
 type OfficialRate struct {
     Currency CurrencyCode
@@ -177,7 +178,7 @@ func NewOfficialRate(code CurrencyCode, name string, quantity int64, rate, chang
 func (r OfficialRate) RatePerUnit() decimal.Decimal // Rate.Shift(-log10(Quantity))
 
 type RateSet struct {
-    ValidFrom   Date
+    ValidFrom   kernel.Date
     PublishedAt time.Time      // in Tbilisi
     Rates       []OfficialRate // sorted by Currency
 }
@@ -185,7 +186,7 @@ func (s RateSet) Empty() bool
 func (s RateSet) Find(code CurrencyCode) (OfficialRate, bool)
 ```
 
-Errors in `domain/errors.go`: `ErrInvalidCurrencyCode`, `ErrInvalidDate`, `ErrInvalidQuantity`.
+Errors in `domain/errors.go`: `ErrInvalidCurrencyCode`, `ErrInvalidQuantity`. `ErrInvalidDate` is in `kernel/errors.go`.
 
 ```go
 // app
@@ -196,12 +197,12 @@ type RateSetResult struct {
 }
 
 type OfficialRateSource interface {
-    RateSet(ctx context.Context, date domain.Date, language kernel.Language) (RateSetResult, error)
+    RateSet(ctx context.Context, date kernel.Date, language kernel.Language) (RateSetResult, error)
 }
 
 type OfficialRatesQuery struct {
     Currencies []domain.CurrencyCode // empty: every currency
-    Date       *domain.Date          // nil: today in Tbilisi
+    Date       *kernel.Date          // nil: today in Tbilisi
     Language   kernel.Language
 }
 
@@ -212,7 +213,7 @@ type OfficialRates struct {
 
 type OfficialHistoryQuery struct {
     Currency domain.CurrencyCode
-    From, To domain.Date
+    From, To kernel.Date
     Language kernel.Language
 }
 
@@ -224,7 +225,7 @@ type OfficialHistory struct {
 }
 
 type HistoryPoint struct {
-    ValidFrom   domain.Date
+    ValidFrom   kernel.Date
     PublishedAt time.Time
     Rate        domain.OfficialRate
 }
@@ -365,7 +366,7 @@ keeps one point for each distinct `ValidFrom`, and drops a set without the curre
 | ------------------------------------------ | ------------------------------- | ---------------------------------------------------------------------------- |
 | A code that is not three letters           | `domain.ErrInvalidCurrencyCode` | `currencies: "US" is not a currency code. Use three letters, for example USD.` |
 | More than 50 codes                         | none, in the tool               | `currencies: 51 codes. Ask for 50 or fewer, or for none to get every currency.` |
-| A date that is not `YYYY-MM-DD`            | `domain.ErrInvalidDate`         | `date: "2026-13-45" is not a date. Use YYYY-MM-DD.`                          |
+| A date that is not `YYYY-MM-DD`            | `kernel.ErrInvalidDate`         | `date: "2026-13-45" is not a date. Use YYYY-MM-DD.`                          |
 | A language other than `en` and `ka`        | `kernel.ErrUnknownLanguage`     | `language: "de" is not a language of the NBG. Use en or ka.`                 |
 | A date after the newest set                | `app.ErrNotPublished`           | `The NBG has not published rates for 2026-10-25. The newest set is valid from 2026-10-17.` |
 | A period longer than 31 days               | `app.ErrPeriodTooLong`          | `to: the period has 40 days. The longest period is 31 days.`                 |
