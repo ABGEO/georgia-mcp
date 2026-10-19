@@ -10,18 +10,21 @@ import (
 
 	fuelcache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/cache"
 	rompetroladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/rompetrol"
+	socaradapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/socar"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/tool"
 	wissoladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/wissol"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	rompetrolclient "github.com/abgeo/georgia-mcp/pkg/rompetrol"
+	socarclient "github.com/abgeo/georgia-mcp/pkg/socar"
 	wissolclient "github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
 const (
 	wissolSwitchVariable    = "GEOMCP_FUEL_WISSOL_ENABLED"
 	rompetrolSwitchVariable = "GEOMCP_FUEL_ROMPETROL_ENABLED"
+	socarSwitchVariable     = "GEOMCP_FUEL_SOCAR_ENABLED"
 )
 
 // Module holds the use case of the context and the cache of each fuel company.
@@ -63,6 +66,17 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		companies = append(companies, rompetrol)
 	} else {
 		logger.Info("Rompetrol is off", slog.String("variable", rompetrolSwitchVariable))
+	}
+
+	if cfg.SOCAR.Enabled {
+		socar, err := socarSource(cfg.SOCAR, logger, now)
+		if err != nil {
+			return nil, err
+		}
+
+		companies = append(companies, socar)
+	} else {
+		logger.Info("SOCAR is off", slog.String("variable", socarSwitchVariable))
 	}
 
 	sources := make([]app.PriceSource, 0, len(companies))
@@ -109,6 +123,24 @@ func rompetrolSource(
 	}
 
 	return rompetrol, nil
+}
+
+func socarSource(
+	cfg SOCARConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := socarclient.New(
+		socarclient.WithBaseURL(cfg.BaseURL.String()),
+		socarclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	socar, err := fuelcache.New(socaradapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of SOCAR: %w", err)
+	}
+
+	return socar, nil
 }
 
 // Register adds the tool of the context. The tool needs one fuel company or more.

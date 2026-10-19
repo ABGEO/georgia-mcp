@@ -14,7 +14,7 @@ const (
 	wissol          = "wissol"
 	regular         = "Euro Regular"
 	regularGeorgian = "ევრო რეგულარი"
-	lpg             = "lpg"
+	kerosene        = "kerosene"
 )
 
 // WISFUEL-SC-004: A company code has lower case letters only, 2 to 16 of them.
@@ -82,7 +82,7 @@ func TestParseGrade(t *testing.T) {
 		{input: "cng", want: domain.GradeCNG, wantUnit: domain.UnitCubicMetre},
 		{input: "super_100", want: domain.GradeSuper100, wantUnit: domain.UnitLitre},
 		{input: "Diesel", wantErr: domain.ErrInvalidGrade},
-		{input: lpg, wantErr: domain.ErrInvalidGrade},
+		{input: kerosene, wantErr: domain.ErrInvalidGrade},
 		{input: "", wantErr: domain.ErrInvalidGrade},
 	}
 
@@ -107,7 +107,7 @@ func TestParseGrade(t *testing.T) {
 
 // WISFUEL-SC-005: No input panics, and every accepted grade is in the list of grades.
 func FuzzParseGrade(f *testing.F) {
-	for _, seed := range []string{"diesel", "cng", "super_100", "Diesel", lpg, ""} {
+	for _, seed := range []string{"diesel", "cng", "super_100", "Diesel", kerosene, ""} {
 		f.Add(seed)
 	}
 
@@ -123,13 +123,27 @@ func FuzzParseGrade(f *testing.F) {
 	})
 }
 
-// WISFUEL-SC-005: The list of grades has the order of the requirements.
+// SOCFUEL-SC-004: The grade lpg is the exact lower case value, for one litre.
+func TestParseGradeOfLPG(t *testing.T) {
+	t.Parallel()
+
+	got, err := domain.ParseGrade("lpg")
+	if err != nil || got != domain.GradeLPG || got.Unit() != domain.UnitLitre {
+		t.Errorf("ParseGrade(lpg) = %q (%q), %v, want lpg (litre)", got, got.Unit(), err)
+	}
+
+	if _, err := domain.ParseGrade("LPG"); !errors.Is(err, domain.ErrInvalidGrade) {
+		t.Errorf("ParseGrade(LPG) error = %v, want ErrInvalidGrade", err)
+	}
+}
+
+// WISFUEL-SC-005, SOCFUEL-SC-004: The list of grades has the order of the requirements.
 func TestGrades(t *testing.T) {
 	t.Parallel()
 
 	want := []domain.Grade{
 		domain.GradeRegular, domain.GradePremium, domain.GradeSuper, domain.GradeSuper100,
-		domain.GradeDiesel, domain.GradeCNG, domain.GradeOther,
+		domain.GradeDiesel, domain.GradeCNG, domain.GradeLPG, domain.GradeOther,
 	}
 
 	got := domain.Grades()
@@ -219,7 +233,7 @@ func TestNewProductPriceRefusesAnIncompleteProduct(t *testing.T) {
 	}{
 		{name: "no code", product: name, grade: domain.GradeRegular, effective: effective},
 		{name: "no name", code: "05", grade: domain.GradeRegular, effective: effective},
-		{name: "unknown grade", code: "05", product: name, grade: lpg, effective: effective},
+		{name: "unknown grade", code: "05", product: name, grade: kerosene, effective: effective},
 	}
 
 	for _, tt := range tests {

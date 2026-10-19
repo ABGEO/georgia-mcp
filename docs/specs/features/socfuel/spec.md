@@ -298,12 +298,12 @@ in a comparison of a model.
 
 | #   | Step                                                                          | Realizes                            | Done |
 | --- | ----------------------------------------------------------------------------- | ----------------------------------- | ---- |
-| 1   | `pkg/socar` module, recorded answers, README, example. `go.work`.             | `SOCFUEL-FR-001`, `SOCFUEL-FR-007`  | [ ]  |
-| 2   | `domain`: `GradeLPG`. The tests of `WISFUEL-SC-005` and `WISFUEL-SC-018` with `kerosene`. | `SOCFUEL-FR-004`                    | [ ]  |
-| 3   | `adapter/socar`.                                                              | `SOCFUEL-FR-001` to `SOCFUEL-FR-003`, `SOCFUEL-FR-005` to `SOCFUEL-FR-007` | [ ]  |
-| 4   | `adapter/tool`: the tag of `grades`.                                          | `SOCFUEL-FR-004`                    | [ ]  |
-| 5   | `module.go`, `config.go`, `configs/.env.example`.                             | `SOCFUEL-FR-008`                    | [ ]  |
-| 6   | Move the terms of requirements 5 to the glossary.                             | `DOM-002`                           | [ ]  |
+| 1   | `pkg/socar` module, recorded answers, README, example. `go.work`.             | `SOCFUEL-FR-001`, `SOCFUEL-FR-007`  | [x]  |
+| 2   | `domain`: `GradeLPG`. The tests of `WISFUEL-SC-005` and `WISFUEL-SC-018` with `kerosene`. | `SOCFUEL-FR-004`                    | [x]  |
+| 3   | `adapter/socar`.                                                              | `SOCFUEL-FR-001` to `SOCFUEL-FR-003`, `SOCFUEL-FR-005` to `SOCFUEL-FR-007` | [x]  |
+| 4   | `adapter/tool`: the tag of `grades`.                                          | `SOCFUEL-FR-004`                    | [x]  |
+| 5   | `module.go`, `config.go`, `configs/.env.example`.                             | `SOCFUEL-FR-008`                    | [x]  |
+| 6   | Move the terms of requirements 5 to the glossary.                             | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

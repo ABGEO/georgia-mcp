@@ -225,3 +225,27 @@ func TestLoadConfigGivesTheDefaultsOfRompetrol(t *testing.T) {
 		t.Errorf("Rompetrol.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
 	}
 }
+
+// SOCFUEL-SC-014: With no variable of fuel, SOCAR is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
+	t.Chdir(t.TempDir())w
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	socar := cfg.Fuel.SOCAR
+	if !socar.Enabled {
+		t.Error("SOCAR.Enabled = false, want true")
+	}
+
+	if got := socar.BaseURL.String(); got != "https://sgp.ge/sgp-backend/api" {
+		t.Errorf("SOCAR.BaseURL = %q, want https://sgp.ge/sgp-backend/api", got)
+	}
+
+	if http := socar.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("SOCAR.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}

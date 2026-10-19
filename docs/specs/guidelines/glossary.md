@@ -62,8 +62,10 @@ define it. The identifier of a term is `GLO-<term>`.
 | fuel company       | A company that sells fuel at its own network of stations in Georgia, for example Wissol.              |
 | company code       | The short lowercase name of a fuel company in a request: `wissol`.                                     |
 | product            | One fuel that a fuel company sells under its own name: "Eko Premium".                                  |
-| grade              | The class of a product that every fuel company shares. `WISFUEL` 5.1 lists the grades and their units. |
+| grade              | The class of a product that every fuel company shares. `WISFUEL` 5.1 lists the grades and their units. `SOCFUEL` 5 adds `lpg`. |
 | standard price     | The price in lari of one unit of a product at a station with an attendant.                             |
 | self-service price | The price in lari of one unit of a product at a self-service station of the company.                   |
 | effective date     | The date from which a fuel company applies a price.                                                    |
 | Rompetrol          | A fuel company of Georgia. Company code `rompetrol`.                                                   |
+| SOCAR              | SOCAR Georgia Petroleum, a fuel company of Georgia. Company code `socar`.                              |
+| `lpg`              | The grade of liquefied petroleum gas. Its unit is the litre.                                           |

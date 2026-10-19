@@ -21,6 +21,8 @@ const (
 	GradeDiesel Grade = "diesel"
 	// GradeCNG is compressed natural gas.
 	GradeCNG Grade = "cng"
+	// GradeLPG is liquefied petroleum gas.
+	GradeLPG Grade = "lpg"
 	// GradeOther is a product that the server cannot classify.
 	GradeOther Grade = "other"
 )
@@ -38,7 +40,14 @@ const (
 // Grades returns every grade, from the petrol of the lowest octane number to other.
 func Grades() []Grade {
 	return []Grade{
-		GradeRegular, GradePremium, GradeSuper, GradeSuper100, GradeDiesel, GradeCNG, GradeOther,
+		GradeRegular,
+		GradePremium,
+		GradeSuper,
+		GradeSuper100,
+		GradeDiesel,
+		GradeCNG,
+		GradeLPG,
+		GradeOther,
 	}
 }
 

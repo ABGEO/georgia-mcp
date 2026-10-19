@@ -1,7 +1,7 @@
 package tool
 
 type getPricesInput struct {
-	Grades    []string `json:"grades,omitempty"    jsonschema:"Grades: regular, premium, super, super_100, diesel, cng, other. Empty asks every grade."`
+	Grades    []string `json:"grades,omitempty"    jsonschema:"Grades: regular, premium, super, super_100, diesel, cng, lpg, other. Empty asks every grade."`
 	Companies []string `json:"companies,omitempty" jsonschema:"Fuel company codes. Empty asks every company. The description of the tool lists the codes."`
 	Language  string   `json:"language,omitempty"  jsonschema:"The language of the product names: ka or en. The default is en."`
 }

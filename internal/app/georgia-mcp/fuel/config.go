@@ -12,6 +12,7 @@ import (
 type Config struct {
 	Wissol    WissolConfig    `envPrefix:"WISSOL_"`
 	Rompetrol RompetrolConfig `envPrefix:"ROMPETROL_"`
+	SOCAR     SOCARConfig     `envPrefix:"SOCAR_"`
 }
 
 // WissolConfig is the configuration of the calls to Wissol. Wissol needs no key, so
@@ -24,11 +25,7 @@ type WissolConfig struct {
 
 // Validate checks the address.
 func (c WissolConfig) Validate() error {
-	if (c.BaseURL.Scheme != "https" && c.BaseURL.Scheme != "http") || c.BaseURL.Host == "" {
-		return &config.FieldError{Field: "BaseURL", Problem: "must be an http or https URL"}
-	}
-
-	return nil
+	return validateBaseURL(c.BaseURL)
 }
 
 // WissolHTTPConfig holds the fields of httpclient.Config with the defaults of Wissol: 1
@@ -55,11 +52,7 @@ type RompetrolConfig struct {
 
 // Validate checks the address.
 func (c RompetrolConfig) Validate() error {
-	if (c.BaseURL.Scheme != "https" && c.BaseURL.Scheme != "http") || c.BaseURL.Host == "" {
-		return &config.FieldError{Field: "BaseURL", Problem: "must be an http or https URL"}
-	}
-
-	return nil
+	return validateBaseURL(c.BaseURL)
 }
 
 // RompetrolHTTPConfig holds the fields of httpclient.Config with the defaults of
@@ -74,4 +67,38 @@ type RompetrolHTTPConfig struct {
 // Validate checks each value as httpclient.Config does.
 func (c RompetrolHTTPConfig) Validate() error {
 	return httpclient.Config(c).Validate()
+}
+
+// SOCARConfig is the configuration of the calls to SOCAR. SOCAR needs no key, so Enabled
+// turns it off. A Config built in Go leaves SOCAR off.
+type SOCARConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
+	BaseURL url.URL `env:"BASE_URL" envDefault:"https://sgp.ge/sgp-backend/api"`
+	HTTP    SOCARHTTPConfig
+}
+
+// Validate checks the address.
+func (c SOCARConfig) Validate() error {
+	return validateBaseURL(c.BaseURL)
+}
+
+// SOCARHTTPConfig holds the fields of httpclient.Config with the defaults of SOCAR: 1 call
+// each second. SOCAR publishes no limit, and the cache sends about 2 calls in an hour.
+type SOCARHTTPConfig struct {
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
+	Rate    float64       `env:"RATE"    envDefault:"1"`
+	Burst   int           `env:"BURST"   envDefault:"1"`
+}
+
+// Validate checks each value as httpclient.Config does.
+func (c SOCARHTTPConfig) Validate() error {
+	return httpclient.Config(c).Validate()
+}
+
+func validateBaseURL(base url.URL) error {
+	if (base.Scheme != "https" && base.Scheme != "http") || base.Host == "" {
+		return &config.FieldError{Field: "BaseURL", Problem: "must be an http or https URL"}
+	}
+
+	return nil
 }

@@ -99,9 +99,9 @@ func TestGetPricesNamesTheAcceptedValues(t *testing.T) {
 	}{
 		{
 			name: "unknown grade",
-			args: map[string]any{"grades": []string{"lpg"}},
-			want: `grades: "lpg" is not a grade. ` +
-				"Use one of: regular, premium, super, super_100, diesel, cng, other.",
+			args: map[string]any{"grades": []string{"kerosene"}},
+			want: `grades: "kerosene" is not a grade. ` +
+				"Use one of: regular, premium, super, super_100, diesel, cng, lpg, other.",
 		},
 		{
 			name: "unknown company",
@@ -216,4 +216,17 @@ func pricesOf(t *testing.T, session *mcp.ClientSession) ([]byte, []map[string]an
 	}
 
 	return raw, prices
+}
+
+// SOCFUEL-SC-011: The grade LPG is not a grade, and the message lists lpg.
+func TestGetPricesRefusesAnUpperCaseGrade(t *testing.T) {
+	t.Parallel()
+
+	got := errorText(t, connect(t, fakePrices{}), map[string]any{"grades": []string{"LPG"}})
+
+	want := `grades: "LPG" is not a grade. ` +
+		"Use one of: regular, premium, super, super_100, diesel, cng, lpg, other."
+	if got != want {
+		t.Errorf("message = %q, want %q", got, want)
+	}
 }

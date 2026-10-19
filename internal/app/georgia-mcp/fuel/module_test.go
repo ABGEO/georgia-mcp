@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"sync"
 	"testing"
@@ -32,6 +33,8 @@ const (
 	gradeReg      = "regular"
 	wissolCode    = "wissol"
 	rompetrolCode = "rompetrol"
+	socarCode     = "socar"
+	gradeLPG      = "lpg"
 )
 
 type priceOutput struct {
@@ -49,6 +52,7 @@ type companyOutput struct {
 	AsOf    string        `json:"as_of"`
 	Stale   bool          `json:"stale"`
 	Prices  []priceOutput `json:"prices"`
+	Missing []string      `json:"missing"`
 }
 
 type pricesOutput struct {
@@ -549,6 +553,159 @@ func TestRompetrolOff(t *testing.T) {
 
 	text, ok := result.Content[0].(*mcp.TextContent)
 	if !ok || !strings.Contains(text.Text, `"rompetrol" is not a fuel company of this server`) {
+		t.Errorf("result = %+v, want the error of an unknown company", result.Content)
+	}
+}
+
+// socarConfig points SOCAR at a server that answers with a status and a recorded body.
+func socarConfig(t *testing.T, enabled bool, answer string, status int) fuel.SOCARConfig {
+	t.Helper()
+
+	path := filepath.Join("../../../../pkg/socar/testdata", answer)
+
+	body, err := os.ReadFile(path) //nolint:gosec // The path names a file of testdata.
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(status)
+		_, _ = w.Write(body)
+	}))
+	t.Cleanup(server.Close)
+
+	base, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return fuel.SOCARConfig{
+		Enabled: enabled,
+		BaseURL: *base,
+		HTTP:    fuel.SOCARHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
+	}
+}
+
+func threeCompanies(t *testing.T) fuel.Config {
+	t.Helper()
+
+	cfg := bothCompanies(t, "home.html")
+	cfg.SOCAR = socarConfig(t, true, "current-prices.json", http.StatusOK)
+
+	return cfg
+}
+
+// SOCFUEL-SC-009: The grade lpg gives LPG of SOCAR, and names lpg as missing at the
+// other companies.
+func TestGetPricesOfLPG(t *testing.T) {
+	t.Parallel()
+
+	session := serve(t, threeCompanies(t), slog.New(slog.DiscardHandler))
+
+	out := decode(t, call(t, session, map[string]any{"grades": []string{gradeLPG}}))
+
+	if len(out.Companies) != 3 {
+		t.Fatalf("companies = %+v, want 3", out.Companies)
+	}
+
+	for _, company := range out.Companies {
+		if company.Company != socarCode {
+			if len(company.Prices) != 0 || !slices.Equal(company.Missing, []string{gradeLPG}) {
+				t.Errorf("%s = %+v, want no price and lpg missing", company.Company, company)
+			}
+
+			continue
+		}
+
+		want := []priceOutput{{Product: "LPG", Grade: gradeLPG, Unit: litre, Price: "2.09"}}
+		if diff := cmp.Diff(want, company.Prices); diff != "" {
+			t.Errorf("prices of SOCAR (-want +got):\n%s", diff)
+		}
+	}
+}
+
+// SOCFUEL-SC-010: The description lists lpg and SOCAR with no effective date, and the
+// schema of grades names lpg.
+func TestTheToolListsLPGAndSOCAR(t *testing.T) {
+	t.Parallel()
+
+	session := serve(t, threeCompanies(t), slog.New(slog.DiscardHandler))
+
+	list, err := session.ListTools(t.Context(), nil)
+	if err != nil {
+		t.Fatalf("ListTools() error = %v", err)
+	}
+
+	tool := list.Tools[0]
+
+	for _, want := range []string{
+		"lpg (litre)",
+		"rompetrol (Rompetrol, publishes no effective date), " +
+			"socar (SOCAR, publishes no effective date), wissol (Wissol)",
+	} {
+		if !strings.Contains(tool.Description, want) {
+			t.Errorf("description = %q, want it to hold %q", tool.Description, want)
+		}
+	}
+
+	schema, err := json.Marshal(tool.InputSchema)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !strings.Contains(string(schema), "cng, lpg, other") {
+		t.Errorf("the input schema does not name lpg: %s", schema)
+	}
+}
+
+// SOCFUEL-SC-012: An error of SOCAR makes SOCAR unavailable, and the answer holds Wissol.
+func TestGetPricesWithAnErrorOfSOCAR(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.SOCAR = socarConfig(t, true, "error.json", http.StatusBadRequest)
+
+	result := call(t, serve(t, cfg, slog.New(slog.DiscardHandler)), map[string]any{})
+	out := decode(t, result)
+
+	if len(out.Companies) != 1 || out.Companies[0].Company != wissolCode {
+		t.Errorf("companies = %+v, want wissol only", out.Companies)
+	}
+
+	raw, err := json.Marshal(result.StructuredContent)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !strings.Contains(string(raw), `"unavailable":[{"company":"socar","source":"SOCAR"}]`) {
+		t.Errorf("the answer does not name SOCAR as unavailable: %s", raw)
+	}
+}
+
+// SOCFUEL-SC-015: SOCAR off logs the variable, and a request for it is a tool error.
+func TestSOCAROff(t *testing.T) {
+	t.Parallel()
+
+	sink := &syncBuffer{}
+	logger := slog.New(slog.NewJSONHandler(sink, &slog.HandlerOptions{Level: slog.LevelDebug}))
+
+	cfg := wissolConfig(t, true)
+	cfg.SOCAR = socarConfig(t, false, "current-prices.json", http.StatusOK)
+
+	session := serve(t, cfg, logger)
+
+	if !strings.Contains(sink.String(), `"msg":"SOCAR is off"`) ||
+		!strings.Contains(sink.String(), `"variable":"GEOMCP_FUEL_SOCAR_ENABLED"`) {
+		t.Errorf("the log lacks the record of SOCAR off:\n%s", sink)
+	}
+
+	result := call(t, session, map[string]any{"companies": []string{socarCode}})
+	if !result.IsError {
+		t.Fatalf("result = %+v, want a tool error", result.StructuredContent)
+	}
+
+	text, ok := result.Content[0].(*mcp.TextContent)
+	if !ok || !strings.Contains(text.Text, `"socar" is not a fuel company of this server`) {
 		t.Errorf("result = %+v, want the error of an unknown company", result.Content)
 	}
 }
