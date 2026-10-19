@@ -10,7 +10,8 @@ import (
 
 // Config is the configuration of the fuel context.
 type Config struct {
-	Wissol WissolConfig `envPrefix:"WISSOL_"`
+	Wissol    WissolConfig    `envPrefix:"WISSOL_"`
+	Rompetrol RompetrolConfig `envPrefix:"ROMPETROL_"`
 }
 
 // WissolConfig is the configuration of the calls to Wissol. Wissol needs no key, so
@@ -41,5 +42,36 @@ type WissolHTTPConfig struct {
 
 // Validate checks each value as httpclient.Config does.
 func (c WissolHTTPConfig) Validate() error {
+	return httpclient.Config(c).Validate()
+}
+
+// RompetrolConfig is the configuration of the reads of the page of Rompetrol. Rompetrol
+// needs no key, so Enabled turns it off. A Config built in Go leaves Rompetrol off.
+type RompetrolConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
+	BaseURL url.URL `env:"BASE_URL" envDefault:"https://www.rompetrol.ge"`
+	HTTP    RompetrolHTTPConfig
+}
+
+// Validate checks the address.
+func (c RompetrolConfig) Validate() error {
+	if (c.BaseURL.Scheme != "https" && c.BaseURL.Scheme != "http") || c.BaseURL.Host == "" {
+		return &config.FieldError{Field: "BaseURL", Problem: "must be an http or https URL"}
+	}
+
+	return nil
+}
+
+// RompetrolHTTPConfig holds the fields of httpclient.Config with the defaults of
+// Rompetrol: 1 call each second. Rompetrol publishes no limit, and the cache sends about
+// 2 calls in an hour.
+type RompetrolHTTPConfig struct {
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
+	Rate    float64       `env:"RATE"    envDefault:"1"`
+	Burst   int           `env:"BURST"   envDefault:"1"`
+}
+
+// Validate checks each value as httpclient.Config does.
+func (c RompetrolHTTPConfig) Validate() error {
 	return httpclient.Config(c).Validate()
 }

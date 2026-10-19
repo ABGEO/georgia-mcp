@@ -31,7 +31,8 @@ func (n ProductName) In(language kernel.Language) string {
 
 // ProductPrice is the price in lari of one unit of a product of a fuel company.
 // Standard is the price at a station with an attendant. SelfService is the price at
-// a self-service station, valid only when the company publishes one.
+// a self-service station, valid only when the company publishes one. EffectiveDate is
+// the zero date when the company publishes no date.
 type ProductPrice struct {
 	Code          string
 	Name          ProductName
@@ -42,8 +43,8 @@ type ProductPrice struct {
 }
 
 // NewProductPrice returns the price of a product. It needs a code, a name, a known
-// grade, a date, a standard price more than zero, and a self-service price more than
-// zero when it is valid.
+// grade, a standard price more than zero, and a self-service price more than zero
+// when it is valid. The date is the zero date when the company publishes none.
 func NewProductPrice(
 	code string,
 	name ProductName,
@@ -61,8 +62,6 @@ func NewProductPrice(
 		return ProductPrice{}, fmt.Errorf("%w: no code", ErrInvalidProductPrice)
 	case name.Georgian == "" && name.English == "":
 		return ProductPrice{}, fmt.Errorf("%w: %q has no name", ErrInvalidProductPrice, code)
-	case effective.IsZero():
-		return ProductPrice{}, fmt.Errorf("%w: %q has no date", ErrInvalidProductPrice, code)
 	case !standard.IsPositive():
 		return ProductPrice{}, fmt.Errorf(
 			"%w: %q standard %s", ErrInvalidProductPrice, code, standard,

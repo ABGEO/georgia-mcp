@@ -66,3 +66,4 @@ define it. The identifier of a term is `GLO-<term>`.
 | standard price     | The price in lari of one unit of a product at a station with an attendant.                             |
 | self-service price | The price in lari of one unit of a product at a self-service station of the company.                   |
 | effective date     | The date from which a fuel company applies a price.                                                    |
+| Rompetrol          | A fuel company of Georgia. Company code `rompetrol`.                                                   |

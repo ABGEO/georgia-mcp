@@ -198,7 +198,7 @@ func TestNewProductPrice(t *testing.T) {
 	}
 }
 
-// WISFUEL-SC-006: A product price needs a code, a name, a known grade, and a date.
+// WISFUEL-SC-006: A product price needs a code, a name, and a known grade.
 func TestNewProductPriceRefusesAnIncompleteProduct(t *testing.T) {
 	t.Parallel()
 
@@ -220,7 +220,6 @@ func TestNewProductPriceRefusesAnIncompleteProduct(t *testing.T) {
 		{name: "no code", product: name, grade: domain.GradeRegular, effective: effective},
 		{name: "no name", code: "05", grade: domain.GradeRegular, effective: effective},
 		{name: "unknown grade", code: "05", product: name, grade: lpg, effective: effective},
-		{name: "no date", code: "05", product: name, grade: domain.GradeRegular},
 	}
 
 	for _, tt := range tests {
@@ -232,6 +231,47 @@ func TestNewProductPriceRefusesAnIncompleteProduct(t *testing.T) {
 			)
 			if !errors.Is(err, domain.ErrInvalidProductPrice) {
 				t.Errorf("NewProductPrice() error = %v, want ErrInvalidProductPrice", err)
+			}
+		})
+	}
+}
+
+// ROMFUEL-SC-005: A product price takes a date, or the zero date of a company that
+// publishes none.
+func TestNewProductPriceTakesTheZeroDate(t *testing.T) {
+	t.Parallel()
+
+	effective, err := kernel.ParseDate("2026-10-08")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tests := []struct {
+		name      string
+		effective kernel.Date
+	}{
+		{name: "a date", effective: effective},
+		{name: "the zero date", effective: kernel.Date{}},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := domain.NewProductPrice(
+				"efix_super",
+				domain.ProductName{Georgian: "efix სუპერი"},
+				domain.GradeSuper,
+				decimal.RequireFromString("4.65"),
+				decimal.NullDecimal{},
+				tt.effective,
+			)
+			if err != nil {
+				t.Fatalf("NewProductPrice() error = %v", err)
+			}
+
+			if got.EffectiveDate != tt.effective {
+				t.Errorf("EffectiveDate = %v, want %v", got.EffectiveDate, tt.effective)
 			}
 		})
 	}

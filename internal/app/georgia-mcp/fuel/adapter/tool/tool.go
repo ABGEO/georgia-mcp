@@ -135,11 +135,14 @@ func toOutput(prices app.Prices, language kernel.Language) pricesOutput {
 
 func toPriceOutput(price domain.ProductPrice, language kernel.Language) priceOutput {
 	out := priceOutput{
-		Product:       price.Name.In(language),
-		Grade:         string(price.Grade),
-		Unit:          string(price.Grade.Unit()),
-		Price:         exact(price.Standard),
-		EffectiveDate: price.EffectiveDate.String(),
+		Product: price.Name.In(language),
+		Grade:   string(price.Grade),
+		Unit:    string(price.Grade.Unit()),
+		Price:   exact(price.Standard),
+	}
+
+	if !price.EffectiveDate.IsZero() {
+		out.EffectiveDate = price.EffectiveDate.String()
 	}
 
 	if price.SelfService.Valid {
@@ -159,10 +162,17 @@ func gradeUnits() string {
 	return strings.Join(entries, ", ")
 }
 
+// companyList lists each company with its name, and tells which one publishes no
+// effective date: "rompetrol (Rompetrol, publishes no effective date), wissol (Wissol)".
 func companyList(companies []domain.Company) string {
 	entries := make([]string, 0, len(companies))
 	for _, company := range companies {
-		entries = append(entries, fmt.Sprintf("%s (%s)", company.Code, company.Name))
+		note := ""
+		if !company.PublishesEffectiveDate {
+			note = ", publishes no effective date"
+		}
+
+		entries = append(entries, fmt.Sprintf("%s (%s%s)", company.Code, company.Name, note))
 	}
 
 	return strings.Join(entries, ", ")

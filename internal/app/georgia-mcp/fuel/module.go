@@ -9,15 +9,20 @@ import (
 	"time"
 
 	fuelcache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/cache"
+	rompetroladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/rompetrol"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/tool"
 	wissoladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/wissol"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	rompetrolclient "github.com/abgeo/georgia-mcp/pkg/rompetrol"
 	wissolclient "github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
-const wissolSwitchVariable = "GEOMCP_FUEL_WISSOL_ENABLED"
+const (
+	wissolSwitchVariable    = "GEOMCP_FUEL_WISSOL_ENABLED"
+	rompetrolSwitchVariable = "GEOMCP_FUEL_ROMPETROL_ENABLED"
+)
 
 // Module holds the use case of the context and the cache of each fuel company.
 type Module struct {
@@ -49,6 +54,17 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		logger.Info("Wissol is off", slog.String("variable", wissolSwitchVariable))
 	}
 
+	if cfg.Rompetrol.Enabled {
+		rompetrol, err := rompetrolSource(cfg.Rompetrol, logger, now)
+		if err != nil {
+			return nil, err
+		}
+
+		companies = append(companies, rompetrol)
+	} else {
+		logger.Info("Rompetrol is off", slog.String("variable", rompetrolSwitchVariable))
+	}
+
 	sources := make([]app.PriceSource, 0, len(companies))
 	for _, company := range companies {
 		sources = append(sources, company)
@@ -75,6 +91,24 @@ func wissolSource(
 	}
 
 	return wissol, nil
+}
+
+func rompetrolSource(
+	cfg RompetrolConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := rompetrolclient.New(
+		rompetrolclient.WithBaseURL(cfg.BaseURL.String()),
+		rompetrolclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	rompetrol, err := fuelcache.New(rompetroladapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Rompetrol: %w", err)
+	}
+
+	return rompetrol, nil
 }
 
 // Register adds the tool of the context. The tool needs one fuel company or more.

@@ -237,3 +237,15 @@ func TestPricesReportsAFailure(t *testing.T) {
 		})
 	}
 }
+
+// ROMFUEL-SC-009: Wissol publishes an effective date.
+func TestCompany(t *testing.T) {
+	t.Parallel()
+
+	got := adapterFor(t, "", http.StatusOK, &syncBuffer{}).Company()
+
+	want := domain.Company{Code: "wissol", Name: "Wissol", PublishesEffectiveDate: true}
+	if got != want {
+		t.Errorf("Company() = %+v, want %+v", got, want)
+	}
+}

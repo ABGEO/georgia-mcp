@@ -316,12 +316,12 @@ the fuels holds no price. The Georgian page names every product in Georgian, the
 | #   | Step                                                                          | Realizes                            | Done |
 | --- | ----------------------------------------------------------------------------- | ----------------------------------- | ---- |
 | 1   | Accept `ADR-0003`. Change `CLT-002` to `CLT-005` and the glossary.            | `ROMFUEL-FR-001`                    | [x]  |
-| 2   | `pkg/rompetrol` module, recorded pages, README, example. `go.work`.           | `ROMFUEL-FR-001`, `ROMFUEL-FR-007`  | [ ]  |
-| 3   | `domain`: `Company.PublishesEffectiveDate`, the zero date in `NewProductPrice`. The sentence of `WISFUEL` 4.2 on the zero date. | `ROMFUEL-FR-004` | [ ]  |
-| 4   | `adapter/rompetrol`. `adapter/wissol`: `PublishesEffectiveDate`.              | `ROMFUEL-FR-001` to `ROMFUEL-FR-003`, `ROMFUEL-FR-006`, `ROMFUEL-FR-007` | [ ]  |
-| 5   | `adapter/tool`: `effective_date` with `omitempty`, `companyList`.             | `ROMFUEL-FR-004`, `ROMFUEL-FR-005`  | [ ]  |
-| 6   | `module.go`, `config.go`, `configs/.env.example`.                             | `ROMFUEL-FR-008`                    | [ ]  |
-| 7   | Move the term "Rompetrol" to the glossary.                                    | `DOM-002`                           | [ ]  |
+| 2   | `pkg/rompetrol` module, recorded pages, README, example. `go.work`.           | `ROMFUEL-FR-001`, `ROMFUEL-FR-007`  | [x]  |
+| 3   | `domain`: `Company.PublishesEffectiveDate`, the zero date in `NewProductPrice`. The sentence of `WISFUEL` 4.2 on the zero date. | `ROMFUEL-FR-004` | [x]  |
+| 4   | `adapter/rompetrol`. `adapter/wissol`: `PublishesEffectiveDate`.              | `ROMFUEL-FR-001` to `ROMFUEL-FR-003`, `ROMFUEL-FR-006`, `ROMFUEL-FR-007` | [x]  |
+| 5   | `adapter/tool`: `effective_date` with `omitempty`, `companyList`.             | `ROMFUEL-FR-004`, `ROMFUEL-FR-005`  | [x]  |
+| 6   | `module.go`, `config.go`, `configs/.env.example`.                             | `ROMFUEL-FR-008`                    | [x]  |
+| 7   | Move the term "Rompetrol" to the glossary.                                    | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

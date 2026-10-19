@@ -194,8 +194,8 @@ func NewProductPrice(code string, name ProductName, grade Grade,
 ```
 
 `NewProductPrice` refuses an empty code, a name with no text, a grade that `ParseGrade`
-refuses, a standard price that is not more than zero, a valid self-service price that is
-not more than zero, and a zero date. Errors in `domain/errors.go`:
+refuses, a standard price that is not more than zero, and a valid self-service price that
+is not more than zero. It accepts a zero date: the company publishes none (`ROMFUEL-DD-006`). Errors in `domain/errors.go`:
 `ErrInvalidCompanyCode`, `ErrInvalidGrade`, `ErrInvalidProductPrice`.
 
 ```go

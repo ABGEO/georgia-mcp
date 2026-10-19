@@ -26,7 +26,10 @@ func ParseCompanyCode(text string) (CompanyCode, error) {
 }
 
 // Company is a company that sells fuel at its own network of stations in Georgia.
+// PublishesEffectiveDate is false when the company gives no effective date to its
+// prices.
 type Company struct {
-	Code CompanyCode
-	Name string
+	Code                   CompanyCode
+	Name                   string
+	PublishesEffectiveDate bool
 }

@@ -61,9 +61,9 @@ func NewAdapter(client *wissolclient.Client, now func() time.Time, logger *slog.
 	return &Adapter{client: client, now: now, logger: logger}
 }
 
-// Company returns Wissol.
+// Company returns Wissol. It publishes an effective date.
 func (a *Adapter) Company() domain.Company {
-	return domain.Company{Code: "wissol", Name: "Wissol"}
+	return domain.Company{Code: "wissol", Name: "Wissol", PublishesEffectiveDate: true}
 }
 
 // Prices reads every product with one call and leaves out each product that is not

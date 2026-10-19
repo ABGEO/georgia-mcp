@@ -27,7 +27,7 @@ type priceOutput struct {
 	Unit             string `json:"unit"                         jsonschema:"The unit of each price: litre, or cubic_metre for cng."`
 	Price            string `json:"price"                        jsonschema:"The standard price in GEL of one unit, as a decimal string."`
 	SelfServicePrice string `json:"self_service_price,omitempty" jsonschema:"The price in GEL of one unit at a self-service station of the company, as a decimal string. Absent when the company publishes none."`
-	EffectiveDate    string `json:"effective_date"               jsonschema:"The date from which the company applies the prices, YYYY-MM-DD."`
+	EffectiveDate    string `json:"effective_date,omitempty"     jsonschema:"The date from which the company applies the prices, YYYY-MM-DD. Absent when the company publishes no date: as_of then gives the age of the price."`
 }
 
 type companyOutput struct {
