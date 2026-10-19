@@ -5,4 +5,5 @@ use (
 	./pkg/bog
 	./pkg/nbg
 	./pkg/tbc
+	./pkg/wissol
 )
