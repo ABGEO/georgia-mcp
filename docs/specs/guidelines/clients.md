@@ -4,15 +4,15 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-18
+updated: 2026-10-19
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
 
 # Vendor clients
 
-A vendor client is a Go module that calls the API of one vendor. Another project
-can import it with no part of the server.
+A vendor client is a Go module that calls the API of one vendor, or reads its web
+page. Another project can import it with no part of the server.
 
 ## CLT-001
 
@@ -25,22 +25,25 @@ The package name is the vendor name: `nbg`, `ttc`.
 A client imports the standard library only. It imports no package of the server
 module, no other client, and no MCP package. A third-party library needs a requirement
 that the API of the vendor demands, for example a protocol that the standard library
-does not offer.
+does not offer. A client of a web page imports `golang.org/x/net/html`. No other client
+imports it. `ADR-0003`.
 
 **Why:** A dependency of a client is a dependency of every project that uses it.
 
 ## CLT-003
 
 A client mirrors the API of the vendor. Its types carry the field names of the
-vendor in their JSON tags. A client does not interpret the data.
+vendor in their JSON tags. A client does not interpret the data. A client of a web
+page returns the text of each cell of the data, as the page shows it. Its types carry
+no JSON tag.
 
 **Why:** The server interprets the data in its adapter. See `DOM-005`.
 
 ## CLT-004
 
 The HTTP client is `net/http`. The client builds the address with `net/url`, and decodes
-the body with `encoding/json` or `encoding/xml`. It reads at most a fixed count of bytes
-from a body.
+the body with `encoding/json` or `encoding/xml`. A client of a web page parses the body
+with `golang.org/x/net/html`. It reads at most a fixed count of bytes from a body.
 
 **Why:** A GET with a query and two headers needs no library. The standard library has
 no major version to migrate.
@@ -56,7 +59,8 @@ The constructor is `New(opts ...Option) *Client`. An option sets one value:
 | `WithUserAgent`   | `georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp)`. |
 | `WithAPIKey`      | None. Only a client whose vendor needs a key. |
 
-The client sets `Accept: application/json` once, at construction.
+The client sets `Accept: application/json` once, at construction. A client of a web
+page sets `Accept: text/html`.
 
 ## CLT-006
 

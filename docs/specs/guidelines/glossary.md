@@ -24,7 +24,8 @@ define it. The identifier of a term is `GLO-<term>`.
 | transport          | The channel that carries MCP: streamable HTTP or stdio.                                                |
 | vendor             | An organization that publishes data that a tool returns, for example the NBG or the TTC.               |
 | source             | The system of a vendor that the server reads.                                                          |
-| vendor client      | A Go module in `pkg/` that calls the API of one vendor. See `CLT`.                                     |
+| vendor client      | A Go module in `pkg/` that calls the API of one vendor, or reads its web page. See `CLT`.              |
+| web page source    | A source that is a page for people, not an API. See `ADR-0003`.                                        |
 | unofficial API     | An API that a vendor uses in its own application and does not document for others.                     |
 
 ## The architecture

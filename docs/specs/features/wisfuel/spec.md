@@ -44,7 +44,7 @@ keeps one entry for each company. `spec-scenarios.md` holds the scenarios.
 | `WISFUEL-NFR-001` | 4.3 cache. `WISFUEL-SC-014`                             |
 | `WISFUEL-NFR-002` | 4.3 cache, 4.3 configuration. `WISFUEL-SC-015`          |
 | `WISFUEL-INV-001` | `WISFUEL-DD-004`                                        |
-| `WISFUEL-INV-002` | 4.3 tool                                                |
+| `WISFUEL-INV-003` | 4.3 tool                                                |
 
 ## 3. Guideline compliance
 
@@ -474,7 +474,7 @@ language in each call. Wissol answers both.
 | 4   | `app`: port, `GetPrices`.                                                     | `WISFUEL-FR-006` to `WISFUEL-FR-009`, `WISFUEL-FR-014` | [x]  |
 | 5   | `adapter/wissol`.                                                             | `WISFUEL-FR-002`, `WISFUEL-FR-003`, `WISFUEL-FR-010` | [x]  |
 | 6   | `adapter/cache`: `PriceCache`.                                                | `WISFUEL-FR-015`, `WISFUEL-NFR-001`, `WISFUEL-NFR-002` | [x]  |
-| 7   | `adapter/tool`: `Register`.                                                   | `WISFUEL-FR-011` to `WISFUEL-FR-013`, `WISFUEL-INV-002` | [x]  |
+| 7   | `adapter/tool`: `Register`.                                                   | `WISFUEL-FR-011` to `WISFUEL-FR-013`, `WISFUEL-INV-003` | [x]  |
 | 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`.                | `WISFUEL-FR-016`                                 | [x]  |
 | 9   | Move the terms of requirements 5 to the glossary.                             | `DOM-002`                                        | [x]  |
 

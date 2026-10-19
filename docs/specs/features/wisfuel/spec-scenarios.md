@@ -207,7 +207,7 @@ The test runs in `synctest`.
 
 ### `WISFUEL-SC-016`
 
-**Verifies:** `WISFUEL-FR-004`, `WISFUEL-FR-012`, `WISFUEL-FR-013`, `WISFUEL-INV-002`
+**Verifies:** `WISFUEL-FR-004`, `WISFUEL-FR-012`, `WISFUEL-FR-013`, `WISFUEL-INV-003`
 **Layer:** integration
 
 **Given** the vendor serves `fuelprice.json`, and a fixed clock.

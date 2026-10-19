@@ -255,10 +255,10 @@ company answers, for any count of requests. Measure the calls at the source.
 A price in an answer has the exact digits that the fuel company publishes. The server
 rounds no digit.
 
-### `WISFUEL-INV-002`
+### `WISFUEL-INV-003`
 
-Every price in an answer carries its fuel company, its grade, its unit, and its
-effective date.
+Every price in an answer carries its fuel company, its grade, and its unit. It carries
+its effective date when the fuel company publishes one.
 
 ## 9. Constraints from the guidelines
 
@@ -284,4 +284,6 @@ effective date.
 
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID              | Retired    | Reason                                                              |
+| --------------- | ---------- | ------------------------------------------------------------------- |
+| WISFUEL-INV-002 | 2026-10-19 | Rompetrol publishes no effective date. `WISFUEL-INV-003` replaces it. |
