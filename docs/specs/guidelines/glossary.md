@@ -69,3 +69,22 @@ define it. The identifier of a term is `GLO-<term>`.
 | Rompetrol          | A fuel company of Georgia. Company code `rompetrol`.                                                   |
 | SOCAR              | SOCAR Georgia Petroleum, a fuel company of Georgia. Company code `socar`.                              |
 | `lpg`              | The grade of liquefied petroleum gas. Its unit is the litre.                                           |
+
+## Transit
+
+| Term               | Meaning                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| stop               | A place where a vehicle of the TTC takes passengers: a bus stop, a metro station, or a cable car station. |
+| stop code          | The number on the sign of a bus stop: `1000`. A station of metro or cable car has none.               |
+| route              | One line of the TTC with one number, for example the bus `385` or the metro line `1`.                 |
+| route number       | The short name of a route that a vehicle shows: `385`.                                                |
+| kind               | The type of vehicle of a route: `bus`, `minibus`, `metro`, or `cable_car`. A stop has the kind `bus`, `metro`, or `cable_car`. |
+| direction          | One of the two ways of a route, with a headsign and an ordered list of stops.                         |
+| headsign           | The destination that a vehicle shows: "Varketili".                                                    |
+| arrival            | The expected arrival of a vehicle of one route at one stop.                                           |
+| live arrival       | An arrival that the TTC computes from the position of the vehicle.                                    |
+| timetable          | The planned times at which the vehicles of one direction leave each of its stops.                     |
+| trip plan          | The itineraries between two points at one time.                                                       |
+| itinerary          | One way to travel between two points: a sequence of legs.                                             |
+| leg                | One part of an itinerary: a walk, or a ride on one route.                                             |
+| place              | A named point in Tbilisi that a person can search: an address, a street, or a building.               |

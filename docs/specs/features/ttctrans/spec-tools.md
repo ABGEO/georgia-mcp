@@ -1,0 +1,309 @@
+---
+id: TTCTRANS
+title: The public transport of Tbilisi, the tools
+type: spec
+status: approved
+created: 2026-10-19
+updated: 2026-10-19
+context: transit
+approved_by: Temuri
+approved_on: 2026-10-19
+constrained_by: [MCP]
+requirements: features/ttctrans/requirements.md
+---
+
+# Specification: The public transport of Tbilisi, the tools
+
+## 1. The tools
+
+| Tool                         | Input (all optional unless marked)                                   | Output             | Realizes |
+| ---------------------------- | -------------------------------------------------------------------- | ------------------ | -------- |
+| `transit_search_stops`       | `query` (required), `kind`, `language`, `limit`                      | `stopsOutput`      | `TTCTRANS-FR-001`, `TTCTRANS-FR-003`, `TTCTRANS-FR-020` |
+| `transit_list_nearby_stops`  | `lat`, `lon` (required), `radius_m`, `kind`, `language`, `limit`     | `nearbyOutput`     | `TTCTRANS-FR-002`, `TTCTRANS-FR-003` |
+| `transit_list_arrivals`      | `stop` (required), `route`, `language`, `limit`                      | `arrivalsOutput`   | `TTCTRANS-FR-004` to `TTCTRANS-FR-007` |
+| `transit_search_routes`      | `query`, `kind`, `language`, `limit`                                 | `routesOutput`     | `TTCTRANS-FR-008`, `TTCTRANS-FR-009` |
+| `transit_get_route`          | `route` (required), `kind`, `language`                               | `routeOutput`      | `TTCTRANS-FR-010` |
+| `transit_get_timetable`      | `route`, `stop` (required), `kind`, `direction`, `date`, `language`  | `timetableOutput`  | `TTCTRANS-FR-011`, `TTCTRANS-FR-012` |
+| `transit_plan_trip`          | `from`, `to` (required), `timing`, `date`, `time`, `kinds`, `preference`, `language` | `tripOutput` | `TTCTRANS-FR-013` to `TTCTRANS-FR-018` |
+| `transit_search_places`      | `query` (required), `language`, `limit`                              | `placesOutput`     | `TTCTRANS-FR-019` |
+
+Every tool takes `language` (`MCP-007`), and every output carries `source` (`TTC`) and
+`as_of` (`MCP-005`). Every output that the cache can serve carries `stale`.
+
+| Input      | Default | Range         |
+| ---------- | ------- | ------------- |
+| `limit` of stops    | 10   | 1 to 50  |
+| `limit` of arrivals | 10   | 1 to 30  |
+| `limit` of routes   | 20   | 1 to 100 |
+| `limit` of places   | 5    | 1 to 20  |
+| `radius_m`          | 500  | 1 to 2000 |
+| `query`             |      | 1 to 100 characters after trim |
+
+The tool validates each limit and the radius. A value of 0 asks the default.
+
+## 2. The descriptions
+
+Each description names the TTC as the source, says that the data covers Tbilisi only,
+and names the tool to call before it when one exists:
+
+| Tool                        | Description |
+| --------------------------- | ----------- |
+| `transit_search_stops`      | Finds the stops of the Tbilisi Transport Company (bus stops, metro stations, cable car stations) by name or stop code, in Georgian or English. Use the stop id of the result with transit_list_arrivals or transit_get_timetable. |
+| `transit_list_nearby_stops` | Lists the stops within a distance of a point in Tbilisi, nearest first, with the distance in metres. Use transit_search_places to get the coordinates of a place. |
+| `transit_list_arrivals`     | Lists the next vehicles at a stop: route number, kind, headsign, minutes from as_of, and the expected instant. live is true when the TTC tracks the vehicle; else the time comes from the timetable. With a route, lists the next vehicles of that route only. |
+| `transit_search_routes`     | Finds the routes of the TTC by number or by name. Kinds: bus, minibus, metro, cable_car. With no query, lists every route. |
+| `transit_get_route`         | Returns a route with each direction: its headsign and its stops in order. |
+| `transit_get_timetable`     | Returns the planned departure times of one direction of a route at one stop, on a date of the current week. A time of 24:00 or later is after midnight, on the next date. |
+| `transit_plan_trip`         | Plans a trip by public transport in Tbilisi between two points, given as coordinates. Returns up to 3 itineraries with each leg: walk or ride, route, stops, instants, distance in metres. Use transit_search_places to get coordinates. |
+| `transit_search_places`     | Finds places in Tbilisi (addresses, streets, buildings) by text, with their coordinates, for transit_plan_trip and transit_list_nearby_stops. Data from OpenStreetMap through the TTC. |
+
+## 3. The structs
+
+```go
+type searchStopsInput struct {
+    Query    string `json:"query"              jsonschema:"A stop name or a stop code, in Georgian or English."`
+    Kind     string `json:"kind,omitempty"     jsonschema:"Only stops of this kind: bus, metro, or cable_car. Empty gives every kind."`
+    Language string `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+    Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of stops, 1 to 50. The default is 10."`
+}
+
+type nearbyStopsInput struct {
+    Lat      float64 `json:"lat"                jsonschema:"The latitude of the point, in degrees."`
+    Lon      float64 `json:"lon"                jsonschema:"The longitude of the point, in degrees."`
+    RadiusM  int     `json:"radius_m,omitempty" jsonschema:"The distance from the point in metres, 1 to 2000. The default is 500."`
+    Kind     string  `json:"kind,omitempty"     jsonschema:"Only stops of this kind: bus, metro, or cable_car. Empty gives every kind."`
+    Language string  `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+    Limit    int     `json:"limit,omitempty"    jsonschema:"The maximum count of stops, 1 to 50. The default is 10."`
+}
+
+type stopsOutput struct {
+    Source string       `json:"source" jsonschema:"The source of the data: TTC."`
+    AsOf   string       `json:"as_of"  jsonschema:"The instant at which the server read the stops, RFC 3339."`
+    Stale  bool         `json:"stale"  jsonschema:"True when the TTC did not answer and the server returns stops it read before."`
+    Stops  []stopOutput `json:"stops"  jsonschema:"The matching stops, best match first."`
+}
+
+type nearbyOutput struct {
+    Source string             `json:"source" jsonschema:"The source of the data: TTC."`
+    AsOf   string             `json:"as_of"  jsonschema:"The instant at which the server read the stops, RFC 3339."`
+    Stale  bool               `json:"stale"  jsonschema:"True when the TTC did not answer and the server returns stops it read before."`
+    Stops  []nearbyStopOutput `json:"stops"  jsonschema:"The stops within the distance, nearest first."`
+}
+
+type stopOutput struct {
+    ID   string  `json:"id"             jsonschema:"The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."`
+    Code string  `json:"code,omitempty" jsonschema:"The number on the sign of a bus stop. Absent for a station of metro or cable car."`
+    Name string  `json:"name"           jsonschema:"The name of the stop."`
+    Kind string  `json:"kind"           jsonschema:"bus, metro, or cable_car. A minibus stops at a bus stop."`
+    Lat  float64 `json:"lat"            jsonschema:"The latitude of the stop, in degrees."`
+    Lon  float64 `json:"lon"            jsonschema:"The longitude of the stop, in degrees."`
+}
+
+type nearbyStopOutput struct {
+    Stop      stopOutput `json:"stop"       jsonschema:"The stop."`
+    DistanceM int        `json:"distance_m" jsonschema:"The distance from the point in metres, rounded."`
+}
+
+type listArrivalsInput struct {
+    Stop     string `json:"stop"               jsonschema:"The stop id (1:1000) or the stop code (1000)."`
+    Route    string `json:"route,omitempty"    jsonschema:"Only this route: its number (385) or its id. Empty gives the next vehicle of each route."`
+    Language string `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+    Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of arrivals, 1 to 30. The default is 10."`
+}
+
+type arrivalsOutput struct {
+    Source   string          `json:"source"         jsonschema:"The source of the data: TTC."`
+    AsOf     string          `json:"as_of"          jsonschema:"The instant at which the server read the arrivals, RFC 3339. minutes count from it."`
+    Stop     stopOutput      `json:"stop"           jsonschema:"The stop."`
+    Arrivals []arrivalOutput `json:"arrivals"       jsonschema:"The next arrivals, soonest first."`
+    Note     string          `json:"note,omitempty" jsonschema:"Why the list is empty."`
+}
+
+type arrivalOutput struct {
+    Route    string `json:"route"    jsonschema:"The route number."`
+    Kind     string `json:"kind"     jsonschema:"bus, minibus, metro, or cable_car."`
+    Headsign string `json:"headsign" jsonschema:"The destination that the vehicle shows."`
+    Minutes  int    `json:"minutes"  jsonschema:"The minutes from as_of to the arrival."`
+    Expected string `json:"expected" jsonschema:"The expected instant of the arrival, RFC 3339."`
+    Live     bool   `json:"live"     jsonschema:"True when the TTC tracks the vehicle. False when the time comes from the timetable."`
+}
+
+type searchRoutesInput struct {
+    Query    string `json:"query,omitempty"    jsonschema:"A route number or a part of a route name. Empty gives every route."`
+    Kind     string `json:"kind,omitempty"     jsonschema:"Only routes of this kind: bus, minibus, metro, or cable_car."`
+    Language string `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+    Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of routes, 1 to 100. The default is 20."`
+}
+
+type routesOutput struct {
+    Source string        `json:"source" jsonschema:"The source of the data: TTC."`
+    AsOf   string        `json:"as_of"  jsonschema:"The instant at which the server read the routes, RFC 3339."`
+    Stale  bool          `json:"stale"  jsonschema:"True when the TTC did not answer and the server returns routes it read before."`
+    Routes []routeOutput `json:"routes" jsonschema:"The matching routes, best match first."`
+}
+
+type routeOutput struct {
+    ID     string `json:"id"     jsonschema:"The route id."`
+    Number string `json:"number" jsonschema:"The route number that the vehicle shows."`
+    Name   string `json:"name"   jsonschema:"The name of the route, usually its two ends."`
+    Kind   string `json:"kind"   jsonschema:"bus, minibus, metro, or cable_car."`
+}
+
+type getRouteInput struct {
+    Route    string `json:"route"              jsonschema:"The route number (385) or the route id."`
+    Kind     string `json:"kind,omitempty"     jsonschema:"The kind, when two routes share the number: bus, minibus, metro, or cable_car."`
+    Language string `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+}
+
+type routeDetailOutput struct {
+    Source     string            `json:"source"     jsonschema:"The source of the data: TTC."`
+    AsOf       string            `json:"as_of"      jsonschema:"The instant at which the server read the route, RFC 3339."`
+    Stale      bool              `json:"stale"      jsonschema:"True when the TTC did not answer and the server returns a route it read before."`
+    Route      routeOutput       `json:"route"      jsonschema:"The route."`
+    Directions []directionOutput `json:"directions" jsonschema:"Each direction of the route. A loop has one."`
+}
+
+type directionOutput struct {
+    Direction int          `json:"direction" jsonschema:"The direction number, for transit_get_timetable."`
+    Headsign  string       `json:"headsign"  jsonschema:"The destination that the vehicle shows."`
+    Stops     []stopOutput `json:"stops"     jsonschema:"The stops in the order of travel."`
+}
+
+type getTimetableInput struct {
+    Route     string `json:"route"               jsonschema:"The route number (385) or the route id."`
+    Stop      string `json:"stop"                jsonschema:"The stop id or the stop code. The stop must be on the direction."`
+    Kind      string `json:"kind,omitempty"      jsonschema:"The kind, when two routes share the number: bus, minibus, metro, or cable_car."`
+    Direction *int   `json:"direction,omitempty" jsonschema:"The direction number from transit_get_route. Required when the route has two directions."`
+    Date      string `json:"date,omitempty"      jsonschema:"The date, YYYY-MM-DD, in the current week. The default is today in Tbilisi."`
+    Language  string `json:"language,omitempty"  jsonschema:"The language of the names: ka or en. The default is en."`
+}
+
+type timetableOutput struct {
+    Source    string      `json:"source"    jsonschema:"The source of the data: TTC."`
+    AsOf      string      `json:"as_of"     jsonschema:"The instant at which the server read the timetable, RFC 3339."`
+    Stale     bool        `json:"stale"     jsonschema:"True when the TTC did not answer and the server returns a timetable it read before."`
+    Route     routeOutput `json:"route"     jsonschema:"The route."`
+    Direction int         `json:"direction" jsonschema:"The direction number."`
+    Headsign  string      `json:"headsign"  jsonschema:"The destination of the direction."`
+    Stop      stopOutput  `json:"stop"      jsonschema:"The stop."`
+    Date      string      `json:"date"      jsonschema:"The date of the times, YYYY-MM-DD."`
+    Times     []string    `json:"times"     jsonschema:"The planned departure times, HH:MM, in order. 24:00 or later is after midnight."`
+}
+
+type pointInput struct {
+    Lat float64 `json:"lat" jsonschema:"The latitude, in degrees."`
+    Lon float64 `json:"lon" jsonschema:"The longitude, in degrees."`
+}
+
+type planTripInput struct {
+    From       pointInput `json:"from"                 jsonschema:"The start point in Tbilisi."`
+    To         pointInput `json:"to"                   jsonschema:"The end point in Tbilisi."`
+    Timing     string     `json:"timing,omitempty"     jsonschema:"leave_now, depart_at, or arrive_by. The default is leave_now."`
+    Date       string     `json:"date,omitempty"       jsonschema:"The date of depart_at or arrive_by, YYYY-MM-DD. The default is today in Tbilisi."`
+    Time       string     `json:"time,omitempty"       jsonschema:"The time of depart_at or arrive_by, HH:MM in Tbilisi. Required with them."`
+    Kinds      []string   `json:"kinds,omitempty"      jsonschema:"The kinds to ride: bus, minibus, metro, cable_car. bus and minibus go together. Empty gives every kind. A walk is always allowed."`
+    Preference string     `json:"preference,omitempty" jsonschema:"fastest, less_walking, or fewer_transfers. The default is fastest."`
+    Language   string     `json:"language,omitempty"   jsonschema:"The language of the names: ka or en. The default is en."`
+}
+
+type tripOutput struct {
+    Source      string            `json:"source"         jsonschema:"The source of the data: TTC."`
+    AsOf        string            `json:"as_of"          jsonschema:"The instant at which the server read the plan, RFC 3339."`
+    Itineraries []itineraryOutput `json:"itineraries"    jsonschema:"Up to 3 ways to travel, in the order of the TTC."`
+    Note        string            `json:"note,omitempty" jsonschema:"Why the list is empty."`
+}
+
+type itineraryOutput struct {
+    Start           string      `json:"start"            jsonschema:"The instant of departure, RFC 3339."`
+    End             string      `json:"end"              jsonschema:"The instant of arrival, RFC 3339."`
+    DurationMinutes int         `json:"duration_minutes" jsonschema:"The duration in minutes, rounded up."`
+    WalkM           int         `json:"walk_m"           jsonschema:"The total distance of walk in metres, rounded."`
+    Transfers       int         `json:"transfers"        jsonschema:"The count of changes from one vehicle to another."`
+    Legs            []legOutput `json:"legs"             jsonschema:"The parts of the trip, in order."`
+}
+
+type legOutput struct {
+    Kind        string         `json:"kind"                   jsonschema:"walk, bus, minibus, metro, or cable_car."`
+    From        legPointOutput `json:"from"                   jsonschema:"Where the leg starts."`
+    To          legPointOutput `json:"to"                     jsonschema:"Where the leg ends."`
+    Start       string         `json:"start"                  jsonschema:"The instant at which the leg starts, RFC 3339."`
+    End         string         `json:"end"                    jsonschema:"The instant at which the leg ends, RFC 3339."`
+    DistanceM   int            `json:"distance_m"             jsonschema:"The distance of the leg in metres, rounded."`
+    RouteNumber string         `json:"route_number,omitempty" jsonschema:"The route number of a ride."`
+    RouteName   string         `json:"route_name,omitempty"   jsonschema:"The route name of a ride."`
+    Stops       int            `json:"stops,omitempty"        jsonschema:"The count of stops of a ride after the boarding stop."`
+}
+
+type legPointOutput struct {
+    Name   string  `json:"name"              jsonschema:"The name of the stop or the point."`
+    StopID string  `json:"stop_id,omitempty" jsonschema:"The stop id. Absent when the point is not a stop."`
+    Lat    float64 `json:"lat"               jsonschema:"The latitude, in degrees."`
+    Lon    float64 `json:"lon"               jsonschema:"The longitude, in degrees."`
+}
+
+type searchPlacesInput struct {
+    Query    string `json:"query"              jsonschema:"An address, a street, or a building in Tbilisi."`
+    Language string `json:"language,omitempty" jsonschema:"The language of the names: ka or en. The default is en."`
+    Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of places, 1 to 20. The default is 5."`
+}
+
+type placesOutput struct {
+    Source string        `json:"source"         jsonschema:"The source of the data: TTC, from OpenStreetMap."`
+    AsOf   string        `json:"as_of"          jsonschema:"The instant at which the server read the places, RFC 3339."`
+    Stale  bool          `json:"stale"          jsonschema:"True when the TTC did not answer and the server returns places it read before."`
+    Places []placeOutput `json:"places"         jsonschema:"The matching places, in the order of the TTC."`
+    Note   string        `json:"note,omitempty" jsonschema:"Why the list is empty."`
+}
+
+type placeOutput struct {
+    Name        string  `json:"name"                   jsonschema:"The name of the place."`
+    Street      string  `json:"street,omitempty"       jsonschema:"The street."`
+    HouseNumber string  `json:"house_number,omitempty" jsonschema:"The house number."`
+    District    string  `json:"district,omitempty"     jsonschema:"The district of Tbilisi."`
+    Lat         float64 `json:"lat"                    jsonschema:"The latitude, in degrees."`
+    Lon         float64 `json:"lon"                    jsonschema:"The longitude, in degrees."`
+}
+```
+
+Each instant is in `kernel.TbilisiZone`, written with `time.RFC3339`. The output of
+`transit_get_route` is `routeDetailOutput`.
+
+## 4. The errors
+
+| Condition                                   | Sentinel                          | Tool message |
+| ------------------------------------------- | --------------------------------- | ------------ |
+| A language other than `ka` and `en`         | `kernel.ErrUnknownLanguage`       | `language: "ru" is not a language of this tool. Use ka or en.` |
+| An empty or long query                      | none, the tool checks it          | `query: give 1 to 100 characters.` |
+| A limit out of range                        | none, the tool checks it          | `limit: 500 is out of range. Use 1 to 50.` |
+| A radius out of range                       | none, the tool checks it          | `radius_m: 5000 is out of range. Use 1 to 2000.` |
+| A kind of stop that is not valid            | `domain.ErrInvalidKind`           | `kind: "minibus" is not a kind of stop. Use one of: bus, metro, cable_car.` |
+| A kind of route that is not valid           | `domain.ErrInvalidKind`           | `kind: "tram" is not a kind of route. Use one of: bus, minibus, metro, cable_car.` |
+| A point that is not valid                   | `domain.ErrInvalidPoint`          | `from: 95, 44.8 is not a point. Use a latitude of -90 to 90 and a longitude of -180 to 180.` |
+| A point outside Tbilisi                     | `app.ErrOutsideTbilisi`           | `to: 40, 40 is outside Tbilisi. The TTC serves Tbilisi only.` |
+| An unknown stop                             | `app.ErrUnknownStop`              | `stop: "999999" is not a stop of the TTC. Use transit_search_stops to find it.` |
+| An unknown route                            | `app.ErrUnknownRoute`             | `route: "999" is not a route of the TTC. Use transit_search_routes to find it.` |
+| A number of two routes and no kind          | `app.ErrAmbiguousRoute`           | `route: "1" names 2 routes: 1 (metro, Akhmeteli Theatre - Varketili), 1 (cable_car, Rike - Narikala). Give the kind.` |
+| No direction, or an unknown direction       | `app.ErrUnknownDirection`         | `direction: route 1 has 2 directions: 0 (Akhmeteli Theatre), 1 (Varketili). Give one.` |
+| A stop not on the direction                 | `app.ErrStopNotOnDirection`       | `stop: "1:1000" is not on direction 1 of route 385. Use transit_get_route to see its stops.` |
+| A text that is not a date                   | `kernel.ErrInvalidDate`           | `date: "20/10" is not a date. Use YYYY-MM-DD.` |
+| A date outside the timetable                | `app.ErrDateOutsideTimetable`     | `date: 2026-10-26 is outside the timetable. Use a date from 2026-10-19 to 2026-10-25.` |
+| A timing that is not valid                  | `domain.ErrInvalidTiming`         | `timing: "now" is not valid. Use leave_now, depart_at, or arrive_by.` |
+| `depart_at` or `arrive_by` with no time     | `domain.ErrInvalidClockTime`      | `time: depart_at needs a time. Use HH:MM.` |
+| A text that is not a time                   | `domain.ErrInvalidClockTime`      | `time: "9" is not a time. Use HH:MM.` |
+| A preference that is not valid              | `domain.ErrInvalidPreference`     | `preference: "cheap" is not valid. Use fastest, less_walking, or fewer_transfers.` |
+| A kind of trip that is not valid            | `domain.ErrInvalidKind`           | `kinds: "walk" is not a kind of route. Use one of: bus, minibus, metro, cable_car.` |
+| `bus` without `minibus`, or the reverse     | `domain.ErrInvalidTripKinds`      | `kinds: the TTC plans bus and minibus together. Give both, or neither.` |
+| The TTC finds no trip                       | `app.ErrTripNotFound`             | `The TTC found no trip between the two points. Try other points or another time.` |
+| The TTC fails                               | `kernel.ErrSourceUnavailable`     | `The TTC did not answer. Try again in a few minutes.` |
+| Any other error                             | none                              | `The server failed to read the data of the TTC.` |
+
+| Note                                         | Text |
+| -------------------------------------------- | ---- |
+| No arrival, with a route                     | `No vehicle of route 385 is expected at this stop now.` |
+| No arrival, with no route                    | `No vehicle is expected at this stop now.` |
+| No itinerary                                 | `The TTC returned no itinerary for this time.` |
+| No place                                     | `No place in Tbilisi matches the text.` |
+
+## Retired identifiers
+
+This file has no retired identifier.

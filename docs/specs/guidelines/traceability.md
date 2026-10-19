@@ -4,7 +4,7 @@ title: Traceability
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-19
 scope: [docs/specs/, tests]
 related: [LNG, PRC, GIT, SPC]
 ---
@@ -177,6 +177,7 @@ Add a row before you create the file or the directory.
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |
+| `TTCTRANS` | `features/ttctrans/` | `transit`  | The stops, routes, arrivals, timetables, and trip plans of the TTC. | Approved |
 
 ## Retired identifiers
 
