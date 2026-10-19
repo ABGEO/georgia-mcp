@@ -15,9 +15,13 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/bootstrap"
 )
 
+// testKey is a key of the TTC. Every configuration of the server needs one while the TTC is on.
+const testKey = "test-key"
+
 // PLATFORM-SC-012: A variable of the environment sets a value. A missing one keeps its default.
 func TestLoadConfigReadsTheEnvironment(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 	t.Setenv("GEOMCP_HTTP_RATE_LIMIT", "30")
 
 	cfg, err := bootstrap.LoadConfig()
@@ -44,6 +48,7 @@ func TestLoadConfigReadsTheLocalFile(t *testing.T) {
 	}
 
 	t.Chdir(dir)
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 	t.Setenv("GEOMCP_HTTP_RATE_LIMIT", "20")
 
 	cfg, err := bootstrap.LoadConfig()
@@ -77,6 +82,7 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.variable+"="+tt.value, func(t *testing.T) {
 			t.Chdir(t.TempDir())
+			t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 			if tt.variable != "" {
 				t.Setenv(tt.variable, tt.value)
@@ -102,6 +108,7 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 // TBCRATE-SC-024: With the key only, the calls to TBC default to 1 each second, burst 1.
 func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 	t.Setenv("GEOMCP_RATES_TBC_API_KEY", "test-key")
 
 	cfg, err := bootstrap.LoadConfig()
@@ -118,6 +125,7 @@ func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 // address, with 0.8 calls each second and a burst of 10.
 func TestLoadConfigGivesTheDefaultsOfBankOfGeorgia(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -146,6 +154,7 @@ func TestLoadConfigGivesTheDefaultsOfBankOfGeorgia(t *testing.T) {
 // the first 60 seconds, under the 60 calls in a minute that the bank allows.
 func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -182,6 +191,7 @@ func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
 // burst of 1.
 func TestLoadConfigGivesTheDefaultsOfWissol(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -206,6 +216,7 @@ func TestLoadConfigGivesTheDefaultsOfWissol(t *testing.T) {
 // timeout of 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfRompetrol(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -229,7 +240,8 @@ func TestLoadConfigGivesTheDefaultsOfRompetrol(t *testing.T) {
 // SOCFUEL-SC-014: With no variable of fuel, SOCAR is on, at its address, with a timeout of
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
-	t.Chdir(t.TempDir())w
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -247,5 +259,60 @@ func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
 
 	if http := socar.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
 		t.Errorf("SOCAR.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
+// TTCTRANS-SC-044: With no key of the TTC, the configuration fails and names the variable.
+func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
+	t.Chdir(t.TempDir())
+
+	_, err := bootstrap.LoadConfig()
+	if err == nil || !strings.Contains(err.Error(), "GEOMCP_TRANSIT_TTC_API_KEY") {
+		t.Errorf("LoadConfig() error = %v, want one that names GEOMCP_TRANSIT_TTC_API_KEY", err)
+	}
+}
+
+// TTCTRANS-SC-044: With the TTC off, the configuration needs no key.
+func TestLoadConfigTurnsTheTTCOff(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_ENABLED", "false")
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	if cfg.Transit.TTC.Enabled {
+		t.Error("TTC.Enabled = true, want false")
+	}
+}
+
+// TTCTRANS-SC-044: The defaults of the TTC are its address, a timeout of 10 seconds, 4
+// calls each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfTheTTC(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	ttc := cfg.Transit.TTC
+	if !ttc.Enabled || ttc.APIKey != testKey {
+		t.Errorf(
+			"TTC = enabled %v with the key %q, want on with %q",
+			ttc.Enabled,
+			ttc.APIKey,
+			testKey,
+		)
+	}
+
+	if got := ttc.BaseURL.String(); got != "https://transit.ttc.com.ge/pis-gateway/api" {
+		t.Errorf("TTC.BaseURL = %q, want https://transit.ttc.com.ge/pis-gateway/api", got)
+	}
+
+	if http := ttc.HTTP; http.Timeout != 10*time.Second || http.Rate != 4 || http.Burst != 1 {
+		t.Errorf("TTC.HTTP = %+v, want a timeout of 10s, rate 4, burst 1", http)
 	}
 }

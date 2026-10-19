@@ -94,13 +94,13 @@ Every path is new unless the table says "change". `T` is `internal/app/georgia-m
 | Tool           | `T/adapter/tool/`                 | `Register`, the structs of `spec-tools.md`.                           |
 | Module         | `T/module.go`, `T/config.go`      | `Module`, `New`, `Register`, `Close`, `Config`, `TTCConfig`.          |
 | Composition    | `internal/app/georgia-mcp/bootstrap/` (change) | `Config.Transit` with `envPrefix:"TRANSIT_"`. `modules.go` builds `transit.New`. |
-| Configuration  | `configs/.env.example`, `deployments/compose.yaml` (change) | The variables of 4.3.                      |
-| Tests          | `bootstrap/config_test.go`, `test/e2e/serve_test.go` (change) | Each test sets `GEOMCP_TRANSIT_TTC_API_KEY`. |
+| Configuration  | `configs/.env.example` (change)   | The variables of 4.3. The compose file reads `.env` and needs no change. |
+| Tests          | `bootstrap/config_test.go`, `test/e2e/serve_test.go` (change) | Each test that loads the configuration sets `GEOMCP_TRANSIT_TTC_API_KEY`. |
 | Workspace      | `go.work` (change)                | `use ./pkg/ttc`.                                                      |
 
 **`pkg/ttc`.** The client sends the header `X-api-key` on every call, and the query
 `locale` where the method takes a locale. It escapes each identifier with
-`url.PathEscape`: the TTC accepts `1%3A1000`. The body limit is 4 MiB: the list of stops
+`url.PathEscape`, which keeps the `:` of `1:1000`. The TTC accepts `1:1000` and `1%3A1000`. The body limit is 4 MiB: the list of stops
 is 325 KB. The default User-Agent is `georgia-mcp-ttc/<version> (+https://github.com/abgeo/georgia-mcp)`.
 The gateway accepts it. It refuses the User-Agent of Python with 403.
 
@@ -255,6 +255,9 @@ func NewPoint(lat, lon float64) (Point, error) // refuses NaN, a latitude outsid
 func (p Point) InTbilisi() bool                 // TTCTRANS-DD-001
 func (p Point) MetresTo(q Point) float64        // haversine, earth radius 6,371,008.8 m
 
+type Box struct{ West, North, East, South float64 }
+func TbilisiBox() Box                           // TTCTRANS-DD-001, for the place search
+
 type StopID string
 type RouteID string
 
@@ -288,6 +291,7 @@ type Arrival struct {
 type ClockTime struct{ minutes int }      // minutes after the start of the service date
 func ParseClockTime(s string) (ClockTime, error) // H:MM or HH:MM, hour 0 to 47, minute 0 to 59
 func (c ClockTime) String() string               // HH:MM; 24:05 is 00:05 of the next date
+func (c ClockTime) Minutes() int
 type StopTimes struct {
     Stop     StopID
     Position int // 1 for the first stop of the direction
@@ -298,7 +302,8 @@ type TimetableDay struct {
     Stops []StopTimes // in the order of Position
 }
 type Timetable struct{ Days []TimetableDay } // sorted by date
-func (t Timetable) Span() (first, last kernel.Date)
+func (t Timetable) Span() (kernel.Date, kernel.Date) // the first and the last date
+func (t Timetable) HasDate(date kernel.Date) bool
 func (t Timetable) Times(date kernel.Date, stop StopID) ([]ClockTime, bool) // TTCTRANS-DD-008
 
 type Timing string
@@ -388,7 +393,7 @@ type PlaceFinder interface {
 | ----------------- | -------------------------------------------------------------------------------- | ------ |
 | `SearchStops`     | `Search(ctx, StopSearch{Text, Kind, Language, Limit})`                           | `StopMatches{Stops, ReadAt, Stale}` |
 | `ListNearbyStops` | `List(ctx, NearbyQuery{Point, Radius, Kind, Limit})`                             | `NearbyStops{Stops []NearbyStop{Stop, Metres int}, ReadAt, Stale}` |
-| `ListArrivals`    | `List(ctx, ArrivalQuery{Stop, Route, Language, Limit})`                          | `Arrivals{Stop, Arrivals, ReadAt}` |
+| `ListArrivals`    | `List(ctx, ArrivalQuery{Stop, Route, Language, Limit})`                          | `Arrivals{Stop, Route *domain.Route, Arrivals, ReadAt}` |
 | `SearchRoutes`    | `Search(ctx, RouteSearch{Text, Kind, Language, Limit})`                          | `RouteMatches{Routes, ReadAt, Stale}` |
 | `GetRoute`        | `Get(ctx, RouteQuery{Route, Kind})`                                              | `RouteView{Route, Directions []DirectionView{ID, Headsign, Stops []domain.Stop}, ReadAt, Stale}` |
 | `GetTimetable`    | `Get(ctx, TimetableQuery{Route, Kind, Direction *int, Stop, Date})`              | `TimetableView{Route, Direction, Stop, Date, Times, ReadAt, Stale}` |
@@ -413,6 +418,7 @@ Errors in `app/errors.go`, each a sentinel with a type that carries the facts of
 
 | Sentinel                     | Type                                                       |
 | ---------------------------- | ---------------------------------------------------------- |
+| `ErrEmptyQuery`              | none. `SearchStops` and `SearchPlaces` refuse a text of spaces before a read. |
 | `ErrUnknownStop`             | `*UnknownStopError{Text}`                                  |
 | `ErrUnknownRoute`            | `*UnknownRouteError{Text}`                                 |
 | `ErrAmbiguousRoute`          | `*AmbiguousRouteError{Text, Routes []domain.Route}`        |
@@ -476,11 +482,12 @@ GET /v2/stops/1:1000?locale=en   (with a wrong key)
 | `GEOMCP_TRANSIT_TTC_API_KEY`     | string   | empty                                           | Yes    | `TTCTRANS-FR-022` |
 | `GEOMCP_TRANSIT_TTC_BASE_URL`    | URL      | `https://transit.ttc.com.ge/pis-gateway/api`    | No     | `TTCTRANS-FR-001` |
 | `GEOMCP_TRANSIT_TTC_TIMEOUT`     | duration | `10s`                                           | No     | `RSL-001`         |
-| `GEOMCP_TRANSIT_TTC_RATE`        | float    | `5`                                             | No     | `TTCTRANS-NFR-004` |
-| `GEOMCP_TRANSIT_TTC_BURST`       | int      | `5`                                             | No     | `TTCTRANS-NFR-004` |
+| `GEOMCP_TRANSIT_TTC_RATE`        | float    | `4`                                             | No     | `TTCTRANS-NFR-004`, `TTCTRANS-DD-013` |
+| `GEOMCP_TRANSIT_TTC_BURST`       | int      | `1`                                             | No     | `TTCTRANS-NFR-004`, `TTCTRANS-DD-013` |
 
 `transit.Config` holds `TTC TTCConfig` with `envPrefix:"TTC_"`. `TTCConfig` holds
-`Enabled bool`, `APIKey string`, `BaseURL url.URL`, and `HTTP httpclient.Config`.
+`Enabled bool`, `APIKey string`, `BaseURL url.URL`, and `HTTP TTCHTTPConfig`. `TTCHTTPConfig`
+has the fields of `httpclient.Config` with the defaults of this table, as `rates.BOGHTTPConfig` does.
 `TTCConfig.Validate` returns `&config.FieldError{Field: "APIKey", Problem: "must be set
 while the TTC is on. Set it, or set GEOMCP_TRANSIT_TTC_ENABLED=false"}` when `Enabled` is
 true and `APIKey` is empty. It also checks the base address as `rates` does.
@@ -642,6 +649,15 @@ bounds the count of records.
 **Alternatives:** A log once for each process. A key that the operator corrects and
 breaks again stays silent.
 
+### `TTCTRANS-DD-013`
+
+**Realizes:** `TTCTRANS-NFR-004`
+**Decision:** The limit of the calls to the TTC is 4 calls each second with a burst of 1.
+**Rationale:** A token bucket lets through its burst plus its rate in one second. The
+first draft gave 5 and 5: 10 calls in one second. `TTCTRANS-SC-043` failed with it.
+**Alternatives:** 3 each second with a burst of 2. A cold read of a route sends 4 calls,
+and the burst of 2 saves no time on 4 calls in a row.
+
 ## 6. Scenarios
 
 `spec-scenarios.md` holds `TTCTRANS-SC-001` to `TTCTRANS-SC-044`.
@@ -650,13 +666,13 @@ breaks again stays silent.
 
 | #   | Step                                                                      | Realizes                                   | Done |
 | --- | ------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/ttc` module, recorded answers, README, example, live test. `go.work`. | `TTCTRANS-FR-001` to `TTCTRANS-FR-019`     | [ ]  |
-| 2   | `domain`: kinds, names, points, stops, routes, timetables, trips, places. | `TTCTRANS-FR-003`, `TTCTRANS-FR-016` to `TTCTRANS-FR-018` | [ ]  |
-| 3   | `app`: ports, errors, `resolve.go`, the eight use cases.                  | `TTCTRANS-FR-001` to `TTCTRANS-FR-020`     | [ ]  |
-| 4   | `adapter/ttc`.                                                            | `TTCTRANS-FR-006`, `TTCTRANS-FR-009`, `TTCTRANS-FR-023` | [ ]  |
-| 5   | `adapter/cache`.                                                          | `TTCTRANS-NFR-001` to `TTCTRANS-NFR-003`   | [ ]  |
-| 6   | `adapter/tool`: the eight tools.                                          | `TTCTRANS-INV-001` to `TTCTRANS-INV-003`   | [ ]  |
-| 7   | `config.go`, `module.go`, `bootstrap`, `.env.example`, compose, the tests that load the configuration. | `TTCTRANS-FR-021`, `TTCTRANS-FR-022`, `TTCTRANS-NFR-004` | [ ]  |
+| 1   | `pkg/ttc` module, recorded answers, README, example, live test. `go.work`. | `TTCTRANS-FR-001` to `TTCTRANS-FR-019`     | [x]  |
+| 2   | `domain`: kinds, names, points, stops, routes, timetables, trips, places. | `TTCTRANS-FR-003`, `TTCTRANS-FR-016` to `TTCTRANS-FR-018` | [x]  |
+| 3   | `app`: ports, errors, `resolve.go`, the eight use cases.                  | `TTCTRANS-FR-001` to `TTCTRANS-FR-020`     | [x]  |
+| 4   | `adapter/ttc`.                                                            | `TTCTRANS-FR-006`, `TTCTRANS-FR-009`, `TTCTRANS-FR-023` | [x]  |
+| 5   | `adapter/cache`.                                                          | `TTCTRANS-NFR-001` to `TTCTRANS-NFR-003`   | [x]  |
+| 6   | `adapter/tool`: the eight tools.                                          | `TTCTRANS-INV-001` to `TTCTRANS-INV-003`   | [x]  |
+| 7   | `config.go`, `module.go`, `bootstrap`, `.env.example`, the tests that load the configuration. | `TTCTRANS-FR-021`, `TTCTRANS-FR-022`, `TTCTRANS-NFR-004` | [x]  |
 
 ## 8. Out of scope for this specification
 

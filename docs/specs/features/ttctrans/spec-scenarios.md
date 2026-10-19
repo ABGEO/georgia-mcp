@@ -41,7 +41,7 @@ through the in-memory MCP transport. `T` is `internal/app/georgia-mcp/transit`.
 | -- | -------- | ----- | ----------------- |
 | `TTCTRANS-SC-001` | `TTCTRANS-FR-001` | unit | `Stops(ctx, "en")` against `stops-en.json`. The path is `/v2/stops`, `locale=en`, `X-api-key` holds the key of `WithAPIKey`, `Accept` is `application/json`, the User-Agent starts with `georgia-mcp-ttc/`. `1:1000` has the code `1000`. `1:gondola_1` has a nil code. |
 | `TTCTRANS-SC-002` | `TTCTRANS-FR-008` | unit | `Routes(ctx, "en")`. The query holds `modes=BUS,SUBWAY,GONDOLA`. `1:minibusR25521` has the number `472` and the mode `BUS`. |
-| `TTCTRANS-SC-003` | `TTCTRANS-FR-010`, `TTCTRANS-FR-011` | unit | `Route`, `PatternStops`, and `Schedule` with `1:R29925` and `1:01`. The raw paths are `/v3/routes/1%3AR29925`, `/stops`, `/schedule`, with `patternSuffix=1:01`. |
+| `TTCTRANS-SC-003` | `TTCTRANS-FR-010`, `TTCTRANS-FR-011` | unit | `Route`, `PatternStops`, and `Schedule` with `1:R29925` and `1:01`. The raw paths are `/v3/routes/1:R29925`, `/stops`, `/schedule`, with `patternSuffix=1:01`. |
 | `TTCTRANS-SC-004` | `TTCTRANS-FR-007` | unit | `ArrivalTimes` with no route sends `ignoreScheduledArrivalTimes=false` and no `routeId`. With `1:R29925` and 5, it sends `routeId=1:R29925` and `maxNumberOfArrivalTimes=5`. |
 | `TTCTRANS-SC-005` | `TTCTRANS-FR-016` | unit | `Plan` with `departAt`, `2026-10-20`, `09:00`. The query holds `fromPlace=41.7251,44.7554`, `departMode=departAt`, `date=2026-10-20`, `time=09:00`, `modes=WALK,BUS`. `plan.json` decodes 3 itineraries. |
 | `TTCTRANS-SC-006` | `TTCTRANS-FR-019` | unit | `Geocode` with `Rustaveli`. The query holds `query`, `locale`, and `bbox`. The first feature has the coordinates `[44.7896467, 41.703497]`. |

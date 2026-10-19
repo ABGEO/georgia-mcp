@@ -31,6 +31,8 @@ const (
 	initializedNotification = `{"jsonrpc":"2.0","method":"notifications/initialized"}`
 	listToolsRequest        = `{"jsonrpc":"2.0","id":2,"method":"tools/list"}`
 	listToolsID             = "2"
+	// ttcKey lets the server start: the TTC is on by default and needs a key.
+	ttcKey = "GEOMCP_TRANSIT_TTC_API_KEY=test-key"
 )
 
 func TestMain(m *testing.M) {
@@ -85,7 +87,7 @@ func startServe(t *testing.T, dir, address string) *exec.Cmd {
 	cmd := exec.CommandContext(t.Context(), binary, "serve")
 	cmd.Dir = dir
 
-	cmd.Env = append(os.Environ(), "GEOMCP_HTTP_ADDRESS="+address)
+	cmd.Env = append(os.Environ(), "GEOMCP_HTTP_ADDRESS="+address, ttcKey)
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("starting serve: %v", err)
@@ -202,7 +204,7 @@ func TestStdioWritesOnlyTheProtocolToStdout(t *testing.T) {
 	cmd := exec.CommandContext(ctx, binary, "stdio")
 	cmd.Dir = t.TempDir()
 
-	cmd.Env = append(os.Environ(), "GEOMCP_LOG_LEVEL=debug")
+	cmd.Env = append(os.Environ(), "GEOMCP_LOG_LEVEL=debug", ttcKey)
 
 	var stderr bytes.Buffer
 
