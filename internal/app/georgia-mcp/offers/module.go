@@ -10,14 +10,19 @@ import (
 
 	bogadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/bog"
 	offercache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/cache"
+	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tbc"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tool"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
 )
 
-const bogSwitchVariable = "GEOMCP_OFFERS_BOG_ENABLED"
+const (
+	bogSwitchVariable = "GEOMCP_OFFERS_BOG_ENABLED"
+	tbcSwitchVariable = "GEOMCP_OFFERS_TBC_ENABLED"
+)
 
 // Module holds the use cases of the context and the cache of each bank.
 type Module struct {
@@ -50,6 +55,17 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		logger.Info("BOG is off", slog.String("variable", bogSwitchVariable))
 	}
 
+	if cfg.TBC.Enabled {
+		tbc, err := tbcSource(cfg.TBC, logger, now)
+		if err != nil {
+			return nil, closeAll(banks, err)
+		}
+
+		banks = append(banks, tbc)
+	} else {
+		logger.Info("TBC is off", slog.String("variable", tbcSwitchVariable))
+	}
+
 	sources := make([]app.OfferSource, 0, len(banks))
 	for _, bank := range banks {
 		sources = append(sources, bank)
@@ -80,6 +96,36 @@ func bogSource(
 	}
 
 	return bog, nil
+}
+
+func tbcSource(
+	cfg TBCConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*offercache.OfferCache, error) {
+	client := tbcoffers.New(
+		tbcoffers.WithBaseURL(cfg.BaseURL.String()),
+		tbcoffers.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	tbc, err := offercache.New(tbcadapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of TBC: %w", err)
+	}
+
+	return tbc, nil
+}
+
+// closeAll closes the caches built before a failure, and returns the failure.
+func closeAll(banks []*offercache.OfferCache, cause error) error {
+	errs := make([]error, 0, 1+len(banks))
+	errs = append(errs, cause)
+
+	for _, bank := range banks {
+		errs = append(errs, bank.Close())
+	}
+
+	return errors.Join(errs...)
 }
 
 // Register adds the tools of the context. The tools need one bank or more.

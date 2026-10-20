@@ -28,21 +28,27 @@ const (
 	searchOffers = "offers_search_offers"
 	getOffer     = "offers_get_offer"
 	bogCode      = "bog"
+	argBanks     = "banks"
 )
 
 type offerJSON struct {
-	ID    string   `json:"id"`
-	Tiers []string `json:"tiers"`
-	URL   string   `json:"url"`
+	ID        string   `json:"id"`
+	Title     string   `json:"title"`
+	Partner   string   `json:"partner"`
+	Tiers     []string `json:"tiers"`
+	StartDate string   `json:"start_date"`
+	EndDate   string   `json:"end_date"`
+	URL       string   `json:"url"`
 }
 
 type searchJSON struct {
 	Banks []struct {
-		Bank   string      `json:"bank"`
-		Source string      `json:"source"`
-		AsOf   string      `json:"as_of"`
-		Total  int         `json:"total"`
-		Offers []offerJSON `json:"offers"`
+		Bank       string      `json:"bank"`
+		Source     string      `json:"source"`
+		AsOf       string      `json:"as_of"`
+		Total      int         `json:"total"`
+		NextOffset int         `json:"next_offset"`
+		Offers     []offerJSON `json:"offers"`
 	} `json:"banks"`
 }
 
@@ -208,7 +214,7 @@ func TestSearchAndGetAnOfferOfBOG(t *testing.T) {
 	var found searchJSON
 
 	decode(t, call(t, session, searchOffers, map[string]any{
-		"banks": []string{
+		argBanks: []string{
 			bogCode,
 		},
 		"tiers":      []string{"premium"},
