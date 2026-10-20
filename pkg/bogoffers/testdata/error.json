@@ -1,0 +1,1 @@
+{"statusKey":"app.error.general","statusMessage":"{\"result\":null,\"code\":15,\"error\":{\"name\":\"UNEXPECTED_ERROR\",\"context\":\"OFFERS_GET_LIFESTYLE_OFFERS_INFOS\",\"value\":\"Oops! ტექნიკური შეფერხება იყო, თავიდან ცადე\",\"key\":\"rb.bff.error.external.method.call.failed\"}}"}

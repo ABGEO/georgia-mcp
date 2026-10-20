@@ -3,6 +3,7 @@ go 1.27.2
 use (
 	.
 	./pkg/bog
+	./pkg/bogoffers
 	./pkg/nbg
 	./pkg/rompetrol
 	./pkg/socar
