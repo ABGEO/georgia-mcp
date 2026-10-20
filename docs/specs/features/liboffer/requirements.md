@@ -49,6 +49,9 @@ Observed behavior of the source on 2026-10-20:
   with "The offer is valid until December 31, 2026". 72 days after 2026-10-20 is 2026-12-31.
 - The answer wraps the list in `"succeeded":true`.
 - A title can end with no-break spaces.
+- A title can be empty in one language: offer 724 has no English title, and the Georgian
+  title "The Westin Grande Sukhumvit". Its address ends with the slug
+  `724-the-westin-grande-sukhumvit`.
 - Liberty publishes no list of offers for a customer who is not a Studio customer.
 
 ## 4. Out of scope
@@ -131,6 +134,21 @@ of Liberty.
 
 The server must read Liberty with no key. The operator must be able to turn Liberty off.
 It is on by default.
+
+### `LIBOFFER-FR-010`
+
+The server must give an offer of Liberty with no title in the requested language the
+words of the slug of its address as its title.
+
+**Why:** Liberty leaves a title empty in one language. An offer with no title is not in
+the answer, and the slug names the partner in Latin letters.
+
+**Examples:**
+
+- Normal case: offer 724 in `en`, with the address `…/details/724-the-westin-grande-sukhumvit `.
+  The title is "The Westin Grande Sukhumvit".
+- Limit case: an offer with a title. The server keeps the title of Liberty.
+- Unwanted case: no title and no slug. The server leaves the offer out.
 
 ## 7. Non-functional requirements
 

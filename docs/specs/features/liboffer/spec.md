@@ -34,6 +34,7 @@ list for each category and each type of Liberty. The terms come from the page of
 | `LIBOFFER-FR-007`  | 4.1 `pkg/liberty` `OfferPage`, `adapter/liberty` |
 | `LIBOFFER-FR-008`  | 4.1 `adapter/liberty`                           |
 | `LIBOFFER-FR-009`  | 4.3 configuration                               |
+| `LIBOFFER-FR-010`  | 4.1 `adapter/liberty`. `LIBOFFER-DD-005`        |
 | `LIBOFFER-NFR-001` | 4.3 configuration. `LIBOFFER-DD-004`. `LIBOFFER-SC-008` |
 
 ## 3. Guideline compliance
@@ -128,7 +129,7 @@ returns the cards of `LIBOFFER-DD-002`. `Offers` follows `LIBOFFER-DD-001`. The 
 | Field of the vendor      | Domain value                                                         |
 | ------------------------ | -------------------------------------------------------------------- |
 | `id`                     | `ID`, as a decimal text.                                             |
-| `title`                  | `Title`, trimmed with `strings.TrimSpace`. It removes U+00A0.        |
+| `title`                  | `Title`, trimmed with `strings.TrimSpace`. It removes U+00A0. Empty: the title of the slug of `url` (`LIBOFFER-DD-005`). |
 | `labels`                 | `Benefit`: each label trimmed, the empty ones dropped, joined by "; ". No label: `shortContent`, trimmed. |
 | `remainingDays`          | `Period.End`. `LIBOFFER-DD-003`.                                     |
 | the lists that hold it   | `Categories`, `BankCategories`, `Kinds`, `Cards`.                    |
@@ -218,7 +219,7 @@ row, and a warning one time for each id.
 
 | Type id | Name                   | Value                                     |
 | ------- | ---------------------- | ----------------------------------------- |
-| 1       | Discount               | the kind `discount`                       |
+| 1       | Sale                   | the kind `discount`                       |
 | 2       | Cashback               | the kind `cashback`                       |
 | 3       | Visa                   | the card `visa`, "Visa"                   |
 | 4       | MasterCard             | the card `mastercard`, "Mastercard"       |
@@ -245,6 +246,19 @@ text with no fixed form.
 **Decision:** The rate is 5 calls each second, with a burst of 5.
 **Rationale:** 67 calls take about 14 seconds at this rate, inside 30 seconds.
 **Alternatives:** 1 call each second. About 70 seconds.
+
+### `LIBOFFER-DD-005`
+
+**Realizes:** `LIBOFFER-FR-010`
+**Decision:** When the title is empty after trim, the adapter takes the last path segment
+of `url`, trims it, removes the id and the `-` before the words, and writes each word
+separated by `-` with a capital first letter, joined by a space. An empty result leaves
+the title empty, and the domain refuses the offer.
+**Rationale:** On 2026-10-20 offer 724 had no English title. Its slug held the name of
+the partner. The slug costs no call.
+**Alternatives:** The title of the other language. A second full read of Liberty, about
+67 calls, for each read of one language. Leave the offer out. The offer disappears in
+silence.
 
 ## 6. Scenarios
 
@@ -341,14 +355,25 @@ and the end date 2026-12-31.
 **When** a client calls the search with `categories: ["leisure"]`.
 **Then** the answer holds `bog` and `tbc`, and names Liberty Bank in `unavailable`.
 
+### `LIBOFFER-SC-010`
+
+**Verifies:** `LIBOFFER-FR-010`
+**Layer:** unit
+
+**Given** three offers with the titles "", "", and "Hyatt", and the addresses
+`…/details/724-the-westin-grande-sukhumvit `, `…/details/725`, and `…/details/727-hyatt`.
+**When** the adapter reads the offers.
+**Then** offer 724 has the title "The Westin Grande Sukhumvit", offer 725 is absent, and
+offer 727 has the title "Hyatt".
+
 ## 7. Build plan
 
 | #   | Step                                                                     | Realizes                                | Done |
 | --- | ------------------------------------------------------------------------ | --------------------------------------- | ---- |
-| 1   | `pkg/liberty` module, recorded answers and page, README, example. `go.work`. | `LIBOFFER-FR-001`, `LIBOFFER-FR-007` | [ ]  |
-| 2   | `adapter/liberty`: the read of `LIBOFFER-DD-001`, the tables, the terms. | `LIBOFFER-FR-001` to `LIBOFFER-FR-008`  | [ ]  |
-| 3   | `config.go`, `module.go`, `configs/.env.example`.                        | `LIBOFFER-FR-009`, `LIBOFFER-NFR-001`   | [ ]  |
-| 4   | Move the terms of requirements 5 to the glossary.                        | `DOM-002`                               | [ ]  |
+| 1   | `pkg/liberty` module, recorded answers and page, README, example. `go.work`. | `LIBOFFER-FR-001`, `LIBOFFER-FR-007` | [x]  |
+| 2   | `adapter/liberty`: the read of `LIBOFFER-DD-001`, the tables, the terms. | `LIBOFFER-FR-001` to `LIBOFFER-FR-008`, `LIBOFFER-FR-010` | [x]  |
+| 3   | `config.go`, `module.go`, `configs/.env.example`.                        | `LIBOFFER-FR-009`, `LIBOFFER-NFR-001`   | [x]  |
+| 4   | Move the terms of requirements 5 to the glossary.                        | `DOM-002`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -90,6 +90,8 @@ define it. The identifier of a term is `GLO-<term>`.
 | BOG                | Bank of Georgia, a bank. Bank code `bog`.                                                             |
 | TBC                | TBC Bank, a bank. Bank code `tbc`.                                                                    |
 | Concept            | The premium package of TBC.                                                                           |
+| Liberty            | Liberty Bank, a bank. Bank code `liberty`.                                                            |
+| Studio             | The premium package of Liberty.                                                                       |
 
 ## Transit
 
