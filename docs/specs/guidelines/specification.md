@@ -4,7 +4,7 @@ title: The specification artifacts
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-20
 scope: [docs/specs/features/]
 related: [PRC, TRC, LNG, MCP, CLT, RSL, CFG]
 ---
@@ -27,7 +27,7 @@ A feature directory holds these files and no other:
 A feature belongs to one bounded context. The frontmatter of each document names
 it in the `context` field. A feature that needs two contexts needs an ADR.
 A feature that builds no context, only the shared parts of the server, names
-`platform` in the field.
+`platform` in the field. A feature of `website/` names `website` in the field.
 
 ## SPC-003
 

@@ -111,3 +111,16 @@ define it. The identifier of a term is `GLO-<term>`.
 | itinerary          | One way to travel between two points: a sequence of legs.                                             |
 | leg                | One part of an itinerary: a walk, or a ride on one route.                                             |
 | place              | A named point in Tbilisi that a person can search: an address, a street, or a building.               |
+
+## The website
+
+| Term               | Meaning                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| site               | The Georgia MCP website.                                                                              |
+| page               | One address of the site in one language.                                                              |
+| home page          | The page at the root of a language.                                                                   |
+| tool page          | The page of one tool.                                                                                 |
+| tool definition    | The name, the title, the description, and the input schema of a tool, as the server lists it.         |
+| tool example       | A question in the words of a person, the input of one tool call, and its output, recorded from the server. |
+| tool summary       | One or two sentences, written for the site, that say what a tool answers.                             |
+| install guide      | The steps that connect one client to the server.                                                      |

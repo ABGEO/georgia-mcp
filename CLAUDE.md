@@ -53,6 +53,7 @@ Cite the identifier that the change restores.
 | ------------------ | ------------------------------------------------------------------------ |
 | Server (`.`)       | `golangci-lint run ./...` then `go test -race ./...` then `go build ./...` |
 | `pkg/<vendor>` | `cd pkg/<vendor> && golangci-lint run ./... && go test -race ./...`, then the server |
+| `website/`     | `cd website && npm run lint && npm test && npm run build`                 |
 
 ## Rules that break most often
 

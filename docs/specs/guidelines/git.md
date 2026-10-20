@@ -4,7 +4,7 @@ title: Git conventions
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-20
 scope: [.]
 related: [PRC, LNG, CLT]
 ---
@@ -54,6 +54,7 @@ The scope names the part of the repository that the change touches.
 | `server`    | `cmd`, `internal/app/georgia-mcp/cli`, `bootstrap`, `test`       |
 | `specs`     | `docs/specs/`                                                    |
 | `build`     | `build/`, `deployments/`, `configs/`, `Taskfile.yml`             |
+| `website`   | `website/`                                                       |
 | `deps`      | A dependency update                                              |
 
 Write no scope when the change touches no single part.

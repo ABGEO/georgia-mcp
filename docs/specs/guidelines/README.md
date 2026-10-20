@@ -42,6 +42,7 @@ every rule in that file.
 | `TRC` | [traceability.md](./traceability.md)       | The identifiers and the frontmatter.                       |
 | `LNG` | [language.md](./language.md)               | How to write every document, comment, and commit message.  |
 | `GLO` | [glossary.md](./glossary.md)               | The terms. One term has one meaning.                       |
+| `BRD` | [brand.md](./brand.md)                     | The identity, the colors, the type, and the website copy.  |
 
 ## Where to put a new rule
 
@@ -66,6 +67,7 @@ every rule in that file.
 | A commit, a branch, or a tag                               | `GIT`     |
 | An identifier or a frontmatter field                       | `TRC`     |
 | A word, a sentence, or a document                          | `LNG`     |
+| A color, a font, the mark, or the copy of the website      | `BRD`     |
 
 A rule that fits no guideline needs a new guideline. A new guideline needs an ADR.
 

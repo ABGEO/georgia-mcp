@@ -4,8 +4,8 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
-scope: [., pkg/, build/package/, deployments/, Taskfile.yml]
+updated: 2026-10-20
+scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -20,6 +20,7 @@ Every command must pass before the work is complete.
 | ------------------ | --------------------------------------------------------------------------------- |
 | Server (`.`)       | `golangci-lint run ./...`, `go test -race ./...`, `go build ./...`                |
 | `pkg/<vendor>`     | `cd pkg/<vendor> && golangci-lint run ./... && go test -race ./...`               |
+| `website/`         | `cd website && npm run lint && npm test && npm run build`                         |
 
 A change in a vendor client touches the server. Run the server commands too.
 

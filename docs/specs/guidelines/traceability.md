@@ -159,6 +159,7 @@ Add a row before you create the file or the directory.
 | `TRC` | `guidelines/traceability.md`   | Active |
 | `LNG` | `guidelines/language.md`       | Active |
 | `GLO` | `guidelines/glossary.md`       | Active |
+| `BRD` | `guidelines/brand.md`          | Active |
 
 ### Decision records
 
@@ -181,6 +182,7 @@ Add a row before you create the file or the directory.
 | `BOGOFFER` | `features/bogoffer/` | `offers`   | The card offers of Bank of Georgia, and the tools of every bank. | Approved |
 | `TBCOFFER` | `features/tbcoffer/` | `offers`   | The card offers of TBC Bank.                                    | Approved |
 | `LIBOFFER` | `features/liboffer/` | `offers`   | The card offers of Liberty Bank for its Studio customers.       | Approved |
+| `WEBSITE`  | `features/website/`  | `website`  | The website of Georgia MCP, in English and in Georgian.         | Approved |
 
 ## Retired identifiers
 
