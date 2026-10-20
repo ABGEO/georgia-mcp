@@ -4,7 +4,7 @@ title: The domain model
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-19
+updated: 2026-10-20
 scope: [internal/app/georgia-mcp/*/domain/, internal/app/georgia-mcp/*/app/, internal/pkg/kernel/]
 related: [ARC, PKG, CLT, GLO]
 ---
@@ -19,7 +19,8 @@ tactical part only where a context holds a rule. `ADR-0001` gives the reason.
 
 A bounded context covers one subject that a person in Georgia asks about.
 Its name is a lowercase noun: `rates`, `transit`, `legislation`.
-A context can read more than one vendor. A vendor belongs to one context.
+A context can read more than one vendor. A vendor client belongs to one context.
+A vendor can feed two contexts through two vendor clients. `ADR-0004`.
 
 **Why:** A person asks "what is the rate of the dollar", not "what does the NBG
 API return". The context holds the question. The vendor is a detail.

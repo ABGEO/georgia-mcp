@@ -37,3 +37,4 @@ The file name holds the slug only. See `TRC-008`.
 | `ADR-0001` | Bounded contexts with ports and adapters     | `bounded-contexts-with-ports-and-adapters.md` | accepted | 2026-10-17 | None. It founds `ARC`, `DOM`, `PKG`. |
 | `ADR-0002` | The civil date in the shared kernel          | `civil-date-in-the-shared-kernel.md`      | accepted | 2026-10-19 | `DOM-008` |
 | `ADR-0003` | A vendor client of a web page                | `vendor-client-of-a-web-page.md`          | accepted | 2026-10-19 | `CLT-002` to `CLT-005` |
+| `ADR-0004` | A vendor in two contexts                     | `a-vendor-in-two-contexts.md`             | accepted | 2026-10-20 | `DOM-001`, `CLT-001` |

@@ -178,6 +178,9 @@ Add a row before you create the file or the directory.
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |
 | `TTCTRANS` | `features/ttctrans/` | `transit`  | The stops, routes, arrivals, timetables, and trip plans of the TTC. | Approved |
+| `BOGOFFER` | `features/bogoffer/` | `offers`   | The card offers of Bank of Georgia, and the tools of every bank. | Approved |
+| `TBCOFFER` | `features/tbcoffer/` | `offers`   | The card offers of TBC Bank.                                    | Approved |
+| `LIBOFFER` | `features/liboffer/` | `offers`   | The card offers of Liberty Bank for its Studio customers.       | Approved |
 
 ## Retired identifiers
 

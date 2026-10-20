@@ -4,7 +4,7 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-19
+updated: 2026-10-20
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
@@ -18,7 +18,8 @@ page. Another project can import it with no part of the server.
 
 A vendor client lives in `pkg/<vendor>`, with its own `go.mod`.
 The module path is `github.com/abgeo/georgia-mcp/pkg/<vendor>`.
-The package name is the vendor name: `nbg`, `ttc`.
+The package name is the vendor name: `nbg`, `ttc`. A second client of the same vendor
+adds its subject to the name: `bogoffers`. `ADR-0004`.
 
 ## CLT-002
 
