@@ -46,6 +46,7 @@ each language, and the use case filters it. `spec-scenarios.md` holds the scenar
 | `BOGOFFER-FR-019`  | 4.2 `UnknownBankError`. 4.5                               |
 | `BOGOFFER-FR-020`  | 4.3 configuration. `BOGOFFER-DD-006`                      |
 | `BOGOFFER-FR-021`  | 4.3 tools, the descriptions and the field `url`           |
+| `BOGOFFER-FR-022`  | 4.2 `SearchQuery.Offset`, `BankOffers.NextOffset`. 4.3 tools. 4.5 |
 | `BOGOFFER-NFR-001` | 4.3 cache. `BOGOFFER-SC-018`                              |
 | `BOGOFFER-NFR-002` | 4.3 cache. `BOGOFFER-SC-019`                              |
 | `BOGOFFER-NFR-003` | 4.3 cache. `BOGOFFER-SC-020`                              |
@@ -272,12 +273,14 @@ type SearchQuery struct {
     Text       string               // empty: no text filter
     Language   kernel.Language
     Limit      int                  // 1 to 30, for each bank
+    Offset     int                  // 0 or more: the count of matching offers to skip, for each bank
 }
 
 type BankOffers struct {
     Bank   domain.Bank
-    Offers []domain.Offer // at most Limit
+    Offers []domain.Offer // at most Limit, after Offset
     Total  int            // every matching offer
+    NextOffset int        // Offset plus the count of Offers, when it is less than Total. Else 0.
     ReadAt time.Time
     Stale  bool
 }
@@ -320,6 +323,8 @@ matches when:
 - `Text` is empty, or the lowercase title, partner, benefit, or a bank category holds the lowercase text.
 
 The offers of a bank sort by end date, the open ones last, then by title, then by id.
+`Search` skips the first `Offset` of them, then keeps at most `Limit`. The id ends the
+order, so two pages of one catalog share no offer.
 
 `Get` finds the offer in the catalog of its bank. An offer that is absent, or that ends
 before today, returns `ErrOfferNotFound`. When `Offer.Terms` is not empty, `Get` returns
@@ -334,7 +339,7 @@ Errors in `app/errors.go`: `ErrUnknownBank` with `*UnknownBankError{Code, Known}
 
 | Tool                   | Input | Output | Errors (4.5) | Realizes |
 | ---------------------- | ----- | ------ | ------------ | -------- |
-| `offers_search_offers` | `banks`, `tiers`, `categories`, `kinds`, `cards`, `from`, `to`, `query`, `language`, `limit` | `searchOutput` | each value, range, limit, query, unknown bank, every bank unavailable | `BOGOFFER-FR-001` to `BOGOFFER-FR-013`, `BOGOFFER-FR-015` to `BOGOFFER-FR-019`, `BOGOFFER-FR-021` |
+| `offers_search_offers` | `banks`, `tiers`, `categories`, `kinds`, `cards`, `from`, `to`, `query`, `language`, `limit`, `offset` | `searchOutput` | each value, range, limit, offset, query, unknown bank, every bank unavailable | `BOGOFFER-FR-001` to `BOGOFFER-FR-013`, `BOGOFFER-FR-015` to `BOGOFFER-FR-019`, `BOGOFFER-FR-021`, `BOGOFFER-FR-022` |
 | `offers_get_offer`     | `bank`, `id` (both required), `language` | `offerDetailOutput` | bank code, unknown bank, id, not found, bank unavailable | `BOGOFFER-FR-014` to `BOGOFFER-FR-019`, `BOGOFFER-FR-021` |
 
 ```go
@@ -349,6 +354,7 @@ type searchOffersInput struct {
     Query      string   `json:"query,omitempty"      jsonschema:"A text to find in the title, the partner, the benefit, or the bank category, 1 to 100 characters."`
     Language   string   `json:"language,omitempty"   jsonschema:"The language of the texts: ka or en. The default is en."`
     Limit      int      `json:"limit,omitempty"      jsonschema:"The maximum count of offers for each bank, 1 to 30. The default is 10."`
+    Offset     int      `json:"offset,omitempty"     jsonschema:"The count of matching offers of each bank to skip, 0 or more. Give the next_offset of a bank to read its next page. The default is 0."`
 }
 
 type searchOutput struct {
@@ -363,6 +369,7 @@ type bankOffersOutput struct {
     AsOf   string        `json:"as_of"  jsonschema:"The instant at which the server read the offers, RFC 3339. The bank publishes no instant."`
     Stale  bool          `json:"stale"  jsonschema:"True when the bank did not answer and the server returns offers it read before."`
     Total  int           `json:"total"  jsonschema:"The count of every matching offer of the bank. offers holds at most limit of them."`
+    NextOffset int       `json:"next_offset,omitempty" jsonschema:"The offset of the next page of the bank. Absent when offers holds the last matching offer."`
     Offers []offerOutput `json:"offers" jsonschema:"The matching offers, the soonest end first."`
 }
 
@@ -415,7 +422,7 @@ Management at BOG), youth the pupils and the students.`
 
 | Tool                   | Title                       | Description |
 | ---------------------- | --------------------------- | ----------- |
-| `offers_search_offers` | Card offers of Georgian banks | Finds the current offers that Georgian banks give to card holders at partners: discounts, cashback, and points. Filters by bank, customer tier, category, benefit kind, card, and period. For "this month", give the first and the last date of the month. The benefit is the text of the bank. Compare the banks by reading it. Give the person the url of each offer that you name. Then `meaning`, the bank codes, and the card codes of each bank. |
+| `offers_search_offers` | Card offers of Georgian banks | Finds the current offers that Georgian banks give to card holders at partners: discounts, cashback, and points. Filters by bank, customer tier, category, benefit kind, card, and period. For "this month", give the first and the last date of the month. When a bank has a next_offset, call again with that offset to read more. The benefit is the text of the bank. Compare the banks by reading it. Give the person the url of each offer that you name. Then `meaning`, the bank codes, and the card codes of each bank. |
 | `offers_get_offer`     | Terms of a card offer       | Returns the full conditions of one offer of a Georgian bank. Use the bank and the id from offers_search_offers. Give the person the url of the offer with the conditions. |
 
 `adapter/tool` builds the list of the card codes in the description from
@@ -504,6 +511,7 @@ returns an error that wraps `kernel.ErrSourceUnavailable` and names the banks.
 | A date that is not `YYYY-MM-DD`                 | `kernel.ErrInvalidDate`         | `from: "20.10.2026" is not a date. Use YYYY-MM-DD.` |
 | `to` before `from`, or more than 366 days       | `app.ErrInvalidRange`           | `to: must be from 0 to 366 days after from.` |
 | A limit outside 1 to 30                         | none, the tool checks it        | `limit: 50 is out of range. Use 1 to 30.` |
+| A negative offset                               | none, the tool checks it        | `offset: -1 is out of range. Use 0 or more.` |
 | A query that is empty after trim, or too long   | none, the tool checks it        | `query: use 1 to 100 characters.` |
 | An empty id                                     | none, the tool checks it        | `id: give the offer id from offers_search_offers.` |
 | An offer that the bank does not list now        | `app.ErrOfferNotFound`          | `id: Bank of Georgia lists no current offer "123". Use offers_search_offers.` |
@@ -619,21 +627,22 @@ no tool.
 
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `BOGOFFER-SC-001` to `BOGOFFER-SC-022`.
+`spec-scenarios.md` holds `BOGOFFER-SC-001` to `BOGOFFER-SC-023`.
 
 ## 7. Build plan
 
 | #   | Step                                                                      | Realizes                                | Done |
 | --- | ------------------------------------------------------------------------- | --------------------------------------- | ---- |
 | 1   | Accept `ADR-0004`. Change `DOM-001` and `CLT-001`.                        | `BOGOFFER-FR-001`                       | [x]  |
-| 2   | `pkg/bogoffers` module, recorded answers, README, example. `go.work`.     | `BOGOFFER-FR-001`                       | [ ]  |
-| 3   | `domain`: every type of 4.2.                                              | `BOGOFFER-FR-003` to `BOGOFFER-FR-009`, `BOGOFFER-INV-001` | [ ]  |
-| 4   | `app`: port, `SearchOffers`, `GetOffer`.                                  | `BOGOFFER-FR-007` to `BOGOFFER-FR-019`  | [ ]  |
-| 5   | `adapter/text`, `adapter/bog`.                                            | `BOGOFFER-FR-001` to `BOGOFFER-FR-006`, `BOGOFFER-INV-002` | [ ]  |
-| 6   | `adapter/cache`: `OfferCache`.                                            | `BOGOFFER-FR-018`, `BOGOFFER-NFR-001` to `BOGOFFER-NFR-003` | [ ]  |
-| 7   | `adapter/tool`: `Register`.                                               | `BOGOFFER-FR-013`, `BOGOFFER-FR-015`    | [ ]  |
-| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`.            | `BOGOFFER-FR-020`                       | [ ]  |
-| 9   | Move the terms of requirements 5 to the glossary, in a section `Offers`.  | `DOM-002`                               | [ ]  |
+| 2   | `pkg/bogoffers` module, recorded answers, README, example. `go.work`.     | `BOGOFFER-FR-001`                       | [x]  |
+| 3   | `domain`: every type of 4.2.                                              | `BOGOFFER-FR-003` to `BOGOFFER-FR-009`, `BOGOFFER-INV-001` | [x]  |
+| 4   | `app`: port, `SearchOffers`, `GetOffer`.                                  | `BOGOFFER-FR-007` to `BOGOFFER-FR-019`  | [x]  |
+| 5   | `adapter/text`, `adapter/bog`.                                            | `BOGOFFER-FR-001` to `BOGOFFER-FR-006`, `BOGOFFER-INV-002` | [x]  |
+| 6   | `adapter/cache`: `OfferCache`.                                            | `BOGOFFER-FR-018`, `BOGOFFER-NFR-001` to `BOGOFFER-NFR-003` | [x]  |
+| 7   | `adapter/tool`: `Register`.                                               | `BOGOFFER-FR-013`, `BOGOFFER-FR-015`    | [x]  |
+| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`.            | `BOGOFFER-FR-020`                       | [x]  |
+| 9   | Move the terms of requirements 5 to the glossary, in a section `Offers`.  | `DOM-002`                               | [x]  |
+| 10  | `app` and `adapter/tool`: the offset and the next offset.                 | `BOGOFFER-FR-022`                       | [x]  |
 
 ## 8. Out of scope for this specification
 

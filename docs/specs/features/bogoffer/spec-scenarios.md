@@ -214,6 +214,17 @@ known codes `[bog, xyz]`.
 **When** `Search` runs with 2026-10-31 to 2026-10-01, then with 2026-01-01 to 2027-01-03.
 **Then** each returns `ErrInvalidRange`.
 
+### `BOGOFFER-SC-023`
+
+**Verifies:** `BOGOFFER-FR-022`
+**Layer:** unit
+
+**Given** a fake source with 25 matching offers.
+**When** `Search` runs with the limit 10 and the offset 0, then 10, then 20, then 30.
+**Then** the pages hold 10, 10, 5, and 0 offers, with the next offsets 10, 20, 0, and 0.
+The three pages hold the 25 ids with no repeat, in the order of the answer of the offset 0
+with the limit 30. The total is 25 each time.
+
 ## The cache
 
 ### `BOGOFFER-SC-018`
@@ -266,7 +277,8 @@ list of 10:00 with `Stale` true. The third returns the error.
 `tiers: ["premium"]`, `categories: ["leisure"]`, `limit: 5`, then calls `offers_get_offer`
 with the first id, then calls the search with `tiers: ["vip"]`.
 **Then** each tool has the annotations of `MCP-004` and the description names the card
-code `visa_infinite`. The search holds `bog` with `source` "Bank of Georgia", an `as_of`,
+code `visa_infinite`. A search with `offset: -1` returns `IsError` with the message of 4.5,
+and a search with `offset: 5` passes 5 to the use case. The search holds `bog` with `source` "Bank of Georgia", an `as_of`,
 5 offers or less, and a `total`. Each offer has the tier `premium` and a `url` that
 starts with `https://bankofgeorgia.ge/en/offers-hub/details/`. Each description tells the
 model to give the person the url. The get returns the

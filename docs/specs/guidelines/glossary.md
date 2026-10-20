@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Glossary
@@ -69,6 +69,25 @@ define it. The identifier of a term is `GLO-<term>`.
 | Rompetrol          | A fuel company of Georgia. Company code `rompetrol`.                                                   |
 | SOCAR              | SOCAR Georgia Petroleum, a fuel company of Georgia. Company code `socar`.                              |
 | `lpg`              | The grade of liquefied petroleum gas. Its unit is the litre.                                           |
+
+## Offers
+
+| Term               | Meaning                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| bank               | A commercial bank of Georgia that publishes card offers.                                              |
+| bank code          | The short lowercase name of a bank in a request: `bog`.                                               |
+| offer              | A benefit that a bank gives to its customers at a partner, for a period.                              |
+| partner            | The company where a customer gets the benefit of an offer: a shop, a hotel, a spa.                    |
+| benefit text       | The text of the bank that states the benefit of an offer: "20% Discount, unlimited".                  |
+| benefit kind       | The class of a benefit that the bank states in a field, not in a text: `discount`, `cashback`, `points`, or `other`. `BOGOFFER` 5.3. |
+| tier               | A group of customers of a bank that an offer is for: `standard`, `premium`, `private`, or `youth`. `BOGOFFER` 5.1. |
+| card               | A card or a package of a bank that an offer names as a condition: "Visa Infinite", "PLUS".            |
+| card code          | The short lowercase name of a card in a request: `visa_infinite`. Each bank has its own codes.        |
+| offer category     | The class of the partner of an offer that every bank shares. `BOGOFFER` 5.2 lists the 14 categories.  |
+| bank category      | The name that a bank gives to the category of an offer: "Health and Care".                            |
+| offer period       | The dates from the start date to the end date of an offer, both included.                             |
+| terms              | The full text of the conditions of an offer.                                                          |
+| BOG                | Bank of Georgia, a bank. Bank code `bog`.                                                             |
 
 ## Transit
 

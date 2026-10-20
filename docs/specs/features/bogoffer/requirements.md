@@ -293,6 +293,22 @@ address of the page of each offer that it names.
 
 **Why:** A benefit text is short. The page of the bank holds the conditions and the current state.
 
+### `BOGOFFER-FR-022`
+
+The server must skip the requested count of matching offers of each bank before it returns
+offers, in the order of the answer. It must give the count to skip for the next page of a
+bank when more matching offers remain.
+
+**Why:** A bank has more offers than one answer holds. A person who asks for every offer of
+SOLO must get each one.
+
+**Examples:**
+
+- Normal case: 130 matching offers, the limit 30, the offset 30. The answer holds offers
+  31 to 60, and the offset 60 for the next page.
+- Limit case: the offset 120. The answer holds the last 10 offers and no next offset.
+- Unwanted case: the offset -1. The server refuses it.
+
 ## 7. Non-functional requirements
 
 ### `BOGOFFER-NFR-001`
