@@ -412,10 +412,10 @@ blank line.
 
 | #   | Step                                                                  | Realizes                                | Done |
 | --- | --------------------------------------------------------------------- | --------------------------------------- | ---- |
-| 1   | `pkg/tbcoffers` module, recorded answers, README, example. `go.work`. | `TBCOFFER-FR-001`, `TBCOFFER-FR-007`    | [ ]  |
-| 2   | `adapter/tbc`: the read of `TBCOFFER-DD-001`, the tables, the terms.  | `TBCOFFER-FR-001` to `TBCOFFER-FR-007`  | [ ]  |
-| 3   | `config.go`, `module.go`, `configs/.env.example`.                     | `TBCOFFER-FR-008`, `TBCOFFER-NFR-001`   | [ ]  |
-| 4   | Move the terms of requirements 5 to the glossary.                     | `DOM-002`                               | [ ]  |
+| 1   | `pkg/tbcoffers` module, recorded answers, README, example. `go.work`. | `TBCOFFER-FR-001`, `TBCOFFER-FR-007`    | [x]  |
+| 2   | `adapter/tbc`: the read of `TBCOFFER-DD-001`, the tables, the terms.  | `TBCOFFER-FR-001` to `TBCOFFER-FR-007`  | [x]  |
+| 3   | `config.go`, `module.go`, `configs/.env.example`.                     | `TBCOFFER-FR-008`, `TBCOFFER-NFR-001`   | [x]  |
+| 4   | Move the terms of requirements 5 to the glossary.                     | `DOM-002`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

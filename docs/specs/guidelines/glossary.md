@@ -88,6 +88,8 @@ define it. The identifier of a term is `GLO-<term>`.
 | offer period       | The dates from the start date to the end date of an offer, both included.                             |
 | terms              | The full text of the conditions of an offer.                                                          |
 | BOG                | Bank of Georgia, a bank. Bank code `bog`.                                                             |
+| TBC                | TBC Bank, a bank. Bank code `tbc`.                                                                    |
+| Concept            | The premium package of TBC.                                                                           |
 
 ## Transit
 
