@@ -10,8 +10,9 @@ import (
 
 // Config is the configuration of the offers context.
 type Config struct {
-	BOG BOGConfig `envPrefix:"BOG_"`
-	TBC TBCConfig `envPrefix:"TBC_"`
+	BOG     BOGConfig     `envPrefix:"BOG_"`
+	TBC     TBCConfig     `envPrefix:"TBC_"`
+	Liberty LibertyConfig `envPrefix:"LIBERTY_"`
 }
 
 // BOGConfig is the configuration of the calls to Bank of Georgia. BOG needs no key, so
@@ -64,6 +65,32 @@ type TBCHTTPConfig struct {
 
 // Validate checks each value as httpclient.Config does.
 func (c TBCHTTPConfig) Validate() error {
+	return httpclient.Config(c).Validate()
+}
+
+// LibertyConfig is the configuration of the calls to Liberty. Liberty needs no key, so
+// Enabled turns it off. A Config built in Go leaves Liberty off.
+type LibertyConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
+	BaseURL url.URL `env:"BASE_URL" envDefault:"https://studioliberty.ge"`
+	HTTP    LibertyHTTPConfig
+}
+
+// Validate checks the address.
+func (c LibertyConfig) Validate() error {
+	return validateBaseURL(c.BaseURL)
+}
+
+// LibertyHTTPConfig holds the fields of httpclient.Config with the defaults of Liberty:
+// 5 calls each second. A read of Liberty is about 67 calls, one for each page of a list.
+type LibertyHTTPConfig struct {
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
+	Rate    float64       `env:"RATE"    envDefault:"5"`
+	Burst   int           `env:"BURST"   envDefault:"5"`
+}
+
+// Validate checks each value as httpclient.Config does.
+func (c LibertyHTTPConfig) Validate() error {
 	return httpclient.Config(c).Validate()
 }
 

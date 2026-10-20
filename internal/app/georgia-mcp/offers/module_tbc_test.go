@@ -206,7 +206,7 @@ func TestGetOfferOfTBC(t *testing.T) {
 			t,
 			session,
 			getOffer,
-			map[string]any{"bank": tbcCode, "id": oktopusID, "language": "en"},
+			map[string]any{argBank: tbcCode, "id": oktopusID, argLanguage: "en"},
 		),
 		&detail,
 	)

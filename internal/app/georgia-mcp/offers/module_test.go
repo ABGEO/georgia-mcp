@@ -29,6 +29,9 @@ const (
 	getOffer     = "offers_get_offer"
 	bogCode      = "bog"
 	argBanks     = "banks"
+	argBank      = "bank"
+	argCats      = "categories"
+	argLanguage  = "language"
 )
 
 type offerJSON struct {
@@ -217,9 +220,9 @@ func TestSearchAndGetAnOfferOfBOG(t *testing.T) {
 		argBanks: []string{
 			bogCode,
 		},
-		"tiers":      []string{"premium"},
-		"categories": []string{"leisure"},
-		"limit":      5,
+		"tiers": []string{"premium"},
+		argCats: []string{"leisure"},
+		"limit": 5,
 	}), &found)
 
 	if len(found.Banks) != 1 || found.Banks[0].Source != "Bank of Georgia" ||
@@ -234,7 +237,7 @@ func TestSearchAndGetAnOfferOfBOG(t *testing.T) {
 
 	decode(
 		t,
-		call(t, session, getOffer, map[string]any{"bank": bogCode, "id": bank.Offers[0].ID}),
+		call(t, session, getOffer, map[string]any{argBank: bogCode, "id": bank.Offers[0].ID}),
 		&detail,
 	)
 
@@ -278,7 +281,7 @@ func TestSearchesShareOneRead(t *testing.T) {
 
 	wg.Wait()
 
-	call(t, session, searchOffers, map[string]any{"language": "ka"})
+	call(t, session, searchOffers, map[string]any{argLanguage: "ka"})
 
 	if en, ka := bog.count("en"), bog.count("ka"); en != 3 || ka != 3 {
 		t.Errorf("calls = en %d, ka %d; want 3 and 3", en, ka)

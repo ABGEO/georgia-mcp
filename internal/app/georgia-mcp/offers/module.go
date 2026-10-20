@@ -10,18 +10,21 @@ import (
 
 	bogadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/bog"
 	offercache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/cache"
+	libertyadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/liberty"
 	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tbc"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tool"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	libertyclient "github.com/abgeo/georgia-mcp/pkg/liberty"
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
 )
 
 const (
-	bogSwitchVariable = "GEOMCP_OFFERS_BOG_ENABLED"
-	tbcSwitchVariable = "GEOMCP_OFFERS_TBC_ENABLED"
+	bogSwitchVariable     = "GEOMCP_OFFERS_BOG_ENABLED"
+	tbcSwitchVariable     = "GEOMCP_OFFERS_TBC_ENABLED"
+	libertySwitchVariable = "GEOMCP_OFFERS_LIBERTY_ENABLED"
 )
 
 // Module holds the use cases of the context and the cache of each bank.
@@ -64,6 +67,17 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		banks = append(banks, tbc)
 	} else {
 		logger.Info("TBC is off", slog.String("variable", tbcSwitchVariable))
+	}
+
+	if cfg.Liberty.Enabled {
+		liberty, err := libertySource(cfg.Liberty, logger, now)
+		if err != nil {
+			return nil, closeAll(banks, err)
+		}
+
+		banks = append(banks, liberty)
+	} else {
+		logger.Info("Liberty is off", slog.String("variable", libertySwitchVariable))
 	}
 
 	sources := make([]app.OfferSource, 0, len(banks))
@@ -114,6 +128,24 @@ func tbcSource(
 	}
 
 	return tbc, nil
+}
+
+func libertySource(
+	cfg LibertyConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*offercache.OfferCache, error) {
+	client := libertyclient.New(
+		libertyclient.WithBaseURL(cfg.BaseURL.String()),
+		libertyclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	liberty, err := offercache.New(libertyadapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Liberty: %w", err)
+	}
+
+	return liberty, nil
 }
 
 // closeAll closes the caches built before a failure, and returns the failure.

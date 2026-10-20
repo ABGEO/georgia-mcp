@@ -64,3 +64,15 @@ func TestLiveSearchOfTBC(t *testing.T) {
 		HTTP:    offers.TBCHTTPConfig{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
 	}}, tbcCode, 30*time.Second)
 }
+
+// LIBOFFER-SC-008: With the real Liberty and an empty cache, a search answers in less
+// than 30 seconds.
+func TestLiveSearchOfLiberty(t *testing.T) {
+	t.Parallel()
+
+	checkColdSearch(t, offers.Config{Liberty: offers.LibertyConfig{
+		Enabled: true,
+		BaseURL: mustURL(t, "https://studioliberty.ge"),
+		HTTP:    offers.LibertyHTTPConfig{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
+	}}, libertyCode, 30*time.Second)
+}
