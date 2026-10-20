@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit"
 	"github.com/abgeo/georgia-mcp/internal/pkg/config"
@@ -16,6 +17,7 @@ type Config struct {
 	Rates   rates.Config      `envPrefix:"RATES_"`
 	Fuel    fuel.Config       `envPrefix:"FUEL_"`
 	Transit transit.Config    `envPrefix:"TRANSIT_"`
+	Offers  offers.Config     `envPrefix:"OFFERS_"`
 }
 
 // LoadConfig reads and validates the configuration.

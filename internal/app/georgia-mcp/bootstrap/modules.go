@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
@@ -32,5 +33,14 @@ func modules(cfg Config, logger *slog.Logger) ([]mcpserver.Module, error) {
 		return nil, fmt.Errorf("building the transit context: %w", err)
 	}
 
-	return []mcpserver.Module{ratesModule, fuelModule, transitModule}, nil
+	offersModule, err := offers.New(cfg.Offers, logger)
+	if err != nil {
+		_ = ratesModule.Close()
+		_ = fuelModule.Close()
+		_ = transitModule.Close()
+
+		return nil, fmt.Errorf("building the offers context: %w", err)
+	}
+
+	return []mcpserver.Module{ratesModule, fuelModule, transitModule, offersModule}, nil
 }
