@@ -281,10 +281,10 @@ tool result is an error: `neogas` is not a fuel company of this server.
 
 | #   | Step                                                                   | Realizes                            | Done |
 | --- | ---------------------------------------------------------------------- | ----------------------------------- | ---- |
-| 1   | `pkg/neogas` module, recorded pages, README, example. `go.work`.       | `NEOFUEL-FR-001`, `NEOFUEL-FR-003`  | [ ]  |
-| 2   | `adapter/neogas`.                                                      | `NEOFUEL-FR-001` to `NEOFUEL-FR-004` | [ ]  |
-| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `NEOFUEL-FR-005`                    | [ ]  |
-| 4   | Move the term "Neogas" to the glossary. Add Neogas to the website.     | `DOM-002`                           | [ ]  |
+| 1   | `pkg/neogas` module, recorded pages, README, example. `go.work`.       | `NEOFUEL-FR-001`, `NEOFUEL-FR-003`  | [x]  |
+| 2   | `adapter/neogas`.                                                      | `NEOFUEL-FR-001` to `NEOFUEL-FR-004` | [x]  |
+| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `NEOFUEL-FR-005`                    | [x]  |
+| 4   | Move the term "Neogas" to the glossary. Add Neogas to the website.     | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -262,6 +262,106 @@ func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
 	}
 }
 
+// CONFUEL-SC-009: With no variable of fuel, Connect is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfConnect(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	connect := cfg.Fuel.Connect
+	if !connect.Enabled {
+		t.Error("Connect.Enabled = false, want true")
+	}
+
+	if got := connect.BaseURL.String(); got != "https://connect.com.ge/wp-json/fuel-prices/v1" {
+		t.Errorf("Connect.BaseURL = %q, want https://connect.com.ge/wp-json/fuel-prices/v1", got)
+	}
+
+	if http := connect.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Connect.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
+// LUKFUEL-SC-009: With no variable of fuel, Lukoil is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfLukoil(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	lukoil := cfg.Fuel.Lukoil
+	if !lukoil.Enabled {
+		t.Error("Lukoil.Enabled = false, want true")
+	}
+
+	if got := lukoil.BaseURL.String(); got != "https://www.lukoil.ge" {
+		t.Errorf("Lukoil.BaseURL = %q, want https://www.lukoil.ge", got)
+	}
+
+	if http := lukoil.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Lukoil.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
+// NEOFUEL-SC-008: With no variable of fuel, Neogas is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfNeogas(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	neogas := cfg.Fuel.Neogas
+	if !neogas.Enabled {
+		t.Error("Neogas.Enabled = false, want true")
+	}
+
+	if got := neogas.BaseURL.String(); got != "https://neogas.ge" {
+		t.Errorf("Neogas.BaseURL = %q, want https://neogas.ge", got)
+	}
+
+	if http := neogas.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Neogas.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
+// PORFUEL-SC-009: With no variable of fuel, Portal is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfPortal(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	portal := cfg.Fuel.Portal
+	if !portal.Enabled {
+		t.Error("Portal.Enabled = false, want true")
+	}
+
+	if got := portal.BaseURL.String(); got != "https://portal.com.ge" {
+		t.Errorf("Portal.BaseURL = %q, want https://portal.com.ge", got)
+	}
+
+	if http := portal.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Portal.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
 // TTCTRANS-SC-044: With no key of the TTC, the configuration fails and names the variable.
 func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 	t.Chdir(t.TempDir())

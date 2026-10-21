@@ -84,6 +84,10 @@ define it. The identifier of a term is `GLO-<term>`.
 | Rompetrol          | A fuel company of Georgia. Company code `rompetrol`.                                                   |
 | SOCAR              | SOCAR Georgia Petroleum, a fuel company of Georgia. Company code `socar`.                              |
 | `lpg`              | The grade of liquefied petroleum gas. Its unit is the litre.                                           |
+| Connect            | A fuel company of Georgia. Company code `connect`.                                                     |
+| Lukoil             | Lukoil Georgia, a fuel company of Georgia. Company code `lukoil`.                                      |
+| Neogas             | A network of gas stations of Georgia. Company code `neogas`.                                           |
+| Portal             | A fuel company of Georgia. Company code `portal`.                                                      |
 
 ## Offers
 

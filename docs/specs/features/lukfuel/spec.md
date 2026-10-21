@@ -356,10 +356,10 @@ tool result is an error: `lukoil` is not a fuel company of this server.
 
 | #   | Step                                                                   | Realizes                            | Done |
 | --- | ---------------------------------------------------------------------- | ----------------------------------- | ---- |
-| 1   | `pkg/lukoil` module, recorded pages, README, example. `go.work`.       | `LUKFUEL-FR-001`, `LUKFUEL-FR-006`  | [ ]  |
-| 2   | `adapter/lukoil`.                                                      | `LUKFUEL-FR-001` to `LUKFUEL-FR-006` | [ ]  |
-| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `LUKFUEL-FR-007`                    | [ ]  |
-| 4   | Move the term "Lukoil" to the glossary. Add Lukoil to the website.     | `DOM-002`                           | [ ]  |
+| 1   | `pkg/lukoil` module, recorded pages, README, example. `go.work`.       | `LUKFUEL-FR-001`, `LUKFUEL-FR-006`  | [x]  |
+| 2   | `adapter/lukoil`.                                                      | `LUKFUEL-FR-001` to `LUKFUEL-FR-006` | [x]  |
+| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `LUKFUEL-FR-007`                    | [x]  |
+| 4   | Move the term "Lukoil" to the glossary. Add Lukoil to the website.     | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

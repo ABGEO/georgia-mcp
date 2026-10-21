@@ -341,10 +341,10 @@ tool result is an error: `connect` is not a fuel company of this server.
 
 | #   | Step                                                                   | Realizes                            | Done |
 | --- | ---------------------------------------------------------------------- | ----------------------------------- | ---- |
-| 1   | `pkg/connect` module, recorded answers, README, example. `go.work`.    | `CONFUEL-FR-001`, `CONFUEL-FR-006`  | [ ]  |
-| 2   | `adapter/connect`.                                                     | `CONFUEL-FR-001` to `CONFUEL-FR-006` | [ ]  |
-| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `CONFUEL-FR-007`                    | [ ]  |
-| 4   | Move the term "Connect" to the glossary. Add Connect to the website.   | `DOM-002`                           | [ ]  |
+| 1   | `pkg/connect` module, recorded answers, README, example. `go.work`.    | `CONFUEL-FR-001`, `CONFUEL-FR-006`  | [x]  |
+| 2   | `adapter/connect`.                                                     | `CONFUEL-FR-001` to `CONFUEL-FR-006` | [x]  |
+| 3   | `module.go`, `config.go`, `configs/.env.example`.                      | `CONFUEL-FR-007`                    | [x]  |
+| 4   | Move the term "Connect" to the glossary. Add Connect to the website.   | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

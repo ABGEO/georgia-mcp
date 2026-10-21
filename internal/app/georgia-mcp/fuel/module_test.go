@@ -35,6 +35,12 @@ const (
 	rompetrolCode = "rompetrol"
 	socarCode     = "socar"
 	gradeLPG      = "lpg"
+	gradeSuper    = "super"
+	gradeSuper100 = "super_100"
+	gradeCNG      = "cng"
+	gradeDiesel   = "diesel"
+	argGrades     = "grades"
+	argCompanies  = "companies"
 )
 
 type priceOutput struct {
@@ -228,11 +234,11 @@ func TestGetPricesOfWissol(t *testing.T) {
 			SelfServicePrice: "3.93", EffectiveDate: "2026-10-08",
 		},
 		"A1 SUPER 100": {
-			Product: "A1 SUPER 100", Grade: "super_100", Unit: litre, Price: "4.79",
+			Product: "A1 SUPER 100", Grade: gradeSuper100, Unit: litre, Price: "4.79",
 			EffectiveDate: "2026-10-17",
 		},
 		"Wissol Gas": {
-			Product: "Wissol Gas", Grade: "cng", Unit: "cubic_metre", Price: "1.64",
+			Product: "Wissol Gas", Grade: gradeCNG, Unit: "cubic_metre", Price: "1.64",
 			EffectiveDate: "2023-11-07",
 		},
 	}
@@ -258,7 +264,7 @@ func TestGetPricesGivesTheNameInTheLanguage(t *testing.T) {
 	tests := map[string]string{"": regular, "en": regular, "ka": "ევრო რეგულარი"}
 
 	for language, want := range tests {
-		args := map[string]any{"grades": []string{gradeReg}}
+		args := map[string]any{argGrades: []string{gradeReg}}
 		if language != "" {
 			args["language"] = language
 		}
@@ -546,7 +552,7 @@ func TestRompetrolOff(t *testing.T) {
 		t.Errorf("the log lacks the record of Rompetrol off:\n%s", sink)
 	}
 
-	result := call(t, session, map[string]any{"companies": []string{rompetrolCode}})
+	result := call(t, session, map[string]any{argCompanies: []string{rompetrolCode}})
 	if !result.IsError {
 		t.Fatalf("result = %+v, want a tool error", result.StructuredContent)
 	}
@@ -602,7 +608,7 @@ func TestGetPricesOfLPG(t *testing.T) {
 
 	session := serve(t, threeCompanies(t), slog.New(slog.DiscardHandler))
 
-	out := decode(t, call(t, session, map[string]any{"grades": []string{gradeLPG}}))
+	out := decode(t, call(t, session, map[string]any{argGrades: []string{gradeLPG}}))
 
 	if len(out.Companies) != 3 {
 		t.Fatalf("companies = %+v, want 3", out.Companies)
@@ -699,7 +705,7 @@ func TestSOCAROff(t *testing.T) {
 		t.Errorf("the log lacks the record of SOCAR off:\n%s", sink)
 	}
 
-	result := call(t, session, map[string]any{"companies": []string{socarCode}})
+	result := call(t, session, map[string]any{argCompanies: []string{socarCode}})
 	if !result.IsError {
 		t.Fatalf("result = %+v, want a tool error", result.StructuredContent)
 	}
@@ -708,4 +714,274 @@ func TestSOCAROff(t *testing.T) {
 	if !ok || !strings.Contains(text.Text, `"socar" is not a fuel company of this server`) {
 		t.Errorf("result = %+v, want the error of an unknown company", result.Content)
 	}
+}
+
+// serveVendor serves a recorded file of a vendor client, and returns the address of the
+// server.
+func serveVendor(t *testing.T, vendor, file string) url.URL {
+	t.Helper()
+
+	path := filepath.Join("../../../../pkg", vendor, "testdata", file)
+
+	body, err := os.ReadFile(path) //nolint:gosec // The path names a file of testdata.
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = w.Write(body)
+	}))
+	t.Cleanup(server.Close)
+
+	base, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return *base
+}
+
+// failingCompanies turns on every company at a server that answers 500.
+func failingCompanies(t *testing.T) fuel.Config {
+	t.Helper()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	t.Cleanup(server.Close)
+
+	base, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	limits := fuel.WissolHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1}
+
+	return fuel.Config{
+		Wissol: fuel.WissolConfig{Enabled: true, BaseURL: *base, HTTP: limits},
+		Rompetrol: fuel.RompetrolConfig{
+			Enabled: true, BaseURL: *base, HTTP: fuel.RompetrolHTTPConfig(limits),
+		},
+		SOCAR: fuel.SOCARConfig{Enabled: true, BaseURL: *base, HTTP: fuel.SOCARHTTPConfig(limits)},
+		Connect: fuel.ConnectConfig{
+			Enabled: true, BaseURL: *base, HTTP: fuel.ConnectHTTPConfig(limits),
+		},
+		Lukoil: fuel.LukoilConfig{
+			Enabled: true,
+			BaseURL: *base,
+			HTTP:    fuel.LukoilHTTPConfig(limits),
+		},
+		Neogas: fuel.NeogasConfig{
+			Enabled: true,
+			BaseURL: *base,
+			HTTP:    fuel.NeogasHTTPConfig(limits),
+		},
+		Portal: fuel.PortalConfig{
+			Enabled: true,
+			BaseURL: *base,
+			HTTP:    fuel.PortalHTTPConfig(limits),
+		},
+	}
+}
+
+// onlyCompany calls the tool and returns the one company of the answer.
+func onlyCompany(
+	t *testing.T,
+	session *mcp.ClientSession,
+	args map[string]any,
+	code string,
+) companyOutput {
+	t.Helper()
+
+	out := decode(t, call(t, session, args))
+	if len(out.Companies) != 1 || out.Companies[0].Company != code {
+		t.Fatalf("companies = %+v, want %s only", out.Companies, code)
+	}
+
+	return out.Companies[0]
+}
+
+func description(t *testing.T, session *mcp.ClientSession) string {
+	t.Helper()
+
+	list, err := session.ListTools(t.Context(), nil)
+	if err != nil {
+		t.Fatalf("ListTools() error = %v", err)
+	}
+
+	return list.Tools[0].Description
+}
+
+// checkOff checks the log record of a company that is off, and the tool error of a
+// request for it.
+func checkOff(t *testing.T, cfg fuel.Config, name, code, variable string) {
+	t.Helper()
+
+	sink := &syncBuffer{}
+	logger := slog.New(slog.NewJSONHandler(sink, &slog.HandlerOptions{Level: slog.LevelDebug}))
+
+	session := serve(t, cfg, logger)
+
+	if !strings.Contains(sink.String(), `"msg":"`+name+` is off"`) ||
+		!strings.Contains(sink.String(), `"variable":"`+variable+`"`) {
+		t.Errorf("the log lacks the record of %s off:\n%s", name, sink)
+	}
+
+	result := call(t, session, map[string]any{argCompanies: []string{code}})
+	if !result.IsError {
+		t.Fatalf("result = %+v, want a tool error", result.StructuredContent)
+	}
+
+	text, ok := result.Content[0].(*mcp.TextContent)
+	if !ok || !strings.Contains(text.Text, `"`+code+`" is not a fuel company of this server`) {
+		t.Errorf("result = %+v, want the error of an unknown company", result.Content)
+	}
+}
+
+// CONFUEL-SC-007: The description lists Connect with no effective date, and Connect
+// answers next to the companies that fail.
+func TestGetPricesOfConnect(t *testing.T) {
+	t.Parallel()
+
+	cfg := failingCompanies(t)
+	cfg.Connect.BaseURL = serveVendor(t, "connect", "current.json")
+
+	session := serve(t, cfg, slog.New(slog.DiscardHandler))
+
+	if want := "connect (Connect, publishes no effective date)"; !strings.Contains(
+		description(t, session), want,
+	) {
+		t.Errorf("description = %q, want it to hold %q", description(t, session), want)
+	}
+
+	connect := onlyCompany(t, session, map[string]any{argGrades: []string{"premium"}}, "connect")
+
+	want := []priceOutput{{
+		Product: "Premium RON 96", Grade: "premium", Unit: litre, Price: "4.15",
+		SelfServicePrice: "3.95",
+	}}
+	if diff := cmp.Diff(want, connect.Prices); diff != "" {
+		t.Errorf("prices of Connect (-want +got):\n%s", diff)
+	}
+}
+
+// CONFUEL-SC-010: Connect off logs the variable, and a request for it is a tool error.
+func TestConnectOff(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.Connect = fuel.ConnectConfig{Enabled: false}
+
+	checkOff(t, cfg, "Connect", "connect", "GEOMCP_FUEL_CONNECT_ENABLED")
+}
+
+// NEOFUEL-SC-006: The description lists Neogas with no effective date. Neogas gives CNG
+// by the cubic metre, and names diesel as missing.
+func TestGetPricesOfNeogas(t *testing.T) {
+	t.Parallel()
+
+	cfg := failingCompanies(t)
+	cfg.Neogas.BaseURL = serveVendor(t, "neogas", "home.html")
+
+	session := serve(t, cfg, slog.New(slog.DiscardHandler))
+
+	if want := "neogas (Neogas, publishes no effective date)"; !strings.Contains(
+		description(t, session), want,
+	) {
+		t.Errorf("description = %q, want it to hold %q", description(t, session), want)
+	}
+
+	neogas := onlyCompany(
+		t, session, map[string]any{argGrades: []string{gradeCNG, gradeDiesel}}, "neogas",
+	)
+
+	want := []priceOutput{{Product: "CNG", Grade: gradeCNG, Unit: "cubic_metre", Price: "1.60"}}
+	if diff := cmp.Diff(want, neogas.Prices); diff != "" {
+		t.Errorf("prices of Neogas (-want +got):\n%s", diff)
+	}
+
+	if !slices.Equal(neogas.Missing, []string{gradeDiesel}) {
+		t.Errorf("missing = %q, want diesel", neogas.Missing)
+	}
+}
+
+// NEOFUEL-SC-009: Neogas off logs the variable, and a request for it is a tool error.
+func TestNeogasOff(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.Neogas = fuel.NeogasConfig{Enabled: false}
+
+	checkOff(t, cfg, "Neogas", "neogas", "GEOMCP_FUEL_NEOGAS_ENABLED")
+}
+
+// PORFUEL-SC-007: The description lists Portal with no effective date. The SUPER of
+// Portal is super, with its standard price only.
+func TestGetPricesOfPortal(t *testing.T) {
+	t.Parallel()
+
+	cfg := failingCompanies(t)
+	cfg.Portal.BaseURL = serveVendor(t, "portal", "fuel-prices.rsc")
+
+	session := serve(t, cfg, slog.New(slog.DiscardHandler))
+
+	if want := "portal (Portal, publishes no effective date)"; !strings.Contains(
+		description(t, session), want,
+	) {
+		t.Errorf("description = %q, want it to hold %q", description(t, session), want)
+	}
+
+	portal := onlyCompany(t, session, map[string]any{argGrades: []string{gradeSuper}}, "portal")
+
+	want := []priceOutput{{Product: "SUPER", Grade: gradeSuper, Unit: litre, Price: "4.39"}}
+	if diff := cmp.Diff(want, portal.Prices); diff != "" {
+		t.Errorf("prices of Portal (-want +got):\n%s", diff)
+	}
+}
+
+// PORFUEL-SC-010: Portal off logs the variable, and a request for it is a tool error.
+func TestPortalOff(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.Portal = fuel.PortalConfig{Enabled: false}
+
+	checkOff(t, cfg, "Portal", "portal", "GEOMCP_FUEL_PORTAL_ENABLED")
+}
+
+// LUKFUEL-SC-007: The description lists Lukoil with no note on the date, and each price
+// of Lukoil carries the date of the newest change.
+func TestGetPricesOfLukoil(t *testing.T) {
+	t.Parallel()
+
+	cfg := failingCompanies(t)
+	cfg.Lukoil.BaseURL = serveVendor(t, "lukoil", "prices-history.html")
+
+	session := serve(t, cfg, slog.New(slog.DiscardHandler))
+
+	tool := description(t, session)
+	if !strings.Contains(tool, "lukoil (Lukoil)") ||
+		strings.Contains(tool, "lukoil (Lukoil, publishes no effective date)") {
+		t.Errorf("description = %q, want lukoil (Lukoil) with no note on the date", tool)
+	}
+
+	lukoil := onlyCompany(t, session, map[string]any{argGrades: []string{gradeDiesel}}, "lukoil")
+
+	want := []priceOutput{{
+		Product: "Euro Diesel", Grade: gradeDiesel, Unit: litre, Price: "4.97",
+		EffectiveDate: "2026-10-05",
+	}}
+	if diff := cmp.Diff(want, lukoil.Prices); diff != "" {
+		t.Errorf("prices of Lukoil (-want +got):\n%s", diff)
+	}
+}
+
+// LUKFUEL-SC-010: Lukoil off logs the variable, and a request for it is a tool error.
+func TestLukoilOff(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.Lukoil = fuel.LukoilConfig{Enabled: false}
+
+	checkOff(t, cfg, "Lukoil", "lukoil", "GEOMCP_FUEL_LUKOIL_ENABLED")
 }

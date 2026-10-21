@@ -4,10 +4,14 @@ use (
 	.
 	./pkg/bog
 	./pkg/bogoffers
+	./pkg/connect
 	./pkg/kursi
 	./pkg/liberty
 	./pkg/libertyrates
+	./pkg/lukoil
 	./pkg/nbg
+	./pkg/neogas
+	./pkg/portal
 	./pkg/rico
 	./pkg/rompetrol
 	./pkg/socar

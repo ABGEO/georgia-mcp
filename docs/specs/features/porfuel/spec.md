@@ -263,7 +263,7 @@ is the instant of the clock. `Company` is `{portal, Portal, false}`.
 
 | Code            | Grade       | Standard | English name  | Georgian name |
 | --------------- | ----------- | -------- | ------------- | ------------- |
-| `super`         | `super_100` | `4.39`   | SUPER         | სუპერი         |
+| `super`         | `super`     | `4.39`   | SUPER         | სუპერი         |
 | `premium`       | `premium`   | `4.19`   | PREMIUM       | პრემიუმი       |
 | `euro-regular`  | `regular`   | `3.94`   | EURO REGULAR  | ევრო რეგულარი   |
 | `euro-diesel`   | `diesel`    | `4.94`   | EURO DIESEL   | ევრო დიზელი     |
@@ -297,7 +297,7 @@ Each case fails with an error that wraps `kernel.ErrSourceUnavailable`.
 **Verifies:** `PORFUEL-FR-001`, `PORFUEL-FR-002`, `PORFUEL-FR-005` **Layer:** integration
 
 **Given** Portal serves `fuel-prices.rsc`, and every other company answers 500.
-**When** a client lists the tools, then calls `fuel_get_prices` with the grade `super_100`.
+**When** a client lists the tools, then calls `fuel_get_prices` with the grade `super`.
 **Then** the description holds `portal (Portal, publishes no effective date)`. `portal`
 holds SUPER at `4.39`, with no `self_service_price` and no `effective_date`.
 
@@ -332,10 +332,10 @@ tool result is an error: `portal` is not a fuel company of this server.
 | #   | Step                                                                   | Realizes                            | Done |
 | --- | ---------------------------------------------------------------------- | ----------------------------------- | ---- |
 | 1   | `CLT-003` to `CLT-005`: the client of a data stream.                   | `PORFUEL-FR-001`                    | [x]  |
-| 2   | `pkg/portal` module, recorded streams, README, example. `go.work`.     | `PORFUEL-FR-001`, `PORFUEL-FR-004`  | [ ]  |
-| 3   | `adapter/portal`.                                                      | `PORFUEL-FR-001` to `PORFUEL-FR-005` | [ ]  |
-| 4   | `module.go`, `config.go`, `configs/.env.example`.                      | `PORFUEL-FR-006`                    | [ ]  |
-| 5   | Move the term "Portal" to the glossary. Add Portal to the website.     | `DOM-002`                           | [ ]  |
+| 2   | `pkg/portal` module, recorded streams, README, example. `go.work`.     | `PORFUEL-FR-001`, `PORFUEL-FR-004`  | [x]  |
+| 3   | `adapter/portal`.                                                      | `PORFUEL-FR-001` to `PORFUEL-FR-005` | [x]  |
+| 4   | `module.go`, `config.go`, `configs/.env.example`.                      | `PORFUEL-FR-006`                    | [x]  |
+| 5   | Move the term "Portal" to the glossary. Add Portal to the website.     | `DOM-002`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

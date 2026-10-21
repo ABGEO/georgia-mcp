@@ -9,6 +9,10 @@ import (
 	"time"
 
 	fuelcache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/cache"
+	connectadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/connect"
+	lukoiladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/lukoil"
+	neogasadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/neogas"
+	portaladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/portal"
 	rompetroladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/rompetrol"
 	socaradapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/socar"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/tool"
@@ -16,6 +20,10 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	connectclient "github.com/abgeo/georgia-mcp/pkg/connect"
+	lukoilclient "github.com/abgeo/georgia-mcp/pkg/lukoil"
+	neogasclient "github.com/abgeo/georgia-mcp/pkg/neogas"
+	portalclient "github.com/abgeo/georgia-mcp/pkg/portal"
 	rompetrolclient "github.com/abgeo/georgia-mcp/pkg/rompetrol"
 	socarclient "github.com/abgeo/georgia-mcp/pkg/socar"
 	wissolclient "github.com/abgeo/georgia-mcp/pkg/wissol"
@@ -25,7 +33,20 @@ const (
 	wissolSwitchVariable    = "GEOMCP_FUEL_WISSOL_ENABLED"
 	rompetrolSwitchVariable = "GEOMCP_FUEL_ROMPETROL_ENABLED"
 	socarSwitchVariable     = "GEOMCP_FUEL_SOCAR_ENABLED"
+	connectSwitchVariable   = "GEOMCP_FUEL_CONNECT_ENABLED"
+	lukoilSwitchVariable    = "GEOMCP_FUEL_LUKOIL_ENABLED"
+	neogasSwitchVariable    = "GEOMCP_FUEL_NEOGAS_ENABLED"
+	portalSwitchVariable    = "GEOMCP_FUEL_PORTAL_ENABLED"
 )
+
+// companySource is one fuel company of the configuration: its switch, and the builder of
+// its cache.
+type companySource struct {
+	enabled  bool
+	name     string
+	variable string
+	build    func() (*fuelcache.PriceCache, error)
+}
 
 // Module holds the use case of the context and the cache of each fuel company.
 type Module struct {
@@ -46,37 +67,19 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 
 	var companies []*fuelcache.PriceCache
 
-	if cfg.Wissol.Enabled {
-		wissol, err := wissolSource(cfg.Wissol, logger, now)
+	for _, source := range companySources(cfg, logger, now) {
+		if !source.enabled {
+			logger.Info(source.name+" is off", slog.String("variable", source.variable))
+
+			continue
+		}
+
+		company, err := source.build()
 		if err != nil {
 			return nil, err
 		}
 
-		companies = append(companies, wissol)
-	} else {
-		logger.Info("Wissol is off", slog.String("variable", wissolSwitchVariable))
-	}
-
-	if cfg.Rompetrol.Enabled {
-		rompetrol, err := rompetrolSource(cfg.Rompetrol, logger, now)
-		if err != nil {
-			return nil, err
-		}
-
-		companies = append(companies, rompetrol)
-	} else {
-		logger.Info("Rompetrol is off", slog.String("variable", rompetrolSwitchVariable))
-	}
-
-	if cfg.SOCAR.Enabled {
-		socar, err := socarSource(cfg.SOCAR, logger, now)
-		if err != nil {
-			return nil, err
-		}
-
-		companies = append(companies, socar)
-	} else {
-		logger.Info("SOCAR is off", slog.String("variable", socarSwitchVariable))
+		companies = append(companies, company)
 	}
 
 	sources := make([]app.PriceSource, 0, len(companies))
@@ -87,6 +90,58 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	logger.Debug("built the context", slog.Int("companies", len(companies)))
 
 	return &Module{prices: app.NewGetPrices(sources), companies: companies}, nil
+}
+
+// companySources lists each fuel company in the order of the build.
+func companySources(
+	cfg Config,
+	logger *slog.Logger,
+	now func() time.Time,
+) []companySource {
+	return []companySource{
+		{
+			enabled: cfg.Wissol.Enabled, name: "Wissol", variable: wissolSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return wissolSource(cfg.Wissol, logger, now)
+			},
+		},
+		{
+			enabled: cfg.Rompetrol.Enabled, name: "Rompetrol", variable: rompetrolSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return rompetrolSource(cfg.Rompetrol, logger, now)
+			},
+		},
+		{
+			enabled: cfg.SOCAR.Enabled, name: "SOCAR", variable: socarSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return socarSource(cfg.SOCAR, logger, now)
+			},
+		},
+		{
+			enabled: cfg.Connect.Enabled, name: "Connect", variable: connectSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return connectSource(cfg.Connect, logger, now)
+			},
+		},
+		{
+			enabled: cfg.Lukoil.Enabled, name: "Lukoil", variable: lukoilSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return lukoilSource(cfg.Lukoil, logger, now)
+			},
+		},
+		{
+			enabled: cfg.Neogas.Enabled, name: "Neogas", variable: neogasSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return neogasSource(cfg.Neogas, now)
+			},
+		},
+		{
+			enabled: cfg.Portal.Enabled, name: "Portal", variable: portalSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return portalSource(cfg.Portal, logger, now)
+			},
+		},
+	}
 }
 
 func wissolSource(
@@ -141,6 +196,77 @@ func socarSource(
 	}
 
 	return socar, nil
+}
+
+func connectSource(
+	cfg ConnectConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := connectclient.New(
+		connectclient.WithBaseURL(cfg.BaseURL.String()),
+		connectclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	connect, err := fuelcache.New(connectadapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Connect: %w", err)
+	}
+
+	return connect, nil
+}
+
+func lukoilSource(
+	cfg LukoilConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := lukoilclient.New(
+		lukoilclient.WithBaseURL(cfg.BaseURL.String()),
+		lukoilclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	lukoil, err := fuelcache.New(lukoiladapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Lukoil: %w", err)
+	}
+
+	return lukoil, nil
+}
+
+func neogasSource(
+	cfg NeogasConfig,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := neogasclient.New(
+		neogasclient.WithBaseURL(cfg.BaseURL.String()),
+		neogasclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	neogas, err := fuelcache.New(neogasadapter.NewAdapter(client, now))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Neogas: %w", err)
+	}
+
+	return neogas, nil
+}
+
+func portalSource(
+	cfg PortalConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := portalclient.New(
+		portalclient.WithBaseURL(cfg.BaseURL.String()),
+		portalclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	)
+
+	portal, err := fuelcache.New(portaladapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Portal: %w", err)
+	}
+
+	return portal, nil
 }
 
 // Register adds the tool of the context. The tool needs one fuel company or more.

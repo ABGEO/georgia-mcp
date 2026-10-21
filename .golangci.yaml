@@ -89,6 +89,8 @@ linters:
             - "!**/pkg/liberty/**"
             - "!**/pkg/libertyrates/**"
             - "!**/pkg/rico/**"
+            - "!**/pkg/neogas/**"
+            - "!**/pkg/lukoil/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg
@@ -104,12 +106,16 @@ linters:
             - "**/pkg/liberty/**"
             - "**/pkg/libertyrates/**"
             - "**/pkg/rico/**"
+            - "**/pkg/neogas/**"
+            - "**/pkg/lukoil/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg/rompetrol
             - github.com/abgeo/georgia-mcp/pkg/liberty
             - github.com/abgeo/georgia-mcp/pkg/libertyrates
             - github.com/abgeo/georgia-mcp/pkg/rico
+            - github.com/abgeo/georgia-mcp/pkg/neogas
+            - github.com/abgeo/georgia-mcp/pkg/lukoil
             - golang.org/x/net/html
           deny:
             - pkg: github.com/abgeo/georgia-mcp/internal
