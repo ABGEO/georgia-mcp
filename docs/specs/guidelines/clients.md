@@ -4,7 +4,7 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-20
+updated: 2026-10-21
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
@@ -36,7 +36,8 @@ imports it. `ADR-0003`.
 A client mirrors the API of the vendor. Its types carry the field names of the
 vendor in their JSON tags. A client does not interpret the data. A client of a web
 page returns the text of each cell of the data, as the page shows it. Its types carry
-no JSON tag.
+no JSON tag. A client of a page that sends its data as JSON in the body (a data stream
+of a web framework) mirrors that JSON, with the field names of the page in its tags.
 
 **Why:** The server interprets the data in its adapter. See `DOM-005`.
 
@@ -44,7 +45,9 @@ no JSON tag.
 
 The HTTP client is `net/http`. The client builds the address with `net/url`, and decodes
 the body with `encoding/json` or `encoding/xml`. A client of a web page parses the body
-with `golang.org/x/net/html`. It reads at most a fixed count of bytes from a body.
+with `golang.org/x/net/html`. A client of a data stream finds the JSON value in the
+body and decodes it with `encoding/json`. It reads at most a fixed count of bytes from
+a body.
 
 **Why:** A GET with a query and two headers needs no library. The standard library has
 no major version to migrate.
@@ -61,7 +64,8 @@ The constructor is `New(opts ...Option) *Client`. An option sets one value:
 | `WithAPIKey`      | None. Only a client whose vendor needs a key. |
 
 The client sets `Accept: application/json` once, at construction. A client of a web
-page sets `Accept: text/html`.
+page sets `Accept: text/html`. A client of a data stream sets the `Accept` of the
+stream and the header that the framework reads to send it, for example `RSC: 1`.
 
 ## CLT-006
 

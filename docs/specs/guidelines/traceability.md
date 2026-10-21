@@ -182,6 +182,10 @@ Add a row before you create the file or the directory.
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |
+| `CONFUEL`  | `features/confuel/`  | `fuel`     | The fuel prices of Connect.                                     | Approved |
+| `LUKFUEL`  | `features/lukfuel/`  | `fuel`     | The fuel prices of Lukoil, with the date of the last change.    | Approved |
+| `NEOFUEL`  | `features/neofuel/`  | `fuel`     | The price of compressed natural gas of Neogas.                  | Approved |
+| `PORFUEL`  | `features/porfuel/`  | `fuel`     | The fuel prices of Portal, read from the data of its web page.  | Approved |
 | `TTCTRANS` | `features/ttctrans/` | `transit`  | The stops, routes, arrivals, timetables, and trip plans of the TTC. | Approved |
 | `BOGOFFER` | `features/bogoffer/` | `offers`   | The card offers of Bank of Georgia, and the tools of every bank. | Approved |
 | `TBCOFFER` | `features/tbcoffer/` | `offers`   | The card offers of TBC Bank.                                    | Approved |

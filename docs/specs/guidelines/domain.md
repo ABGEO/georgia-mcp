@@ -4,7 +4,7 @@ title: The domain model
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-20
+updated: 2026-10-21
 scope: [internal/app/georgia-mcp/*/domain/, internal/app/georgia-mcp/*/app/, internal/pkg/kernel/]
 related: [ARC, PKG, CLT, GLO]
 ---
@@ -64,6 +64,15 @@ A monetary amount, a price, or an exchange rate never uses a binary floating poi
 type. It uses `decimal.Decimal` of `github.com/shopspring/decimal`.
 
 **Why:** 0.1 has no exact binary form. A rate of 2.5982 must stay 2.5982.
+
+A vendor can send a price as the full digits of a binary float:
+`4.3499999999999996447286321199499070644378662109375` for 4.35. The adapter then
+parses the text to a `float64`, writes the shortest text that parses back to the same
+`float64` (`strconv.FormatFloat(f, 'f', -1, 64)`), and reads that text as a
+`decimal.Decimal`. The float lives inside this one conversion only.
+
+**Why:** The vendor stored the price as a binary float. The shortest text is the price
+that the vendor entered and shows on its page.
 
 ## DOM-007
 
