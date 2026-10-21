@@ -316,3 +316,119 @@ func TestLoadConfigGivesTheDefaultsOfTheTTC(t *testing.T) {
 		t.Errorf("TTC.HTTP = %+v, want a timeout of 10s, rate 4, burst 1", http)
 	}
 }
+
+// LIBRATE-SC-008: With no variable of Liberty, the bank is on, at its production
+// address, with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfLiberty(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	liberty := cfg.Rates.Liberty
+	if !liberty.Enabled {
+		t.Error("Liberty.Enabled = false, want true")
+	}
+
+	if got := liberty.BaseURL.String(); got != "https://www.libertybank.ge" {
+		t.Errorf("Liberty.BaseURL = %q, want %q", got, "https://www.libertybank.ge")
+	}
+
+	if liberty.HTTP.Rate != 1 || liberty.HTTP.Burst != 1 {
+		t.Errorf(
+			"Liberty.HTTP = rate %v burst %d, want rate 1 burst 1",
+			liberty.HTTP.Rate,
+			liberty.HTTP.Burst,
+		)
+	}
+}
+
+// TERARATE-SC-008: With no variable of Terabank, the bank is on, at its production
+// address, with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfTerabank(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	terabank := cfg.Rates.Terabank
+	if !terabank.Enabled {
+		t.Error("Terabank.Enabled = false, want true")
+	}
+
+	if got := terabank.BaseURL.String(); got != "https://terabank.ge" {
+		t.Errorf("Terabank.BaseURL = %q, want %q", got, "https://terabank.ge")
+	}
+
+	if terabank.HTTP.Rate != 1 || terabank.HTTP.Burst != 1 {
+		t.Errorf(
+			"Terabank.HTTP = rate %v burst %d, want rate 1 burst 1",
+			terabank.HTTP.Rate,
+			terabank.HTTP.Burst,
+		)
+	}
+}
+
+// RICORATE-SC-009: With no variable of Rico Credit, it is on, at its production
+// address, with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfRicoCredit(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	rico := cfg.Rates.Rico
+	if !rico.Enabled {
+		t.Error("Rico.Enabled = false, want true")
+	}
+
+	if got := rico.BaseURL.String(); got != "https://www.rico.ge" {
+		t.Errorf("Rico.BaseURL = %q, want %q", got, "https://www.rico.ge")
+	}
+
+	if rico.HTTP.Rate != 1 || rico.HTTP.Burst != 1 {
+		t.Errorf(
+			"Rico.HTTP = rate %v burst %d, want rate 1 burst 1",
+			rico.HTTP.Rate,
+			rico.HTTP.Burst,
+		)
+	}
+}
+
+// KURSRATE-SC-009: With no variable of Kursi.ge, it is on, at its production address,
+// with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfKursi(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	kursi := cfg.Rates.Kursi
+	if !kursi.Enabled {
+		t.Error("Kursi.Enabled = false, want true")
+	}
+
+	if got := kursi.BaseURL.String(); got != "https://api-core.kursi.ge" {
+		t.Errorf("Kursi.BaseURL = %q, want %q", got, "https://api-core.kursi.ge")
+	}
+
+	if kursi.HTTP.Rate != 1 || kursi.HTTP.Burst != 1 {
+		t.Errorf(
+			"Kursi.HTTP = rate %v burst %d, want rate 1 burst 1",
+			kursi.HTTP.Rate,
+			kursi.HTTP.Burst,
+		)
+	}
+}

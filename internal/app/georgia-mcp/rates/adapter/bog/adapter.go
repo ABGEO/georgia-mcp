@@ -36,7 +36,7 @@ func NewAdapter(client *bogclient.Client, now func() time.Time) *Adapter {
 
 // Bank returns Bank of Georgia.
 func (a *Adapter) Bank() domain.Bank {
-	return domain.Bank{Code: "bog", Name: "Bank of Georgia"}
+	return domain.Bank{Code: "bog", Name: "Bank of Georgia", Kind: domain.KindBank}
 }
 
 // CommercialRates reads each code with its own call, all at once. A code with no rate

@@ -24,6 +24,8 @@ const (
 	tbcTestdata   = "../../../../pkg/tbc/testdata"
 	getCommercial = "rates_get_commercial_rates"
 	tbcKey        = "GEOMCP_RATES_TBC_API_KEY"
+	// clockInstant is the instant of the fixed clock of serve, in Tbilisi.
+	clockInstant = "2026-10-18T14:00:00+04:00"
 )
 
 type commercialRateOutput struct {
@@ -127,7 +129,7 @@ func TestGetCommercialRatesOfTBC(t *testing.T) {
 		Banks: []bankRatesOutput{{
 			Bank:   "tbc",
 			Source: "TBC Bank",
-			AsOf:   "2026-10-18T14:00:00+04:00",
+			AsOf:   clockInstant,
 			Rates:  []commercialRateOutput{{Currency: dollar, Buy: "2.566", Sell: "2.628"}},
 		}},
 	}

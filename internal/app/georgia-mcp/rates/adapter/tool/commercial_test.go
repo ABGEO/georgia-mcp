@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 	"testing"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -21,6 +22,7 @@ const (
 	argCurrencies = "currencies"
 	tbcCode       = "tbc"
 	bogCode       = "bog"
+	bogName       = "Bank of Georgia"
 )
 
 type fakeCommercial struct {
@@ -120,7 +122,7 @@ func TestGetCommercialRatesWhenEveryBankFails(t *testing.T) {
 
 	session := connectCommercial(t, fakeCommercial{
 		banks: []domain.Bank{
-			{Code: bogCode, Name: "Bank of Georgia"},
+			{Code: bogCode, Name: bogName},
 			{Code: tbcCode, Name: "TBC Bank"},
 		},
 		err: fmt.Errorf("asking the banks: %w", kernel.ErrSourceUnavailable),
@@ -131,5 +133,69 @@ func TestGetCommercialRatesWhenEveryBankFails(t *testing.T) {
 	want := "Bank of Georgia and TBC Bank did not answer. Try again in a few minutes."
 	if got := errorText(t, result); got != want {
 		t.Errorf("error = %q, want %q", got, want)
+	}
+}
+
+// RICORATE-SC-008: The list of banks in the description gives the kind of each company
+// that is not a bank. A bank with no kind is a bank.
+func TestTheDescriptionGivesTheKindOfABank(t *testing.T) {
+	t.Parallel()
+
+	georgia := domain.Bank{Code: bogCode, Name: bogName, Kind: domain.KindBank}
+	rico := domain.Bank{Code: "rico", Name: "Rico Credit", Kind: domain.KindMicrofinance}
+
+	tests := map[string]struct {
+		banks []domain.Bank
+		want  string
+	}{
+		"a bank": {
+			banks: []domain.Bank{georgia},
+			want:  "The banks of this server: bog (Bank of Georgia).",
+		},
+		"a bank with no kind": {
+			banks: []domain.Bank{{Code: bogCode, Name: bogName}},
+			want:  "The banks of this server: bog (Bank of Georgia).",
+		},
+		"a microfinance organization": {
+			banks: []domain.Bank{georgia, rico},
+			want: "The banks of this server: bog (Bank of Georgia), " +
+				"rico (Rico Credit, a microfinance organization).",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			session := connectCommercial(t, fakeCommercial{banks: tt.banks})
+
+			list, err := session.ListTools(t.Context(), nil)
+			if err != nil {
+				t.Fatalf("ListTools() error = %v", err)
+			}
+
+			if got := list.Tools[0].Description; !strings.Contains(got, tt.want) {
+				t.Errorf("description = %q, want it to hold %q", got, tt.want)
+			}
+		})
+	}
+}
+
+// KURSRATE-SC-008: An online exchange bureau takes the article an.
+func TestTheDescriptionNamesAnOnlineExchangeBureau(t *testing.T) {
+	t.Parallel()
+
+	session := connectCommercial(t, fakeCommercial{banks: []domain.Bank{
+		{Code: "kursi", Name: "Kursi.ge", Kind: domain.KindExchangeBureau},
+	}})
+
+	list, err := session.ListTools(t.Context(), nil)
+	if err != nil {
+		t.Fatalf("ListTools() error = %v", err)
+	}
+
+	want := "kursi (Kursi.ge, an online exchange bureau)"
+	if got := list.Tools[0].Description; !strings.Contains(got, want) {
+		t.Errorf("description = %q, want it to hold %q", got, want)
 	}
 }

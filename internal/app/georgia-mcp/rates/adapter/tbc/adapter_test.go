@@ -179,7 +179,7 @@ func TestCommercialRatesIgnoreACodeThatWasNotRequested(t *testing.T) {
 func TestBank(t *testing.T) {
 	t.Parallel()
 
-	want := domain.Bank{Code: "tbc", Name: "TBC Bank"}
+	want := domain.Bank{Code: "tbc", Name: "TBC Bank", Kind: domain.KindBank}
 	if got := adapterFor(t, answer("{}")).Bank(); got != want {
 		t.Errorf("Bank() = %+v, want %+v", got, want)
 	}

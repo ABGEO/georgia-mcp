@@ -10,20 +10,32 @@ import (
 
 	bogadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/bog"
 	ratecache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/cache"
+	kursiadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/kursi"
+	libertyadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/liberty"
 	nbgadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/nbg"
+	ricoadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/rico"
 	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/tbc"
+	terabankadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/terabank"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/tool"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	bogclient "github.com/abgeo/georgia-mcp/pkg/bog"
+	kursiclient "github.com/abgeo/georgia-mcp/pkg/kursi"
+	libertyclient "github.com/abgeo/georgia-mcp/pkg/libertyrates"
 	nbgclient "github.com/abgeo/georgia-mcp/pkg/nbg"
+	ricoclient "github.com/abgeo/georgia-mcp/pkg/rico"
 	tbcclient "github.com/abgeo/georgia-mcp/pkg/tbc"
+	terabankclient "github.com/abgeo/georgia-mcp/pkg/terabank"
 )
 
 const (
-	tbcKeyVariable    = "GEOMCP_RATES_TBC_API_KEY"
-	bogSwitchVariable = "GEOMCP_RATES_BOG_ENABLED"
+	tbcKeyVariable         = "GEOMCP_RATES_TBC_API_KEY"
+	kursiSwitchVariable    = "GEOMCP_RATES_KURSI_ENABLED"
+	bogSwitchVariable      = "GEOMCP_RATES_BOG_ENABLED"
+	libertySwitchVariable  = "GEOMCP_RATES_LIBERTY_ENABLED"
+	terabankSwitchVariable = "GEOMCP_RATES_TERABANK_ENABLED"
+	ricoSwitchVariable     = "GEOMCP_RATES_RICO_ENABLED"
 )
 
 // Module holds the use cases of the context and their caches.
@@ -82,6 +94,14 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}, nil
 }
 
+// switchedBank is a bank that needs no key, so the operator turns it off with a switch.
+type switchedBank struct {
+	enabled  bool
+	name     string
+	variable string
+	adapter  func() app.CommercialRateSource
+}
+
 // commercialSources builds the cached source of each bank that the server can read.
 func commercialSources(
 	cfg Config,
@@ -90,64 +110,118 @@ func commercialSources(
 ) ([]*ratecache.CommercialRateCache, error) {
 	logger = logger.With(slog.String("component", "context"), slog.String("context", "rates"))
 
-	var banks []*ratecache.CommercialRateCache
+	var adapters []app.CommercialRateSource
 
 	if cfg.TBC.APIKey == "" {
 		logger.Warn("TBC Bank is off: no API key", slog.String("variable", tbcKeyVariable))
 	} else {
-		tbc, err := tbcSource(cfg.TBC, now)
+		adapters = append(adapters, tbcAdapter(cfg.TBC, now))
+	}
+
+	for _, bank := range switchedBanks(cfg, now) {
+		if !bank.enabled {
+			logger.Info(bank.name+" is off", slog.String("variable", bank.variable))
+
+			continue
+		}
+
+		adapters = append(adapters, bank.adapter())
+	}
+
+	banks := make([]*ratecache.CommercialRateCache, 0, len(adapters))
+
+	for _, adapter := range adapters {
+		bank, err := ratecache.NewCommercial(adapter)
 		if err != nil {
-			return nil, err
+			for _, built := range banks {
+				_ = built.Close()
+			}
+
+			return nil, fmt.Errorf("building the cache of %s: %w", adapter.Bank().Name, err)
 		}
 
-		banks = append(banks, tbc)
+		banks = append(banks, bank)
 	}
 
-	if !cfg.BOG.Enabled {
-		logger.Info("Bank of Georgia is off", slog.String("variable", bogSwitchVariable))
-
-		return banks, nil
-	}
-
-	bog, err := bogSource(cfg.BOG, now)
-	if err != nil {
-		for _, bank := range banks {
-			_ = bank.Close()
-		}
-
-		return nil, err
-	}
-
-	return append(banks, bog), nil
+	return banks, nil
 }
 
-func tbcSource(cfg TBCConfig, now func() time.Time) (*ratecache.CommercialRateCache, error) {
-	client := tbcclient.New(
+func switchedBanks(cfg Config, now func() time.Time) []switchedBank {
+	return []switchedBank{
+		{
+			cfg.BOG.Enabled,
+			"Bank of Georgia",
+			bogSwitchVariable,
+			func() app.CommercialRateSource { return bogAdapter(cfg.BOG, now) },
+		},
+		{
+			cfg.Liberty.Enabled,
+			"Liberty Bank",
+			libertySwitchVariable,
+			func() app.CommercialRateSource { return libertyAdapter(cfg.Liberty, now) },
+		},
+		{
+			cfg.Terabank.Enabled,
+			"Terabank",
+			terabankSwitchVariable,
+			func() app.CommercialRateSource { return terabankAdapter(cfg.Terabank, now) },
+		},
+		{
+			cfg.Rico.Enabled,
+			"Rico Credit",
+			ricoSwitchVariable,
+			func() app.CommercialRateSource { return ricoAdapter(cfg.Rico, now) },
+		},
+		{
+			cfg.Kursi.Enabled,
+			"Kursi.ge",
+			kursiSwitchVariable,
+			func() app.CommercialRateSource { return kursiAdapter(cfg.Kursi, now) },
+		},
+	}
+}
+
+func bogAdapter(cfg BOGConfig, now func() time.Time) *bogadapter.Adapter {
+	return bogadapter.NewAdapter(bogclient.New(
+		bogclient.WithBaseURL(cfg.BaseURL.String()),
+		bogclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	), now)
+}
+
+func libertyAdapter(cfg LibertyConfig, now func() time.Time) *libertyadapter.Adapter {
+	return libertyadapter.NewAdapter(libertyclient.New(
+		libertyclient.WithBaseURL(cfg.BaseURL.String()),
+		libertyclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	), now)
+}
+
+func terabankAdapter(cfg TerabankConfig, now func() time.Time) *terabankadapter.Adapter {
+	return terabankadapter.NewAdapter(terabankclient.New(
+		terabankclient.WithBaseURL(cfg.BaseURL.String()),
+		terabankclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	), now)
+}
+
+func ricoAdapter(cfg RicoConfig, now func() time.Time) *ricoadapter.Adapter {
+	return ricoadapter.NewAdapter(ricoclient.New(
+		ricoclient.WithBaseURL(cfg.BaseURL.String()),
+		ricoclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	), now)
+}
+
+func kursiAdapter(cfg KursiConfig, now func() time.Time) *kursiadapter.Adapter {
+	return kursiadapter.NewAdapter(kursiclient.New(
+		kursiclient.WithBaseURL(cfg.BaseURL.String()),
+		kursiclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+	), now)
+}
+
+func tbcAdapter(cfg TBCConfig, now func() time.Time) *tbcadapter.Adapter {
+	return tbcadapter.NewAdapter(tbcclient.New(
 		tbcclient.WithBaseURL(cfg.BaseURL.String()),
 		tbcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 		tbcclient.WithAPIKey(cfg.APIKey),
-	)
-
-	tbc, err := ratecache.NewCommercial(tbcadapter.NewAdapter(client, now))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of TBC Bank: %w", err)
-	}
-
-	return tbc, nil
-}
-
-func bogSource(cfg BOGConfig, now func() time.Time) (*ratecache.CommercialRateCache, error) {
-	client := bogclient.New(
-		bogclient.WithBaseURL(cfg.BaseURL.String()),
-		bogclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
-	)
-
-	bog, err := ratecache.NewCommercial(bogadapter.NewAdapter(client, now))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Bank of Georgia: %w", err)
-	}
-
-	return bog, nil
+	), now)
 }
 
 // Register adds the tools of the context. The commercial tool needs one bank or more.

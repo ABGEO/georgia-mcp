@@ -36,7 +36,7 @@ func NewAdapter(client *tbcclient.Client, now func() time.Time) *Adapter {
 
 // Bank returns TBC Bank.
 func (a *Adapter) Bank() domain.Bank {
-	return domain.Bank{Code: "tbc", Name: "TBC Bank"}
+	return domain.Bank{Code: "tbc", Name: "TBC Bank", Kind: domain.KindBank}
 }
 
 // CommercialRates reads the codes in one call. A requested code that the answer lacks

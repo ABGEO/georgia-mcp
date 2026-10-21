@@ -25,8 +25,24 @@ func ParseBankCode(text string) (BankCode, error) {
 	return BankCode(text), nil
 }
 
-// Bank is a commercial bank that publishes commercial rates.
+// BankKind is the kind of a company that publishes commercial rates.
+type BankKind string
+
+const (
+	// KindBank is a commercial bank.
+	KindBank BankKind = "bank"
+	// KindMicrofinance is a microfinance organization: the NBG registers it to lend
+	// money, and it is not a bank.
+	KindMicrofinance BankKind = "microfinance organization"
+	// KindExchangeBureau is an online exchange bureau: the NBG registers it to change
+	// money, and it changes money by bank transfer only.
+	KindExchangeBureau BankKind = "online exchange bureau"
+)
+
+// Bank is a company that publishes commercial rates. Kind tells a bank from a company
+// that is not one. An empty Kind is a bank.
 type Bank struct {
 	Code BankCode
 	Name string
+	Kind BankKind
 }

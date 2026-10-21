@@ -22,7 +22,8 @@ const (
 	getCommercialDescription = "Returns the current commercial exchange rates of Georgian banks: " +
 		"the prices in GEL at which a bank buys and sells one unit of a currency. Use it for the " +
 		"price of a currency at a bank today, or to compare banks. Ask for 1 to 10 currencies. %s " +
-		"The banks of this server: %s. The rates are of today. The tool has no history."
+		"The banks of this server: %s. The list gives the kind of each one that is not a bank. " +
+		"The rates are of today. The tool has no history."
 )
 
 // CommercialRatesGetter returns the commercial rates of the banks of the server.
@@ -170,10 +171,25 @@ func toCommercialOutput(rates app.CommercialRates) commercialRatesOutput {
 func bankList(banks []domain.Bank) string {
 	entries := make([]string, 0, len(banks))
 	for _, bank := range banks {
-		entries = append(entries, fmt.Sprintf("%s (%s)", bank.Code, bank.Name))
+		if bank.Kind == "" || bank.Kind == domain.KindBank {
+			entries = append(entries, fmt.Sprintf("%s (%s)", bank.Code, bank.Name))
+
+			continue
+		}
+
+		entries = append(entries, fmt.Sprintf("%s (%s, %s %s)", bank.Code, bank.Name,
+			article(bank.Kind), bank.Kind))
 	}
 
 	return strings.Join(entries, ", ")
+}
+
+func article(kind domain.BankKind) string {
+	if kind != "" && strings.ContainsRune("aeiou", rune(kind[0])) {
+		return "an"
+	}
+
+	return "a"
 }
 
 // joinNames joins names as English does: "A", "A and B", "A, B and C".

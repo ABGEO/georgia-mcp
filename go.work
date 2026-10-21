@@ -4,12 +4,16 @@ use (
 	.
 	./pkg/bog
 	./pkg/bogoffers
+	./pkg/kursi
 	./pkg/liberty
+	./pkg/libertyrates
 	./pkg/nbg
+	./pkg/rico
 	./pkg/rompetrol
 	./pkg/socar
 	./pkg/tbc
 	./pkg/tbcoffers
+	./pkg/terabank
 	./pkg/ttc
 	./pkg/wissol
 )

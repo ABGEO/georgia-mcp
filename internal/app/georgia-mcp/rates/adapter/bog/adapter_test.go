@@ -260,7 +260,7 @@ func TestCommercialRatesReadTheCodesAtOnce(t *testing.T) {
 		t.Errorf("codes mismatch (-want +got):\n%s", diff)
 	}
 
-	want := domain.Bank{Code: "bog", Name: "Bank of Georgia"}
+	want := domain.Bank{Code: "bog", Name: "Bank of Georgia", Kind: domain.KindBank}
 	if bank := adapter.Bank(); bank != want {
 		t.Errorf("Bank() = %+v, want %+v", bank, want)
 	}

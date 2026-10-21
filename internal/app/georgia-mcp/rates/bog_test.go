@@ -92,7 +92,7 @@ func TestGetCommercialRatesOfBankOfGeorgia(t *testing.T) {
 	want := bogOutput{Banks: []bogBankOutput{{
 		Bank:   bogCode,
 		Source: "Bank of Georgia",
-		AsOf:   "2026-10-18T14:00:00+04:00",
+		AsOf:   clockInstant,
 		Rates:  []commercialRateOutput{{Currency: dollar, Buy: "2.565", Sell: "2.629"}},
 	}}}
 	if diff := cmp.Diff(want, out); diff != "" {
