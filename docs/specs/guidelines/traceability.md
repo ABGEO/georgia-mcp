@@ -4,7 +4,7 @@ title: Traceability
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-19
+updated: 2026-10-21
 scope: [docs/specs/, tests]
 related: [LNG, PRC, GIT, SPC]
 ---
@@ -175,6 +175,10 @@ Add a row before you create the file or the directory.
 | `NBGRATE`  | `features/nbgrate/`  | `rates`    | The official exchange rates of the NBG, on a date and over a period. | Approved |
 | `TBCRATE`  | `features/tbcrate/`  | `rates`    | The commercial exchange rates of TBC Bank, and the tool of every bank. | Approved |
 | `BOGRATE`  | `features/bograte/`  | `rates`    | The commercial exchange rates of Bank of Georgia.               | Approved |
+| `LIBRATE`  | `features/librate/`  | `rates`    | The commercial exchange rates of Liberty Bank, read from its home page. | Approved |
+| `TERARATE` | `features/terarate/` | `rates`    | The commercial exchange rates of Terabank.                       | Approved |
+| `RICORATE` | `features/ricorate/` | `rates`    | The commercial exchange rates of Rico Credit, and the kind of a bank. | Approved |
+| `KURSRATE` | `features/kursrate/` | `rates`    | The commercial exchange rates of Kursi.ge, an online exchange bureau. | Approved |
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |

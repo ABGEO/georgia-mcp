@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Glossary
@@ -55,6 +55,21 @@ define it. The identifier of a term is `GLO-<term>`.
 | lari               | The currency of Georgia. Code `GEL`.                                                                   |
 | language           | The language of a text that a source publishes: `ka` (Georgian) or `en` (English). See `MCP-007`.      |
 
+## Rates
+
+| Term                      | Meaning                                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------------------- |
+| bank                      | In `rates`, a company of Georgia that publishes commercial rates: a commercial bank, a microfinance organization, or an online exchange bureau. `RICORATE` 5. |
+| bank kind                 | The kind of a bank in `rates`: `bank`, `microfinance organization`, or `online exchange bureau`. |
+| commercial rate           | The two prices in lari at which a bank buys and sells one unit of a currency.                  |
+| buy rate                  | The price in lari that the bank pays for one unit of a currency.                               |
+| sell rate                 | The price in lari that the bank asks for one unit of a currency.                               |
+| microfinance organization | A company of Georgia that the NBG registers to lend money. It is not a bank.                   |
+| online exchange bureau    | A company of Georgia that the NBG registers to change money, by bank transfer only.            |
+| Terabank                  | Terabank, a commercial bank. Bank code `terabank`.                                             |
+| Rico Credit               | Rico Credit, a microfinance organization. Bank code `rico`.                                    |
+| Kursi.ge                  | Kursi.ge, an online exchange bureau. Bank code `kursi`.                                        |
+
 ## Fuel
 
 | Term               | Meaning                                                                                               |
@@ -74,7 +89,7 @@ define it. The identifier of a term is `GLO-<term>`.
 
 | Term               | Meaning                                                                                               |
 | ------------------ | ----------------------------------------------------------------------------------------------------- |
-| bank               | A commercial bank of Georgia that publishes card offers.                                              |
+| bank               | A commercial bank of Georgia that publishes card offers. In `rates`, see the section Rates.            |
 | bank code          | The short lowercase name of a bank in a request: `bog`.                                               |
 | offer              | A benefit that a bank gives to its customers at a partner, for a period.                              |
 | partner            | The company where a customer gets the benefit of an offer: a shop, a hotel, a spa.                    |
