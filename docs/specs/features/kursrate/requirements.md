@@ -48,7 +48,8 @@ Observed behavior of the source on 2026-10-21:
   TBC and Bank of Georgia under `bankRates`, and those of Bank of Georgia equal its own
   API at the same minute: `2.565` to buy and `2.629` to sell.
 - A pair also holds the official rate of the NBG, and its change.
-- The JSON numbers drop the trailing zeros. The answer holds no instant.
+- Each price has four decimal places, with the trailing zeros: `2.5940`. The answer
+  holds no instant.
 - The page says that Kursi.ge works from 08:00 to 00:00, every day.
 
 ## 4. Out of scope

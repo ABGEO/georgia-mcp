@@ -145,14 +145,14 @@ GET https://api-core.kursi.ge/api/public/currencies
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 [
  {"baseCurrencyCode":"GEL","secondaryCurrencyCode":"USD","name":"აშშ დოლარი","nbgRate":2.5978,"diff":-0.0001,
-  "buyRate":2.594,"sellRate":2.601,
-  "bankRates":{"TBC":{"buyRate":2.565,"sellRate":2.627},"BOG":{"buyRate":2.565,"sellRate":2.629}}},
+  "buyRate":2.5940,"sellRate":2.6010,
+  "bankRates":{"TBC":{"buyRate":2.5650,"sellRate":2.6270},"BOG":{"buyRate":2.5650,"sellRate":2.6290}}},
  {"baseCurrencyCode":"USD","secondaryCurrencyCode":"EUR","name":"EUR","nbgRate":0,"diff":0,
-  "buyRate":1.12,"sellRate":1.129,
+  "buyRate":1.1200,"sellRate":1.1290,
   "bankRates":{"TBC":{"buyRate":1.0944,"sellRate":1.1509},"BOG":{"buyRate":1.0928,"sellRate":1.1521}}},
  {"baseCurrencyCode":"GEL","secondaryCurrencyCode":"CNY","name":"ჩინური იუანი","nbgRate":0.3891,"diff":0.0023,
   "buyRate":0.3858,"sellRate":0.3925,
-  "bankRates":{"TBC":{"buyRate":0.372,"sellRate":0.406},"BOG":{"buyRate":0.3708,"sellRate":0.407}}}
+  "bankRates":{"TBC":{"buyRate":0.3720,"sellRate":0.4060},"BOG":{"buyRate":0.3708,"sellRate":0.4070}}}
 ]
 ```
 
@@ -234,8 +234,8 @@ carries no `Authorization` header.
 
 **Given** the vendor serves `currencies.json`.
 **When** `Currencies` runs.
-**Then** the result holds 8 pairs. The pair of `GEL` and `USD` has `BuyRate` `2.594`,
-`SellRate` `2.601`, and `BankRates["BOG"].BuyRate` `2.565`.
+**Then** the result holds 8 pairs. The pair of `GEL` and `USD` has `BuyRate` `2.5940`,
+`SellRate` `2.6010`, and `BankRates["BOG"].BuyRate` `2.5650`.
 
 ### `KURSRATE-SC-003`
 
@@ -344,11 +344,11 @@ The log holds one info record that names `GEOMCP_RATES_KURSI_ENABLED`.
 
 | #   | Step                                                                     | Realizes                                   | Done |
 | --- | ------------------------------------------------------------------------ | ------------------------------------------ | ---- |
-| 1   | `domain.KindExchangeBureau`.                                             | `KURSRATE-FR-004`                          | [ ]  |
-| 2   | `pkg/kursi` module, `testdata/currencies.json`, README, example. `go.work`. | `KURSRATE-FR-001`                       | [ ]  |
-| 3   | `adapter/kursi`.                                                         | `KURSRATE-FR-001` to `KURSRATE-FR-003`, `KURSRATE-INV-001` | [ ]  |
-| 4   | `config.go`: `KursiConfig`, `KursiHTTPConfig`. `configs/.env.example`.   | `KURSRATE-FR-005`, `KURSRATE-NFR-001`      | [ ]  |
-| 5   | `module.go`: the source of Kursi.ge, and the info record.                | `KURSRATE-FR-001`, `KURSRATE-FR-005`       | [ ]  |
+| 1   | `domain.KindExchangeBureau`.                                             | `KURSRATE-FR-004`                          | [x]  |
+| 2   | `pkg/kursi` module, `testdata/currencies.json`, README, example. `go.work`. | `KURSRATE-FR-001`                       | [x]  |
+| 3   | `adapter/kursi`.                                                         | `KURSRATE-FR-001` to `KURSRATE-FR-003`, `KURSRATE-INV-001` | [x]  |
+| 4   | `config.go`: `KursiConfig`, `KursiHTTPConfig`. `configs/.env.example`.   | `KURSRATE-FR-005`, `KURSRATE-NFR-001`      | [x]  |
+| 5   | `module.go`: the source of Kursi.ge, and the info record.                | `KURSRATE-FR-001`, `KURSRATE-FR-005`       | [x]  |
 
 ## 8. Out of scope for this specification
 

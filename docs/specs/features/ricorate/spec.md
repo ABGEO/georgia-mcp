@@ -390,12 +390,12 @@ The log holds one info record that names `GEOMCP_RATES_RICO_ENABLED`.
 
 | #   | Step                                                                        | Realizes                                 | Done |
 | --- | --------------------------------------------------------------------------- | ---------------------------------------- | ---- |
-| 1   | `domain.BankKind`, `Bank.Kind`. The adapters of TBC and Bank of Georgia set `KindBank`. | `RICORATE-FR-004`             | [ ]  |
-| 2   | The description of the tool and `bankList`.                                 | `RICORATE-FR-004`                        | [ ]  |
-| 3   | `pkg/rico` module, `testdata/home-ka.html`, README, example. `go.work`.     | `RICORATE-FR-001`                        | [ ]  |
-| 4   | `adapter/rico`.                                                             | `RICORATE-FR-001` to `RICORATE-FR-003`, `RICORATE-INV-001` | [ ]  |
-| 5   | `config.go`: `RicoConfig`, `RicoHTTPConfig`. `configs/.env.example`.        | `RICORATE-FR-005`, `RICORATE-NFR-001`    | [ ]  |
-| 6   | `module.go`: the source of Rico Credit, and the info record.                | `RICORATE-FR-001`, `RICORATE-FR-005`     | [ ]  |
+| 1   | `domain.BankKind`, `Bank.Kind`. The adapters of TBC and Bank of Georgia set `KindBank`. | `RICORATE-FR-004`             | [x]  |
+| 2   | The description of the tool and `bankList`.                                 | `RICORATE-FR-004`                        | [x]  |
+| 3   | `pkg/rico` module, `testdata/home-ka.html`, README, example. `go.work`.     | `RICORATE-FR-001`                        | [x]  |
+| 4   | `adapter/rico`.                                                             | `RICORATE-FR-001` to `RICORATE-FR-003`, `RICORATE-INV-001` | [x]  |
+| 5   | `config.go`: `RicoConfig`, `RicoHTTPConfig`. `configs/.env.example`.        | `RICORATE-FR-005`, `RICORATE-NFR-001`    | [x]  |
+| 6   | `module.go`: the source of Rico Credit, and the info record.                | `RICORATE-FR-001`, `RICORATE-FR-005`     | [x]  |
 
 Step 1 sets `KindBank` in every adapter of a bank that exists at that time, the adapters
 of `LIBRATE` and `TERARATE` included.

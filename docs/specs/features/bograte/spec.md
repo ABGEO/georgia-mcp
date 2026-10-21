@@ -4,7 +4,7 @@ title: The commercial exchange rates of Bank of Georgia
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-21
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -347,7 +347,7 @@ The vendor counts one call for each code: the adapter does not retry.
 **Given** a vendor that holds each call until 10 calls wait at once, then answers each.
 **When** the adapter asks for 10 codes.
 **Then** the result holds 10 rates. A reader one call at a time would block for good,
-so the test fails after 5 seconds. `Bank()` is `{bog, Bank of Georgia}`.
+so the test fails after 5 seconds. `Bank()` is `{bog, Bank of Georgia, bank}`, with the kind of `RICORATE`.
 
 ### `BOGRATE-SC-009`
 

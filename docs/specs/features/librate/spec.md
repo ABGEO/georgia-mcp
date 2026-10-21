@@ -389,10 +389,10 @@ counts 1 call.
 
 | #   | Step                                                                          | Realizes                              | Done |
 | --- | ----------------------------------------------------------------------------- | ------------------------------------- | ---- |
-| 1   | `pkg/libertyrates` module, `testdata/home-ka.html`, README, example. `go.work`. | `LIBRATE-FR-001`                      | [ ]  |
-| 2   | `adapter/liberty`.                                                            | `LIBRATE-FR-001` to `LIBRATE-FR-003`, `LIBRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `LibertyConfig`, `LibertyHTTPConfig`. `configs/.env.example`.    | `LIBRATE-FR-004`, `LIBRATE-NFR-001`   | [ ]  |
-| 4   | `module.go`: the source of Liberty, and the info record.                      | `LIBRATE-FR-001`, `LIBRATE-FR-004`    | [ ]  |
+| 1   | `pkg/libertyrates` module, `testdata/home-ka.html`, README, example. `go.work`. | `LIBRATE-FR-001`                      | [x]  |
+| 2   | `adapter/liberty`.                                                            | `LIBRATE-FR-001` to `LIBRATE-FR-003`, `LIBRATE-INV-001` | [x]  |
+| 3   | `config.go`: `LibertyConfig`, `LibertyHTTPConfig`. `configs/.env.example`.    | `LIBRATE-FR-004`, `LIBRATE-NFR-001`   | [x]  |
+| 4   | `module.go`: the source of Liberty, and the info record.                      | `LIBRATE-FR-001`, `LIBRATE-FR-004`    | [x]  |
 
 ## 8. Out of scope for this specification
 

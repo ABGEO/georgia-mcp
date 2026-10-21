@@ -43,7 +43,7 @@ Observed behavior of the source on 2026-10-21:
 - Each currency has a buy price and a sell price, for one unit, against the lari. The
   vendor calls them cross rates. They are the rates that the page shows under
   "ტერაბანკის კურსი".
-- The JSON numbers drop the trailing zeros: `2.93`.
+- Each price has four decimal places, with the trailing zeros: `2.9300`.
 - Each currency also holds the prices of the day before, and a flag that tells the
   page to show them. The answer holds no instant.
 - The answer has a field `succeeded`, true on each call.

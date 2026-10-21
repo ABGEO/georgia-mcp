@@ -128,9 +128,9 @@ POST https://terabank.ge/_mvcapi/CurrencyRatesApi/GetTeraCrossRates
 Content-Length: 0
 200 application/json; charset=utf-8
 {"data":[
- {"iso":"USD","teraCrossRateBuy":2.596,"teraCrossRateSell":2.601,"previousDayTeraCrossRateBuy":2.547,"previousDayTeraCrossRateSell":2.647,"showPreviosDayRates":true},
- {"iso":"EUR","teraCrossRateBuy":2.905,"teraCrossRateSell":2.93,"previousDayTeraCrossRateBuy":2.832,"previousDayTeraCrossRateSell":3.002,"showPreviosDayRates":true},
- {"iso":"GBP","teraCrossRateBuy":3.376,"teraCrossRateSell":3.56,"previousDayTeraCrossRateBuy":3.347,"previousDayTeraCrossRateSell":3.531,"showPreviosDayRates":false}
+ {"iso":"USD","teraCrossRateBuy":2.5960,"teraCrossRateSell":2.6010,"previousDayTeraCrossRateBuy":2.5470,"previousDayTeraCrossRateSell":2.6470,"showPreviosDayRates":true},
+ {"iso":"EUR","teraCrossRateBuy":2.9050,"teraCrossRateSell":2.9300,"previousDayTeraCrossRateBuy":2.8320,"previousDayTeraCrossRateSell":3.0020,"showPreviosDayRates":true},
+ {"iso":"GBP","teraCrossRateBuy":3.3760,"teraCrossRateSell":3.5600,"previousDayTeraCrossRateBuy":3.3470,"previousDayTeraCrossRateSell":3.5310,"showPreviosDayRates":false}
 ],"succeeded":true,"message":""}
 
 POST with no Content-Length: 411 text/html
@@ -193,8 +193,8 @@ the bank.
 **Realizes:** `TERARATE-INV-001`
 **Decision:** The adapter parses the text of `Buy` and `Sell` with
 `decimal.NewFromString`, and drops the trailing zeros.
-**Rationale:** `json.Number` keeps the digits of the answer. The source writes no
-trailing zero today. The drop keeps the format of `BOGRATE-DD-005` if it starts to.
+**Rationale:** `json.Number` keeps the digits of the answer. The source pads each price
+to four decimal places: `2.9300`. The drop gives `2.93`, as `BOGRATE-DD-005` does.
 **Alternatives:** `float64`. `DOM-006` forbids it.
 
 ## 6. Scenarios
@@ -220,8 +220,8 @@ trailing zero today. The drop keeps the format of `BOGRATE-DD-005` if it starts 
 
 **Given** the vendor serves `cross-rates.json`.
 **When** `CrossRates` runs.
-**Then** the result holds 3 items. The item of `USD` has `Buy` `2.596`, `Sell` `2.601`,
-and `PreviousDayBuy` `2.547`.
+**Then** the result holds 3 items. The item of `USD` has `Buy` `2.5960`, `Sell` `2.6010`,
+and `PreviousDayBuy` `2.5470`.
 
 ### `TERARATE-SC-003`
 
@@ -318,10 +318,10 @@ record that names `GEOMCP_RATES_TERABANK_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                   | Done |
 | --- | -------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/terabank` module, recorded answers, README, example. `go.work`.       | `TERARATE-FR-001`, `TERARATE-FR-003`       | [ ]  |
-| 2   | `adapter/terabank`.                                                        | `TERARATE-FR-001` to `TERARATE-FR-003`, `TERARATE-INV-001` | [ ]  |
-| 3   | `config.go`: `TerabankConfig`, `TerabankHTTPConfig`. `configs/.env.example`. | `TERARATE-FR-004`, `TERARATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the source of Terabank, and the info record.                  | `TERARATE-FR-001`, `TERARATE-FR-004`       | [ ]  |
+| 1   | `pkg/terabank` module, recorded answers, README, example. `go.work`.       | `TERARATE-FR-001`, `TERARATE-FR-003`       | [x]  |
+| 2   | `adapter/terabank`.                                                        | `TERARATE-FR-001` to `TERARATE-FR-003`, `TERARATE-INV-001` | [x]  |
+| 3   | `config.go`: `TerabankConfig`, `TerabankHTTPConfig`. `configs/.env.example`. | `TERARATE-FR-004`, `TERARATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the source of Terabank, and the info record.                  | `TERARATE-FR-001`, `TERARATE-FR-004`       | [x]  |
 
 ## 8. Out of scope for this specification
 
