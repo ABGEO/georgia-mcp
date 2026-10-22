@@ -78,7 +78,7 @@ The home page must show each context with its name, its count of tools, and the 
 
 **Examples:**
 
-- Normal case: "Fuel prices, 1 tool, Wissol, Rompetrol, SOCAR, +5 more".
+- Normal case: "Fuel prices, 1 tool, Wissol, Rompetrol, SOCAR", then "+N more" for the other companies.
 - Limit case: a context with three vendors shows three names and no count.
 - Limit case: a context with one vendor shows one vendor name.
 
@@ -233,7 +233,7 @@ Beside the chat examples, the home page must explain in three steps how a questi
 
 **Examples:**
 
-- Normal case: "You ask", "The model calls a tool", "You get the answer", then "14 tools", "4 subjects", "16 sources".
+- Normal case: "You ask", "The model calls a tool", "You get the answer", then the counts of the tools, the subjects, and the sources.
 - Limit case: the owner adds a tool. The count of tools grows with no change to the copy.
 
 ### `WEBSITE-FR-033`

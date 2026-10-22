@@ -97,6 +97,7 @@ Every path is under `website/`. Every file is new.
 | Content      | `src/content/tools/<tool name>.yaml`, `src/content/contexts.yaml` | Written by hand.                         |
 | Catalog      | `src/lib/catalog.ts`                     | `buildCatalog`, `CatalogError`, `getCatalog`. `WEBSITE-DD-004`. |
 | Inputs       | `src/lib/inputs.ts`                      | `inputRows`. `WEBSITE-DD-005`.                                |
+| Tabs         | `src/lib/tabs.ts`                        | `enhanceTabs`. `WEBSITE-DD-021`.                              |
 | Language     | `src/i18n/index.ts`, `src/i18n/en.ts`, `src/i18n/ka.ts` | `Lang`, `Dictionary`, `t`, `localize`, `alternate`. |
 | Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
@@ -450,10 +451,22 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 ### `WEBSITE-DD-020`
 
 **Realizes:** `WEBSITE-FR-005`
-**Decision:** `ContextCard` lists the first three vendors of the context, in the order of `contexts.yaml`. When the context has more, a last item `li.more` gives the count of the rest: `contexts.more`, "+5 more", "+5 სხვა".
+**Decision:** `ContextCard` lists the first three vendors of the context, in the order of `contexts.yaml`. When the context has more, a last item `li.more` gives the count of the rest: `contexts.more`, "+N more", "+N სხვა".
 **Rationale:** The fuel reads seven vendors and the transit reads one. A full list makes one card tall and the grid uneven. The tool page lists every vendor (`WEBSITE-DD-019`).
 **Alternatives:** A list in one line that wraps. Its height still depends on the count. A control that expands the list. The tool page already holds it.
 
+
+### `WEBSITE-DD-021`
+
+**Realizes:** `WEBSITE-FR-008`, `WEBSITE-DD-008`, `WEBSITE-DD-014`
+**Decision:** `enhanceTabs(root, panelSelector, orientation)` in `src/lib/tabs.ts` turns the
+tab list and the panels of a root into tabs: the roles, one visible panel, a roving tab
+index, Home, End, and the arrow keys. `vertical` moves with up and down. `both` also
+moves with left and right. `ToolList` passes `vertical`, and `InstallGuides` passes `both`.
+**Rationale:** The two components held the same script of 35 lines. One function keeps
+the keyboard pattern of a tab list in one place.
+**Alternatives:** A web component. It moves the markup into a custom element for a
+behavior of 30 lines.
 ## 6. Scenarios
 
 ### `WEBSITE-SC-001`
@@ -551,9 +564,9 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 **Verifies:** `WEBSITE-FR-012`, `WEBSITE-INV-001`
 **Layer:** build
 
-**Given** `definitions.json` with 14 tools.
+**Given** `definitions.json` with one tool or more.
 **When** the test lists `dist/tools/*/index.html` and `dist/ka/tools/*/index.html`.
-**Then** each list holds 14 names, equal to the keys of `definitions.json`.
+**Then** each list equals the keys of `definitions.json`.
 
 ### `WEBSITE-SC-013`
 
@@ -760,7 +773,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 
 **Given** both home pages.
 **When** the test reads `#examples`.
-**Then** it holds the steps `ask`, `call`, and `answer` in this order, and the counts 14 tools, 4 contexts, and 16 vendors.
+**Then** it holds the steps `ask`, `call`, and `answer` in this order, and the counts of the catalog: the tools of `definitions.json`, the contexts of `contexts.yaml`, and its vendors counted one time each by name, since a bank serves more than one context.
 
 ### `WEBSITE-SC-041`
 
@@ -808,16 +821,16 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 
 **Given** the pages of `rates_get_commercial_rates`, `fuel_get_prices`, and `rates_get_official_rates`, in each language.
 **When** the test reads `#vendors`.
-**Then** the commercial rates list 6 banks with their codes, the first `tbc`. The fuel prices list 7 companies with their codes. The official rates list the National Bank of Georgia, "საქართველოს ეროვნული ბანკი" in Georgian, with no code.
+**Then** the commercial rates list the banks of their tool file with their codes, the first `tbc`. The fuel prices list the companies of their tool file with their codes, in its order. The official rates list the National Bank of Georgia, "საქართველოს ეროვნული ბანკი" in Georgian, with no code.
 
 ### `WEBSITE-SC-046`
 
 **Verifies:** `WEBSITE-FR-005`
 **Layer:** build
 
-**Given** both home pages, and the context `fuel` with seven vendors.
+**Given** both home pages, and the context `fuel` with more than three vendors in `contexts.yaml`.
 **When** the page is built.
-**Then** the card of `fuel` lists three vendor names, then "+5 more" or "+5 სხვა". No card lists more than three names.
+**Then** the card of `fuel` lists three vendor names, then "+N more" or "+N სხვა", where N is the count of the other vendors. No card lists more than three names.
 
 ### `WEBSITE-SC-034`
 
@@ -879,6 +892,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 | 13  | Write the test of the tool tabs. Add the vertical tabs to `ToolList`.                       | `WEBSITE-DD-014`, `SC-036`     | [x] |
 | 19  | Write the tests of the vendors. Add the codes to `contexts.yaml` and the tool files, the checks to `buildCatalog`, and `#vendors` to `Tool.astro`. Run the refresh. Rewrite each answer from its new recording. | `WEBSITE-DD-018`, `DD-019`, `SC-043` to `SC-045` | [x] |
 | 20  | Write the test of the vendors of a card. Cap the list of `ContextCard` at three, with the count of the rest. | `WEBSITE-DD-020`, `SC-046` | [x] |
+| 21  | Derive the counts of the build tests from the data. Move the tab script of `ToolList` and `InstallGuides` to `src/lib/tabs.ts`. | `WEBSITE-DD-021`, `SC-012`, `SC-040`, `SC-045`, `SC-046` | [x] |
 
 ## 8. Out of scope for this specification
 
