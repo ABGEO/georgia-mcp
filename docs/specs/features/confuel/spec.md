@@ -4,7 +4,7 @@ title: The fuel prices of Connect
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -74,7 +74,7 @@ const DefaultBaseURL = "https://connect.com.ge/wp-json/fuel-prices/v1"
 
 var ErrUnexpectedStatus = errors.New("connect: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Current(ctx context.Context) (Snapshot, error)
 
 // Snapshot is the answer of GET /current.

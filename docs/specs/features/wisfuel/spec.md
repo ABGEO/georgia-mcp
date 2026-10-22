@@ -4,7 +4,7 @@ title: The fuel prices of Wissol
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -93,7 +93,7 @@ const DefaultBaseURL = "https://api.wissol.ge"
 
 var ErrUnexpectedStatus = errors.New("wissol: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) FuelPrices(ctx context.Context) ([]FuelPrice, error)
 
 type FuelPrice struct {

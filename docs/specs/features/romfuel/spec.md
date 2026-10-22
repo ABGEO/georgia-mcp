@@ -4,7 +4,7 @@ title: The fuel prices of Rompetrol
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -82,7 +82,7 @@ var (
     ErrMalformedTable   = errors.New("rompetrol: malformed price table")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Prices(ctx context.Context) ([]PriceRow, error)
 
 // PriceRow is one row of the body of the price table, as the page shows it.

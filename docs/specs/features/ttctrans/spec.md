@@ -107,7 +107,7 @@ The gateway accepts it. It refuses the User-Agent of Python with 403.
 ```go
 const DefaultBaseURL = "https://transit.ttc.com.ge/pis-gateway/api"
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent, WithAPIKey
+func New(opts ...Option) *Client // the options of vendorhttp, and WithAPIKey
 func (c *Client) Stops(ctx context.Context, locale string) ([]Stop, error)                          // GET /v2/stops
 func (c *Client) Routes(ctx context.Context, locale string) ([]Route, error)                        // GET /v3/routes?modes=BUS,SUBWAY,GONDOLA
 func (c *Client) Route(ctx context.Context, id, locale string) (RouteDetail, error)                 // GET /v3/routes/{id}

@@ -4,7 +4,7 @@ title: The official exchange rates of the NBG
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-19
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -99,7 +99,7 @@ const DefaultBaseURL = "https://nbg.gov.ge/gw/api/ct/monetarypolicy"
 
 type Language string // LanguageEnglish "en", LanguageGeorgian "ka"
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 
 type RateSetsQuery struct {
     Date       time.Time // zero: the newest set

@@ -83,7 +83,7 @@ var (
     ErrMalformedTable   = errors.New("gulf: malformed price table")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func NewTransport() *http.Transport
 func (c *Client) PriceArchive(ctx context.Context) (PriceTable, error)
 
@@ -134,7 +134,7 @@ that is not a number or is negative, and no product left.
 that it builds today, when `cfg.Gulf.Enabled` is true. Else it logs at info level
 `Gulf is off` with the attribute `variable=GEOMCP_FUEL_GULF_ENABLED`. `gulfSource`
 passes `httpclient.NewWithTransport(cfg.HTTP, gulfclient.NewTransport())` to
-`gulfclient.WithHTTPClient`.
+`vendorhttp.WithHTTPClient`.
 
 ### 4.2 Domain model
 

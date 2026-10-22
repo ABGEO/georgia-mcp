@@ -4,7 +4,7 @@ title: The fuel prices of Lukoil
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -78,7 +78,7 @@ var (
     ErrMalformedTable   = errors.New("lukoil: malformed price table")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) PriceHistory(ctx context.Context) (PriceTable, error)
 
 // PriceTable is the table of the price history page, as the page shows it.

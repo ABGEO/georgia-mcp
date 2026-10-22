@@ -4,7 +4,7 @@ title: The fuel prices of Portal
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -77,7 +77,7 @@ var (
     ErrMalformedPriceList = errors.New("portal: malformed price list")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) FuelPrices(ctx context.Context) ([]FuelPrice, error)
 
 // FuelPrice is one entry of the list "fuelPricesData" of the page.

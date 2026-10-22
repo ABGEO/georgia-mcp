@@ -4,7 +4,7 @@ title: The commercial exchange rates of Rico Credit
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -79,7 +79,7 @@ var (
     ErrMalformedTable   = errors.New("rico: malformed rate table")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Rates(ctx context.Context) ([]RateRow, error)
 
 // RateRow is one row of the rate table of the home page, as the page shows it.

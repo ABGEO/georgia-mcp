@@ -72,7 +72,7 @@ var (
     ErrNoRate           = errors.New("bog: no rate") // the answer 204
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) CommercialRate(ctx context.Context, currency string) (*CommercialRate, error)
 
 type CommercialRate struct {

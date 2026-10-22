@@ -3,7 +3,7 @@ title: Architecture decision records
 type: index
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-22
 ---
 
 # Architecture decision records
@@ -39,3 +39,4 @@ The file name holds the slug only. See `TRC-008`.
 | `ADR-0003` | A vendor client of a web page                | `vendor-client-of-a-web-page.md`          | accepted | 2026-10-19 | `CLT-002` to `CLT-005` |
 | `ADR-0004` | A vendor in two contexts                     | `a-vendor-in-two-contexts.md`             | accepted | 2026-10-20 | `DOM-001`, `CLT-001` |
 | `ADR-0005` | A brand and a static website                 | `a-brand-and-a-static-website.md`         | accepted | 2026-10-20 | Founds `BRD`. `GIT-004`, `BLD-001`, `SPC-002` |
+| `ADR-0006` | A shared module of the vendor clients        | `a-shared-module-of-the-vendor-clients.md` | accepted | 2026-10-22 | `CLT-002`, `CLT-004`, `CLT-005`, `CLT-007` |

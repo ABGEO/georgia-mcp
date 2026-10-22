@@ -346,7 +346,26 @@ Each test of the cache runs in `synctest.Test` and uses `Cache[string]` and `Cac
 | A off, B off                                     | No source, no error. Two info records.                     |
 | `CloseAll` of two sources, the first fails       | Both are closed. The error is the failure of the first.    |
 
-## The packaging
+## The vendor clients
+
+### `PLATFORM-SC-037`
+
+**Verifies:** `PLATFORM-FR-026`
+**Layer:** unit
+
+**Given** an `httptest` server that records the request, and `vendorhttp.New` with the
+module `example.com/pkg/acme`, a sentinel, the header `Accept: application/json`, and a
+limit of 8 bytes.
+
+| Request and answer                                  | Result                                                     |
+| --------------------------------------------------- | ---------------------------------------------------------- |
+| `Fetch` of the path `rates`, the query `a=1`, 200 `{"x":1}` | The path `/rates?a=1`, `Accept`, a User-Agent that starts with `georgia-mcp-acme/`, the body. |
+| `Fetch`, 200 with a body of 20 bytes                | The first 8 bytes.                                         |
+| `Fetch`, 503 `down`                                 | A `*StatusError` with 503 and `down`. `errors.Is` finds the sentinel. |
+| `Do`, 204                                           | The answer with 204, and no error.                         |
+| `FetchJSON`, 200 `{"x":1}`                          | The target holds 1.                                        |
+| `Do` with the method `POST`, a body, and `Accept: text/html` | The server gets `POST`, the body, and `text/html`.        |
+
 
 ### `PLATFORM-SC-026`
 

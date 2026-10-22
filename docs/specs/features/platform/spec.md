@@ -51,6 +51,7 @@ It adds the container image, the local compose file, and the task file.
 | `PLATFORM-FR-023`  | 4.1 `deployments/compose.yaml`                          |
 | `PLATFORM-FR-024`  | 4.1 `Taskfile.yml`. `PLATFORM-DD-009`                   |
 | `PLATFORM-FR-025`  | 4.1 `vendors`. `PLATFORM-DD-011`                        |
+| `PLATFORM-FR-026`  | 4.1 `pkg/vendorhttp`. `PLATFORM-DD-013`                 |
 | `PLATFORM-NFR-001` | 4.4. `PLATFORM-SC-029`                                  |
 | `PLATFORM-NFR-002` | 4.4. `PLATFORM-SC-016`                                  |
 | `PLATFORM-NFR-003` | 4.1 `build/package/Dockerfile`. `PLATFORM-SC-030`       |
@@ -135,6 +136,7 @@ Every path is new. Each package with more than one file has `doc.go` (`PKG-006`)
 | `internal/pkg/cache/`            | See below.                                                            |
 | `internal/pkg/httpclient/`       | See below.                                                            |
 | `internal/pkg/vendors/`          | See below.                                                            |
+| `pkg/vendorhttp/`                | A module of its own, standard library only. See below.                |
 
 **`mcpserver`.**
 
@@ -253,6 +255,38 @@ func (r *Registry[T]) Build() ([]T, error)
 func CloseAll[T io.Closer](sources []T) error
 ```
 
+**`vendorhttp`.**
+
+```go
+const DefaultTimeout = 10 * time.Second
+func New(module string, sentinel error, opts ...Option) *Client
+func WithBaseURL(baseURL string) Option
+func WithHTTPClient(client *http.Client) Option
+func WithUserAgent(userAgent string) Option
+func WithHeader(key, value string) Option // sent with each request
+func WithMaxBody(bytes int64) Option      // default 1 MiB
+
+type Request struct {
+    Method string      // GET when empty
+    Path   []string
+    Query  url.Values
+    Header http.Header // wins over the header of the client
+    Body   []byte
+}
+type Response struct { StatusCode int; Header http.Header; Body []byte }
+func (c *Client) Do(ctx context.Context, req Request) (*Response, error)
+func (c *Client) Fetch(ctx context.Context, req Request) ([]byte, error)
+func (c *Client) FetchJSON(ctx context.Context, req Request, target any) error
+func (r *Response) ErrorBody() string // the first 1 KiB of the body
+type StatusError struct { StatusCode int; Body string } // Unwrap gives the sentinel of New
+```
+
+`New` takes the module path of the client. The default User-Agent is
+`georgia-mcp-<the last part of the path>/<the version of the module>
+(+https://github.com/abgeo/georgia-mcp)`. The default HTTP client has `DefaultTimeout`.
+`Do` returns the answer for any status. `Fetch` returns the body of a 200, and a
+`*StatusError` for any other status. `FetchJSON` decodes the body of `Fetch`.
+
 `Build` calls `Build` of each entry that is on, in the order of `Add`, and returns the
 results in that order. It logs each entry that is off at info level: `<Name> is off`,
 with the attribute `variable`. When one `Build` fails, it closes each source that it
@@ -262,7 +296,7 @@ joins the errors.
 `New` returns a client with `Timeout` and a transport that calls `rate.Limiter.Wait`
 with the context of the request before the base transport. A failed wait returns
 `fmt.Errorf("waiting for the vendor limit: %w", kernel.ErrSourceUnavailable)`.
-A context passes the client to a vendor client with `WithHTTPClient` (`CLT-005`).
+A context passes the client to a vendor client with `vendorhttp.WithHTTPClient` (`CLT-005`).
 
 **The repository files.**
 
@@ -501,9 +535,27 @@ names the Go field, and the operator sets a variable.
 **Alternatives:** The messages of the validator, with its translator. They name the Go
 field, and need two more modules.
 
+### `PLATFORM-DD-013`
+
+**Realizes:** `PLATFORM-FR-026`, `ADR-0006`
+**Decision:** `pkg/vendorhttp` holds the request and the options of every vendor client.
+A client keeps `New`, `APIError`, and `ErrUnexpectedStatus`, and passes its sentinel to
+`vendorhttp.New`. It declares `type Option = vendorhttp.Option`, and declares only the
+option of a value of its own vendor: `tbc.WithAPIKey`, `ttc.WithAPIKey`. 12 clients declare `type APIError = vendorhttp.StatusError`. 7 keep
+their own type and read `Do`:
+
+| Client                       | Reason                                                     |
+| ---------------------------- | ---------------------------------------------------------- |
+| `bog`                        | `RetryAfter`, and 204 is `ErrNoRate`.                      |
+| `tbc`                        | `Title` and `SystemCode` from the body. Any 2xx is a success. |
+| `nbg`                        | The text holds the body. Any 2xx is a success.             |
+| `kursi`, `terabank`, `libertyrates`, `rico` | Their tests build the error as a value. `StatusError` holds the sentinel of the client, which a value of a test leaves empty. |
+**Rationale:** `ADR-0006`.
+**Alternatives:** `ADR-0006`.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-036`.
+`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-037`.
 
 ## 7. Build plan
 
@@ -520,6 +572,7 @@ field, and need two more modules.
 | 9   | `build/package/`, `deployments/compose.yaml`, `Taskfile.yml`.                  | `PLATFORM-FR-022` to `PLATFORM-FR-024`, `PLATFORM-NFR-003` | [x]  |
 | 10  | `vendors`. The modules of rates, fuel, and offers build their vendors with it. | `PLATFORM-FR-025`                               | [x]  |
 | 11  | `config` validates with tags. Every `Validate` method becomes a tag.           | `PLATFORM-FR-012`                               | [x]  |
+| 12  | `pkg/vendorhttp`. Each vendor client sends its requests with it.               | `PLATFORM-FR-026`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

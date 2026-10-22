@@ -4,7 +4,7 @@ title: The price of compressed natural gas of Neogas
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -70,7 +70,7 @@ const DefaultBaseURL = "https://neogas.ge"
 
 var ErrUnexpectedStatus = errors.New("neogas: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 
 // GasPrices returns the text of each gas price of the calculator of the home page,
 // in the order of the page: ["1.60", "1.60"]. A page with none returns an empty list.

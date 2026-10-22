@@ -34,6 +34,7 @@ internal/
     mcpserver/                   The MCP server and its middleware. See MCP.
     cache/                       The cache. See RSL.
 pkg/<vendor>/                    One vendor client module. See CLT.
+pkg/vendorhttp/                  The request of every vendor client. See ADR-0006.
 build/package/                   The Dockerfile and its ignore file. See BLD-005.
 deployments/                     The compose file of a local run.
 configs/                         The example of the configuration. See CFG-007.

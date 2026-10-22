@@ -232,6 +232,14 @@ the switch.
 - Unwanted case: the cache of one company cannot start. The server stops, and the
   error names the company.
 
+### `PLATFORM-FR-026`
+
+Every vendor client must send the User-Agent of the server, read at most a fixed count
+of bytes of an answer, and report a status that is not a success as an error that holds
+the status and the first 1 KiB of the body.
+
+**Why:** `CLT-005` and `CLT-007` hold the rules. One module realizes them for 19 clients (`ADR-0006`).
+
 ## 6. Non-functional requirements
 
 ### `PLATFORM-NFR-001`

@@ -4,7 +4,7 @@ title: The card offers of Bank of Georgia
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-22
 context: offers
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -101,7 +101,7 @@ const DefaultBaseURL = "https://bankofgeorgia.ge/api/bog-b/offers-hub"
 
 var ErrUnexpectedStatus = errors.New("bogoffers: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Offers(ctx context.Context, q OffersQuery) (OffersPage, error)
 
 type OffersQuery struct {

@@ -4,7 +4,7 @@ title: The card offers of Liberty Bank for its Studio customers
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-22
 context: offers
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -75,7 +75,7 @@ var (
     ErrNoTerms          = errors.New("liberty: the page has no block of terms")
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Categories(ctx context.Context, language string) ([]Category, error)
 func (c *Client) Types(ctx context.Context, language string) ([]Type, error)
 func (c *Client) Offers(ctx context.Context, q OffersQuery) ([]Offer, error) // one page

@@ -23,8 +23,8 @@ adds its subject to the name: `bogoffers`. `ADR-0004`.
 
 ## CLT-002
 
-A client imports the standard library only. It imports no package of the server
-module, no other client, and no MCP package. A third-party library needs a requirement
+A client imports the standard library and `pkg/vendorhttp` only. It imports no package
+of the server module, no other client, and no MCP package. `ADR-0006`. A third-party library needs a requirement
 that the API of the vendor demands, for example a protocol that the standard library
 does not offer. A client of a web page imports `golang.org/x/net/html`. No other client
 imports it. `ADR-0003`. A client of a vendor whose filter refuses the TLS handshake of Go
@@ -44,8 +44,9 @@ of a web framework) mirrors that JSON, with the field names of the page in its t
 
 ## CLT-004
 
-The HTTP client is `net/http`. The client builds the address with `net/url`, and decodes
-the body with `encoding/json` or `encoding/xml`. A client of a web page parses the body
+A client sends each request with `vendorhttp.Client`. It builds the address, sets the
+headers, limits the body, and decodes JSON. The HTTP client is `net/http`. A client
+decodes another body with `encoding/json` or `encoding/xml`. A client of a web page parses the body
 with `golang.org/x/net/html`. A client of a data stream finds the JSON value in the
 body and decodes it with `encoding/json`. It reads at most a fixed count of bytes from
 a body.
@@ -59,14 +60,22 @@ no major version to migrate.
 
 ## CLT-005
 
-The constructor is `New(opts ...Option) *Client`. An option sets one value:
+The constructor is `New(opts ...Option) *Client`, and `Option` is `vendorhttp.Option`.
+The caller sets a value that every client has with the option of `vendorhttp`. A client
+does not declare that option again. An option sets one value:
 
-| Option            | Default                                      |
-| ----------------- | -------------------------------------------- |
-| `WithBaseURL`     | The production address of the vendor.        |
-| `WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
-| `WithUserAgent`   | `georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp)`. |
-| `WithAPIKey`      | None. Only a client whose vendor needs a key. |
+| Option                       | Default                                      |
+| ---------------------------- | -------------------------------------------- |
+| `vendorhttp.WithBaseURL`     | `DefaultBaseURL` of the client.              |
+| `vendorhttp.WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
+| `vendorhttp.WithUserAgent`   | `georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp)`. |
+| `WithAPIKey` of the client   | None. Only a client whose vendor needs a key. |
+
+A value of one vendor is an option of its client that returns a `vendorhttp.Option`.
+
+```go
+client := tbc.New(vendorhttp.WithBaseURL(address), tbc.WithAPIKey(key))
+```
 
 The client sets `Accept: application/json` once, at construction. A client of a web
 page sets `Accept: text/html`. A client of a data stream sets the `Accept` of the
@@ -81,7 +90,8 @@ Every request carries that context.
 
 A status that is not a success is an error. It is never an empty result.
 The client returns `*APIError`, with the status code and the first 1 KiB of the body.
-`APIError` wraps the sentinel `ErrUnexpectedStatus`, so `errors.Is` finds it.
+`APIError` wraps the sentinel `ErrUnexpectedStatus`, so `errors.Is` finds it. A client
+whose error has no field of its own can declare `type APIError = vendorhttp.StatusError`.
 
 ## CLT-008
 

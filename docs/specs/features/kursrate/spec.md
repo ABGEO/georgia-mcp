@@ -4,7 +4,7 @@ title: The commercial exchange rates of Kursi.ge
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -70,7 +70,7 @@ const DefaultBaseURL = "https://api-core.kursi.ge"
 
 var ErrUnexpectedStatus = errors.New("kursi: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Currencies(ctx context.Context) ([]Currency, error)
 
 // Currency is one pair of currencies, with the rates of Kursi.ge for it.

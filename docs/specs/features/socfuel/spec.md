@@ -4,7 +4,7 @@ title: The fuel prices of SOCAR
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 context: fuel
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -77,7 +77,7 @@ const DefaultBaseURL = "https://sgp.ge/sgp-backend/api"
 
 var ErrUnexpectedStatus = errors.New("socar: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) CurrentPrices(ctx context.Context) (PriceList, error)
 
 type currentPricesResponse struct {

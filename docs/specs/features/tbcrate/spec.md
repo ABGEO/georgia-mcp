@@ -88,7 +88,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 ```go
 const DefaultBaseURL = "https://api.tbcbank.ge"
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent, WithAPIKey
+func New(opts ...Option) *Client // the options of vendorhttp, and WithAPIKey
 func (c *Client) CommercialRates(ctx context.Context, currencies []string) (*CommercialRates, error)
 
 type CommercialRates struct {

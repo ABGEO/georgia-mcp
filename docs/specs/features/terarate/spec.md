@@ -4,7 +4,7 @@ title: The commercial exchange rates of Terabank
 type: spec
 status: approved
 created: 2026-10-21
-updated: 2026-10-21
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-21
@@ -73,7 +73,7 @@ var (
     ErrNotSucceeded     = errors.New("terabank: not succeeded") // succeeded is false
 )
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) CrossRates(ctx context.Context) ([]CrossRate, error)
 
 type CrossRate struct {

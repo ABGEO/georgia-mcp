@@ -4,7 +4,7 @@ title: The card offers of TBC Bank
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-22
 context: offers
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -69,7 +69,7 @@ const DefaultBaseURL = "https://apigw.tbcbank.ge/api/v1/marketing"
 
 var ErrUnexpectedStatus = errors.New("tbcoffers: unexpected status")
 
-func New(opts ...Option) *Client // WithBaseURL, WithHTTPClient, WithUserAgent
+func New(opts ...Option) *Client // the options of vendorhttp
 func (c *Client) Filters(ctx context.Context, segment, locale string) ([]Filter, error)
 func (c *Client) Offers(ctx context.Context, r OffersRequest) (OffersPage, error)
 func (c *Client) Offer(ctx context.Context, slug, locale string) (Entry, error)
