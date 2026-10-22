@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"io/fs"
 	"maps"
+	"net/url"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/caarlos0/env/v11"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 )
 
@@ -18,29 +21,20 @@ const (
 	localFile = ".env"
 )
 
-// FieldError tells that one field of a configuration struct has an invalid value.
-// A Validate method returns it, and Load adds the name of the variable.
+// FieldError tells that the variable of one field has an invalid value.
 type FieldError struct {
-	Field    string
+	Variable string
 	Problem  string
-	variable string
 }
 
-// Error returns the variable, or the field when the variable is not known, and the problem.
+// Error returns the variable and the problem.
 func (e *FieldError) Error() string {
-	if e.variable != "" {
-		return e.variable + ": " + e.Problem
-	}
-
-	return e.Field + ": " + e.Problem
+	return e.Variable + ": " + e.Problem
 }
 
-type validator interface {
-	Validate() error
-}
-
-// Load reads the configuration into T, then calls the Validate method of each
-// struct in T that has one. A variable of the environment wins over the local file.
+// Load reads the configuration into T, then checks the validate tag of each field. A
+// variable of the environment wins over the local file. Each invalid value gives a
+// *FieldError.
 func Load[T any]() (T, error) {
 	var cfg T
 
@@ -56,7 +50,7 @@ func Load[T any]() (T, error) {
 		return cfg, fmt.Errorf("configuration: %w", err)
 	}
 
-	if err := validate(reflect.ValueOf(cfg), prefix); err != nil {
+	if err := validate(cfg); err != nil {
 		return cfg, fmt.Errorf("configuration: %w", err)
 	}
 
@@ -130,40 +124,99 @@ func walkFields(
 	}
 }
 
-func validate(value reflect.Value, keyPrefix string) error {
-	var errs []error
+func validate(cfg any) error {
+	check := validator.New(validator.WithRequiredStructEnabled())
+	check.RegisterCustomTypeFunc(urlText, url.URL{})
 
-	if v, ok := reflect.TypeAssert[validator](value); ok {
-		if err := v.Validate(); err != nil {
-			errs = append(errs, nameFieldError(err, value.Type(), keyPrefix))
-		}
+	err := check.Struct(cfg)
+
+	var failures validator.ValidationErrors
+	if !errors.As(err, &failures) {
+		return err //nolint:wrapcheck // Load adds the context.
 	}
 
-	for field, fieldValue := range value.Fields() {
-		_, isLeaf := field.Tag.Lookup("env")
-		if isLeaf || field.Type.Kind() != reflect.Struct || !field.IsExported() {
-			continue
-		}
+	errs := make([]error, 0, len(failures))
 
-		if err := validate(fieldValue, keyPrefix+field.Tag.Get("envPrefix")); err != nil {
-			errs = append(errs, err)
-		}
+	for _, failure := range failures {
+		place := locate(reflect.TypeOf(cfg), failure.StructNamespace())
+		errs = append(errs, &FieldError{Variable: place.variable, Problem: problem(failure, place)})
 	}
 
 	return errors.Join(errs...)
 }
 
-func nameFieldError(err error, structType reflect.Type, keyPrefix string) error {
-	var fieldErr *FieldError
-	if !errors.As(err, &fieldErr) {
-		return err
+// urlText gives the validator the text of a url.URL, so a tag of a string applies to it.
+func urlText(value reflect.Value) any {
+	if address, ok := reflect.TypeAssert[url.URL](value); ok {
+		return address.String()
 	}
 
-	if field, ok := structType.FieldByName(fieldErr.Field); ok {
-		if key, ok := field.Tag.Lookup("env"); ok {
-			fieldErr.variable = keyPrefix + key
+	return nil
+}
+
+// place is a field of the configuration: the struct that holds it, the prefix of that
+// struct, and the variable of the field.
+type place struct {
+	parent    reflect.Type
+	keyPrefix string
+	variable  string
+}
+
+// locate follows a namespace of Go fields, "Config.Rates.TBC.APIKey", from the root
+// type, and adds the envPrefix of each struct on the way. An index of a list,
+// "Ranges[1]", names the variable of the list.
+func locate(root reflect.Type, namespace string) place {
+	_, path, _ := strings.Cut(namespace, ".")
+	found := place{parent: root, keyPrefix: prefix}
+
+	for name := range strings.SplitSeq(path, ".") {
+		name, _, _ = strings.Cut(name, "[")
+
+		field, ok := found.parent.FieldByName(name)
+		if !ok {
+			found.variable = found.keyPrefix + name
+
+			return found
 		}
+
+		if key, ok := field.Tag.Lookup("env"); ok {
+			found.variable = found.keyPrefix + key
+
+			return found
+		}
+
+		found.keyPrefix += field.Tag.Get("envPrefix")
+		found.parent = field.Type
 	}
 
-	return err
+	return found
+}
+
+// problem gives the text of a failed rule. PLATFORM spec 5 lists each one.
+func problem(failure validator.FieldError, at place) string {
+	switch failure.Tag() {
+	case "http_url":
+		return "must be an http or https URL"
+	case "gt":
+		return "must be more than " + failure.Param()
+	case "min", "gte":
+		return "must be " + failure.Param() + " or more"
+	case "hostname_port":
+		return "must be host:port"
+	case "cidr":
+		return fmt.Sprint(failure.Value()) + " must be a CIDR range"
+	case "oneof":
+		return "must be one of: " + strings.Join(strings.Fields(failure.Param()), ", ")
+	case "required_if":
+		switchName, _, _ := strings.Cut(failure.Param(), " ")
+		variable := at.keyPrefix + switchName
+
+		if field, ok := at.parent.FieldByName(switchName); ok {
+			variable = at.keyPrefix + field.Tag.Get("env")
+		}
+
+		return "must be set while " + variable + " is true. Set it, or set " + variable + "=false"
+	default:
+		return "fails the rule " + failure.Tag()
+	}
 }

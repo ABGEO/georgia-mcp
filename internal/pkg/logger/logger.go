@@ -4,8 +4,6 @@ package logger
 import (
 	"io"
 	"log/slog"
-
-	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 )
 
 const (
@@ -16,16 +14,7 @@ const (
 // Config is the configuration of the logger.
 type Config struct {
 	Level  slog.Level `env:"LEVEL"  envDefault:"info"`
-	Format string     `env:"FORMAT" envDefault:"json"`
-}
-
-// Validate checks the format.
-func (c Config) Validate() error {
-	if c.Format != formatJSON && c.Format != formatText {
-		return &config.FieldError{Field: "Format", Problem: `must be "json" or "text"`}
-	}
-
-	return nil
+	Format string     `env:"FORMAT" envDefault:"json" validate:"oneof=json text"`
 }
 
 // New returns a logger that writes to output. It adds the source position at the

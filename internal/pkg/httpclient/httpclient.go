@@ -9,29 +9,14 @@ import (
 
 	"golang.org/x/time/rate"
 
-	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
 // Config is the configuration of the calls to one vendor.
 type Config struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
-	Rate    float64       `env:"RATE"    envDefault:"5"`
-	Burst   int           `env:"BURST"   envDefault:"5"`
-}
-
-// Validate checks that each value is positive.
-func (c Config) Validate() error {
-	switch {
-	case c.Timeout <= 0:
-		return &config.FieldError{Field: "Timeout", Problem: "must be more than 0"}
-	case c.Rate <= 0:
-		return &config.FieldError{Field: "Rate", Problem: "must be more than 0"}
-	case c.Burst < 1:
-		return &config.FieldError{Field: "Burst", Problem: "must be 1 or more"}
-	default:
-		return nil
-	}
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
+	Rate    float64       `env:"RATE"    envDefault:"5"   validate:"gt=0"`
+	Burst   int           `env:"BURST"   envDefault:"5"   validate:"min=1"`
 }
 
 // New returns a client that waits for a free slot of the limit before each call.
