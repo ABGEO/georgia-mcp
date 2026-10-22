@@ -99,3 +99,41 @@ func TestVendorLimit(t *testing.T) {
 		}
 	})
 }
+
+// countingTransport answers 200 with no network, and counts the calls.
+type countingTransport struct {
+	calls atomic.Int32
+}
+
+func (c *countingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	c.calls.Add(1)
+
+	return &http.Response{StatusCode: http.StatusOK, Body: http.NoBody, Request: req}, nil
+}
+
+// GULFUEL-SC-012: The vendor limit applies over a transport that the caller gives.
+func TestVendorLimitOverATransport(t *testing.T) {
+	t.Parallel()
+
+	transport := &countingTransport{}
+	client := httpclient.NewWithTransport(
+		httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
+		transport,
+	)
+
+	if err := get(t.Context(), client, "https://vendor.test"); err != nil {
+		t.Fatalf("the first request: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(t.Context(), 100*time.Millisecond)
+	defer cancel()
+
+	err := get(ctx, client, "https://vendor.test")
+	if !errors.Is(err, kernel.ErrSourceUnavailable) {
+		t.Errorf("the second request error = %v, want kernel.ErrSourceUnavailable", err)
+	}
+
+	if calls := transport.calls.Load(); calls != 1 {
+		t.Errorf("the transport counts %d calls, want 1", calls)
+	}
+}

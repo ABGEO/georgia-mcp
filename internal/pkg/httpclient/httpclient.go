@@ -38,10 +38,16 @@ func (c Config) Validate() error {
 // A call that cannot get a slot before its deadline fails with
 // kernel.ErrSourceUnavailable.
 func New(cfg Config) *http.Client {
+	return NewWithTransport(cfg, http.DefaultTransport)
+}
+
+// NewWithTransport returns the client of New over base. A vendor that refuses the TLS
+// handshake of Go needs a base of its own.
+func NewWithTransport(cfg Config, base http.RoundTripper) *http.Client {
 	return &http.Client{
 		Timeout: cfg.Timeout,
 		Transport: &limitedTransport{
-			base:    http.DefaultTransport,
+			base:    base,
 			limiter: rate.NewLimiter(rate.Limit(cfg.Rate), cfg.Burst),
 		},
 	}
