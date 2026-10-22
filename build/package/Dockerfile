@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.27.2 AS build
+# The build runs on the platform of the builder, and Go compiles for the target platform.
+FROM --platform=$BUILDPLATFORM golang:1.27.2 AS build
+
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /src
 
@@ -12,7 +16,7 @@ COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     git config --global --add safe.directory /src \
-    && CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp
+    && CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp
 
 FROM gcr.io/distroless/static-debian13:nonroot
 
