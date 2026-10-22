@@ -64,7 +64,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Domain         | `F/domain/grade.go` (change)          | `GradeLPG`. `Grades` lists it after `GradeCNG`.            |
 | Driven adapter | `F/adapter/socar/`                    | `Adapter`, `NewAdapter`.                                   |
 | Tool           | `F/adapter/tool/schema.go` (change)   | The tag of `getPricesInput.Grades`. 4.3.                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.SOCAR`, `SOCARConfig`, `SOCARHTTPConfig`, `socarSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.SOCAR`, `socarSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/socar`.                                         |
 | Glossary       | `docs/specs/guidelines/glossary.md` (change) | The terms of requirements 5.                        |
@@ -214,9 +214,7 @@ GET https://sgp.ge/sgp-backend/api/integration/info/get-archive-price-list
 | `GEOMCP_FUEL_SOCAR_RATE`        | float    | `1`                              | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_SOCAR_BURST`       | int      | `1`                              | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `SOCAR SOCARConfig` with `envPrefix:"SOCAR_"`. `SOCARConfig` and
-`SOCARHTTPConfig` have the shape of `WissolConfig` and `WissolHTTPConfig`, with the
-defaults of this table.
+`fuel.Config` gains `SOCAR vendors.Config` with `envPrefix:"SOCAR_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

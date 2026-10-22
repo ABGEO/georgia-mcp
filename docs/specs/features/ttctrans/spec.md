@@ -485,9 +485,9 @@ GET /v2/stops/1:1000?locale=en   (with a wrong key)
 | `GEOMCP_TRANSIT_TTC_RATE`        | float    | `4`                                             | No     | `TTCTRANS-NFR-004`, `TTCTRANS-DD-013` |
 | `GEOMCP_TRANSIT_TTC_BURST`       | int      | `1`                                             | No     | `TTCTRANS-NFR-004`, `TTCTRANS-DD-013` |
 
-`transit.Config` holds `TTC TTCConfig` with `envPrefix:"TTC_"`. `TTCConfig` holds
-`Enabled bool`, `APIKey string`, `BaseURL url.URL`, and `HTTP TTCHTTPConfig`. `TTCHTTPConfig`
-has the fields of `httpclient.Config` with the defaults of this table, as `rates.BOGHTTPConfig` does.
+`transit.Config` holds `TTC TTCConfig` with `envPrefix:"TTC_"`. `TTCConfig` embeds
+`vendors.Config` and adds `APIKey`. `transit.Defaults` gives the defaults of this table,
+with `WithLimit(4, 1)` (`PLATFORM-DD-014`).
 `APIKey` has `validate:"required_if=Enabled true"`, so `config.Load` fails with
 `GEOMCP_TRANSIT_TTC_API_KEY: must be set while GEOMCP_TRANSIT_TTC_ENABLED is true. Set it,
 or set GEOMCP_TRANSIT_TTC_ENABLED=false` when `Enabled` is true and `APIKey` is empty

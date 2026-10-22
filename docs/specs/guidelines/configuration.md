@@ -47,9 +47,12 @@ type Config struct {
 ## CFG-005
 
 A field declares its default in an `envDefault` tag, and its rule in a `validate` tag of
-`github.com/go-playground/validator/v10`. A struct has no `Validate` method.
-`config.Load` validates the configuration at the start and stops on an error. Each
-error names the variable.
+`github.com/go-playground/validator/v10`. A struct that more than one vendor uses,
+`vendors.Config` and `httpclient.Config`, has no `envDefault` tag: a tag holds one value
+for every vendor. The context gives the value of each vendor in `Defaults() Config`,
+`bootstrap.Defaults` composes them, and `config.Load` starts from that value. A struct
+has no `Validate` method. `config.Load` validates the configuration at the start and
+stops on an error. Each error names the variable.
 
 | Value                                | Tag                        |
 | ------------------------------------ | -------------------------- |
@@ -61,8 +64,10 @@ error names the variable.
 A rule that no tag of the validator expresses is a tag that `internal/pkg/config`
 registers, with its message.
 
-**Why:** A wrong value must fail at the start, not at the first tool call. A rule next to
-its default needs no method that repeats it for each vendor.
+**Why:** A wrong value must fail at the start, not at the first tool call. A rule in a tag
+needs no method that repeats it for each vendor. A default of a shared struct differs
+for each vendor, and its tag cannot: a Go value holds each one, next to the others of its
+context.
 
 ## CFG-006
 
@@ -84,6 +89,25 @@ switch.
 ```
 GEOMCP_RATES_TBC_ENABLED=true
 GEOMCP_RATES_TBC_API_KEY=
+```
+
+The configuration of such a vendor is `vendors.Config`: the switch, the base address,
+and the calls. `vendors.Defaults(address)` gives it on, at the address, with 1 call each
+second. `WithLimit` sets another limit. A vendor with a value of its own embeds
+`vendors.Config` and adds the field.
+
+```go
+type Config struct {
+    Wissol vendors.Config `envPrefix:"WISSOL_"`
+    BOG    vendors.Config `envPrefix:"BOG_"`
+}
+
+func Defaults() Config {
+    return Config{
+        Wissol: vendors.Defaults("https://api.wissol.ge"),
+        BOG:    vendors.Defaults("https://api.businessonline.ge").WithLimit(0.8, 10),
+    }
+}
 ```
 
 **Why:** One rule for every vendor. A vendor never goes off because a value is missing,

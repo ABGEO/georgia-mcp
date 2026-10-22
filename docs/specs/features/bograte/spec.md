@@ -57,7 +57,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Vendor client  | `pkg/bog/`                            | `Client`, `New`, `Option`, `CommercialRate`, `APIError`, `ErrUnexpectedStatus`, `ErrNoRate`. |
 | Driven adapter | `R/adapter/bog/`                      | `Adapter`, `NewAdapter`.                                     |
-| Module         | `R/module.go`, `R/config.go` (change) | `Config.BOG`, `BOGConfig`, `BOGHTTPConfig`, the source of Bank of Georgia. |
+| Module         | `R/module.go`, `R/config.go` (change) | `Config.BOG`, the source of Bank of Georgia. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                    | `use ./pkg/bog`.                                             |
 
@@ -137,9 +137,8 @@ GET https://api.businessonline.ge/api/rates/commercial/GEL
 | `GEOMCP_RATES_BOG_RATE`       | float    | `0.8`                           | No     | `BOGRATE-NFR-001` |
 | `GEOMCP_RATES_BOG_BURST`      | int      | `10`                            | No     | `BOGRATE-NFR-001` |
 
-`rates.Config` gains `BOG BOGConfig` with `envPrefix:"BOG_"`. `BOGConfig` holds
-`Enabled bool`, `BaseURL url.URL`, and `HTTP BOGHTTPConfig`. `BOGHTTPConfig` has the
-fields of `httpclient.Config` with the defaults of this table, as `TBCHTTPConfig` does.
+`rates.Config` gains `BOG vendors.Config` with `envPrefix:"BOG_"`. `rates.Defaults` gives
+the defaults of this table, with `WithLimit(0.8, 10)` (`PLATFORM-DD-014`).
 
 The tool, its structs, its errors, and the cache are those of `TBCRATE` 4.3 and 4.5. The
 cache of Bank of Georgia is a second `CommercialRateCache`: 5 minutes to live, 55 minutes
@@ -222,9 +221,9 @@ so a padded value would show eight places as a false precision.
 ### `BOGRATE-DD-006`
 
 **Realizes:** `BOGRATE-FR-003`, `CFG-005`
-**Decision:** The switch is `Enabled bool` with `envDefault:"true"`.
-**Rationale:** The default lives in the tag. A `Config` built in Go with no `BOG` field
-reads no Bank of Georgia, so a test of TBC calls no real vendor.
+**Decision:** The switch is `Enabled bool`, and `rates.Defaults` sets it to true.
+**Rationale:** The default lives in `rates.Defaults`. A `Config` built in Go with no `BOG`
+field reads no Bank of Georgia, so a test of TBC calls no real vendor.
 **Alternatives:** `Disabled bool`. Its zero value turns the bank on in every `Config`
 literal.
 
@@ -364,7 +363,7 @@ so the test fails after 5 seconds. `Bank()` is `{bog, Bank of Georgia, bank}`, w
 **Verifies:** `BOGRATE-NFR-001`
 **Layer:** unit
 
-**Given** a `rate.Limiter` with the default `Rate` and `Burst` of `BOGHTTPConfig`.
+**Given** a `rate.Limiter` with the default `Rate` and `Burst` of Bank of Georgia in `rates.Defaults`.
 **When** 100 calls wait on it at once.
 **Then** at most 58 calls pass in the first 60 seconds. The test runs in `synctest`.
 

@@ -62,7 +62,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ---------------------------------------------------------- |
 | Vendor client  | `pkg/connect/`                        | `Client`, `New`, `Option`, `Snapshot`, `FuelPrice`, `APIError`, `ErrUnexpectedStatus`. |
 | Driven adapter | `F/adapter/connect/`                  | `Adapter`, `NewAdapter`.                                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Connect`, `ConnectConfig`, `ConnectHTTPConfig`, `connectSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Connect`, `connectSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/connect`.                                       |
 | Website        | `website/src/content/contexts.yaml` (change) | Connect, კონექტი, in the list of `fuel`.          |
@@ -173,8 +173,7 @@ GET https://connect.com.ge/wp-json/fuel-prices/v1/date/2020-01-01
 | `GEOMCP_FUEL_CONNECT_RATE`     | float    | `1`                                             | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_CONNECT_BURST`    | int      | `1`                                             | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Connect ConnectConfig` with `envPrefix:"CONNECT_"`, with the shape
-of `WissolConfig` and the defaults of this table.
+`fuel.Config` gains `Connect vendors.Config` with `envPrefix:"CONNECT_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

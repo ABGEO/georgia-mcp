@@ -62,7 +62,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ---------------------------------------------------------- |
 | Vendor client  | `pkg/lukoil/`                         | `Client`, `New`, `Option`, `PriceTable`, `APIError`, `ErrUnexpectedStatus`, `ErrNoPriceTable`, `ErrMalformedTable`. |
 | Driven adapter | `F/adapter/lukoil/`                   | `Adapter`, `NewAdapter`.                                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Lukoil`, `LukoilConfig`, `LukoilHTTPConfig`, `lukoilSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Lukoil`, `lukoilSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/lukoil`.                                        |
 | Website        | `website/src/content/contexts.yaml` (change) | Lukoil, ლუკოილი, in the list of `fuel`.           |
@@ -173,8 +173,7 @@ The answer sets the cookies `XSRF-TOKEN` and `laravel_session`. The client sends
 | `GEOMCP_FUEL_LUKOIL_RATE`     | float    | `1`                     | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_LUKOIL_BURST`    | int      | `1`                     | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Lukoil LukoilConfig` with `envPrefix:"LUKOIL_"`, with the shape of
-`WissolConfig` and the defaults of this table.
+`fuel.Config` gains `Lukoil vendors.Config` with `envPrefix:"LUKOIL_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

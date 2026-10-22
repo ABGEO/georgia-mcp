@@ -89,7 +89,7 @@ Every path is new unless the table says "change". `O` is `internal/app/georgia-m
 | Shared text    | `O/adapter/text/`          | `FromHTML`: the text of an HTML fragment. `BOGOFFER-DD-004`.          |
 | Cache          | `O/adapter/cache/`         | `OfferCache`, `New`.                                                  |
 | Tool           | `O/adapter/tool/`          | `Register`, the structs of 4.3.                                       |
-| Module         | `O/module.go`, `O/config.go` | `Module`, `New`, `Config`, `BOGConfig`, `BOGHTTPConfig`.            |
+| Module         | `O/module.go`, `O/config.go` | `Module`, `New`, `Config`, `Defaults`.            |
 | Composition    | `internal/app/georgia-mcp/bootstrap/` (change) | `Config.Offers` with `envPrefix:"OFFERS_"`. `modules.go` builds `offers.New`. |
 | Configuration  | `configs/.env.example` (change) | The variables of 4.3.                                            |
 | Workspace      | `go.work` (change)         | `use ./pkg/bogoffers`.                                                |
@@ -469,7 +469,7 @@ Accept-Language: en
 | `GEOMCP_OFFERS_BOG_RATE`        | float    | `1`                                              | No     | `BOGOFFER-NFR-002` |
 | `GEOMCP_OFFERS_BOG_BURST`       | int      | `1`                                              | No     | `BOGOFFER-NFR-002` |
 
-`offers.Config` holds `BOG BOGConfig` with `envPrefix:"BOG_"`, as `fuel.Config` does.
+`offers.Config` holds `BOG vendors.Config` with `envPrefix:"BOG_"`, as `fuel.Config` does. `offers.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ### 4.4 Flow
 

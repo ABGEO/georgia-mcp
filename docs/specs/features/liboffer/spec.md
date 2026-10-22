@@ -60,7 +60,7 @@ list for each category and each type of Liberty. The terms come from the page of
 | -------------- | ----------------------------- | ------------------------------------------------------- |
 | Vendor client  | `pkg/liberty/`                | `Client`, `New`, `Option`, `Categories`, `Types`, `Offers`, `OfferPage`, `Category`, `Type`, `OffersQuery`, `Offer`, `Page`, `APIError`, `ErrUnexpectedStatus`, `ErrNoSuccess`, `ErrNoTerms`. |
 | Driven adapter | `O/adapter/liberty/`          | `Adapter`, `NewAdapter`, the tables of `LIBOFFER-DD-002`. |
-| Module         | `O/module.go`, `O/config.go` (change) | `LibertyConfig`, `LibertyHTTPConfig`. The source of Liberty. |
+| Module         | `O/module.go`, `O/config.go` (change) | `Liberty vendors.Config`, `WithLimit(5, 5)`. The source of Liberty. |
 | Configuration  | `configs/.env.example` (change) | The variables of 4.3.                                 |
 | Workspace      | `go.work` (change)            | `use ./pkg/liberty`.                                    |
 

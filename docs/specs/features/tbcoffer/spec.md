@@ -58,7 +58,7 @@ one list for each filter of TBC.
 | -------------- | ----------------------------- | ------------------------------------------------------- |
 | Vendor client  | `pkg/tbcoffers/`              | `Client`, `New`, `Option`, `Filters`, `Offers`, `Offer`, `Filter`, `OffersRequest`, `OffersPage`, `Entry`, `Segment`, `Partner`, `Node`, `APIError`, `ErrUnexpectedStatus`. |
 | Driven adapter | `O/adapter/tbc/`              | `Adapter`, `NewAdapter`, the tables of `TBCOFFER-DD-002`. |
-| Module         | `O/module.go`, `O/config.go` (change) | `TBCConfig`, `TBCHTTPConfig`. The source of TBC.  |
+| Module         | `O/module.go`, `O/config.go` (change) | `TBC vendors.Config`, `WithLimit(5, 5)`. The source of TBC.  |
 | Configuration  | `configs/.env.example` (change) | The variables of 4.3.                                 |
 | Workspace      | `go.work` (change)            | `use ./pkg/tbcoffers`.                                  |
 

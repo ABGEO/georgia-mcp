@@ -323,8 +323,9 @@ publication at about 17:00 Tbilisi time, and that the rate is indicative.
 | `GEOMCP_RATES_NBG_BURST`           | int      | `5`                                            | No     | `NBGRATE-NFR-003` |
 | `GEOMCP_RATES_NBG_CACHE_ENTRIES`   | int, 1 or more | `512`                                    | No     | `NBGRATE-NFR-002` |
 
-`rates.Config` holds `NBG nbgConfig` with `envPrefix:"NBG_"`. `nbgConfig` embeds
-`httpclient.Config` and adds `BaseURL url.URL` and `CacheEntries int`.
+`rates.Config` holds `NBG NBGConfig` with `envPrefix:"NBG_"`. `NBGConfig` holds
+`BaseURL url.URL` and `CacheEntries int` with their defaults in tags, and `HTTP
+httpclient.Config`, whose limit `rates.Defaults` gives (`PLATFORM-DD-014`).
 
 ### 4.4 Flow
 

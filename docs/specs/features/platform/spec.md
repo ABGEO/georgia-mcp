@@ -129,7 +129,7 @@ Every path is new. Each package with more than one file has `doc.go` (`PKG-006`)
 | Path                                  | Types and functions                                                   |
 | ------------------------------------- | --------------------------------------------------------------------- |
 | `internal/pkg/buildinfo/`        | `type Info struct { Version, Commit, GoVersion string }`. `func Get() Info` reads `debug.ReadBuildInfo`: the main module version, `vcs.revision`, and `runtime.Version()`. An absent value is `unknown`. |
-| `internal/pkg/config/`           | `func Load[T any]() (T, error)`. Loads `.env` with `godotenv.Load`, ignores `fs.ErrNotExist`. Parses with `env.ParseAsWithOptions[T](env.Options{Prefix: "GEOMCP_"})`. Validates `T` with `go-playground/validator/v10` and its `validate` tags. Each failure becomes a `*FieldError{Variable, Problem}`. `PLATFORM-DD-012`. |
+| `internal/pkg/config/`           | `func Load[T any](defaults T) (T, error)`. Loads `.env` with `godotenv.Load`, ignores `fs.ErrNotExist`. Parses into a copy of `defaults` with `env.ParseWithOptions(&cfg, env.Options{Prefix: "GEOMCP_"})`: a variable that is set replaces its field. `func URL(text string) url.URL` reads a default address. `PLATFORM-DD-014`. Validates `T` with `go-playground/validator/v10` and its `validate` tags. Each failure becomes a `*FieldError{Variable, Problem}`. `PLATFORM-DD-012`. |
 | `internal/pkg/logger/`           | `type Config struct { Level slog.Level; Format string }`. `Format` has `validate:"oneof=json text"`. `func New(cfg Config, output io.Writer) *slog.Logger`. `AddSource` when the level is debug (`LOG-003`). |
 | `internal/pkg/mcpserver/`        | See below.                                                            |
 | `internal/pkg/httpserver/`       | See below.                                                            |
@@ -233,16 +233,25 @@ func (c *Cache[V]) Close()
 
 ```go
 type Config struct {
-    Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-    Rate    float64       `env:"RATE"    envDefault:"5"   validate:"gt=0"`
-    Burst   int           `env:"BURST"   envDefault:"5"   validate:"min=1"`
+    Timeout time.Duration `env:"TIMEOUT" validate:"gt=0"`
+    Rate    float64       `env:"RATE"    validate:"gt=0"`
+    Burst   int           `env:"BURST"   validate:"min=1"`
 }
+func Defaults() Config // 10s, 1 each second, burst 1
+func (c Config) WithLimit(rate float64, burst int) Config
 func New(cfg Config) *http.Client
 ```
 
 **`vendors`.**
 
 ```go
+type Config struct {
+    Enabled bool              `env:"ENABLED"`
+    BaseURL url.URL           `env:"BASE_URL" validate:"http_url"`
+    HTTP    httpclient.Config
+}
+func Defaults(baseURL string) Config // on, at baseURL, with httpclient.Defaults
+func (c Config) WithLimit(rate float64, burst int) Config
 type Entry[T io.Closer] struct {
     Name     string // "Lukoil", for the log
     Enabled  bool
@@ -553,6 +562,34 @@ their own type and read `Do`:
 **Rationale:** `ADR-0006`.
 **Alternatives:** `ADR-0006`.
 
+### `PLATFORM-DD-014`
+
+**Realizes:** `CFG-008`, `CFG-005`
+**Decision:** `vendors.Config` and `httpclient.Config` declare no default in a tag. Each
+context declares `Defaults()` with the values of its vendors, `bootstrap.Defaults`
+composes them, and `config.Load` parses the environment into that value. Any other
+struct keeps its defaults in tags. The configuration of each vendor is `vendors.Config`: the
+switch, the base address, and the calls. A vendor with a value of its own, the key of
+TBC or of the TTC, embeds it and adds the field. `vendors.Defaults(address)` gives the
+limit of 14 of 18 vendors, 1 call each second with a burst of 1. `WithLimit` gives the
+others:
+
+| Vendor                 | Limit                          |
+| ---------------------- | ------------------------------ |
+| NBG                    | 5 each second, burst 5. No switch: `NBGConfig`. |
+| Bank of Georgia, rates | 0.8 each second, burst 10.     |
+| TBC, offers            | 5 each second, burst 5.        |
+| Liberty, offers        | 5 each second, burst 5.        |
+| TTC                    | 4 each second, burst 1.        |
+
+**Rationale:** A tag of a shared struct holds one default for every vendor, and the base
+address and the limit differ for each vendor. 18 HTTP structs and 18 vendor structs
+repeated three fields to change a default. A struct used one time keeps the default next
+to its field.
+**Alternatives:** Defaults in tags, with a struct for each vendor that differs. The base
+address differs for each vendor, so each vendor keeps a struct. Every default in Go: a
+struct used one time then has its default far from its field.
+
 ## 6. Scenarios
 
 `spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-037`.
@@ -573,6 +610,7 @@ their own type and read `Do`:
 | 10  | `vendors`. The modules of rates, fuel, and offers build their vendors with it. | `PLATFORM-FR-025`                               | [x]  |
 | 11  | `config` validates with tags. Every `Validate` method becomes a tag.           | `PLATFORM-FR-012`                               | [x]  |
 | 12  | `pkg/vendorhttp`. Each vendor client sends its requests with it.               | `PLATFORM-FR-026`                               | [x]  |
+| 13  | `Defaults()` of each context. `vendors.Config` for each vendor.                | `CFG-005`, `CFG-008`                            | [x]  |
 
 ## 8. Out of scope for this specification
 

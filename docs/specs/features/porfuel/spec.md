@@ -61,7 +61,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Guidelines     | `docs/specs/guidelines/clients.md` (change, done) | `CLT-003` to `CLT-005`: the client of a data stream. |
 | Vendor client  | `pkg/portal/`                         | `Client`, `New`, `Option`, `FuelPrice`, `FuelType`, `APIError`, `ErrUnexpectedStatus`, `ErrNoPriceList`, `ErrMalformedPriceList`. |
 | Driven adapter | `F/adapter/portal/`                   | `Adapter`, `NewAdapter`.                                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Portal`, `PortalConfig`, `PortalHTTPConfig`, `portalSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Portal`, `portalSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/portal`.                                        |
 | Website        | `website/src/content/contexts.yaml` (change) | Portal, პორტალი, in the list of `fuel`.           |
@@ -172,8 +172,7 @@ inside the strings of its scripts, with each quote escaped.
 | `GEOMCP_FUEL_PORTAL_RATE`     | float    | `1`                     | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_PORTAL_BURST`    | int      | `1`                     | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Portal PortalConfig` with `envPrefix:"PORTAL_"`, with the shape of
-`WissolConfig` and the defaults of this table.
+`fuel.Config` gains `Portal vendors.Config` with `envPrefix:"PORTAL_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

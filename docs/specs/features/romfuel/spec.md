@@ -67,7 +67,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Driven adapter | `F/adapter/rompetrol/`                | `Adapter`, `NewAdapter`.                                   |
 | Driven adapter | `F/adapter/wissol/` (change)          | `Company` sets `PublishesEffectiveDate: true`.             |
 | Tool           | `F/adapter/tool/` (change)            | `priceOutput.EffectiveDate` with `omitempty`. `companyList`. 4.3. |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Rompetrol`, `RompetrolConfig`, `RompetrolHTTPConfig`, `rompetrolSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Rompetrol`, `rompetrolSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/rompetrol`.                                     |
 
@@ -216,9 +216,7 @@ Each cell of the real page holds the text between new lines and tabs.
 | `GEOMCP_FUEL_ROMPETROL_RATE`        | float    | `1`                        | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_ROMPETROL_BURST`       | int      | `1`                        | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Rompetrol RompetrolConfig` with `envPrefix:"ROMPETROL_"`.
-`RompetrolConfig` and `RompetrolHTTPConfig` have the shape of `WissolConfig` and
-`WissolHTTPConfig`, with the defaults of this table.
+`fuel.Config` gains `Rompetrol vendors.Config` with `envPrefix:"ROMPETROL_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

@@ -276,12 +276,11 @@ oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is sta
 | `GEOMCP_RATES_TBC_RATE`       | float    | `1`                      | No     | `TBCRATE-NFR-002` |
 | `GEOMCP_RATES_TBC_BURST`      | int      | `1`                      | No     | `TBCRATE-NFR-002` |
 
-`rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` holds `Enabled`,
-`APIKey`, `BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `APIKey` has
+`rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` embeds
+`vendors.Config` and adds `APIKey`. `rates.Defaults` gives the defaults of this table
+(`PLATFORM-DD-014`). `APIKey` has
 `validate:"required_if=Enabled true"`, so `config.Load` refuses an empty key while
-`Enabled` is true, and names `GEOMCP_RATES_TBC_ENABLED` (`PLATFORM-DD-012`). `TBCHTTPConfig` has the fields of
-`httpclient.Config` with the defaults of this table, and converts to it. A default lives
-in a struct tag, so `httpclient.Config` cannot carry a second set.
+`Enabled` is true, and names `GEOMCP_RATES_TBC_ENABLED` (`PLATFORM-DD-012`).
 
 ### 4.4 Flow
 

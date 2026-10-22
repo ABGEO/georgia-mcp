@@ -59,7 +59,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Vendor client  | `pkg/libertyrates/`                   | `Client`, `New`, `Option`, `RateRow`, `Quote`, `APIError`, `ErrUnexpectedStatus`, `ErrNoRateBlock`, `ErrMalformedBlock`. |
 | Driven adapter | `R/adapter/liberty/`                  | `Adapter`, `NewAdapter`.                                     |
-| Module         | `R/module.go`, `R/config.go` (change) | `Config.Liberty`, `LibertyConfig`, `LibertyHTTPConfig`, `libertySource`. |
+| Module         | `R/module.go`, `R/config.go` (change) | `Config.Liberty`, `libertySource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                    | `use ./pkg/libertyrates`.                                    |
 
@@ -189,9 +189,7 @@ GET https://www.libertybank.ge/ka/
 | `GEOMCP_RATES_LIBERTY_RATE`       | float    | `1`                          | No     | `LIBRATE-NFR-001` |
 | `GEOMCP_RATES_LIBERTY_BURST`      | int      | `1`                          | No     | `LIBRATE-NFR-001` |
 
-`rates.Config` gains `Liberty LibertyConfig` with `envPrefix:"LIBERTY_"`. `LibertyConfig`
-and `LibertyHTTPConfig` have the shape of `BOGConfig` and `BOGHTTPConfig`, with the
-defaults of this table.
+`rates.Config` gains `Liberty vendors.Config` with `envPrefix:"LIBERTY_"`. `rates.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 The tool, its structs, its errors, and the cache are those of `TBCRATE` 4.3 and 4.5.
 The cache of Liberty is a `CommercialRateCache`: 5 minutes to live, 55 minutes of

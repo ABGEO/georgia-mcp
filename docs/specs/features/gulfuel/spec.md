@@ -66,7 +66,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Vendor client  | `pkg/gulf/`                           | `Client`, `New`, `Option`, `NewTransport`, `PriceTable`, `Column`, `APIError`, `ErrUnexpectedStatus`, `ErrNoPriceTable`, `ErrMalformedTable`. |
 | Shared         | `internal/pkg/httpclient/` (change)   | `NewWithTransport`. `New` calls it with `http.DefaultTransport`. |
 | Driven adapter | `F/adapter/gulf/`                     | `Adapter`, `NewAdapter`.                                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Gulf`, `GulfConfig`, `GulfHTTPConfig`, `gulfSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Gulf`, `gulfSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/gulf`.                                          |
 | Linter         | `.golangci.yaml` (change)             | The depguard list `browser-handshake-clients`: `pkg/gulf` imports `x/net/html` and `utls`. `CLT-002`. |
@@ -192,8 +192,7 @@ The same request with the handshake of Go returns 403 with `cf-mitigated: challe
 | `GEOMCP_FUEL_GULF_RATE`     | float    | `1`               | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_GULF_BURST`    | int      | `1`               | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Gulf GulfConfig` with `envPrefix:"GULF_"`, with the shape of
-`WissolConfig` and the defaults of this table.
+`fuel.Config` gains `Gulf vendors.Config` with `envPrefix:"GULF_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

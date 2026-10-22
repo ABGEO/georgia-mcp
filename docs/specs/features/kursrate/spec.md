@@ -59,7 +59,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | Vendor client  | `pkg/kursi/`                          | `Client`, `New`, `Option`, `Currency`, `BankRate`, `APIError`, `ErrUnexpectedStatus`. |
 | Domain         | `R/domain/bank.go` (change)           | `KindExchangeBureau`. 4.2.                                   |
 | Driven adapter | `R/adapter/kursi/`                    | `Adapter`, `NewAdapter`.                                     |
-| Module         | `R/module.go`, `R/config.go` (change) | `Config.Kursi`, `KursiConfig`, `KursiHTTPConfig`, `kursiSource`. |
+| Module         | `R/module.go`, `R/config.go` (change) | `Config.Kursi`, `kursiSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                    | `use ./pkg/kursi`.                                           |
 
@@ -166,9 +166,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 | `GEOMCP_RATES_KURSI_RATE`       | float    | `1`                          | No     | `KURSRATE-NFR-001` |
 | `GEOMCP_RATES_KURSI_BURST`      | int      | `1`                          | No     | `KURSRATE-NFR-001` |
 
-`rates.Config` gains `Kursi KursiConfig` with `envPrefix:"KURSI_"`. `KursiConfig` and
-`KursiHTTPConfig` have the shape of `BOGConfig` and `BOGHTTPConfig`, with the defaults
-of this table.
+`rates.Config` gains `Kursi vendors.Config` with `envPrefix:"KURSI_"`. `rates.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 

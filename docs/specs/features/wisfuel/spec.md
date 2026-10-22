@@ -80,7 +80,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Driven adapter | `F/adapter/wissol/`                        | `Adapter`, `NewAdapter`.                                     |
 | Cache          | `F/adapter/cache/`                         | `PriceCache`, `New`.                                         |
 | Tool           | `F/adapter/tool/`                          | `Register`, the structs of 4.3.                              |
-| Module         | `F/module.go`, `F/config.go`               | `Module`, `New`, `Config`, `WissolConfig`, `WissolHTTPConfig`. |
+| Module         | `F/module.go`, `F/config.go`               | `Module`, `New`, `Config`. |
 | Composition    | `internal/app/georgia-mcp/bootstrap/` (change) | `Config.Fuel` with `envPrefix:"FUEL_"`. `modules.go` builds `fuel.New`. |
 | Configuration  | `configs/.env.example` (change)            | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                         | `use ./pkg/wissol`.                                          |
@@ -328,10 +328,7 @@ A stale value is younger than the time to live and the maximum stale: 12 hours.
 | `GEOMCP_FUEL_WISSOL_RATE`        | float    | `1`                     | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_WISSOL_BURST`       | int      | `1`                     | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` holds `Wissol WissolConfig` with `envPrefix:"WISSOL_"`. `WissolConfig`
-holds `Enabled bool`, `BaseURL url.URL`, and `HTTP WissolHTTPConfig`.
-`WissolHTTPConfig` has the fields of `httpclient.Config` with the defaults of this
-table, as `rates.BOGHTTPConfig` does.
+`fuel.Config` holds `Wissol vendors.Config` with `envPrefix:"WISSOL_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ### 4.4 Flow
 

@@ -64,7 +64,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | Driven adapter | `R/adapter/rico/`                     | `Adapter`, `NewAdapter`.                                     |
 | Driven adapter | `R/adapter/tbc/`, `R/adapter/bog/` (change) | `Bank` sets `Kind: domain.KindBank`.                   |
 | Tool           | `R/adapter/tool/commercial.go` (change) | `getCommercialDescription`, `bankList`. 4.3.               |
-| Module         | `R/module.go`, `R/config.go` (change) | `Config.Rico`, `RicoConfig`, `RicoHTTPConfig`, `ricoSource`. |
+| Module         | `R/module.go`, `R/config.go` (change) | `Config.Rico`, `ricoSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                    | `use ./pkg/rico`.                                            |
 
@@ -205,9 +205,7 @@ GET https://www.rico.ge/ka/
 | `GEOMCP_RATES_RICO_RATE`       | float    | `1`                   | No     | `RICORATE-NFR-001` |
 | `GEOMCP_RATES_RICO_BURST`      | int      | `1`                   | No     | `RICORATE-NFR-001` |
 
-`rates.Config` gains `Rico RicoConfig` with `envPrefix:"RICO_"`. `RicoConfig` and
-`RicoHTTPConfig` have the shape of `BOGConfig` and `BOGHTTPConfig`, with the defaults of
-this table. The cache is a `CommercialRateCache`, as for Bank of Georgia.
+`rates.Config` gains `Rico vendors.Config` with `envPrefix:"RICO_"`. `rates.Defaults` gives the defaults of this table (`PLATFORM-DD-014`). The cache is a `CommercialRateCache`, as for Bank of Georgia.
 
 ## 5. Design decisions
 

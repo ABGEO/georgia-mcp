@@ -59,7 +59,7 @@ Every path is new unless the table says "change". `R` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Vendor client  | `pkg/terabank/`                       | `Client`, `New`, `Option`, `CrossRate`, `APIError`, `ErrUnexpectedStatus`, `ErrNotSucceeded`. |
 | Driven adapter | `R/adapter/terabank/`                 | `Adapter`, `NewAdapter`.                                     |
-| Module         | `R/module.go`, `R/config.go` (change) | `Config.Terabank`, `TerabankConfig`, `TerabankHTTPConfig`, `terabankSource`. |
+| Module         | `R/module.go`, `R/config.go` (change) | `Config.Terabank`, `terabankSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                        |
 | Workspace      | `go.work` (change)                    | `use ./pkg/terabank`.                                        |
 
@@ -147,9 +147,7 @@ GET: 404
 | `GEOMCP_RATES_TERABANK_RATE`       | float    | `1`                   | No     | `TERARATE-NFR-001` |
 | `GEOMCP_RATES_TERABANK_BURST`      | int      | `1`                   | No     | `TERARATE-NFR-001` |
 
-`rates.Config` gains `Terabank TerabankConfig` with `envPrefix:"TERABANK_"`.
-`TerabankConfig` and `TerabankHTTPConfig` have the shape of `BOGConfig` and
-`BOGHTTPConfig`, with the defaults of this table. `LIBRATE-DD-005` gives the reason for
+`rates.Config` gains `Terabank vendors.Config` with `envPrefix:"TERABANK_"`. `rates.Defaults` gives the defaults of this table (`PLATFORM-DD-014`). `LIBRATE-DD-005` gives the reason for
 the limit.
 
 The tool, its structs, its errors, and the cache are those of `TBCRATE` 4.3 and 4.5.

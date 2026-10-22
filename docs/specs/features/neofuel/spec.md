@@ -58,7 +58,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | -------------- | ------------------------------------- | ---------------------------------------------------------- |
 | Vendor client  | `pkg/neogas/`                         | `Client`, `New`, `Option`, `APIError`, `ErrUnexpectedStatus`. |
 | Driven adapter | `F/adapter/neogas/`                   | `Adapter`, `NewAdapter`.                                   |
-| Module         | `F/module.go`, `F/config.go` (change) | `Config.Neogas`, `NeogasConfig`, `NeogasHTTPConfig`, `neogasSource`. |
+| Module         | `F/module.go`, `F/config.go` (change) | `Config.Neogas`, `neogasSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/neogas`.                                        |
 | Website        | `website/src/content/contexts.yaml` (change) | Neogas, ნეოგაზი, in the list of `fuel`.           |
@@ -152,8 +152,7 @@ GET https://neogas.ge/ka/
 | `GEOMCP_FUEL_NEOGAS_RATE`     | float    | `1`                 | No     | `WISFUEL-NFR-002` |
 | `GEOMCP_FUEL_NEOGAS_BURST`    | int      | `1`                 | No     | `WISFUEL-NFR-002` |
 
-`fuel.Config` gains `Neogas NeogasConfig` with `envPrefix:"NEOGAS_"`, with the shape of
-`WissolConfig` and the defaults of this table.
+`fuel.Config` gains `Neogas vendors.Config` with `envPrefix:"NEOGAS_"`. `fuel.Defaults` gives the defaults of this table (`PLATFORM-DD-014`).
 
 ## 5. Design decisions
 
