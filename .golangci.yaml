@@ -117,6 +117,7 @@ linters:
             - github.com/abgeo/georgia-mcp/pkg/rico
             - github.com/abgeo/georgia-mcp/pkg/neogas
             - github.com/abgeo/georgia-mcp/pkg/lukoil
+            - github.com/abgeo/georgia-mcp/pkg/vendorhttp
             - golang.org/x/net/html
           deny:
             - pkg: github.com/abgeo/georgia-mcp/internal
@@ -130,6 +131,7 @@ linters:
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg/gulf
+            - github.com/abgeo/georgia-mcp/pkg/vendorhttp
             - golang.org/x/net/html
             - github.com/refraction-networking/utls
           deny:

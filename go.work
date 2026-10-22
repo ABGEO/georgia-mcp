@@ -20,5 +20,6 @@ use (
 	./pkg/tbcoffers
 	./pkg/terabank
 	./pkg/ttc
+	./pkg/vendorhttp
 	./pkg/wissol
 )
