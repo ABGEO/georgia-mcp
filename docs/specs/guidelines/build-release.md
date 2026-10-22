@@ -4,8 +4,8 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-20
-scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml]
+updated: 2026-10-21
+scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -20,7 +20,7 @@ Every command must pass before the work is complete.
 | ------------------ | --------------------------------------------------------------------------------- |
 | Server (`.`)       | `golangci-lint run ./...`, `go test -race ./...`, `go build ./...`                |
 | `pkg/<vendor>`     | `cd pkg/<vendor> && golangci-lint run ./... && go test -race ./...`               |
-| `website/`         | `cd website && npm run lint && npm test && npm run build`                         |
+| `website/`         | `cd website && pnpm lint && pnpm test && pnpm build`                         |
 
 A change in a vendor client touches the server. Run the server commands too.
 
@@ -61,7 +61,8 @@ passes no version with `-ldflags`.
 The container image builds with `CGO_ENABLED=0` and `-trimpath` in a multi-stage
 `build/package/Dockerfile`, from the repository root. The build stage copies the whole
 repository, `.git` and `go.work` included, so the workspace resolves every module and Go
-writes the version of `BLD-004`. Cache mounts keep the module cache and the build cache. The final stage is a distroless static image
+writes the version of `BLD-004`. The build stage runs on `$BUILDPLATFORM` and compiles with
+`GOOS=$TARGETOS GOARCH=$TARGETARCH`, so a second platform needs no emulation. Cache mounts keep the module cache and the build cache. The final stage is a distroless static image
 that runs as a user that is not root. Its command is `georgia-mcp serve`.
 
 The final stage carries the OpenContainers labels `title`, `description`, `source`,
@@ -81,6 +82,27 @@ conflict with those of the project.
 ## BLD-007
 
 Before a release, `go tool govulncheck ./...` passes in each module.
+
+## BLD-008
+
+`.github/workflows/images.yml` builds two images for `linux/amd64` and `linux/arm64` and
+publishes them to GitHub Packages:
+
+| Image                                  | Dockerfile                    | Context    |
+| -------------------------------------- | ----------------------------- | ---------- |
+| `ghcr.io/abgeo/georgia-mcp`            | `build/package/Dockerfile`    | `.`        |
+| `ghcr.io/abgeo/georgia-mcp-website`    | `website/.docker/Dockerfile`  | `website/` |
+
+| Event                 | Tags                                      | Push |
+| --------------------- | ----------------------------------------- | ---- |
+| A push to `main`      | `main`, `sha-<short>`                     | Yes  |
+| A tag `v<x.y.z>`      | `<x.y.z>`, `<x.y>`, `latest`, `sha-<short>` | Yes  |
+| A pull request        | `pr-<n>`                                  | No   |
+
+`VERSION` is `git describe --tags --always --dirty` and `REVISION` is the commit.
+The label `org.opencontainers.image.source` of each image links the package to the repository.
+Each action is pinned to the commit of a release, with the version in a comment.
+`.github/dependabot.yml` proposes a new pin each week.
 
 ## Retired identifiers
 
