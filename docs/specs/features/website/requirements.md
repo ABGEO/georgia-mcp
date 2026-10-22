@@ -4,7 +4,7 @@ title: The website
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-22
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -70,23 +70,17 @@ The site must not choose the language from the browser or the location of the vi
 
 **Why:** A shared link opens the same page for every reader.
 
-### `WEBSITE-FR-004`
-
-The home page must hold these sections, in this order: the introduction, the
-contexts, the tool examples, the install guides, the tools, and the author.
-
 ### `WEBSITE-FR-005`
 
-The home page must show each context with its name, its count of tools, and the name of each vendor that it reads.
+The home page must show each context with its name, its count of tools, and the names of up to three vendors that it reads. When the context reads more than three vendors, the home page must also show the count of the rest.
+
+**Why:** Cards of equal height keep the grid of contexts even.
 
 **Examples:**
 
-- Normal case: "Fuel prices, 1 tool, Wissol, Rompetrol, SOCAR".
+- Normal case: "Fuel prices, 1 tool, Wissol, Rompetrol, SOCAR, +5 more".
+- Limit case: a context with three vendors shows three names and no count.
 - Limit case: a context with one vendor shows one vendor name.
-
-### `WEBSITE-FR-006`
-
-The home page must show one tool example for each context at least.
 
 ### `WEBSITE-FR-007`
 
@@ -139,12 +133,6 @@ A tool page must show the tool definition. For each input, it shows the name, th
 - Normal case: `rates_get_official_rates` shows its inputs `currencies` and `date`.
 - Limit case: a tool with no input shows the sentence "This tool takes no input."
 
-### `WEBSITE-FR-014`
-
-A tool page must show each tool example of the tool, with the question, the input, the output, and the date of the record.
-
-**Why:** A reader must see that the output is a record, and how old it is.
-
 ### `WEBSITE-FR-015`
 
 A Georgian tool page must show the tool summary and the question of each tool example in Georgian. It shows the tool definition and the output as the server returns them.
@@ -186,7 +174,7 @@ The site must keep the theme that the reader selects from page to page in the sa
 
 ### `WEBSITE-FR-021`
 
-The site must answer an unknown address with a page in English and in Georgian that links to both home pages.
+The site must answer an unknown address with a page in English that links to the home page.
 
 ### `WEBSITE-FR-022`
 
@@ -206,6 +194,59 @@ The build of the site must read each tool definition from a file in the reposito
 
 - Normal case: the owner adds a tool to the server and runs the command. The file holds the new tool, and the build fails until the tool has an example and two summaries.
 - Limit case: the owner changes a tool and does not run the command. The site shows the old definition.
+
+### `WEBSITE-FR-024`
+
+A tool page must show each tool example of the tool, with the question, the input, and the output.
+
+**Why:** The output carries its `as_of` (`WEBSITE-INV-003`). A second date beside it confused the owner.
+
+### `WEBSITE-FR-027`
+
+The build must fail when a context has no chat example, when a chat example has no text in one language, or when a chat example names a tool of another context or a tool that the server does not register.
+
+**Why:** A chat example is written by hand. The build catches the gap that a person misses.
+
+### `WEBSITE-FR-028`
+
+The home page must show the chat examples of several tools, one after another, in a random order. Each chat example shows a question and the answer of a model, as text in the language of the page.
+
+**Why:** One example at a time reads like a real chat. A random order shows a new tool to a reader who comes back.
+
+**Examples:**
+
+- Normal case: a random question types out, the tool name shows, the answer types out. After a pause, the question and the answer of another tool join below it, as in one conversation.
+- Limit case: the reader asks the browser for reduced motion. One chat example shows in full, with no typing and no automatic change.
+- Unwanted case: the home page shows the input or the output of a tool as JSON.
+
+### `WEBSITE-FR-030`
+
+The home page must hold these sections, in this order: the introduction, the chat examples, the contexts, the install guides, and the tools.
+
+**Why:** The chat examples show what the server does before the reader reads the list of subjects.
+
+### `WEBSITE-FR-032`
+
+Beside the chat examples, the home page must explain in three steps how a question reaches a source and comes back. It must also give the count of tools, of contexts, and of vendors.
+
+**Why:** A reader who does not know MCP sees what happens between the question and the answer.
+
+**Examples:**
+
+- Normal case: "You ask", "The model calls a tool", "You get the answer", then "14 tools", "4 subjects", "16 sources".
+- Limit case: the owner adds a tool. The count of tools grows with no change to the copy.
+
+### `WEBSITE-FR-033`
+
+A tool page must list each vendor that the tool reads, with its name in the language of the page. When the tool takes the code of a vendor in its input, the page also gives the code.
+
+**Why:** A reader sees which banks or fuel companies a tool can answer for before a call, and which code to name.
+
+**Examples:**
+
+- Normal case: `fuel_get_prices` lists Wissol `wissol`, Rompetrol `rompetrol`, and 5 more.
+- Limit case: `rates_get_official_rates` lists the National Bank of Georgia, with no code: the tool takes none.
+- Unwanted case: the server reads a new bank, and the page of the tool does not list it. The build fails (`WEBSITE-INV-004`).
 
 ## 7. Non-functional requirements
 
@@ -228,10 +269,13 @@ Measure the compressed size of the script files that each built page loads.
 The home page must transfer 500 KB at most in total, fonts included, compressed, on its first view with an empty cache.
 Measure in a browser at a width of 390 px.
 
-### `WEBSITE-NFR-004`
+### `WEBSITE-NFR-005`
 
 Each page must conform to WCAG 2.2 level AA. Each control must work from the keyboard alone.
+The chat examples of the home page are the one exception: they do not meet success criterion 2.2.2, and they have no control that pauses them. With `prefers-reduced-motion: reduce`, they do not move.
 Measure with an automatic accessibility check on each built page, and by hand on one page of each kind.
+
+**Why:** The owner wants the chat examples with no control. A reader who asks the browser for reduced motion gets a still chat example.
 
 ## 8. Invariants
 
@@ -250,6 +294,12 @@ The set of pages in English is equal to the set of pages in Georgian.
 The output of a tool example always shows its `source` and its `as_of`.
 
 **Why:** `MCP-005`. A reader checks a number by its source and its date.
+
+### `WEBSITE-INV-004`
+
+When a tool definition lists the vendors of the server, the vendors of the tool page are the same set, by code.
+
+**Why:** A list on the site that the server does not match tells the reader a false thing.
 
 ## 9. Constraints from the guidelines
 
@@ -275,3 +325,11 @@ The output of a tool example always shows its `source` and its `as_of`.
 | ID             | Retired    | Reason                                                                 |
 | -------------- | ---------- | ---------------------------------------------------------------------- |
 | WEBSITE-FR-016 | 2026-10-20 | The build reads a file, not the server. `WEBSITE-FR-023` replaces it.  |
+| WEBSITE-FR-014 | 2026-10-20 | The page shows no date of the record. `WEBSITE-FR-024` replaces it.    |
+| WEBSITE-FR-006 | 2026-10-20 | The home page shows chat examples. `WEBSITE-FR-025` replaces it.       |
+| WEBSITE-FR-025 | 2026-10-21 | The chat examples play one at a time. `WEBSITE-FR-028` replaces it.    |
+| WEBSITE-FR-004 | 2026-10-21 | The chat examples come first. `WEBSITE-FR-030` replaces it.            |
+| WEBSITE-FR-026 | 2026-10-21 | A chat example links to no tool page. The owner removed the link.      |
+| WEBSITE-FR-029 | 2026-10-21 | The reader does not move to the next example. `WEBSITE-FR-031` replaces it. |
+| WEBSITE-FR-031 | 2026-10-21 | The chat examples have no pause control. The owner removed it.         |
+| WEBSITE-NFR-004 | 2026-10-21 | The chat examples are an exception to WCAG 2.2.2. `WEBSITE-NFR-005` replaces it. |

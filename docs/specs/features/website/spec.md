@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-22
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -28,17 +28,14 @@ from the server.
 | `WEBSITE-FR-001`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-001`           |
 | `WEBSITE-FR-002`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-002`           |
 | `WEBSITE-FR-003`  | `WEBSITE-DD-001`, `WEBSITE-SC-003`                      |
-| `WEBSITE-FR-004`  | 4.3 Pages, `WEBSITE-SC-004`                             |
-| `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-SC-005`                        |
-| `WEBSITE-FR-006`  | `WEBSITE-DD-004`, `WEBSITE-SC-006`                      |
+| `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-SC-005`, `WEBSITE-SC-046` |
 | `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
 | `WEBSITE-FR-008`  | 4.4, `WEBSITE-DD-008`, `WEBSITE-SC-008`, `WEBSITE-SC-009` |
 | `WEBSITE-FR-009`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
 | `WEBSITE-FR-010`  | 4.3 Pages, `WEBSITE-SC-010`                             |
-| `WEBSITE-FR-011`  | 4.3 Pages, `WEBSITE-SC-011`                             |
+| `WEBSITE-FR-011`  | 4.3 Pages, `WEBSITE-DD-014`, `WEBSITE-SC-011`, `WEBSITE-SC-036` |
 | `WEBSITE-FR-012`  | 4.3 Pages, `WEBSITE-SC-012`                             |
 | `WEBSITE-FR-013`  | `WEBSITE-DD-005`, `WEBSITE-SC-013`, `WEBSITE-SC-014`    |
-| `WEBSITE-FR-014`  | 4.3 Data files, `WEBSITE-SC-015`                        |
 | `WEBSITE-FR-015`  | `WEBSITE-DD-005`, `WEBSITE-SC-016`                      |
 | `WEBSITE-FR-017`  | `WEBSITE-DD-004`, `WEBSITE-SC-017` to `WEBSITE-SC-021`  |
 | `WEBSITE-FR-018`  | 4.3 Commands, `WEBSITE-DD-003`, `WEBSITE-SC-022`        |
@@ -47,13 +44,20 @@ from the server.
 | `WEBSITE-FR-021`  | 4.3 Pages, `WEBSITE-SC-026`                             |
 | `WEBSITE-FR-022`  | 4.3 Pages, `WEBSITE-DD-010`, `WEBSITE-SC-027`           |
 | `WEBSITE-FR-023`  | 4.3 Data files, `WEBSITE-DD-002`, `WEBSITE-SC-022`      |
+| `WEBSITE-FR-024`  | 4.1 `Ticket`, `WEBSITE-SC-015`                          |
+| `WEBSITE-FR-028`  | `WEBSITE-DD-015`, `WEBSITE-SC-035`, `WEBSITE-SC-037`, `WEBSITE-SC-039` |
+| `WEBSITE-FR-030`  | 4.3 Pages, `WEBSITE-SC-004`                             |
+| `WEBSITE-FR-032`  | `WEBSITE-DD-016`, `WEBSITE-SC-040`, `WEBSITE-SC-041`    |
+| `WEBSITE-FR-033`  | 4.2 `vendors`, `WEBSITE-DD-018`, `WEBSITE-DD-019`, `WEBSITE-SC-043`, `WEBSITE-SC-045` |
+| `WEBSITE-FR-027`  | `WEBSITE-DD-004`, `WEBSITE-SC-034`                      |
 | `WEBSITE-NFR-001` | `WEBSITE-DD-008`, `WEBSITE-SC-028`                      |
 | `WEBSITE-NFR-002` | `WEBSITE-DD-007`, `WEBSITE-SC-029`                      |
 | `WEBSITE-NFR-003` | `WEBSITE-DD-006`, `WEBSITE-SC-030`                      |
-| `WEBSITE-NFR-004` | `WEBSITE-SC-031`, `WEBSITE-SC-032`                      |
+| `WEBSITE-NFR-005` | `WEBSITE-SC-031`, `WEBSITE-SC-032`, `WEBSITE-SC-039`    |
 | `WEBSITE-INV-001` | `WEBSITE-DD-004`, `WEBSITE-SC-012`                      |
 | `WEBSITE-INV-002` | `WEBSITE-DD-001`, `WEBSITE-SC-001`                      |
 | `WEBSITE-INV-003` | `WEBSITE-DD-004`, `WEBSITE-SC-021`                      |
+| `WEBSITE-INV-004` | `WEBSITE-DD-004`, `WEBSITE-DD-018`, `WEBSITE-SC-044`    |
 
 `WEBSITE-FR-017` and `WEBSITE-INV-001` say "the tools that the server registers".
 `WEBSITE-FR-023` makes `definitions.json` the record of that set on the site.
@@ -66,11 +70,11 @@ from the server.
 | `BRD-005`, `BRD-006`   | Brand     | `src/assets/mark.svg` holds the mark as one outlined path. `WEBSITE-DD-011`. |
 | `BRD-007`, `BRD-008`   | Brand     | `src/styles/tokens.css` holds every token of `BRD-007`. A component reads a token only. |
 | `BRD-009`              | Brand     | `WEBSITE-DD-006`.                                                     |
-| `BRD-010`, `BRD-011`   | Brand     | The components `Echo`, `Band`, `Stamp`, `Ticket`, and `Footer`.       |
+| `BRD-010`, `BRD-011`   | Brand     | The components `Mark`, `Band`, `Stamp`, `Ticket`, and `Footer`.       |
 | `BRD-012`, `BRD-013`   | Brand     | `src/styles/global.css`. Every animation sits inside `@media (prefers-reduced-motion: no-preference)`. |
 | `BRD-014`, `BRD-015`   | Brand     | `src/i18n/en.ts` and `src/i18n/ka.ts` hold the copy. Both satisfy one type. |
 | `MCP-005`              | MCP tools | `WEBSITE-DD-004` refuses an output with no `source` or no `as_of`.    |
-| `BLD-001`              | Build     | `npm run lint`, `npm test`, `npm run build`. 4.3 Commands.            |
+| `BLD-001`              | Build     | `pnpm lint`, `pnpm test`, `pnpm build`. 4.3 Commands.            |
 | `GIT-004`              | Git       | A commit of this feature has the scope `website`.                     |
 | `LNG-006`, `LNG-007`   | Language  | The test of `WEBSITE-SC-033` refuses an em dash in the copy.          |
 
@@ -97,10 +101,11 @@ Every path is under `website/`. Every file is new.
 | Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
 | Views        | `src/views/Home.astro`, `src/views/Tool.astro` | One view for both languages. A page passes `lang`.      |
-| Components   | `src/components/*.astro`                 | `Mark`, `Echo`, `Band`, `Stamp`, `Ticket`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
+| Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
 | Pages        | `src/pages/`                             | 4.3 Pages.                                                    |
 | Styles       | `src/styles/tokens.css`, `src/styles/global.css` | `BRD-007`, `BRD-012`.                                 |
-| Static       | `public/favicon.svg`, `public/og/en.png`, `public/og/ka.png` | The favicon and the preview images.       |
+| Static       | `public/favicon.svg`, `public/apple-touch-icon.png`, `public/og/en.png`, `public/og/ka.png`, `public/robots.txt` | The icons, the preview images, and the robots file that names the sitemap. |
+| Image        | `.docker/Dockerfile`, `.docker/Dockerfile.dockerignore`, `.docker/nginx.conf` | The container image of the site. `WEBSITE-DD-017`. |
 
 `src/site.ts`:
 
@@ -139,9 +144,10 @@ type Recording = {
 // tools/<tool name>.yaml. The file name is the tool name.
 type ToolContent = {
   context: "rates" | "fuel" | "transit" | "offers"
-  featured: boolean // the tool of the context on the home page
   summary: Localized
-  examples: Array<{ id: string; question: Localized; input: Record<string, unknown> }>
+  vendors: string[] // the codes of the vendors that the tool reads, each a vendor of its context. WEBSITE-DD-018.
+  // The answer is written by hand from the recording of the example. It is the chat example of the home page.
+  examples: Array<{ id: string; question: Localized; answer: Localized; input: Record<string, unknown> }>
 }
 
 // contexts.yaml: an object keyed by the context name.
@@ -150,7 +156,7 @@ type ContextContent = {
   hue: "butter" | "peach" | "sky" | "lilac"
   icon: string // a Lucide icon name
   name: Localized
-  vendors: Localized[]
+  vendors: Array<Localized & { code: string }> // code: the code of the server, "tbc"; or a short name, "nbg"
 }
 
 // The result of buildCatalog. Every page reads this, never a collection.
@@ -158,8 +164,10 @@ type Catalog = {
   contexts: Array<ContextContent & { key: string; tools: CatalogTool[] }>
   tools: CatalogTool[] // sorted by context order, then by name
 }
-type CatalogTool = Definition & ToolContent & {
+type CatalogTool = Definition & Omit<ToolContent, "vendors"> & {
   examples: Array<ToolContent["examples"][number] & { recordedAt: string; output: unknown }>
+  vendors: Array<Localized & { code: string }> // in the order of the tool file
+  takesVendorCode: boolean                      // WEBSITE-DD-019
 }
 
 class CatalogError extends Error {
@@ -173,17 +181,17 @@ The `glob` loader reads `tools/*.yaml`.
 
 ### 4.3 Declarations
 
-**Pages.** `trailingSlash` is `always`. Every page exists in both columns.
+**Pages.** Every link on the site ends with a slash. `trailingSlash` is `ignore`, so the dev and preview servers answer an unknown address with or without a slash with the page of `WEBSITE-FR-021`. Every page exists in both columns.
 
 | English              | Georgian                 | Source file                                         | Realizes                         |
 | -------------------- | ------------------------ | --------------------------------------------------- | -------------------------------- |
-| `/`                  | `/ka/`                   | `src/pages/index.astro`, `src/pages/ka/index.astro` | `WEBSITE-FR-001`, `FR-004` to `FR-009`, `FR-011` |
-| `/tools/<name>/`     | `/ka/tools/<name>/`      | `src/pages/tools/[name].astro`, `src/pages/ka/tools/[name].astro` | `WEBSITE-FR-012` to `FR-015` |
+| `/`                  | `/ka/`                   | `src/pages/index.astro`, `src/pages/ka/index.astro` | `WEBSITE-FR-001`, `FR-005`, `FR-007` to `FR-009`, `FR-011`, `FR-028`, `FR-030` |
+| `/tools/<name>/`     | `/ka/tools/<name>/`      | `src/pages/tools/[name].astro`, `src/pages/ka/tools/[name].astro` | `WEBSITE-FR-012` to `FR-015`, `FR-033` |
 | `/404.html`          | The same file            | `src/pages/404.astro`                               | `WEBSITE-FR-021`                 |
 
 - Each page links to its pair with `LangSwitch` and with `<link rel="alternate" hreflang>`. `WEBSITE-FR-002`.
 - No file exists under `src/pages/mcp`. `WEBSITE-FR-010`.
-- The home page holds the sections of `WEBSITE-FR-004` in order, each a `<section>` with an `id`: `intro`, `contexts`, `examples`, `install`, `tools`, `author`.
+- The home page holds the sections of `WEBSITE-FR-030` in order, each a `<section>` with an `id`: `intro`, `examples`, `contexts`, `install`, `tools`.
 - `Base.astro` ends each page with `Footer`: the byline of `BRD-011`, and `REPO_URL`. `WEBSITE-FR-019`.
 - `Base.astro` writes `<title>`, `<meta name="description">`, `og:title`, `og:description`, `og:image`, `og:locale`, and `twitter:card` from the dictionary of the page. `WEBSITE-FR-022`.
 
@@ -191,8 +199,8 @@ The `glob` loader reads `tools/*.yaml`.
 
 | File                               | Written by            | Holds                                              | Realizes                         |
 | ---------------------------------- | --------------------- | -------------------------------------------------- | -------------------------------- |
-| `src/data/definitions.json`        | `npm run refresh`     | `Definition` of each tool that the server lists    | `WEBSITE-FR-023`, `FR-013`       |
-| `src/data/recordings.json`         | `npm run refresh`     | `Recording` of each tool example                   | `WEBSITE-FR-014`, `FR-018`       |
+| `src/data/definitions.json`        | `pnpm refresh`     | `Definition` of each tool that the server lists    | `WEBSITE-FR-023`, `FR-013`       |
+| `src/data/recordings.json`         | `pnpm refresh`     | `Recording` of each tool example                   | `WEBSITE-FR-024`, `FR-018`       |
 | `src/content/tools/<name>.yaml`    | The owner             | `ToolContent`                                      | `WEBSITE-FR-011`, `FR-015`       |
 | `src/content/contexts.yaml`        | The owner             | `ContextContent`                                   | `WEBSITE-FR-005`                 |
 
@@ -200,12 +208,12 @@ The `glob` loader reads `tools/*.yaml`.
 
 | Command            | Does                                                                         | Realizes                  |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------- |
-| `npm run dev`      | Serves the site with reload.                                                 | None. A tool of the work. |
-| `npm run build`    | `astro build` to `dist/`. Fails on a `CatalogError`.                         | `WEBSITE-FR-017`          |
-| `npm run lint`     | `astro check`, then `oxlint`.                                                | `BLD-001`                 |
-| `npm test`         | `vitest run`, then `playwright test`. The build tests read `dist/`.          | `WEBSITE-DD-012`          |
-| `npm run refresh`  | Writes both data files from the server. `WEBSITE-DD-003`.                    | `WEBSITE-FR-018`, `FR-023` |
-| `npm run og`       | Writes `public/og/en.png` and `public/og/ka.png`. `WEBSITE-DD-010`.          | `WEBSITE-FR-022`          |
+| `pnpm dev`      | Serves the site with reload.                                                 | None. A tool of the work. |
+| `pnpm build`    | `astro build` to `dist/`. Fails on a `CatalogError`.                         | `WEBSITE-FR-017`          |
+| `pnpm lint`     | `astro check`, then `oxlint`.                                                | `BLD-001`                 |
+| `pnpm test`         | `vitest run`, then `playwright test`. The build tests read `dist/`.          | `WEBSITE-DD-012`          |
+| `pnpm refresh`  | Writes both data files from the server. `WEBSITE-DD-003`.                    | `WEBSITE-FR-018`, `FR-023` |
+| `pnpm og`       | Builds the site, then writes `public/og/en.png` and `public/og/ka.png`. `WEBSITE-DD-010`. | `WEBSITE-FR-022`          |
 
 **Configuration.** The refresh reads the `.env` file of the repository root, because
 the server starts in that directory. The site reads no variable.
@@ -218,22 +226,23 @@ the server starts in that directory. The site reads no variable.
 ### 4.4 Install guides
 
 `InstallGuides` renders one panel for each guide, in this order. `{url}` is `SERVER_URL`.
-Each panel of a remote server holds a `CopyField` with `{url}`. `WEBSITE-FR-008`.
+Each panel of a remote server holds a `CopyField` with `{url}`, except the panel of Claude Desktop and mobile, which points to the panel of claude.ai. `WEBSITE-FR-008`. The group of the local guides is named "Prefer to run it yourself?".
 
 | Guide          | Steps                                                                                       | Realizes         |
 | -------------- | ------------------------------------------------------------------------------------------- | ---------------- |
-| Claude         | Settings, Connectors, Add custom connector. Name `Georgia MCP`, URL `{url}`. Web and desktop. | `WEBSITE-FR-007` |
+| claude.ai      | Customize, Connectors, Add custom connector. Name `Georgia MCP`, URL `{url}`, authentication No sign-in. The Free plan allows one custom connector. | `WEBSITE-FR-007` |
+| Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | `claude mcp add --transport http georgia-mcp {url}`                                         | `WEBSITE-FR-007` |
-| ChatGPT        | Settings, Apps and connectors, Advanced, turn on developer mode. Create a connector with `{url}`, no authentication. | `WEBSITE-FR-007` |
+| ChatGPT        | Plugins, the plus button, Add custom MCP server. Name `Georgia MCP`, URL `{url}`, authentication None, accept the warning. A paid plan. | `WEBSITE-FR-007` |
 | Cursor         | `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}`                   | `WEBSITE-FR-007` |
 | VS Code        | `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}`        | `WEBSITE-FR-007` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
-| Docker         | `docker run -p 8080:8080 -e GEOMCP_TRANSIT_TTC_API_KEY=... ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
+| Docker         | `docker run -p 8080:8080 -e GEOMCP_TRANSIT_TTC_API_KEY=... -e GEOMCP_RATES_TBC_API_KEY=... ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
 
 The two local guides state the settings of the keys:
 
 - `GEOMCP_TRANSIT_TTC_API_KEY` is required. `GEOMCP_TRANSIT_TTC_ENABLED=false` starts the server without the transit tools.
-- `GEOMCP_RATES_TBC_API_KEY` is optional. Without it, the commercial rates leave out TBC Bank.
+- `GEOMCP_RATES_TBC_API_KEY` is required. `GEOMCP_RATES_TBC_ENABLED=false` starts the server without TBC Bank in the commercial rates.
 
 ### 4.5 Flow of the refresh
 
@@ -258,9 +267,9 @@ sequenceDiagram
 
 | Condition                                       | Where                | Message                                                         |
 | ----------------------------------------------- | -------------------- | --------------------------------------------------------------- |
-| A check of `WEBSITE-DD-004` fails               | `npm run build`      | `CatalogError`, one line for each problem, for example `transit_list_vehicles: no tool content`. |
-| The server does not start                       | `npm run refresh`    | The stderr of the server, and exit code 1. No file changes.     |
-| A tool call returns a result with `isError`     | `npm run refresh`    | `<tool>.<example>: <the text of the result>`, and exit code 1. No file changes. |
+| A check of `WEBSITE-DD-004` fails               | `pnpm build`      | `CatalogError`, one line for each problem, for example `transit_list_vehicles: no tool content`. |
+| The server does not start                       | `pnpm refresh`    | The stderr of the server, and exit code 1. No file changes.     |
+| A tool call returns a result with `isError`     | `pnpm refresh`    | `<tool>.<example>: <the text of the result>`, and exit code 1. No file changes. |
 | The browser refuses the clipboard               | `CopyField`          | The field selects the address. The label says "Press Ctrl+C to copy". |
 
 ## 5. Design decisions
@@ -288,7 +297,7 @@ sequenceDiagram
 
 ### `WEBSITE-DD-004`
 
-**Realizes:** `WEBSITE-FR-006`, `WEBSITE-FR-017`, `WEBSITE-INV-001`, `WEBSITE-INV-003`
+**Realizes:** `WEBSITE-FR-017`, `WEBSITE-FR-027`, `WEBSITE-INV-001`, `WEBSITE-INV-003`, `WEBSITE-INV-004`
 **Decision:** `buildCatalog(definitions, recordings, tools, contexts)` is a pure function. It runs every check below, collects every problem, and throws one `CatalogError`. `getCatalog()` reads the four collections, calls `buildCatalog` once, and keeps the result. Each page calls `getCatalog()`, so a problem fails the build.
 
 | Check                                                                          | Requirement      |
@@ -300,7 +309,10 @@ sequenceDiagram
 | Each recording output is valid against the `outputSchema` of its tool. Ajv 2020. | `WEBSITE-FR-017` |
 | Each recording output holds a `source` key and an `as_of` key, at any depth.   | `WEBSITE-INV-003` |
 | Each context of a tool exists in `contexts.yaml`.                              | `WEBSITE-FR-017` |
-| Each context has one `featured` tool, exactly.                                 | `WEBSITE-FR-006` |
+| Each example has an answer in `en` and in `ka`.                                | `WEBSITE-FR-027` |
+| Each context has one tool at least.                                            | `WEBSITE-FR-027` |
+| Each vendor code of a tool is a vendor of its context. Each tool names one at least. | `WEBSITE-FR-033` |
+| When the description lists the vendors of the server, they equal the vendors of the tool. `WEBSITE-DD-018`. | `WEBSITE-INV-004` |
 
 **Rationale:** A pure function has a unit test for each check, with no build. One error with every problem saves a build for each problem.
 **Alternatives:** A check inside each loader. A loader sees one collection only.
@@ -308,7 +320,7 @@ sequenceDiagram
 ### `WEBSITE-DD-005`
 
 **Realizes:** `WEBSITE-FR-013`, `WEBSITE-FR-015`
-**Decision:** `inputRows(inputSchema)` returns one row for each property: name, type, description, required, default. A type is the `type` of the property, `<item type>[]` for an array, and the values joined by ` | ` for an `enum`. A schema with no property gives no row, and `InputTable` shows the dictionary text "This tool takes no input." The Georgian tool page shows the `summary.ka` and the `question.ka`. The definition and the output stay in English, inside `lang="en"`.
+**Decision:** `inputRows(inputSchema)` returns one row for each property: name, type, description, required, default. A type is the `type` of the property, `<item type>[]` for an array, and the values joined by ` | ` for an `enum`. The table drops `null` from a list of types, so `["null", "array"]` of strings is `string[]`. A schema with no property gives no row, and `InputTable` shows the dictionary text "This tool takes no input." The Georgian tool page shows the `summary.ka` and the `question.ka`. The definition and the output stay in English, inside `lang="en"`.
 **Rationale:** The model reads the English definition. `lang="en"` tells a screen reader the language of the block.
 **Alternatives:** A translation of each description. The owner refused it.
 
@@ -343,7 +355,7 @@ sequenceDiagram
 ### `WEBSITE-DD-010`
 
 **Realizes:** `WEBSITE-FR-022`
-**Decision:** Two preview images, 1200 by 630 px: `public/og/en.png` and `public/og/ka.png`, committed. `npm run og` opens `scripts/og-card.html` in Playwright with each language and takes a screenshot. Every page of a language uses the image of that language.
+**Decision:** Two preview images, 1200 by 630 px: `public/og/en.png` and `public/og/ka.png`, committed. `pnpm og` builds the site, opens `scripts/og-card.html` in Playwright with the hero text and the font rules of each built home page, and takes a screenshot. Every page of a language uses the image of that language.
 **Rationale:** The requirement asks for an image in the language of the page. One image for each language meets it. Playwright is already a dependency of the tests.
 **Alternatives:** One image for each page, drawn at build. It adds a renderer and a font pipeline for 30 images.
 
@@ -356,13 +368,13 @@ sequenceDiagram
 
 ### `WEBSITE-DD-012`
 
-**Realizes:** `WEBSITE-NFR-001` to `NFR-004`, and each scenario
+**Realizes:** `WEBSITE-NFR-001` to `NFR-003`, `WEBSITE-NFR-005`, and each scenario
 **Decision:** Three test layers. A test cites its scenario in a comment, as `TST-001` asks of Go.
 
 | Layer     | Runs                                                        | Tool                         |
 | --------- | ----------------------------------------------------------- | ---------------------------- |
 | `unit`    | One module of `src/lib` or `src/i18n`, with data in the test. | Vitest                       |
-| `build`   | The files in `dist/` after `npm run build`.                 | Vitest                       |
+| `build`   | The files in `dist/` after `pnpm build`.                 | Vitest                       |
 | `browser` | The site from `astro preview`, in Chromium.                 | Playwright, `@axe-core/playwright` |
 | `manual`  | The owner, by hand.                                         | None                         |
 
@@ -372,9 +384,75 @@ sequenceDiagram
 ### `WEBSITE-DD-013`
 
 **Realizes:** `BLD-001`
-**Decision:** `npm run lint` runs `astro check`, then `oxlint`. The versions: Node 24, `astro` 7.4.1, `@astrojs/check` 0.9.11, `@astrojs/sitemap` 3.7.4, `@modelcontextprotocol/sdk` 1.32.1, `ajv` 8.20.0, `vitest` 5.0.5, `@playwright/test` 1.64.1, `@axe-core/playwright` 4.14.0, `oxlint` 1.89.0, `typescript` 7.0.2, `yaml` 2.9.1. `@astrojs/sitemap` writes the sitemap with the `hreflang` pairs.
-**Rationale:** `astro check` reads the types of `.astro` files. Astro 7 needs Node 22.22 at least.
+**Decision:** `pnpm lint` runs `astro check`, then `oxlint`. The versions: Node 24, `pnpm` 11.25.0 through Corepack, `astro` 7.4.1, `@astrojs/check` 0.9.11, `@astrojs/sitemap` 3.7.4, `@modelcontextprotocol/sdk` 1.32.1, `ajv` 8.20.0, `vitest` 5.0.5, `@playwright/test` 1.64.1, `@axe-core/playwright` 4.14.0, `node-html-parser` 9.0.4 for the build tests, `@lucide/astro` 1.60.0 for the icons, `oxlint` 1.89.0, `typescript` 6.0.3, `yaml` 2.9.1. `@astrojs/sitemap` writes the sitemap with the `hreflang` pairs.
+**Rationale:** `astro check` reads the types of `.astro` files. Astro 7 needs Node 22.22 at least. `@astrojs/check` 0.9.11 accepts TypeScript 5 or 6 only.
 **Alternatives:** ESLint. Slower, with more configuration.
+
+### `WEBSITE-DD-014`
+
+**Realizes:** `WEBSITE-FR-011`, `WEBSITE-NFR-001`
+**Decision:** `ToolList` renders one panel for each context, every panel visible. The script adds a vertical tab list beside the panels: one tab for each context, with its icon, its name, and its count of tools. It shows the panel of the selected tab only, and moves the selection with the up and down arrow keys. Below 760 px, the tab list sits above the panels.
+**Rationale:** A list of 14 tools is long. One context at a time is short. With scripts off, the reader sees every tool.
+**Alternatives:** Horizontal tabs, as in `InstallGuides`. Four long names in Georgian do not fit on one line.
+
+### `WEBSITE-DD-015`
+
+**Realizes:** `WEBSITE-FR-028`, `WEBSITE-NFR-001`, `WEBSITE-NFR-005`
+**Decision:** `ChatPlayer` renders a list of every example of every tool: the context, the question, and the answer. The script turns the list into one chat window that grows as one conversation. Each exchange adds itself below the last one:
+
+| State     | The window shows                                                         | Time                       |
+| --------- | ------------------------------------------------------------------------ | -------------------------- |
+| Question  | The question types out, one character each 28 ms.                         | The length of the question |
+| Tool call | The name of the tool, as text, with three dots.                           | 1200 ms                    |
+| Answer    | The answer types out, one character each 12 ms.                           | The length of the answer   |
+| Hold      | The full exchange, before the next one joins.                             | 6000 ms                    |
+
+The first exchange is a random example. The order is a shuffle of all examples, and two examples of one context never follow each other. The top of the window fades only when older exchanges scroll under it. The window keeps the last three exchanges and removes the oldest. The player has no control. It stops while the page is hidden or the window is out of the view. The window has `aria-hidden="true"`. A screen reader reads the list, which the script hides from view and takes out of the tab order. With `prefers-reduced-motion: reduce`, the window shows one random example in full, with no control and no change.
+**Rationale:** The list carries the text for a crawler, a screen reader, and a reader with scripts off. The window adds the motion only.
+**Alternatives:** A live region that announces each answer. It interrupts a screen reader every few seconds.
+
+### `WEBSITE-DD-016`
+
+**Realizes:** `WEBSITE-FR-032`
+**Decision:** `#examples` has two columns from 960 px: `ChatPlayer` on 7 of 12 columns, and `HowItWorks` on 5. Below 960 px, `HowItWorks` sits under the player. `HowItWorks` holds three steps, `ask`, `call`, and `answer`, and three counts that `buildCatalog` gives: the tools, the contexts, and the distinct names of the vendors in English. The player writes its state to `data-phase` on its root: `question`, `calling`, `answer`, or `hold`. The step of the state takes the fill of `wine`. With `prefers-reduced-motion: reduce`, the player writes no state, and no step takes the fill.
+**Rationale:** The steps name what the reader sees in the chat at the same moment. A count from the catalog stays true when a tool or a vendor changes.
+**Alternatives:** A static list of more questions. It repeats the chat.
+
+### `WEBSITE-DD-017`
+
+**Realizes:** `WEBSITE-FR-021`, `WEBSITE-NFR-003`
+**Decision:** `website/.docker/Dockerfile` builds the site, with `website/` as the build context, in `node:24.15.0-alpine` with `pnpm install --frozen-lockfile` and `pnpm build`. The build stage runs on `$BUILDPLATFORM`, so the static files build once for both platforms. The final stage carries the OpenContainers labels of `BLD-005`. `BLD-008` publishes the image as `ghcr.io/abgeo/georgia-mcp-website`. The image runs `nginxinc/nginx-unprivileged:1.30.6-alpine` as a user that is not root, on port 8080. `.docker/nginx.conf` serves `dist/`, answers an unknown address with `404.html` and the status 404, compresses text with gzip, and gives each file in `/_astro/` the header `Cache-Control: public, max-age=31536000, immutable`. A redirect is relative (`absolute_redirect off`), so the proxy in front keeps its own host name.
+**Rationale:** The owner asked for a build in Node and a server in nginx. Astro gives each file in `/_astro/` a hash in its name, so a long cache never serves an old file.
+**Alternatives:** The official `nginx` image. It starts as root.
+
+### `WEBSITE-DD-018`
+
+**Realizes:** `WEBSITE-FR-033`, `WEBSITE-INV-004`
+**Decision:** Each vendor of `contexts.yaml` has a `code`. Each tool file lists the codes of its vendors under `vendors`. `buildCatalog` gives each tool the vendors of its context with those codes, in the order of the tool file. A description that holds the phrase `of this server:` lists the vendors of the server as `<code> (<name>)`, up to the next `. `. The check reads the codes of that list, and fails on a code that the tool file lacks, or on a code of the tool file that the list lacks.
+
+| Context   | Codes                                                         |
+| --------- | ------------------------------------------------------------- |
+| `rates`   | `nbg`, `tbc`, `bog`, `liberty`, `terabank`, `rico`, `kursi`    |
+| `fuel`    | `wissol`, `rompetrol`, `socar`, `connect`, `lukoil`, `neogas`, `portal` |
+| `transit` | `ttc`                                                         |
+| `offers`  | `tbc`, `bog`, `liberty`                                       |
+
+**Rationale:** The owner chose a list by hand, checked against the server. The names in Georgian come from the site, and the refresh catches a vendor that the site lacks.
+**Alternatives:** The list from the description alone. It gives no Georgian name, and a tool with no such sentence gives no list.
+
+### `WEBSITE-DD-019`
+
+**Realizes:** `WEBSITE-FR-033`
+**Decision:** `takesVendorCode` is true when the description lists the vendors of the server (`WEBSITE-DD-018`). The section `#vendors` of a tool page sits after the summary of the head, and lists each vendor: the name in the language of the page, then the code in `<code>` when `takesVendorCode` is true. The heading is the label of the list of `ContextCard`, `contexts.sources`: "Sources", "წყაროები".
+**Rationale:** A code that no input takes, `nbg`, misleads a reader. One list of vendors has one label on the whole site (`LNG-002`).
+**Alternatives:** The code on every vendor. The NBG and the TTC take no code.
+
+### `WEBSITE-DD-020`
+
+**Realizes:** `WEBSITE-FR-005`
+**Decision:** `ContextCard` lists the first three vendors of the context, in the order of `contexts.yaml`. When the context has more, a last item `li.more` gives the count of the rest: `contexts.more`, "+5 more", "+5 სხვა".
+**Rationale:** The fuel reads seven vendors and the transit reads one. A full list makes one card tall and the grid uneven. The tool page lists every vendor (`WEBSITE-DD-019`).
+**Alternatives:** A list in one line that wraps. Its height still depends on the count. A control that expands the list. The tool page already holds it.
 
 ## 6. Scenarios
 
@@ -407,12 +485,12 @@ sequenceDiagram
 
 ### `WEBSITE-SC-004`
 
-**Verifies:** `WEBSITE-FR-004`
+**Verifies:** `WEBSITE-FR-030`
 **Layer:** build
 
 **Given** `dist/index.html` and `dist/ka/index.html`.
 **When** the test reads the `id` of each `<section>` in `<main>`.
-**Then** the list is `intro`, `contexts`, `examples`, `install`, `tools`, `author`.
+**Then** the list is `intro`, `examples`, `contexts`, `install`, `tools`.
 
 ### `WEBSITE-SC-005`
 
@@ -423,15 +501,6 @@ sequenceDiagram
 **When** `buildCatalog` runs.
 **Then** the `fuel` entry holds three vendors and one tool, and the other holds one vendor.
 
-### `WEBSITE-SC-006`
-
-**Verifies:** `WEBSITE-FR-006`
-**Layer:** unit
-
-**Given** a context with two `featured` tools, and a context with none.
-**When** `buildCatalog` runs.
-**Then** `CatalogError` names both contexts.
-
 ### `WEBSITE-SC-007`
 
 **Verifies:** `WEBSITE-FR-007`, `WEBSITE-FR-009`
@@ -439,7 +508,7 @@ sequenceDiagram
 
 **Given** both home pages.
 **When** the test reads the panels of `#install`.
-**Then** there are seven panels in the order of 4.4, and the Docker panel holds `GEOMCP_TRANSIT_TTC_ENABLED`.
+**Then** there are eight panels in the order of 4.4, and the Docker panel holds `GEOMCP_TRANSIT_TTC_ENABLED` and `GEOMCP_RATES_TBC_ENABLED`.
 
 ### `WEBSITE-SC-008`
 
@@ -506,12 +575,12 @@ sequenceDiagram
 
 ### `WEBSITE-SC-015`
 
-**Verifies:** `WEBSITE-FR-014`
+**Verifies:** `WEBSITE-FR-024`
 **Layer:** build
 
 **Given** the tool page of `fuel_get_prices` in both languages.
 **When** the test reads each `Ticket`.
-**Then** each shows the question, the input, the output, and the `recordedAt` date of its recording.
+**Then** each shows the question, the input, and the output, and no date of the record. The stub shows the name of the context.
 
 ### `WEBSITE-SC-016`
 
@@ -573,7 +642,7 @@ sequenceDiagram
 **Layer:** manual
 
 **Given** a `.env` with both keys, and Go.
-**When** the owner runs `npm run refresh`, then `npm run build`.
+**When** the owner runs `pnpm refresh`, then `pnpm build`.
 **Then** both data files change only where the server changed, and the build passes.
 
 ### `WEBSITE-SC-023`
@@ -583,7 +652,7 @@ sequenceDiagram
 
 **Given** each built page.
 **When** the test reads the `<footer>`.
-**Then** it holds "Made with :3 in Georgia by ABGEO", a link to `https://www.abgeo.dev`, and a link to `REPO_URL`.
+**Then** it holds "Made with ❤️ in Georgia by ABGEO", a link to `https://www.abgeo.dev`, and a link to `REPO_URL`.
 
 ### `WEBSITE-SC-024`
 
@@ -609,8 +678,8 @@ sequenceDiagram
 **Layer:** browser
 
 **Given** `astro preview`.
-**When** the browser opens `/no-such-page/`.
-**Then** the answer is 404, and the page holds a link to `/` and a link to `/ka/`.
+**When** the browser opens `/no-such-page/`, then `/no-such-page`.
+**Then** each answer is 404 with the page of `WEBSITE-FR-021`, in English only. The page holds a link to `/` and no text in Georgian, its language switch points to `/ka/`, and it carries `<meta name="robots" content="noindex">` and no canonical link.
 
 ### `WEBSITE-SC-027`
 
@@ -628,7 +697,7 @@ sequenceDiagram
 
 **Given** both home pages and one tool page, before a browser runs them.
 **When** the test reads the text of the HTML file.
-**Then** it holds the heading of each section, every panel of `#install`, and the output of each `Ticket`.
+**Then** it holds the heading of each section, every panel of `#install`, the answer of each chat example on a home page, and the output of each `Ticket` on a tool page.
 
 ### `WEBSITE-SC-029`
 
@@ -650,7 +719,7 @@ sequenceDiagram
 
 ### `WEBSITE-SC-031`
 
-**Verifies:** `WEBSITE-NFR-004`
+**Verifies:** `WEBSITE-NFR-005`
 **Layer:** browser
 
 **Given** `/`, `/ka/`, one tool page in each language, and the 404 page, in each theme.
@@ -659,7 +728,7 @@ sequenceDiagram
 
 ### `WEBSITE-SC-032`
 
-**Verifies:** `WEBSITE-NFR-004`
+**Verifies:** `WEBSITE-NFR-005`
 **Layer:** browser
 
 **Given** the home page.
@@ -675,28 +744,151 @@ sequenceDiagram
 **When** the test reads every string.
 **Then** no string holds an em dash.
 
+### `WEBSITE-SC-036`
+
+**Verifies:** `WEBSITE-FR-011`
+**Layer:** browser
+
+**Given** the home page.
+**When** the reader selects the tab of the context `transit`, then presses the down arrow key.
+**Then** the panel of `transit` shows its 8 tools and the other panels are hidden. After the key, the tab of `offers` has the focus and its panel shows.
+
+### `WEBSITE-SC-040`
+
+**Verifies:** `WEBSITE-FR-032`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads `#examples`.
+**Then** it holds the steps `ask`, `call`, and `answer` in this order, and the counts 14 tools, 4 contexts, and 16 vendors.
+
+### `WEBSITE-SC-041`
+
+**Verifies:** `WEBSITE-FR-032`
+**Layer:** browser
+
+**Given** the home page, with motion allowed.
+**When** the player shows the tool call.
+**Then** the player has `data-phase="calling"`, and the step `call` has the fill of `wine` while the steps `ask` and `answer` do not.
+
+### `WEBSITE-SC-042`
+
+**Verifies:** `WEBSITE-FR-021`, `WEBSITE-NFR-003`
+**Layer:** manual
+
+**Given** the image from `docker build -f website/.docker/Dockerfile -t georgia-mcp-website website`.
+**When** the owner runs it with `-p 8080:8080` and requests `/`, `/ka/`, a tool page, `/no-such-page/`, and a file of `/_astro/`.
+**Then** each page answers 200, the unknown address answers 404 with the page of `WEBSITE-FR-021`, the file of `/_astro/` carries the immutable `Cache-Control` and `Content-Encoding: gzip`, and the process runs as a user that is not root.
+
+### `WEBSITE-SC-043`
+
+**Verifies:** `WEBSITE-FR-033`
+**Layer:** unit
+
+**Given** a context with the vendors `tbc` and `bog`, a tool that names `bog` and `tbc`, and a description that lists `bog (Bank of Georgia), tbc (TBC Bank)`.
+**When** `buildCatalog` runs.
+**Then** the tool holds `bog`, then `tbc`, with their names, and `takesVendorCode` is true. A tool with the same vendors and no such description has `takesVendorCode` false.
+
+### `WEBSITE-SC-044`
+
+**Verifies:** `WEBSITE-INV-004`, `WEBSITE-FR-033`
+**Layer:** unit
+
+| Case                                                              | Problem of the `CatalogError`          |
+| ----------------------------------------------------------------- | -------------------------------------- |
+| The description lists `terabank`. The tool file lacks it.         | `<tool>: the server lists terabank`    |
+| The tool file names `kursi`. The description lacks it.            | `<tool>: the server does not list kursi` |
+| The tool file names `hydro`. Its context lacks it.                | `<tool>: unknown vendor hydro`         |
+| The tool file names no vendor.                                    | `<tool>: no vendor`                    |
+
+### `WEBSITE-SC-045`
+
+**Verifies:** `WEBSITE-FR-033`
+**Layer:** build
+
+**Given** the pages of `rates_get_commercial_rates`, `fuel_get_prices`, and `rates_get_official_rates`, in each language.
+**When** the test reads `#vendors`.
+**Then** the commercial rates list 6 banks with their codes, the first `tbc`. The fuel prices list 7 companies with their codes. The official rates list the National Bank of Georgia, "საქართველოს ეროვნული ბანკი" in Georgian, with no code.
+
+### `WEBSITE-SC-046`
+
+**Verifies:** `WEBSITE-FR-005`
+**Layer:** build
+
+**Given** both home pages, and the context `fuel` with seven vendors.
+**When** the page is built.
+**Then** the card of `fuel` lists three vendor names, then "+5 more" or "+5 სხვა". No card lists more than three names.
+
+### `WEBSITE-SC-034`
+
+**Verifies:** `WEBSITE-FR-027`
+**Layer:** unit
+
+**Given** an example with no Georgian answer, an example with no English answer, and a context with no tool.
+**When** `buildCatalog` runs.
+**Then** `CatalogError` holds one problem for each.
+
+### `WEBSITE-SC-035`
+
+**Verifies:** `WEBSITE-FR-028`, `WEBSITE-NFR-001`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads `#examples`.
+**Then** its list holds one chat example for each example of each tool, with the question and the answer in the language of the page, and no link and no `<pre>`.
+
+### `WEBSITE-SC-037`
+
+**Verifies:** `WEBSITE-FR-028`
+**Layer:** browser
+
+**Given** the home page, with motion allowed.
+**When** the player starts.
+**Then** the question types out, then the tool name shows, then the answer types out. Within 30 seconds, an exchange of a second tool joins below the first, and the first stays. The window holds no link.
+
+### `WEBSITE-SC-039`
+
+**Verifies:** `WEBSITE-FR-028`, `WEBSITE-NFR-005`
+**Layer:** browser
+
+**Given** the home page, with `prefers-reduced-motion: reduce`.
+**When** the page loads and 8 seconds pass.
+**Then** one chat example shows in full, it does not change, and the player has no control.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
 | --- | ------------------------------------------------------------------------------------------ | ------------------------------ | ---- |
-| 1   | Create the project: `package.json`, `.nvmrc`, `astro.config.mjs`, lint, test configuration. | `WEBSITE-DD-001`, `DD-012`, `DD-013` | [ ] |
-| 2   | Write `src/site.ts`, the types and the collections of 4.2.                                  | `WEBSITE-FR-023`               | [ ]  |
-| 3   | Write the unit tests of `buildCatalog` and `inputRows`. Run them. They fail.               | `WEBSITE-SC-005`, `SC-006`, `SC-013`, `SC-014`, `SC-017` to `SC-021` | [ ] |
-| 4   | Write `src/lib/catalog.ts` and `src/lib/inputs.ts` until the tests pass.                   | `WEBSITE-DD-004`, `DD-005`     | [ ]  |
-| 5   | Write `scripts/refresh.ts`. Write `contexts.yaml` and a `tools/*.yaml` for each tool. Run the refresh. | `WEBSITE-DD-003`, `FR-018` | [ ] |
-| 6   | Write `tokens.css`, `global.css`, `mark.svg`, the favicon, and the components of `BRD`.    | `WEBSITE-DD-006`, `DD-011`     | [ ]  |
-| 7   | Write `src/i18n`, with the English copy and a Georgian draft for the owner.                | `WEBSITE-DD-001`, `SC-033`     | [ ]  |
-| 8   | Write `Base.astro`, the two views, and the pages of 4.3.                                   | `WEBSITE-FR-001` to `FR-022`   | [ ]  |
-| 9   | Write the scripts of `ThemeToggle`, `CopyField`, `InstallGuides`.                           | `WEBSITE-DD-007` to `DD-009`   | [ ]  |
-| 10  | Write `scripts/og.ts` and the card. Run it.                                                 | `WEBSITE-DD-010`               | [ ]  |
-| 11  | Write the build and the browser tests. Run lint, test, build until they pass.              | `WEBSITE-SC-001` to `SC-033`   | [ ]  |
+| 1   | Create the project: `package.json`, `.nvmrc`, `astro.config.mjs`, lint, test configuration. | `WEBSITE-DD-001`, `DD-012`, `DD-013` | [x] |
+| 2   | Write `src/site.ts`, the types and the collections of 4.2.                                  | `WEBSITE-FR-023`               | [x]  |
+| 3   | Write the unit tests of `buildCatalog` and `inputRows`. Run them. They fail.               | `WEBSITE-SC-005`, `SC-013`, `SC-014`, `SC-017` to `SC-021` | [x] |
+| 4   | Write `src/lib/catalog.ts` and `src/lib/inputs.ts` until the tests pass.                   | `WEBSITE-DD-004`, `DD-005`     | [x]  |
+| 5   | Write `scripts/refresh.ts`. Write `contexts.yaml` and a `tools/*.yaml` for each tool. Run the refresh. | `WEBSITE-DD-003`, `FR-018` | [x] |
+| 6   | Write `tokens.css`, `global.css`, `mark.svg`, the favicon, and the components of `BRD`.    | `WEBSITE-DD-006`, `DD-011`     | [x]  |
+| 7   | Write `src/i18n`, with the English copy and a Georgian draft for the owner.                | `WEBSITE-DD-001`, `SC-033`     | [x]  |
+| 8   | Write `Base.astro`, the two views, and the pages of 4.3.                                   | `WEBSITE-FR-001` to `FR-022`   | [x]  |
+| 9   | Write the scripts of `ThemeToggle`, `CopyField`, `InstallGuides`.                           | `WEBSITE-DD-007` to `DD-009`   | [x]  |
+| 10  | Write `scripts/og.ts` and the card. Run it.                                                 | `WEBSITE-DD-010`               | [x]  |
+| 11  | Write the build and the browser tests. Run lint, test, build until they pass.              | `WEBSITE-SC-001` to `SC-033`   | [x]  |
+| 12  | Write the tests of the chat examples. Write `Chat` and the `chat` of `contexts.yaml`. Remove `featured`. | `WEBSITE-SC-034`, `SC-035` | [x] |
+| 14  | Write the tests of the player. Move each answer to its example. Write `ChatPlayer`. Move `#examples` after `#intro`. | `WEBSITE-DD-015`, `SC-004`, `SC-034` to `SC-039` | [x] |
+| 15  | Make the player one growing conversation. Remove Next and the links to the tools.         | `WEBSITE-DD-015`, `SC-035`, `SC-037` to `SC-039` | [x] |
+| 16  | Remove the pause control of the player.                                                    | `WEBSITE-DD-015`, `SC-037`, `SC-039` | [x] |
+| 17  | Write the tests of `HowItWorks`. Write it and the two columns of `#examples`.             | `WEBSITE-DD-016`, `SC-040`, `SC-041` | [x] |
+| 18  | Write `.docker/Dockerfile`, its ignore file, and `.docker/nginx.conf`. Build the image and run it. | `WEBSITE-DD-017`, `SC-042`     | [x] |
+| 13  | Write the test of the tool tabs. Add the vertical tabs to `ToolList`.                       | `WEBSITE-DD-014`, `SC-036`     | [x] |
+| 19  | Write the tests of the vendors. Add the codes to `contexts.yaml` and the tool files, the checks to `buildCatalog`, and `#vendors` to `Tool.astro`. Run the refresh. Rewrite each answer from its new recording. | `WEBSITE-DD-018`, `DD-019`, `SC-043` to `SC-045` | [x] |
+| 20  | Write the test of the vendors of a card. Cap the list of `ContextCard` at three, with the count of the rest. | `WEBSITE-DD-020`, `SC-046` | [x] |
 
 ## 8. Out of scope for this specification
 
 - The deployment, and the route of `/mcp` to the server. The owner decides them outside this feature.
-- The release of the binary and of `ghcr.io/abgeo/georgia-mcp`. Until it exists, the binary guide and the Docker guide name an address that does not answer.
+- The release of the binary. Until it exists, the binary guide names an address that does not answer. `BLD-008` publishes `ghcr.io/abgeo/georgia-mcp`.
 - A check that `definitions.json` equals the server. `WEBSITE-FR-023` accepts a stale file until the next refresh.
 
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID             | Retired    | Reason                                                              |
+| -------------- | ---------- | ------------------------------------------------------------------- |
+| WEBSITE-SC-006 | 2026-10-20 | `WEBSITE-FR-006` is retired. `WEBSITE-SC-034` checks the chat examples. |
+| WEBSITE-SC-038 | 2026-10-21 | `WEBSITE-FR-031` is retired. The player has no pause control.         |

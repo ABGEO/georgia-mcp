@@ -143,5 +143,6 @@ define it. The identifier of a term is `GLO-<term>`.
 | tool page          | The page of one tool.                                                                                 |
 | tool definition    | The name, the title, the description, and the input schema of a tool, as the server lists it.         |
 | tool example       | A question in the words of a person, the input of one tool call, and its output, recorded from the server. |
+| chat example       | A question in the words of a person and the answer of a model, written for the site from a recorded output. |
 | tool summary       | One or two sentences, written for the site, that say what a tool answers.                             |
 | install guide      | The steps that connect one client to the server.                                                      |

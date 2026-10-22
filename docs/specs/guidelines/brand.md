@@ -4,7 +4,7 @@ title: Brand
 type: guideline
 status: active
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-10-21
 scope: [website/, README.md, the social preview image]
 related: [LNG, GLO]
 ---
@@ -79,7 +79,7 @@ The palette is pastel. Each color is a CSS token. A component uses the token, ne
 | `paper`   | `#FBF7F0` | `#1A1614` | The page.                            |
 | `surface` | `#FFFDF9` | `#241F1C` | A card, a code block.                |
 | `ink`     | `#2A2320` | `#F3ECE2` | The text.                            |
-| `muted`   | `#6B6058` | `#ABA096` | Secondary text, a Georgian echo.     |
+| `muted`   | `#6B6058` | `#ABA096` | Secondary text.                      |
 | `line`    | `#E8DFD2` | `#3B332D` | A border, a divider, the band.       |
 
 Each hue has a pastel fill and a deep tone for text. Wine is the brand hue.
@@ -109,10 +109,10 @@ A section uses `wine` and one subject hue at most.
 
 | Role             | Font               | Rule                                              |
 | ---------------- | ------------------ | ------------------------------------------------- |
-| Display          | Fraunces           | Headings in Latin. Weight 600. `SOFT` axis 50.    |
+| Display          | Fraunces           | Headings in Latin. Weight 600.                    |
 | Body             | Geist              | Text in Latin. 17 px, line height 1.6.            |
 | Data and code    | JetBrains Mono     | A tool name, an input, an output, a command.      |
-| Georgian         | Noto Sans Georgian | All Georgian text. Weight 700 for a heading.      |
+| Georgian         | Noto Sans Georgian | All Georgian text. A heading: weight 600, `font-size-adjust: ex-height 0.482`. |
 
 - The type scale has a ratio of 1.25.
 - Show every rate, price, and time with tabular numerals (`font-variant-numeric: tabular-nums`).
@@ -120,6 +120,8 @@ A section uses `wine` and one subject hue at most.
 - Use Mtavruli (Georgian capitals) for a label of three words or fewer. Never for a sentence.
 
 **Why:** Fraunces has no Georgian glyphs. One Georgian font keeps the Georgian page even.
+The x-height of Fraunces is 0.482 em and the x-height of Noto Sans Georgian is 0.536 em.
+The adjustment gives a heading one size in both languages.
 
 ## BRD-010
 
@@ -128,7 +130,6 @@ The Georgian motif is quiet. A screen holds one motif at most. These are the mot
 | Motif | Form                                                                        |
 | ----- | --------------------------------------------------------------------------- |
 | Mark  | `Ⴋ`, per `BRD-005`.                                                         |
-| Echo  | On the English site, a heading carries its Georgian word below it, in `muted`. |
 | Band  | A divider of the top bar of mani with a repeated bowl below it, 8 px high, in `line`. |
 
 ## BRD-011
@@ -139,7 +140,7 @@ The playful devices:
 | ------ | -------------------------------------------------------------------------------------- | ------------------- |
 | Stamp  | A short status ("Read-only", "Live", "No key") in mono capitals, a 2 px border, turned 2 to 4 degrees. | One on a screen.    |
 | Ticket | The card of a tool example, with a perforated edge, like a transit ticket.             | Tool examples only. |
-| Byline | "Made with :3 in Georgia by ABGEO" in the footer. "ABGEO" links to `https://www.abgeo.dev`. | The footer only.    |
+| Byline | "Made with ❤️ in Georgia by ABGEO" in the footer. "ABGEO" links to `https://www.abgeo.dev`. | The footer only.    |
 
 ## BRD-012
 
@@ -151,7 +152,8 @@ The playful devices:
 
 ## BRD-013
 
-- An animation lasts 200 ms at most and changes `opacity` or `transform` only.
+- An animation lasts 200 ms at most and changes `opacity`, `transform`, or a color only.
+- The chat examples of the home page type their text one character at a time. They are the one exception to the limit of 200 ms.
 - A stamp presses once when it enters the view.
 - Under `prefers-reduced-motion: reduce`, nothing moves.
 - Do not use parallax. Do not take control of the scroll.
@@ -171,8 +173,9 @@ other `LNG` rules for the copy:
 ## BRD-015
 
 Every page exists in English and in Georgian, with the same sections in the same order.
-English is the default language. A page shows the output of a tool as the server
-returned it. Do not draw a mockup of an answer.
+English is the default language. A tool page shows the output of a tool as the server
+returned it. A chat example of the home page writes its answer from a recorded output,
+with the numbers of the record.
 
 ## Retired identifiers
 
