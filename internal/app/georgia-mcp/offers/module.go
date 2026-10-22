@@ -3,7 +3,6 @@
 package offers
 
 import (
-	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -16,6 +15,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
 	libertyclient "github.com/abgeo/georgia-mcp/pkg/liberty"
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
@@ -45,39 +45,25 @@ func New(cfg Config, logger *slog.Logger) (*Module, error) {
 func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, error) {
 	logger = logger.With(slog.String("component", "context"), slog.String("context", "offers"))
 
-	var banks []*offercache.OfferCache
+	registry := vendors.New[*offercache.OfferCache](logger)
+	registry.Add(vendors.Entry[*offercache.OfferCache]{
+		Name: "BOG", Enabled: cfg.BOG.Enabled, Variable: bogSwitchVariable,
+		Build: func() (*offercache.OfferCache, error) { return bogSource(cfg.BOG, logger, now) },
+	})
+	registry.Add(vendors.Entry[*offercache.OfferCache]{
+		Name: "TBC", Enabled: cfg.TBC.Enabled, Variable: tbcSwitchVariable,
+		Build: func() (*offercache.OfferCache, error) { return tbcSource(cfg.TBC, logger, now) },
+	})
+	registry.Add(vendors.Entry[*offercache.OfferCache]{
+		Name: "Liberty", Enabled: cfg.Liberty.Enabled, Variable: libertySwitchVariable,
+		Build: func() (*offercache.OfferCache, error) {
+			return libertySource(cfg.Liberty, logger, now)
+		},
+	})
 
-	if cfg.BOG.Enabled {
-		bog, err := bogSource(cfg.BOG, logger, now)
-		if err != nil {
-			return nil, err
-		}
-
-		banks = append(banks, bog)
-	} else {
-		logger.Info("BOG is off", slog.String("variable", bogSwitchVariable))
-	}
-
-	if cfg.TBC.Enabled {
-		tbc, err := tbcSource(cfg.TBC, logger, now)
-		if err != nil {
-			return nil, closeAll(banks, err)
-		}
-
-		banks = append(banks, tbc)
-	} else {
-		logger.Info("TBC is off", slog.String("variable", tbcSwitchVariable))
-	}
-
-	if cfg.Liberty.Enabled {
-		liberty, err := libertySource(cfg.Liberty, logger, now)
-		if err != nil {
-			return nil, closeAll(banks, err)
-		}
-
-		banks = append(banks, liberty)
-	} else {
-		logger.Info("Liberty is off", slog.String("variable", libertySwitchVariable))
+	banks, err := registry.Build()
+	if err != nil {
+		return nil, fmt.Errorf("building the banks: %w", err)
 	}
 
 	sources := make([]app.OfferSource, 0, len(banks))
@@ -148,18 +134,6 @@ func libertySource(
 	return liberty, nil
 }
 
-// closeAll closes the caches built before a failure, and returns the failure.
-func closeAll(banks []*offercache.OfferCache, cause error) error {
-	errs := make([]error, 0, 1+len(banks))
-	errs = append(errs, cause)
-
-	for _, bank := range banks {
-		errs = append(errs, bank.Close())
-	}
-
-	return errors.Join(errs...)
-}
-
 // Register adds the tools of the context. The tools need one bank or more.
 func (m *Module) Register(registry *mcpserver.Registry) error {
 	if len(m.banks) == 0 {
@@ -171,10 +145,5 @@ func (m *Module) Register(registry *mcpserver.Registry) error {
 
 // Close stops every cache.
 func (m *Module) Close() error {
-	errs := make([]error, 0, len(m.banks))
-	for _, bank := range m.banks {
-		errs = append(errs, bank.Close())
-	}
-
-	return errors.Join(errs...)
+	return vendors.CloseAll(m.banks)
 }
