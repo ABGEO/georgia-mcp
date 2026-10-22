@@ -175,6 +175,24 @@ and `GEOMCP_LOG_FORMAT=text`, and `t.Setenv("GEOMCP_HTTP_RATE_LIMIT", "20")`.
 | `GEOMCP_LOG_FORMAT`           | `xml`   | An error that holds `GEOMCP_LOG_FORMAT`          |
 | `GEOMCP_LOG_LEVEL`            | `loud`  | An error that holds `GEOMCP_LOG_LEVEL`           |
 
+### `PLATFORM-SC-036`
+
+**Verifies:** `PLATFORM-FR-012`
+**Layer:** unit
+
+**Given** a struct under the prefix `GEOMCP_`, with `envPrefix:"VENDOR_"` on a struct
+that holds each field below.
+
+| Field and tag                          | Value                    | Error                                                       |
+| -------------------------------------- | ------------------------ | ----------------------------------------------------------- |
+| `BaseURL url.URL`, `http_url`          | `ftp://example.com`      | `GEOMCP_VENDOR_BASE_URL: must be an http or https URL`      |
+| `Rate float64`, `gt=0`                 | `0`                      | `GEOMCP_VENDOR_RATE: must be more than 0`                   |
+| `APIKey string`, `required_if=Enabled true` | empty, `ENABLED=true` | `GEOMCP_VENDOR_API_KEY: must be set while GEOMCP_VENDOR_ENABLED is true. Set it, or set GEOMCP_VENDOR_ENABLED=false` |
+| `APIKey string`, `required_if=Enabled true` | empty, `ENABLED=false` | No error                                                  |
+| `Ranges []string`, `dive,cidr`         | `10.0.0.0/8,nope`        | `GEOMCP_VENDOR_RANGES: nope must be a CIDR range`           |
+
+Two invalid values give two errors, and each one is a `*FieldError`.
+
 ## The commands and the lifecycle
 
 ### `PLATFORM-SC-015`

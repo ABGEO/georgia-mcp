@@ -277,9 +277,9 @@ oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is sta
 | `GEOMCP_RATES_TBC_BURST`      | int      | `1`                      | No     | `TBCRATE-NFR-002` |
 
 `rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` holds `Enabled`,
-`APIKey`, `BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `Validate` refuses an empty key
-while `Enabled` is true, with the problem "must be set while TBC is on. Set it, or set
-GEOMCP_RATES_TBC_ENABLED=false". `TBCHTTPConfig` has the fields of
+`APIKey`, `BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `APIKey` has
+`validate:"required_if=Enabled true"`, so `config.Load` refuses an empty key while
+`Enabled` is true, and names `GEOMCP_RATES_TBC_ENABLED` (`PLATFORM-DD-012`). `TBCHTTPConfig` has the fields of
 `httpclient.Config` with the defaults of this table, and converts to it. A default lives
 in a struct tag, so `httpclient.Config` cannot carry a second set.
 
@@ -438,7 +438,7 @@ One more field for the model to read, for a short outage.
 
 **Realizes:** `TBCRATE-FR-012`, `TBCRATE-FR-013`, `CFG-008`
 **Decision:** TBC has the switch `Enabled`, on by default, as each other bank. While it is
-on, `TBCConfig.Validate` needs the key, so the server does not start with an empty key.
+on, the `validate` tag of the key needs it, so the server does not start with an empty key.
 With no bank on, the module adds no commercial tool.
 **Rationale:** The key turned TBC off in silence. A deployment that forgot the key served
 the commercial rates with no TBC, and only a warning told the operator.

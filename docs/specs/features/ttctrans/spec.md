@@ -4,7 +4,7 @@ title: The public transport of Tbilisi
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 context: transit
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -47,7 +47,7 @@ search, a nearby query, and the resolution of a stop or a route send no call.
 | `TTCTRANS-FR-019`  | 4.2 `SearchPlaces`. 4.1 `adapter/ttc`, places                         |
 | `TTCTRANS-FR-020`  | 4.2 `Name.In`. `TTCTRANS-DD-002`                                      |
 | `TTCTRANS-FR-021`  | 4.3 configuration. 4.1 `module.go`                                    |
-| `TTCTRANS-FR-022`  | 4.3 configuration, `TTCConfig.Validate`                               |
+| `TTCTRANS-FR-022`  | 4.3 configuration, the `validate` tag of `TTCConfig.APIKey`           |
 | `TTCTRANS-FR-023`  | 4.1 `adapter/ttc`. `TTCTRANS-DD-012`                                  |
 | `TTCTRANS-NFR-001` | 4.3 cache. `TTCTRANS-SC-040`                                          |
 | `TTCTRANS-NFR-002` | 4.3 cache. `TTCTRANS-SC-041`                                          |
@@ -75,7 +75,7 @@ search, a nearby query, and the resolution of a stop or a route send no call.
 | `MCP-002` to `MCP-008` | `spec-tools.md`.                                                                   |
 | `RSL-001`, `RSL-008`   | `httpclient.New` gives the timeout and the limit.                                  |
 | `RSL-003` to `RSL-006` | `adapter/cache` holds one decorator for each cached port. 4.3 cache.               |
-| `CFG-003`, `CFG-005`   | Each variable has the prefix `GEOMCP_TRANSIT_TTC_`. `Validate` refuses no key.     |
+| `CFG-003`, `CFG-005`   | Each variable has the prefix `GEOMCP_TRANSIT_TTC_`. `required_if` refuses no key. |
 | `LOG-004`, `LOG-008`   | The logger carries `context=transit`. No record holds the key.                     |
 
 ## 4. Design
@@ -488,9 +488,10 @@ GET /v2/stops/1:1000?locale=en   (with a wrong key)
 `transit.Config` holds `TTC TTCConfig` with `envPrefix:"TTC_"`. `TTCConfig` holds
 `Enabled bool`, `APIKey string`, `BaseURL url.URL`, and `HTTP TTCHTTPConfig`. `TTCHTTPConfig`
 has the fields of `httpclient.Config` with the defaults of this table, as `rates.BOGHTTPConfig` does.
-`TTCConfig.Validate` returns `&config.FieldError{Field: "APIKey", Problem: "must be set
-while the TTC is on. Set it, or set GEOMCP_TRANSIT_TTC_ENABLED=false"}` when `Enabled` is
-true and `APIKey` is empty. It also checks the base address as `rates` does.
+`APIKey` has `validate:"required_if=Enabled true"`, so `config.Load` fails with
+`GEOMCP_TRANSIT_TTC_API_KEY: must be set while GEOMCP_TRANSIT_TTC_ENABLED is true. Set it,
+or set GEOMCP_TRANSIT_TTC_ENABLED=false` when `Enabled` is true and `APIKey` is empty
+(`PLATFORM-DD-012`). `BaseURL` has `validate:"http_url"`.
 
 ### 4.4 Flow
 

@@ -37,7 +37,7 @@ It adds the container image, the local compose file, and the task file.
 | `PLATFORM-FR-009`  | 4.1 `httpserver`. 4.3 configuration. `PLATFORM-DD-010`  |
 | `PLATFORM-FR-010`  | 4.1 `config`. 4.3 configuration                         |
 | `PLATFORM-FR-011`  | 4.1 `config`                                            |
-| `PLATFORM-FR-012`  | 4.1 `config`, `bootstrap.Config.Validate`. 4.5          |
+| `PLATFORM-FR-012`  | 4.1 `config`. 4.5. `PLATFORM-DD-012`                    |
 | `PLATFORM-FR-013`  | 4.3 CLI commands                                        |
 | `PLATFORM-FR-014`  | 4.4. `PLATFORM-DD-005`                                  |
 | `PLATFORM-FR-015`  | 4.1 `mcpserver` middleware                              |
@@ -128,8 +128,8 @@ Every path is new. Each package with more than one file has `doc.go` (`PKG-006`)
 | Path                                  | Types and functions                                                   |
 | ------------------------------------- | --------------------------------------------------------------------- |
 | `internal/pkg/buildinfo/`        | `type Info struct { Version, Commit, GoVersion string }`. `func Get() Info` reads `debug.ReadBuildInfo`: the main module version, `vcs.revision`, and `runtime.Version()`. An absent value is `unknown`. |
-| `internal/pkg/config/`           | `func Load[T any]() (T, error)`. Loads `.env` with `godotenv.Load`, ignores `fs.ErrNotExist`. Parses with `env.ParseAsWithOptions[T](env.Options{Prefix: "GEOMCP_"})`. Calls `Validate()` when `T` implements `interface{ Validate() error }`. |
-| `internal/pkg/logger/`           | `type Config struct { Level slog.Level; Format string }`. `func (c Config) Validate() error`. `func New(cfg Config, output io.Writer) *slog.Logger`. `AddSource` when the level is debug (`LOG-003`). |
+| `internal/pkg/config/`           | `func Load[T any]() (T, error)`. Loads `.env` with `godotenv.Load`, ignores `fs.ErrNotExist`. Parses with `env.ParseAsWithOptions[T](env.Options{Prefix: "GEOMCP_"})`. Validates `T` with `go-playground/validator/v10` and its `validate` tags. Each failure becomes a `*FieldError{Variable, Problem}`. `PLATFORM-DD-012`. |
+| `internal/pkg/logger/`           | `type Config struct { Level slog.Level; Format string }`. `Format` has `validate:"oneof=json text"`. `func New(cfg Config, output io.Writer) *slog.Logger`. `AddSource` when the level is debug (`LOG-003`). |
 | `internal/pkg/mcpserver/`        | See below.                                                            |
 | `internal/pkg/httpserver/`       | See below.                                                            |
 | `internal/pkg/cache/`            | See below.                                                            |
@@ -173,13 +173,12 @@ func (e *ToolError) Unwrap() error { return e.Cause }
 
 ```go
 type Config struct {
-    Address        string        `env:"ADDRESS"         envDefault:":8080"`
-    TrustedProxies []string      `env:"TRUSTED_PROXIES" envSeparator:","`
+    Address        string        `env:"ADDRESS"         envDefault:":8080" validate:"hostname_port"`
+    TrustedProxies []string      `env:"TRUSTED_PROXIES" envSeparator:","   validate:"dive,cidr"`
     AllowedOrigins []string      `env:"ALLOWED_ORIGINS" envSeparator:","`
-    RateLimit      int           `env:"RATE_LIMIT"      envDefault:"60"`
-    RateWindow     time.Duration `env:"RATE_WINDOW"     envDefault:"1m"`
+    RateLimit      int           `env:"RATE_LIMIT"      envDefault:"60"    validate:"min=1"`
+    RateWindow     time.Duration `env:"RATE_WINDOW"     envDefault:"1m"    validate:"gte=1s"`
 }
-func (c Config) Validate() error
 
 type Server struct { /* http *http.Server; ready atomic.Bool */ }
 func New(cfg Config, logger *slog.Logger, mcpHandler http.Handler) *Server
@@ -232,11 +231,10 @@ func (c *Cache[V]) Close()
 
 ```go
 type Config struct {
-    Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
-    Rate    float64       `env:"RATE"    envDefault:"5"`
-    Burst   int           `env:"BURST"   envDefault:"5"`
+    Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
+    Rate    float64       `env:"RATE"    envDefault:"5"   validate:"gt=0"`
+    Burst   int           `env:"BURST"   envDefault:"5"   validate:"min=1"`
 }
-func (c Config) Validate() error
 func New(cfg Config) *http.Client
 ```
 
@@ -349,7 +347,7 @@ The end of the input returns nil (`LIF-005`).
 | Condition                          | Behavior                                  | Message on stderr                                     |
 | ---------------------------------- | ----------------------------------------- | ----------------------------------------------------- |
 | A variable fails to parse          | Exit 1 before the logger exists.          | `configuration: <the env error, which names the variable>` |
-| A `Validate` rule fails            | Exit 1.                                   | `configuration: GEOMCP_HTTP_ADDRESS: invalid address, want host:port` |
+| A `validate` rule fails            | Exit 1.                                   | `configuration: GEOMCP_HTTP_ADDRESS: must be host:port` |
 | Two tools share a name             | Exit 1.                                   | `registering the tools: mcp server: duplicate tool name: <name>` |
 | The address is in use              | Exit 1.                                   | `serving http: listen tcp :8080: bind: address already in use` |
 | An origin outside the list         | 403, `text/plain`, `forbidden origin`.    | One access record.                                    |
@@ -368,6 +366,7 @@ The end of the input returns nil (`LIF-005`).
 | `github.com/spf13/cobra`                  | v1.10.2  |
 | `github.com/caarlos0/env/v11`             | v11.4.1  |
 | `github.com/joho/godotenv`                | v1.5.1   |
+| `github.com/go-playground/validator/v10`  | v10.30.5 |
 | `github.com/maypok86/otter/v2`            | v2.3.0   |
 | `golang.org/x/sync`                       | latest   |
 | `golang.org/x/time`                       | v0.16.0  |
@@ -476,9 +475,35 @@ close after a failure. The offers context wrote it as one `if` for each bank.
 **Alternatives:** A context adds a vendor only when it is on. Each context then writes
 the log of a vendor that is off again.
 
+### `PLATFORM-DD-012`
+
+**Realizes:** `PLATFORM-FR-012`, `CFG-005`
+**Decision:** `config.Load` validates the whole configuration with one validator. It reads
+`url.URL` as its text, so `http_url` applies to it. It turns each failure into a
+`*FieldError`, and joins them. The variable is the prefix, each `envPrefix` on the path
+of the field, and its `env` key. The problem comes from a fixed table, one text for each
+tag:
+
+| Tag                  | Problem                                                          |
+| -------------------- | ---------------------------------------------------------------- |
+| `http_url`           | `must be an http or https URL`                                   |
+| `gt`                 | `must be more than <param>`                                      |
+| `min`, `gte`         | `must be <param> or more`                                        |
+| `hostname_port`      | `must be host:port`                                              |
+| `cidr`               | `<value> must be a CIDR range`                                   |
+| `oneof`              | `must be one of: <params, with a comma>`                         |
+| `required_if`        | `must be set while <switch> is true. Set it, or set <switch>=false` |
+| any other            | `fails the rule <tag>`                                           |
+
+`<switch>` is the variable of the field that `required_if` names, in the same struct.
+**Rationale:** 40 `Validate` methods repeated four checks. The message of the validator
+names the Go field, and the operator sets a variable.
+**Alternatives:** The messages of the validator, with its translator. They name the Go
+field, and need two more modules.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-035`.
+`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-036`.
 
 ## 7. Build plan
 
@@ -494,6 +519,7 @@ the log of a vendor that is off again.
 | 8   | `bootstrap.App`, `cli`, `main`.                                                | `PLATFORM-FR-013`, `PLATFORM-NFR-001`, `PLATFORM-INV-002` | [x]  |
 | 9   | `build/package/`, `deployments/compose.yaml`, `Taskfile.yml`.                  | `PLATFORM-FR-022` to `PLATFORM-FR-024`, `PLATFORM-NFR-003` | [x]  |
 | 10  | `vendors`. The modules of rates, fuel, and offers build their vendors with it. | `PLATFORM-FR-025`                               | [x]  |
+| 11  | `config` validates with tags. Every `Validate` method becomes a tag.           | `PLATFORM-FR-012`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

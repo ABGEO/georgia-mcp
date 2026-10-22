@@ -46,12 +46,23 @@ type Config struct {
 
 ## CFG-005
 
-A field declares its default in an `envDefault` tag. A required field carries
-`required` and `notEmpty`. A struct with a rule that a tag cannot express has a
-`Validate() error` method. The process validates the configuration at the start
-and stops on an error.
+A field declares its default in an `envDefault` tag, and its rule in a `validate` tag of
+`github.com/go-playground/validator/v10`. A struct has no `Validate` method.
+`config.Load` validates the configuration at the start and stops on an error. Each
+error names the variable.
 
-**Why:** A wrong value must fail at the start, not at the first tool call.
+| Value                                | Tag                        |
+| ------------------------------------ | -------------------------- |
+| The base address of a vendor         | `http_url`                 |
+| A timeout, a rate                    | `gt=0`                     |
+| A burst, a count of entries          | `min=1`                    |
+| The key of a vendor with a switch    | `required_if=Enabled true` |
+
+A rule that no tag of the validator expresses is a tag that `internal/pkg/config`
+registers, with its message.
+
+**Why:** A wrong value must fail at the start, not at the first tool call. A rule next to
+its default needs no method that repeats it for each vendor.
 
 ## CFG-006
 
