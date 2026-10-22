@@ -1,0 +1,89 @@
+rates:
+  order: 1
+  hue: butter
+  icon: landmark
+  name:
+    en: Exchange rates
+    ka: გაცვლითი კურსი
+  vendors:
+    - code: nbg
+      en: National Bank of Georgia
+      ka: საქართველოს ეროვნული ბანკი
+    - code: tbc
+      en: TBC Bank
+      ka: თიბისი ბანკი
+    - code: bog
+      en: Bank of Georgia
+      ka: საქართველოს ბანკი
+    - code: liberty
+      en: Liberty Bank
+      ka: ლიბერთი ბანკი
+    - code: terabank
+      en: Terabank
+      ka: ტერაბანკი
+    - code: rico
+      en: Rico Credit
+      ka: რიკო კრედიტი
+    - code: kursi
+      en: Kursi.ge
+      ka: Kursi.ge
+fuel:
+  order: 2
+  hue: peach
+  icon: fuel
+  name:
+    en: Fuel prices
+    ka: საწვავის ფასები
+  vendors:
+    - code: wissol
+      en: Wissol
+      ka: ვისოლი
+    - code: rompetrol
+      en: Rompetrol
+      ka: რომპეტროლი
+    - code: socar
+      en: SOCAR
+      ka: სოკარი
+    - code: connect
+      en: Connect
+      ka: კონექტი
+    - code: lukoil
+      en: Lukoil
+      ka: ლუკოილი
+    - code: neogas
+      en: Neogas
+      ka: ნეოგაზი
+    - code: portal
+      en: Portal
+      ka: პორტალი
+    - code: gulf
+      en: Gulf
+      ka: გალფი
+transit:
+  order: 3
+  hue: sky
+  icon: bus
+  name:
+    en: Tbilisi transit
+    ka: თბილისის ტრანსპორტი
+  vendors:
+    - code: ttc
+      en: Tbilisi Transport Company
+      ka: თბილისის სატრანსპორტო კომპანია
+offers:
+  order: 4
+  hue: lilac
+  icon: credit-card
+  name:
+    en: Card offers
+    ka: ბარათის შეთავაზებები
+  vendors:
+    - code: tbc
+      en: TBC Bank
+      ka: თიბისი ბანკი
+    - code: bog
+      en: Bank of Georgia
+      ka: საქართველოს ბანკი
+    - code: liberty
+      en: Liberty Bank
+      ka: ლიბერთი ბანკი

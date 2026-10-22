@@ -1,0 +1,151 @@
+---
+import { Cable, MessageCircleQuestionMark, ShieldCheck } from "@lucide/astro"
+
+import type { Catalog } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+
+interface Props {
+  lang: Lang
+  catalog: Catalog
+}
+
+const { lang, catalog } = Astro.props
+const copy = t(lang).how
+const vendors = new Set(catalog.contexts.flatMap((context) => context.vendors.map((vendor) => vendor.en)))
+const steps = [
+  { key: "ask", icon: MessageCircleQuestionMark, ...copy.steps.ask },
+  { key: "call", icon: Cable, ...copy.steps.call },
+  { key: "answer", icon: ShieldCheck, ...copy.steps.answer },
+]
+const counts = [
+  { key: "tools", value: catalog.tools.length, label: copy.counts.tools },
+  { key: "contexts", value: catalog.contexts.length, label: copy.counts.contexts },
+  { key: "vendors", value: vendors.size, label: copy.counts.vendors },
+]
+---
+
+<aside class="how" aria-labelledby={`how-title-${lang}`}>
+  <h3 id={`how-title-${lang}`}>{copy.heading}</h3>
+  <ol class="steps">
+    {
+      steps.map((step) => (
+        <li class="step" data-step={step.key}>
+          <step.icon size={22} stroke-width={1.5} aria-hidden="true" />
+          <div>
+            <strong>{step.title}</strong>
+            <p>{step.text}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <dl class="counts">
+    {
+      counts.map((count) => (
+        <div data-count={count.key}>
+          <dt>{count.label}</dt>
+          <dd class="number">{count.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</aside>
+
+<style>
+  .how {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 5);
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  .steps {
+    display: grid;
+    gap: calc(var(--u) * 3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: calc(var(--u) * 3);
+    align-items: start;
+    padding: calc(var(--u) * 4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .step > :global(svg) {
+    color: var(--wine);
+  }
+
+  .step strong {
+    display: block;
+    font-weight: 600;
+  }
+
+  .step p {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  :global(.examples-grid:has(.chat-player[data-phase="question"])) .step[data-step="ask"],
+  :global(.examples-grid:has(.chat-player[data-phase="calling"])) .step[data-step="call"],
+  :global(.examples-grid:has(.chat-player[data-phase="answer"])) .step[data-step="answer"],
+  :global(.examples-grid:has(.chat-player[data-phase="hold"])) .step[data-step="answer"] {
+    background: var(--wine-fill);
+    border-color: var(--wine);
+  }
+
+  :global(.examples-grid:has(.chat-player[data-phase])) .step[data-step] p {
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .step {
+      transition:
+        background-color 200ms ease-out,
+        border-color 200ms ease-out;
+    }
+  }
+
+  .counts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: calc(var(--u) * 3);
+    margin: 0;
+  }
+
+  .counts > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--u);
+    padding: calc(var(--u) * 4);
+    border-top: 2px solid var(--ink);
+  }
+
+  dt {
+    font: 500 0.72rem / 1.3 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  :lang(ka) dt {
+    font-family: var(--geo);
+    letter-spacing: 0.02em;
+  }
+
+  dd {
+    margin: 0;
+    font: 600 var(--step-3) / 1 var(--display);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

@@ -1,0 +1,355 @@
+---
+import type { Catalog } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+import ContextIcon from "./ContextIcon.astro"
+import Mark from "./Mark.astro"
+
+interface Props {
+  lang: Lang
+  catalog: Catalog
+}
+
+const { lang, catalog } = Astro.props
+const copy = t(lang).chat
+const items = catalog.contexts.flatMap((context) =>
+  context.tools.flatMap((tool) => tool.examples.map((example) => ({ context, tool, example }))),
+)
+---
+
+<div class="chat-player" data-chat-player>
+  <div class="chat-window" aria-hidden="true" hidden></div>
+  <ol class="chat-list">
+    {
+      items.map(({ context, tool, example }) => (
+        <li
+          class="exchange"
+          data-key={`${tool.name}.${example.id}`}
+          data-tool={tool.name}
+          data-context={context.key}
+          data-hue={context.hue}
+        >
+          <header class="subject">
+            <ContextIcon name={context.icon} size={18} />
+            <span class="label">{context.name[lang]}</span>
+          </header>
+          <div class="question bubble">
+            <span class="who">{copy.you}</span>
+            <p>{example.question[lang]}</p>
+          </div>
+          <div class="calling">
+            {copy.calling} <code>{tool.name}</code>
+            <span class="dots" aria-hidden="true" />
+          </div>
+          <div class="answer bubble">
+            <span class="who">
+              <Mark size={14} /> {copy.model}
+            </span>
+            <p>{example.answer[lang]}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  const timing = { question: 28, calling: 1200, answer: 12, hold: 6000 }
+  const kept = 3
+
+  function shuffle(items: HTMLElement[]): HTMLElement[] {
+    const order = [...items]
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[order[i], order[j]] = [order[j], order[i]]
+    }
+    for (let i = 1; i < order.length; i++) {
+      if (order[i].dataset.context !== order[i - 1].dataset.context) continue
+      const swap = order.findIndex((item, j) => j > i && item.dataset.context !== order[i - 1].dataset.context)
+      if (swap > 0) [order[i], order[swap]] = [order[swap], order[i]]
+    }
+
+    return order
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-chat-player]")) {
+    const list = root.querySelector<HTMLElement>(".chat-list")
+    const view = root.querySelector<HTMLElement>(".chat-window")
+    if (!list || !view) continue
+
+    const items = [...list.querySelectorAll<HTMLElement>(":scope > li")]
+    if (items.length === 0) continue
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    let order = shuffle(items)
+    let index = 0
+    let phase: "question" | "calling" | "answer" | "hold" = "question"
+    let typed = 0
+    let current: { node: HTMLElement; question: string; answer: string } | undefined
+    let timer: number | undefined
+    let inView = true
+
+    const add = (source: HTMLElement, full: boolean) => {
+      const node = source.cloneNode(true) as HTMLElement
+      const text = {
+        question: node.querySelector(".question p")?.textContent ?? "",
+        answer: node.querySelector(".answer p")?.textContent ?? "",
+      }
+      // The hidden copy of the full text gives each bubble its final size before the typing starts.
+      for (const [selector, value] of [[".question p", text.question], [".answer p", text.answer]]) {
+        const paragraph = node.querySelector(selector)!
+        const ghost = document.createElement("span")
+        const typing = document.createElement("span")
+        ghost.className = "ghost"
+        typing.className = "typed"
+        ghost.textContent = value
+        typing.textContent = full ? value : ""
+        paragraph.replaceChildren(ghost, typing)
+      }
+      if (!full) {
+        node.querySelector<HTMLElement>(".calling")!.hidden = true
+        node.querySelector<HTMLElement>(".answer")!.hidden = true
+      } else node.querySelector(".calling")!.classList.add("done")
+      view.append(node)
+      while (view.children.length > kept) view.firstElementChild?.remove()
+      current = { node, ...text }
+      phase = full ? "hold" : "question"
+      typed = 0
+    }
+
+    const nextItem = () => {
+      index += 1
+      if (index >= order.length) {
+        const last = order[order.length - 1].dataset.context
+        order = shuffle(items)
+        if (order[0].dataset.context === last) order.push(order.shift()!)
+        index = 0
+      }
+
+      return order[index]
+    }
+
+    const tick = () => {
+      timer = undefined
+      if (!current) return
+      const { node } = current
+      let delay = 0
+      if (phase === "question") {
+        typed += 1
+        node.querySelector(".question .typed")!.textContent = current.question.slice(0, typed)
+        if (typed >= current.question.length) {
+          phase = "calling"
+          node.querySelector<HTMLElement>(".calling")!.hidden = false
+          delay = timing.calling
+        } else delay = timing.question
+      } else if (phase === "calling") {
+        phase = "answer"
+        typed = 0
+        node.querySelector(".calling")!.classList.add("done")
+        node.querySelector<HTMLElement>(".answer")!.hidden = false
+        delay = timing.answer
+      } else if (phase === "answer") {
+        typed += 1
+        node.querySelector(".answer .typed")!.textContent = current.answer.slice(0, typed)
+        if (typed >= current.answer.length) {
+          phase = "hold"
+          delay = timing.hold
+        } else delay = timing.answer
+      } else {
+        add(nextItem(), false)
+        delay = timing.question
+      }
+      view.scrollTop = view.scrollHeight
+      view.classList.toggle("overflowing", view.scrollHeight > view.clientHeight)
+      root.dataset.phase = phase
+      schedule(delay)
+    }
+
+    const running = () => !reduced && inView && !document.hidden
+
+    function schedule(delay: number) {
+      if (timer === undefined && running()) timer = window.setTimeout(tick, delay)
+    }
+
+    const update = () => {
+      if (running()) schedule(0)
+      else if (timer !== undefined) {
+        window.clearTimeout(timer)
+        timer = undefined
+      }
+    }
+
+    list.classList.add("visually-hidden")
+    view.hidden = false
+    add(order[0], reduced)
+    if (!reduced) root.dataset.phase = phase
+    document.addEventListener("visibilitychange", update)
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting
+      update()
+    }).observe(view)
+    update()
+  }
+</script>
+
+<style>
+  .chat-player {
+    display: grid;
+    gap: calc(var(--u) * 3);
+    min-width: 0;
+  }
+
+  .chat-window {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 8);
+    height: 30rem;
+    padding: calc(var(--u) * 6);
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .chat-window.overflowing {
+    mask-image: linear-gradient(to bottom, transparent 0, black 4rem);
+  }
+
+  .chat-window[hidden],
+  .chat-window [hidden] {
+    display: none;
+  }
+
+  .exchange {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 3);
+  }
+
+  .subject {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 2);
+    color: var(--hue);
+  }
+
+  .subject :global(.label) {
+    color: inherit;
+    font-weight: 600;
+  }
+
+  .bubble {
+    display: grid;
+    gap: calc(var(--u) * 1.5);
+    max-width: 88%;
+    padding: calc(var(--u) * 3) calc(var(--u) * 4);
+    border-radius: 12px;
+  }
+
+  .bubble p {
+    display: grid;
+  }
+
+  .bubble p > :global(span) {
+    grid-area: 1 / 1;
+  }
+
+  .bubble p > :global(.ghost) {
+    visibility: hidden;
+  }
+
+  .question {
+    justify-self: end;
+    background: var(--wine-fill);
+    border-bottom-right-radius: 2px;
+  }
+
+  .answer {
+    justify-self: start;
+    background: var(--hue-fill);
+    border-bottom-left-radius: 2px;
+  }
+
+  .who {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 600 0.72rem / 1.2 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.75;
+  }
+
+  :lang(ka) .who {
+    font-family: var(--geo);
+    letter-spacing: 0.02em;
+  }
+
+  .answer .who :global(.mark) {
+    color: var(--wine);
+  }
+
+  .calling {
+    justify-self: start;
+    font: 500 0.82rem / 1.4 var(--mono);
+    color: var(--muted);
+  }
+
+  :lang(ka) .calling {
+    font-family: var(--geo);
+  }
+
+  .calling code {
+    color: var(--hue);
+  }
+
+  .dots::after {
+    content: "...";
+  }
+
+  .calling.done .dots::after {
+    content: "";
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .calling:not(.done) .dots::after {
+      animation: dots 1.2s steps(4) infinite;
+    }
+
+    @keyframes dots {
+      0% {
+        content: "";
+      }
+
+      25% {
+        content: ".";
+      }
+
+      50% {
+        content: "..";
+      }
+
+      75% {
+        content: "...";
+      }
+    }
+  }
+
+  .chat-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: calc(var(--u) * 6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chat-list > li {
+    padding: calc(var(--u) * 5);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--hue);
+    border-radius: var(--radius);
+  }
+</style>

@@ -1,0 +1,16 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: Find the public transport routes of Tbilisi by number or by name.
+  ka: იპოვე თბილისის საზოგადოებრივი ტრანსპორტის მარშრუტები ნომრით ან სახელით.
+examples:
+  - id: baratashvili
+    question:
+      en: Which routes go to Baratashvili Street?
+      ka: რომელი მარშრუტები მიდის ბარათაშვილის ქუჩაზე?
+    answer:
+      en: "Three bus routes serve Baratashvili Street: 316 to Kiketi, 326 to Politkovskaya Street, and 397 to Saburtalo-Vake."
+      ka: "ბარათაშვილის ქუჩაზე სამი ავტობუსის მარშრუტი გადის: 316 კიკეთისკენ, 326 პოლიტკოვსკაიას ქუჩისკენ და 397 საბურთალო-ვაკისკენ."
+    input:
+      query: Baratashvili
+      limit: 3

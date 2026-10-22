@@ -1,0 +1,16 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: Find a place in Tbilisi by name or address, to start or end a trip there.
+  ka: იპოვე ადგილი თბილისში სახელით ან მისამართით, რომ იქიდან დაიწყო ან იქ დაასრულო მგზავრობა.
+examples:
+  - id: freedom-square
+    question:
+      en: Where is Freedom Square?
+      ka: სად არის თავისუფლების მოედანი?
+    answer:
+      en: "Freedom Square is in Sololaki, in the centre of Tbilisi, at 41.6939, 44.8013."
+      ka: "თავისუფლების მოედანი თბილისის ცენტრში, სოლოლაკშია (41.6939, 44.8013)."
+    input:
+      query: Freedom Square
+      limit: 2

@@ -1,0 +1,18 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: The stops near a point in Tbilisi, nearest first, with the distance to each.
+  ka: თბილისში მოცემულ წერტილთან ახლოს მდებარე გაჩერებები, უახლოესიდან დაწყებული, მანძილით.
+examples:
+  - id: freedom-square
+    question:
+      en: Which stops are near Freedom Square?
+      ka: რომელი გაჩერებებია თავისუფლების მოედანთან ახლოს?
+    answer:
+      en: "The nearest is the Freedom Square bus stop 822, 26 metres away. Three more Freedom Square stops are within 150 metres, and the Liberty Square metro station is 168 metres away."
+      ka: "უახლოესია თავისუფლების მოედნის გაჩერება 822, 26 მეტრში. თავისუფლების მოედნის კიდევ სამი გაჩერება 150 მეტრის ფარგლებშია, მეტროსადგური კი 168 მეტრში."
+    input:
+      lat: 41.6939
+      lon: 44.8013
+      radius_m: 300
+      limit: 5

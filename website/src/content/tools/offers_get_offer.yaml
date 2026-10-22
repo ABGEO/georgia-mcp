@@ -1,0 +1,16 @@
+context: offers
+vendors: [tbc, bog, liberty]
+summary:
+  en: The full terms of one card offer, as the bank publishes them.
+  ka: ერთი ბარათის შეთავაზების სრული პირობები, როგორც ბანკი აქვეყნებს.
+examples:
+  - id: chicago-style
+    question:
+      en: What are the terms of the Chicago Style offer?
+      ka: რა პირობები აქვს Chicago Style-ის შეთავაზებას?
+    answer:
+      en: "Until 31 January, sCool Card holders get 20% sCool cashback at Chicago Style, up to 100 lari in sCool points. Pay at a Bank of Georgia terminal to get it."
+      ka: "31 იანვრამდე sCool ბარათის მფლობელები Chicago Style-ში 20%-იან sCool ქეშბექს იღებენ, ჯამში 100 ლარამდე sCool ქულებით. ამისთვის გადაიხადე საქართველოს ბანკის ტერმინალით."
+    input:
+      bank: bog
+      id: "19503"

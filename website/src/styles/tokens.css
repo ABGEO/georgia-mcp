@@ -1,0 +1,64 @@
+:root {
+  --paper: #fbf7f0;
+  --surface: #fffdf9;
+  --ink: #2a2320;
+  --muted: #6b6058;
+  --line: #e8dfd2;
+  --wine-fill: #f4cfd3;
+  --wine: #7a1f2b;
+  --butter-fill: #f6e3a8;
+  --butter: #7a5410;
+  --peach-fill: #f9cdb8;
+  --peach: #9a3d22;
+  --sky-fill: #c9deee;
+  --sky: #2c5b7a;
+  --lilac-fill: #e2d2ec;
+  --lilac: #6e3b6b;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1a1614;
+    --surface: #241f1c;
+    --ink: #f3ece2;
+    --muted: #aba096;
+    --line: #3b332d;
+    --wine-fill: #4a2229;
+    --wine: #f2a9b2;
+    --butter-fill: #4a3b1a;
+    --butter: #f2d58a;
+    --peach-fill: #4e2c22;
+    --peach: #f5b39a;
+    --sky-fill: #1f3546;
+    --sky: #a9cbe6;
+    --lilac-fill: #3a2a42;
+    --lilac: #d5bde6;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #1a1614;
+  --surface: #241f1c;
+  --ink: #f3ece2;
+  --muted: #aba096;
+  --line: #3b332d;
+  --wine-fill: #4a2229;
+  --wine: #f2a9b2;
+  --butter-fill: #4a3b1a;
+  --butter: #f2d58a;
+  --peach-fill: #4e2c22;
+  --peach: #f5b39a;
+  --sky-fill: #1f3546;
+  --sky: #a9cbe6;
+  --lilac-fill: #3a2a42;
+  --lilac: #d5bde6;
+  color-scheme: dark;
+}
+
+[data-hue="wine"] { --hue-fill: var(--wine-fill); --hue: var(--wine); }
+[data-hue="butter"] { --hue-fill: var(--butter-fill); --hue: var(--butter); }
+[data-hue="peach"] { --hue-fill: var(--peach-fill); --hue: var(--peach); }
+[data-hue="sky"] { --hue-fill: var(--sky-fill); --hue: var(--sky); }
+[data-hue="lilac"] { --hue-fill: var(--lilac-fill); --hue: var(--lilac); }

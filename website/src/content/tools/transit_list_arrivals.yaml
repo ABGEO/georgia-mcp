@@ -1,0 +1,16 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: The next vehicles at a stop, live, with the minutes until each one arrives.
+  ka: შემდეგი ტრანსპორტი გაჩერებაზე, რეალურ დროში, მოსვლამდე დარჩენილი წუთებით.
+examples:
+  - id: rustaveli-metro
+    question:
+      en: When is the next bus at the Rustaveli metro stop?
+      ka: როდის მოვა შემდეგი ავტობუსი რუსთაველის მეტროსთან?
+    answer:
+      en: "No bus is expected at the Rustaveli metro stop (814) right now."
+      ka: "რუსთაველის მეტროს გაჩერებაზე (814) ახლა არცერთი ავტობუსი არ არის მოსალოდნელი."
+    input:
+      stop: "814"
+      limit: 5

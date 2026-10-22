@@ -1,0 +1,159 @@
+---
+import InputTable from "../components/InputTable.astro"
+import Stamp from "../components/Stamp.astro"
+import Ticket from "../components/Ticket.astro"
+import { localize, t } from "../i18n"
+import type { CatalogContext, CatalogTool } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import Base from "../layouts/Base.astro"
+
+interface Props {
+  lang: Lang
+  tool: CatalogTool
+  context: CatalogContext
+}
+
+const { lang, tool, context } = Astro.props
+const copy = t(lang)
+---
+
+<Base
+  lang={lang}
+  path={`/tools/${tool.name}/`}
+  title={copy.meta.tool(tool.title)}
+  description={tool.summary[lang]}
+>
+  <section class="head" data-hue={context.hue}>
+    <div class="wrap head-inner">
+      <a class="back" href={`${localize("/", lang)}#tools`}>{copy.tool.back}</a>
+      <span class="label context">{context.name[lang]}</span>
+      <h1><code>{tool.name}</code></h1>
+      <p class="title" lang="en">{tool.title}</p>
+      <p class="summary">{tool.summary[lang]}</p>
+      <section id="vendors" class="vendors" aria-labelledby="vendors-title">
+        <h2 id="vendors-title" class="label">{copy.contexts.sources}</h2>
+        <ul>
+          {
+            tool.vendors.map((vendor) => (
+              <li>
+                <span class="name">{vendor[lang]}</span>
+                {tool.takesVendorCode && <code>{vendor.code}</code>}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+      {tool.annotations.readOnlyHint === true && <Stamp text={copy.tool.stamp} hue={context.hue} tilt={-2} />}
+    </div>
+  </section>
+
+  <div class="wrap body">
+    <section class="part" aria-labelledby="definition-title">
+      <h2 id="definition-title">{copy.tool.definition}</h2>
+      <p class="description" lang="en">{tool.description}</p>
+    </section>
+
+    <section class="part" aria-labelledby="inputs-title">
+      <h2 id="inputs-title">{copy.tool.inputs}</h2>
+      <InputTable lang={lang} schema={tool.inputSchema} />
+    </section>
+
+    <section class="part" aria-labelledby="examples-title">
+      <h2 id="examples-title">{copy.tool.examples}</h2>
+      {tool.examples.map((example) => <Ticket lang={lang} tool={tool.name} context={context} example={example} />)}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .head {
+    background: var(--hue-fill);
+  }
+
+  .head-inner {
+    display: grid;
+    justify-items: start;
+    gap: calc(var(--u) * 3);
+    padding-block: calc(var(--u) * 12);
+  }
+
+  .back {
+    font-size: 0.92rem;
+  }
+
+  .context {
+    color: var(--hue);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 4.5vw, var(--step-4));
+    overflow-wrap: anywhere;
+  }
+
+  h1 code {
+    font-weight: 600;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-size: var(--step-1);
+  }
+
+  .summary {
+    font-size: 1.1rem;
+  }
+
+  .vendors {
+    display: grid;
+    gap: calc(var(--u) * 2);
+  }
+
+  .vendors h2 {
+    color: var(--ink);
+  }
+
+  .vendors ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vendors li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: calc(var(--u) * 2);
+    padding: var(--u) calc(var(--u) * 3);
+    background: var(--paper);
+    border-radius: var(--radius);
+    font-size: 0.92rem;
+  }
+
+  .vendors code {
+    color: var(--hue);
+    font-size: 0.85rem;
+  }
+
+  .body {
+    display: grid;
+    gap: calc(var(--u) * 12);
+    padding-block: calc(var(--u) * 12);
+  }
+
+  .part {
+    display: grid;
+    gap: calc(var(--u) * 4);
+    min-width: 0;
+  }
+
+  .part h2 {
+    font-size: var(--step-2);
+  }
+
+  .description {
+    white-space: pre-line;
+  }
+</style>

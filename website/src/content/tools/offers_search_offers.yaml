@@ -1,0 +1,17 @@
+context: offers
+vendors: [tbc, bog, liberty]
+summary:
+  en: The current card offers of the banks, to find a discount or cashback where you shop.
+  ka: ბანკების ბარათების მიმდინარე შეთავაზებები, რომ იპოვო ფასდაკლება ან ქეშბექი იქ, სადაც ყიდულობ.
+examples:
+  - id: dining-cashback
+    question:
+      en: Which cards give cashback at restaurants?
+      ka: რომელი ბარათი მაძლევს ქეშბექს რესტორნებში?
+    answer:
+      en: "Bank of Georgia gives 20% cashback at Coffee Academy with the SOLO card, and at Fike with the Student Card, up to 100 lari. Liberty Bank gives 7% at Badagi with its premium Visa and Mastercard cards."
+      ka: "საქართველოს ბანკი 20%-იან ქეშბექს გაძლევს Coffee Academy-ში SOLO ბარათით და Fike-ში სტუდენტური ბარათით, 100 ლარამდე. ლიბერთი ბანკი 7%-ს გაძლევს ბადაგში პრემიუმ Visa და Mastercard ბარათებით."
+    input:
+      categories: [dining]
+      kinds: [cashback]
+      limit: 2

@@ -1,0 +1,15 @@
+context: rates
+vendors: [nbg]
+summary:
+  en: The official rate of the lari against any currency, for today or a past date, from the National Bank of Georgia.
+  ka: ლარის ოფიციალური კურსი ნებისმიერი ვალუტის მიმართ, დღევანდელი ან წარსული თარიღისთვის, საქართველოს ეროვნული ბანკიდან.
+examples:
+  - id: today
+    question:
+      en: What's the official dollar and euro rate today?
+      ka: რა არის დღეს დოლარისა და ევროს ოფიციალური კურსი?
+    answer:
+      en: "The National Bank of Georgia's official rate for today: 1 US dollar is 2.5976 lari, and 1 euro is 2.9163 lari."
+      ka: "საქართველოს ეროვნული ბანკის დღევანდელი ოფიციალური კურსით 1 აშშ დოლარი 2.5976 ლარია, ხოლო 1 ევრო 2.9163 ლარი."
+    input:
+      currencies: [USD, EUR]

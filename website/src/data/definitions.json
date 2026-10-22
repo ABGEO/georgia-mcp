@@ -1,0 +1,2201 @@
+{
+  "fuel_get_prices": {
+    "name": "fuel_get_prices",
+    "title": "Fuel prices of Georgian fuel companies",
+    "description": "Returns the current fuel prices of Georgian fuel companies: the price in GEL of one unit of each product. Use it for the price of petrol, diesel, or gas at a company today, or to compare companies. Each product has a grade that every company shares: regular (litre), premium (litre), super (litre), super_100 (litre), diesel (litre), cng (cubic_metre), lpg (litre), other (litre). price: the price in GEL of one unit at a station with an attendant. self_service_price: the price in GEL of one unit at a self-service station of the same company. A product with no self_service_price has none. The fuel companies of this server: connect (Connect, publishes no effective date), gulf (Gulf), lukoil (Lukoil), neogas (Neogas, publishes no effective date), portal (Portal, publishes no effective date), rompetrol (Rompetrol, publishes no effective date), socar (SOCAR, publishes no effective date), wissol (Wissol). The prices are of today. The tool has no history.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "grades": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Grades: regular, premium, super, super_100, diesel, cng, lpg, other. Empty asks every grade."
+        },
+        "companies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Fuel company codes. Empty asks every company. The description of the tool lists the codes."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the product names: ka or en. The default is en."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "meaning": {
+          "type": "string",
+          "description": "How to read price and self_service_price."
+        },
+        "companies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "string",
+                "description": "The company code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the fuel company."
+              },
+              "as_of": {
+                "type": "string",
+                "description": "The instant at which the server read the prices, RFC 3339. The company publishes no instant."
+              },
+              "stale": {
+                "type": "boolean",
+                "description": "True when the company did not answer and the server returns prices it read before."
+              },
+              "prices": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "product": {
+                      "type": "string",
+                      "description": "The name of the product at the company."
+                    },
+                    "grade": {
+                      "type": "string",
+                      "description": "The grade of the product, the same for every company."
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "The unit of each price: litre, or cubic_metre for cng."
+                    },
+                    "price": {
+                      "type": "string",
+                      "description": "The standard price in GEL of one unit, as a decimal string."
+                    },
+                    "self_service_price": {
+                      "type": "string",
+                      "description": "The price in GEL of one unit at a self-service station of the company, as a decimal string. Absent when the company publishes none."
+                    },
+                    "effective_date": {
+                      "type": "string",
+                      "description": "The date from which the company applies the prices, YYYY-MM-DD. Absent when the company publishes no date: as_of then gives the age of the price."
+                    }
+                  },
+                  "required": [
+                    "product",
+                    "grade",
+                    "unit",
+                    "price"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The prices of the products, sorted by grade."
+              },
+              "missing": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The requested grades that the company does not sell."
+              }
+            },
+            "required": [
+              "company",
+              "source",
+              "as_of",
+              "stale",
+              "prices"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The prices of each fuel company that answered, sorted by company code."
+        },
+        "unavailable": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "string",
+                "description": "The company code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the fuel company."
+              }
+            },
+            "required": [
+              "company",
+              "source"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The fuel companies that did not answer."
+        }
+      },
+      "required": [
+        "meaning",
+        "companies"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "offers_get_offer": {
+    "name": "offers_get_offer",
+    "title": "Terms of a card offer",
+    "description": "Returns the full conditions of one offer of a Georgian bank. Use the bank and the id from offers_search_offers. Give the person the url of the offer with the conditions.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "bank": {
+          "type": "string",
+          "description": "The bank code of the offer."
+        },
+        "id": {
+          "type": "string",
+          "description": "The offer id from offers_search_offers."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the texts: ka or en. The default is en."
+        }
+      },
+      "required": [
+        "bank",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The name of the bank."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the terms, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the bank did not answer and the server returns terms it read before."
+        },
+        "offer": {
+          "type": "object",
+          "properties": {
+            "bank": {
+              "type": "string",
+              "description": "The bank code."
+            },
+            "id": {
+              "type": "string",
+              "description": "The offer id of the bank. offers_get_offer takes it."
+            },
+            "title": {
+              "type": "string",
+              "description": "The title of the offer."
+            },
+            "partner": {
+              "type": "string",
+              "description": "The company that gives the benefit. Absent when the bank names none."
+            },
+            "benefit": {
+              "type": "string",
+              "description": "The text of the bank that states the benefit. Read the percent, the cap, and the conditions from it."
+            },
+            "kinds": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "The benefit kinds that the bank states in a field. other: the bank states none."
+            },
+            "categories": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "The offer categories, the same for every bank."
+            },
+            "bank_categories": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "The names of the categories at the bank."
+            },
+            "tiers": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "The customer tiers that can use the offer."
+            },
+            "cards": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "The card code. cards of offers_search_offers takes it."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the card at the bank."
+                  }
+                },
+                "required": [
+                  "code",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "description": "The cards that the offer names. Absent: every card of the tiers."
+            },
+            "start_date": {
+              "type": "string",
+              "description": "The first date of the offer, YYYY-MM-DD. Absent when the bank publishes none."
+            },
+            "end_date": {
+              "type": "string",
+              "description": "The last date of the offer, YYYY-MM-DD. Absent when the bank publishes none."
+            },
+            "url": {
+              "type": "string",
+              "description": "The page of the offer at the bank. Give it to the person with each offer that you name."
+            }
+          },
+          "description": "The offer.",
+          "required": [
+            "bank",
+            "id",
+            "title",
+            "benefit",
+            "kinds",
+            "categories",
+            "tiers",
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        "terms": {
+          "type": "string",
+          "description": "The full conditions of the offer, as the bank writes them."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "offer",
+        "terms"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "offers_search_offers": {
+    "name": "offers_search_offers",
+    "title": "Card offers of Georgian banks",
+    "description": "Finds the current offers that Georgian banks give to card holders at partners: discounts, cashback, and points. Filters by bank, customer tier, category, benefit kind, card, and period. For \"this month\", give the first and the last date of the month. When a bank has a next_offset, call again with that offset to read more. The benefit is the text of the bank. Compare the banks by reading it. Give the person the url of each offer that you name. benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students. The banks of this server: bog (Bank of Georgia), liberty (Liberty Bank), tbc (TBC Bank). The card codes of each bank: bog: amex (Amex), mastercard (Mastercard), mastercard_world_elite (Mastercard World Elite), plus (PLUS), scool_card (sCool Card), solo (SOLO), student_card (Student Card), super_plus (Super PLUS), teacher_card (Teacher Card), visa (Visa), visa_infinite (Visa Infinite), visa_platinum (Visa Platinum), visa_signature (Visa Signature); liberty: mastercard (Mastercard), top_card_black (Top|Card Black Edition), visa (Visa); tbc: concept_card (TBC Concept Card), credit_card (Credit Card), crypto (Crypto), installment (Installment), mastercard (Mastercard), pay_later (Pay Later), pupil_card (Pupil's Card), tbc_card (TBC Card), travel_card (Travel Card), visa (Visa).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "banks": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Bank codes. Empty asks every bank. The description lists the codes."
+        },
+        "tiers": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Customer tiers: standard, premium, private, youth. An offer matches when it has one of them."
+        },
+        "categories": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Offer categories: dining, leisure, travel, health_beauty, auto, transport, shopping, electronics, home, education, kids, entertainment, real_estate, other."
+        },
+        "kinds": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Benefit kinds: discount, cashback, points, other."
+        },
+        "cards": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Card codes of the banks. An offer that names no card matches every card. The description lists the codes of each bank."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of the period, YYYY-MM-DD. The default is today in Tbilisi."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of the period, YYYY-MM-DD, at most 366 days after from. The default is from."
+        },
+        "query": {
+          "type": "string",
+          "description": "A text to find in the title, the partner, the benefit, or the bank category, 1 to 100 characters."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the texts: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of offers for each bank, 1 to 30. The default is 10."
+        },
+        "offset": {
+          "type": "integer",
+          "description": "The count of matching offers of each bank to skip, 0 or more. Give the next_offset of a bank to read its next page. The default is 0."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "meaning": {
+          "type": "string",
+          "description": "How to read the offers."
+        },
+        "banks": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank": {
+                "type": "string",
+                "description": "The bank code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the bank."
+              },
+              "as_of": {
+                "type": "string",
+                "description": "The instant at which the server read the offers, RFC 3339. The bank publishes no instant."
+              },
+              "stale": {
+                "type": "boolean",
+                "description": "True when the bank did not answer and the server returns offers it read before."
+              },
+              "total": {
+                "type": "integer",
+                "description": "The count of every matching offer of the bank. offers holds at most limit of them."
+              },
+              "next_offset": {
+                "type": "integer",
+                "description": "The offset of the next page of the bank. Absent when offers holds the last matching offer."
+              },
+              "offers": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "bank": {
+                      "type": "string",
+                      "description": "The bank code."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "The offer id of the bank. offers_get_offer takes it."
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the offer."
+                    },
+                    "partner": {
+                      "type": "string",
+                      "description": "The company that gives the benefit. Absent when the bank names none."
+                    },
+                    "benefit": {
+                      "type": "string",
+                      "description": "The text of the bank that states the benefit. Read the percent, the cap, and the conditions from it."
+                    },
+                    "kinds": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The benefit kinds that the bank states in a field. other: the bank states none."
+                    },
+                    "categories": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The offer categories, the same for every bank."
+                    },
+                    "bank_categories": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The names of the categories at the bank."
+                    },
+                    "tiers": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The customer tiers that can use the offer."
+                    },
+                    "cards": {
+                      "type": [
+                        "null",
+                        "array"
+                      ],
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "description": "The card code. cards of offers_search_offers takes it."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the card at the bank."
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "description": "The cards that the offer names. Absent: every card of the tiers."
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "description": "The first date of the offer, YYYY-MM-DD. Absent when the bank publishes none."
+                    },
+                    "end_date": {
+                      "type": "string",
+                      "description": "The last date of the offer, YYYY-MM-DD. Absent when the bank publishes none."
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "The page of the offer at the bank. Give it to the person with each offer that you name."
+                    }
+                  },
+                  "required": [
+                    "bank",
+                    "id",
+                    "title",
+                    "benefit",
+                    "kinds",
+                    "categories",
+                    "tiers",
+                    "url"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The matching offers, the soonest end first."
+              }
+            },
+            "required": [
+              "bank",
+              "source",
+              "as_of",
+              "stale",
+              "total",
+              "offers"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The offers of each bank that answered, sorted by bank code."
+        },
+        "unavailable": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank": {
+                "type": "string",
+                "description": "The bank code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the bank."
+              }
+            },
+            "required": [
+              "bank",
+              "source"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The banks that did not answer."
+        }
+      },
+      "required": [
+        "meaning",
+        "banks"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "rates_get_commercial_rates": {
+    "name": "rates_get_commercial_rates",
+    "title": "Commercial exchange rates of Georgian banks",
+    "description": "Returns the current commercial exchange rates of Georgian banks: the prices in GEL at which a bank buys and sells one unit of a currency. Use it for the price of a currency at a bank today, or to compare banks. Ask for 1 to 10 currencies. buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it. The banks of this server: bog (Bank of Georgia), kursi (Kursi.ge, an online exchange bureau), liberty (Liberty Bank), rico (Rico Credit, a microfinance organization), tbc (TBC Bank), terabank (Terabank). The list gives the kind of each one that is not a bank. The rates are of today. The tool has no history.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "currencies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "1 to 10 ISO 4217 codes, for example USD and EUR."
+        },
+        "banks": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Bank codes. Empty asks every bank. The description of the tool lists the codes."
+        }
+      },
+      "required": [
+        "currencies"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "meaning": {
+          "type": "string",
+          "description": "How to read buy and sell."
+        },
+        "banks": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank": {
+                "type": "string",
+                "description": "The bank code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the bank."
+              },
+              "as_of": {
+                "type": "string",
+                "description": "The oldest instant at which the server read a rate of this bank, RFC 3339. The bank publishes no instant."
+              },
+              "stale": {
+                "type": "boolean",
+                "description": "True when the bank did not answer and the server returns rates it read before."
+              },
+              "rates": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "currency": {
+                      "type": "string",
+                      "description": "The ISO 4217 code."
+                    },
+                    "buy": {
+                      "type": "string",
+                      "description": "The price in GEL that the bank pays for one unit, as a decimal string."
+                    },
+                    "sell": {
+                      "type": "string",
+                      "description": "The price in GEL that the bank asks for one unit, as a decimal string."
+                    }
+                  },
+                  "required": [
+                    "currency",
+                    "buy",
+                    "sell"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The commercial rates, sorted by currency."
+              },
+              "missing": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The requested codes that the bank does not quote."
+              }
+            },
+            "required": [
+              "bank",
+              "source",
+              "as_of",
+              "stale",
+              "rates"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The rates of each bank that answered, sorted by bank code."
+        },
+        "unavailable": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "bank": {
+                "type": "string",
+                "description": "The bank code."
+              },
+              "source": {
+                "type": "string",
+                "description": "The name of the bank."
+              }
+            },
+            "required": [
+              "bank",
+              "source"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The banks that did not answer."
+        }
+      },
+      "required": [
+        "meaning",
+        "banks"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "rates_get_official_rates": {
+    "name": "rates_get_official_rates",
+    "title": "Official exchange rates of the NBG",
+    "description": "Returns the official exchange rates of the lari that the National Bank of Georgia (NBG) sets, for one date. Use it for the rate of a currency today or on a past date, for a contract, an invoice, or a tax form. Each rate is the price in GEL of `quantity` units; `rate_per_unit` is the price of one unit. The NBG publishes the rates of each business day at about 17:00 Tbilisi time, in force from the next day until the next set. A weekend or a holiday returns the set in force on it. The official rate is indicative. It is not the price of a bank.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "currencies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "ISO 4217 codes, for example USD and EUR. Empty returns every currency. At most 50."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date in YYYY-MM-DD, in Tbilisi. Empty means today. At most the valid date of the newest set: tomorrow after about 17:00."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the currency names: en or ka. Empty means en."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "National Bank of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The publication instant of the set, RFC 3339. The read instant when the set is empty."
+        },
+        "valid_from": {
+          "type": "string",
+          "description": "The date from which the set is in force, YYYY-MM-DD."
+        },
+        "read_at": {
+          "type": "string",
+          "description": "The instant the server read the set from the NBG, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the NBG did not answer and the server returns a set it read before."
+        },
+        "rates": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "The ISO 4217 code."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the currency in the requested language."
+              },
+              "quantity": {
+                "type": "integer",
+                "description": "The count of units that rate prices."
+              },
+              "rate": {
+                "type": "string",
+                "description": "The price in GEL of quantity units, as a decimal string."
+              },
+              "rate_per_unit": {
+                "type": "string",
+                "description": "The price in GEL of one unit, as a decimal string."
+              },
+              "change": {
+                "type": "string",
+                "description": "The change of rate from the previous set, signed, as a decimal string."
+              },
+              "valid_from": {
+                "type": "string",
+                "description": "The date from which this rate is in force, YYYY-MM-DD."
+              }
+            },
+            "required": [
+              "currency",
+              "name",
+              "quantity",
+              "rate",
+              "rate_per_unit",
+              "change",
+              "valid_from"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The official rates, sorted by currency."
+        },
+        "missing": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The requested codes with no official rate on the date."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "read_at",
+        "stale",
+        "rates"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "rates_list_official_history": {
+    "name": "rates_list_official_history",
+    "title": "Official exchange rate history of the NBG",
+    "description": "Returns the official exchange rates of one currency over a period of up to 31 days, as set by the National Bank of Georgia (NBG). Use it for the movement of a currency over a week or a month. The answer holds one point for each set in force in the period, the set in force on the first day included. Each rate is the price in GEL of `quantity` units.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "One ISO 4217 code, for example USD."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of the period, YYYY-MM-DD."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of the period, YYYY-MM-DD. At most 31 days after from, counted with both ends."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the currency name: en or ka. Empty means en."
+        }
+      },
+      "required": [
+        "currency",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "National Bank of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The publication instant of the newest point, RFC 3339."
+        },
+        "read_at": {
+          "type": "string",
+          "description": "The oldest instant at which the server read a point from the NBG, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when one point comes from a set read before an outage of the NBG."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The ISO 4217 code."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the currency in the requested language."
+        },
+        "points": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "description": "The ISO 4217 code."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the currency in the requested language."
+              },
+              "quantity": {
+                "type": "integer",
+                "description": "The count of units that rate prices."
+              },
+              "rate": {
+                "type": "string",
+                "description": "The price in GEL of quantity units, as a decimal string."
+              },
+              "rate_per_unit": {
+                "type": "string",
+                "description": "The price in GEL of one unit, as a decimal string."
+              },
+              "change": {
+                "type": "string",
+                "description": "The change of rate from the previous set, signed, as a decimal string."
+              },
+              "valid_from": {
+                "type": "string",
+                "description": "The date from which this rate is in force, YYYY-MM-DD."
+              }
+            },
+            "required": [
+              "currency",
+              "name",
+              "quantity",
+              "rate",
+              "rate_per_unit",
+              "change",
+              "valid_from"
+            ],
+            "additionalProperties": false
+          },
+          "description": "One official rate for each set in force in the period, ascending by valid_from."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "read_at",
+        "stale",
+        "currency",
+        "name",
+        "points"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_get_route": {
+    "name": "transit_get_route",
+    "title": "A route of Tbilisi and its stops",
+    "description": "Returns a route of the TTC with each direction: its headsign and its stops in order.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "description": "The route number (385) or the route id."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The kind, when two routes share the number: bus, minibus, metro, or cable_car."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        }
+      },
+      "required": [
+        "route"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the route, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns a route it read before."
+        },
+        "route": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The route id."
+            },
+            "number": {
+              "type": "string",
+              "description": "The route number that the vehicle shows."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the route, usually its two ends."
+            },
+            "kind": {
+              "type": "string",
+              "description": "bus, minibus, metro, or cable_car."
+            }
+          },
+          "description": "The route.",
+          "required": [
+            "id",
+            "number",
+            "name",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "directions": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "direction": {
+                "type": "integer",
+                "description": "The direction number, for transit_get_timetable."
+              },
+              "headsign": {
+                "type": "string",
+                "description": "The destination that the vehicle shows."
+              },
+              "stops": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "The number on the sign of a bus stop. Absent for a station of metro or cable car."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the stop."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "bus, metro, or cable_car. A minibus stops at a bus stop."
+                    },
+                    "lat": {
+                      "type": "number",
+                      "description": "The latitude of the stop, in degrees."
+                    },
+                    "lon": {
+                      "type": "number",
+                      "description": "The longitude of the stop, in degrees."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "kind",
+                    "lat",
+                    "lon"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The stops in the order of travel."
+              }
+            },
+            "required": [
+              "direction",
+              "headsign",
+              "stops"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Each direction of the route. A loop has one."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "route",
+        "directions"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_get_timetable": {
+    "name": "transit_get_timetable",
+    "title": "Timetable of a route at a stop",
+    "description": "Returns the planned departure times of one direction of a route of the TTC at one stop, on a date of the current week. A time of 24:00 or later is after midnight, on the next date.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "description": "The route number (385) or the route id."
+        },
+        "stop": {
+          "type": "string",
+          "description": "The stop id or the stop code. The stop must be on the direction."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The kind, when two routes share the number: bus, minibus, metro, or cable_car."
+        },
+        "direction": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "description": "The direction number from transit_get_route. Required when the route has two directions."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date, YYYY-MM-DD, in the current week. The default is today in Tbilisi."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        }
+      },
+      "required": [
+        "route",
+        "stop"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the timetable, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns a timetable it read before."
+        },
+        "route": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The route id."
+            },
+            "number": {
+              "type": "string",
+              "description": "The route number that the vehicle shows."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the route, usually its two ends."
+            },
+            "kind": {
+              "type": "string",
+              "description": "bus, minibus, metro, or cable_car."
+            }
+          },
+          "description": "The route.",
+          "required": [
+            "id",
+            "number",
+            "name",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "direction": {
+          "type": "integer",
+          "description": "The direction number."
+        },
+        "headsign": {
+          "type": "string",
+          "description": "The destination of the direction."
+        },
+        "stop": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."
+            },
+            "code": {
+              "type": "string",
+              "description": "The number on the sign of a bus stop. Absent for a station of metro or cable car."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the stop."
+            },
+            "kind": {
+              "type": "string",
+              "description": "bus, metro, or cable_car. A minibus stops at a bus stop."
+            },
+            "lat": {
+              "type": "number",
+              "description": "The latitude of the stop, in degrees."
+            },
+            "lon": {
+              "type": "number",
+              "description": "The longitude of the stop, in degrees."
+            }
+          },
+          "description": "The stop.",
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the times, YYYY-MM-DD."
+        },
+        "times": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The planned departure times, HH:MM, in order. 24:00 or later is after midnight."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "route",
+        "direction",
+        "headsign",
+        "stop",
+        "date",
+        "times"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_list_arrivals": {
+    "name": "transit_list_arrivals",
+    "title": "Next arrivals at a stop in Tbilisi",
+    "description": "Lists the next vehicles of the TTC at a stop: route number, kind, headsign, minutes from as_of, and the expected instant. live is true when the TTC tracks the vehicle; else the time comes from the timetable. With a route, lists the next vehicles of that route only.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "stop": {
+          "type": "string",
+          "description": "The stop id (1:1000) or the stop code (1000)."
+        },
+        "route": {
+          "type": "string",
+          "description": "Only this route: its number (385) or its id. Empty gives the next vehicle of each route."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of arrivals, 1 to 30. The default is 10."
+        }
+      },
+      "required": [
+        "stop"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the arrivals, RFC 3339. minutes count from it."
+        },
+        "stop": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."
+            },
+            "code": {
+              "type": "string",
+              "description": "The number on the sign of a bus stop. Absent for a station of metro or cable car."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the stop."
+            },
+            "kind": {
+              "type": "string",
+              "description": "bus, metro, or cable_car. A minibus stops at a bus stop."
+            },
+            "lat": {
+              "type": "number",
+              "description": "The latitude of the stop, in degrees."
+            },
+            "lon": {
+              "type": "number",
+              "description": "The longitude of the stop, in degrees."
+            }
+          },
+          "description": "The stop.",
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "arrivals": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "route": {
+                "type": "string",
+                "description": "The route number."
+              },
+              "kind": {
+                "type": "string",
+                "description": "bus, minibus, metro, or cable_car."
+              },
+              "headsign": {
+                "type": "string",
+                "description": "The destination that the vehicle shows."
+              },
+              "minutes": {
+                "type": "integer",
+                "description": "The minutes from as_of to the arrival."
+              },
+              "expected": {
+                "type": "string",
+                "description": "The expected instant of the arrival, RFC 3339."
+              },
+              "live": {
+                "type": "boolean",
+                "description": "True when the TTC tracks the vehicle. False when the time comes from the timetable."
+              }
+            },
+            "required": [
+              "route",
+              "kind",
+              "headsign",
+              "minutes",
+              "expected",
+              "live"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The next arrivals, soonest first."
+        },
+        "note": {
+          "type": "string",
+          "description": "Why the list is empty."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stop",
+        "arrivals"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_list_nearby_stops": {
+    "name": "transit_list_nearby_stops",
+    "title": "Stops near a point in Tbilisi",
+    "description": "Lists the stops of the TTC within a distance of a point in Tbilisi, nearest first, with the distance in metres. Use transit_search_places to get the coordinates of a place.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number",
+          "description": "The latitude of the point, in degrees."
+        },
+        "lon": {
+          "type": "number",
+          "description": "The longitude of the point, in degrees."
+        },
+        "radius_m": {
+          "type": "integer",
+          "description": "The distance from the point in metres, 1 to 2000. The default is 500."
+        },
+        "kind": {
+          "type": "string",
+          "description": "Only stops of this kind: bus, metro, or cable_car. Empty gives every kind."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of stops, 1 to 50. The default is 10."
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the stops, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns stops it read before."
+        },
+        "stops": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "stop": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "The number on the sign of a bus stop. Absent for a station of metro or cable car."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the stop."
+                  },
+                  "kind": {
+                    "type": "string",
+                    "description": "bus, metro, or cable_car. A minibus stops at a bus stop."
+                  },
+                  "lat": {
+                    "type": "number",
+                    "description": "The latitude of the stop, in degrees."
+                  },
+                  "lon": {
+                    "type": "number",
+                    "description": "The longitude of the stop, in degrees."
+                  }
+                },
+                "description": "The stop.",
+                "required": [
+                  "id",
+                  "name",
+                  "kind",
+                  "lat",
+                  "lon"
+                ],
+                "additionalProperties": false
+              },
+              "distance_m": {
+                "type": "integer",
+                "description": "The distance from the point in metres, rounded."
+              }
+            },
+            "required": [
+              "stop",
+              "distance_m"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The stops within the distance, nearest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "stops"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_plan_trip": {
+    "name": "transit_plan_trip",
+    "title": "Plan a trip by public transport in Tbilisi",
+    "description": "Plans a trip by public transport of the TTC in Tbilisi between two points, given as coordinates. Returns up to 3 itineraries with each leg: walk or ride, route, stops, instants, distance in metres. Use transit_search_places to get coordinates.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "description": "The latitude, in degrees."
+            },
+            "lon": {
+              "type": "number",
+              "description": "The longitude, in degrees."
+            }
+          },
+          "description": "The start point in Tbilisi.",
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "to": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "description": "The latitude, in degrees."
+            },
+            "lon": {
+              "type": "number",
+              "description": "The longitude, in degrees."
+            }
+          },
+          "description": "The end point in Tbilisi.",
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "timing": {
+          "type": "string",
+          "description": "leave_now, depart_at, or arrive_by. The default is leave_now."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of depart_at or arrive_by, YYYY-MM-DD. The default is today in Tbilisi."
+        },
+        "time": {
+          "type": "string",
+          "description": "The time of depart_at or arrive_by, HH:MM in Tbilisi. Required with them."
+        },
+        "kinds": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The kinds to ride: bus, minibus, metro, cable_car. bus and minibus go together. Empty gives every kind. A walk is always allowed."
+        },
+        "preference": {
+          "type": "string",
+          "description": "fastest, less_walking, or fewer_transfers. The default is fastest."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the plan, RFC 3339."
+        },
+        "itineraries": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "start": {
+                "type": "string",
+                "description": "The instant of departure, RFC 3339."
+              },
+              "end": {
+                "type": "string",
+                "description": "The instant of arrival, RFC 3339."
+              },
+              "duration_minutes": {
+                "type": "integer",
+                "description": "The duration in minutes, rounded up."
+              },
+              "walk_m": {
+                "type": "integer",
+                "description": "The total distance of walk in metres, rounded."
+              },
+              "transfers": {
+                "type": "integer",
+                "description": "The count of changes from one vehicle to another."
+              },
+              "legs": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "walk, bus, minibus, metro, or cable_car."
+                    },
+                    "from": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the stop or the point."
+                        },
+                        "stop_id": {
+                          "type": "string",
+                          "description": "The stop id. Absent when the point is not a stop."
+                        },
+                        "lat": {
+                          "type": "number",
+                          "description": "The latitude, in degrees."
+                        },
+                        "lon": {
+                          "type": "number",
+                          "description": "The longitude, in degrees."
+                        }
+                      },
+                      "description": "Where the leg starts.",
+                      "required": [
+                        "name",
+                        "lat",
+                        "lon"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "to": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the stop or the point."
+                        },
+                        "stop_id": {
+                          "type": "string",
+                          "description": "The stop id. Absent when the point is not a stop."
+                        },
+                        "lat": {
+                          "type": "number",
+                          "description": "The latitude, in degrees."
+                        },
+                        "lon": {
+                          "type": "number",
+                          "description": "The longitude, in degrees."
+                        }
+                      },
+                      "description": "Where the leg ends.",
+                      "required": [
+                        "name",
+                        "lat",
+                        "lon"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "start": {
+                      "type": "string",
+                      "description": "The instant at which the leg starts, RFC 3339."
+                    },
+                    "end": {
+                      "type": "string",
+                      "description": "The instant at which the leg ends, RFC 3339."
+                    },
+                    "distance_m": {
+                      "type": "integer",
+                      "description": "The distance of the leg in metres, rounded."
+                    },
+                    "route_number": {
+                      "type": "string",
+                      "description": "The route number of a ride."
+                    },
+                    "route_name": {
+                      "type": "string",
+                      "description": "The route name of a ride."
+                    },
+                    "stops": {
+                      "type": "integer",
+                      "description": "The count of stops of a ride after the boarding stop."
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "from",
+                    "to",
+                    "start",
+                    "end",
+                    "distance_m"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The parts of the trip, in order."
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "duration_minutes",
+              "walk_m",
+              "transfers",
+              "legs"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Up to 3 ways to travel, in the order of the TTC."
+        },
+        "note": {
+          "type": "string",
+          "description": "Why the list is empty."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "itineraries"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_search_places": {
+    "name": "transit_search_places",
+    "title": "Search places in Tbilisi",
+    "description": "Finds places in Tbilisi (addresses, streets, buildings) by text, with their coordinates, for transit_plan_trip and transit_list_nearby_stops. Data from OpenStreetMap through the TTC.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "An address, a street, or a building in Tbilisi."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of places, 1 to 20. The default is 5."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC, from OpenStreetMap."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the places, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns places it read before."
+        },
+        "places": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the place."
+              },
+              "street": {
+                "type": "string",
+                "description": "The street."
+              },
+              "house_number": {
+                "type": "string",
+                "description": "The house number."
+              },
+              "district": {
+                "type": "string",
+                "description": "The district of Tbilisi."
+              },
+              "lat": {
+                "type": "number",
+                "description": "The latitude, in degrees."
+              },
+              "lon": {
+                "type": "number",
+                "description": "The longitude, in degrees."
+              }
+            },
+            "required": [
+              "name",
+              "lat",
+              "lon"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The matching places, in the order of the TTC."
+        },
+        "note": {
+          "type": "string",
+          "description": "Why the list is empty."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "places"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_search_routes": {
+    "name": "transit_search_routes",
+    "title": "Search the routes of Tbilisi",
+    "description": "Finds the routes of the TTC by number or by name. Kinds: bus, minibus, metro, cable_car. With no query, lists every route.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "A route number or a part of a route name. Empty gives every route."
+        },
+        "kind": {
+          "type": "string",
+          "description": "Only routes of this kind: bus, minibus, metro, or cable_car."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of routes, 1 to 100. The default is 20."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the routes, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns routes it read before."
+        },
+        "routes": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The route id."
+              },
+              "number": {
+                "type": "string",
+                "description": "The route number that the vehicle shows."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the route, usually its two ends."
+              },
+              "kind": {
+                "type": "string",
+                "description": "bus, minibus, metro, or cable_car."
+              }
+            },
+            "required": [
+              "id",
+              "number",
+              "name",
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The matching routes, best match first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "routes"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "transit_search_stops": {
+    "name": "transit_search_stops",
+    "title": "Search the stops of Tbilisi",
+    "description": "Finds the stops of the Tbilisi Transport Company (bus stops, metro stations, cable car stations) by name or stop code, in Georgian or English. Use the stop id of the result with transit_list_arrivals or transit_get_timetable.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "A stop name or a stop code, in Georgian or English."
+        },
+        "kind": {
+          "type": "string",
+          "description": "Only stops of this kind: bus, metro, or cable_car. Empty gives every kind."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of stops, 1 to 50. The default is 10."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TTC."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the stops, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the TTC did not answer and the server returns stops it read before."
+        },
+        "stops": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The stop id, for example 1:1000. Every transit tool that takes a stop accepts it."
+              },
+              "code": {
+                "type": "string",
+                "description": "The number on the sign of a bus stop. Absent for a station of metro or cable car."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the stop."
+              },
+              "kind": {
+                "type": "string",
+                "description": "bus, metro, or cable_car. A minibus stops at a bus stop."
+              },
+              "lat": {
+                "type": "number",
+                "description": "The latitude of the stop, in degrees."
+              },
+              "lon": {
+                "type": "number",
+                "description": "The longitude of the stop, in degrees."
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "kind",
+              "lat",
+              "lon"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The matching stops, best match first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "stops"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  }
+}

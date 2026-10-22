@@ -1,0 +1,24 @@
+---
+import mark from "../assets/mark.svg?raw"
+
+interface Props {
+  size?: number
+  label?: string
+  class?: string
+}
+
+const { size = 32, label, class: className } = Astro.props
+const svg = mark.replace(
+  "<svg ",
+  `<svg width="${size}" height="${size}" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} `,
+)
+---
+
+<span class:list={["mark", className]} set:html={svg} />
+
+<style>
+  .mark {
+    display: inline-flex;
+    line-height: 0;
+  }
+</style>

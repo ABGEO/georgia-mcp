@@ -1,0 +1,5 @@
+export const SITE_NAME = "Georgia MCP"
+export const SITE_URL = "https://geo-mcp.abgeo.cloud"
+export const SERVER_URL = "https://geo-mcp.abgeo.cloud/mcp"
+export const REPO_URL = "https://github.com/abgeo/georgia-mcp"
+export const AUTHOR_URL = "https://www.abgeo.dev"

@@ -1,0 +1,221 @@
+---
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+import { REPO_URL, SERVER_URL } from "../site"
+import CopyField from "./CopyField.astro"
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const copy = t(lang).install
+const local = "http://localhost:8080/mcp"
+
+interface Guide {
+  key: keyof typeof copy.guides
+  group: "remote" | "local"
+  address?: string
+  code?: string
+  download?: string
+  keys?: boolean
+}
+
+const guides: Guide[] = [
+  { key: "claude", group: "remote", address: SERVER_URL },
+  { key: "claudeApps", group: "remote" },
+  { key: "claudeCode", group: "remote", address: SERVER_URL, code: `claude mcp add --transport http georgia-mcp ${SERVER_URL}` },
+  { key: "chatgpt", group: "remote", address: SERVER_URL },
+  {
+    key: "cursor",
+    group: "remote",
+    address: SERVER_URL,
+    code: JSON.stringify({ mcpServers: { "georgia-mcp": { url: SERVER_URL } } }, null, 2),
+  },
+  {
+    key: "vscode",
+    group: "remote",
+    address: SERVER_URL,
+    code: JSON.stringify({ servers: { "georgia-mcp": { type: "http", url: SERVER_URL } } }, null, 2),
+  },
+  {
+    key: "binary",
+    group: "local",
+    code: "go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest\nclaude mcp add georgia-mcp -- georgia-mcp stdio",
+    download: `${REPO_URL}/releases/latest`,
+    keys: true,
+  },
+  {
+    key: "docker",
+    group: "local",
+    address: local,
+    code: "docker run -p 8080:8080 \\\n  -e GEOMCP_TRANSIT_TTC_API_KEY=... \\\n  -e GEOMCP_RATES_TBC_API_KEY=... \\\n  ghcr.io/abgeo/georgia-mcp",
+    keys: true,
+  },
+]
+
+const groups = [
+  { key: "remote", label: copy.remote },
+  { key: "local", label: copy.local },
+] as const
+---
+
+<div class="guides" data-guides>
+  <div class="tablist" role="tablist" aria-label={copy.heading} hidden>
+    {
+      groups.map((group) => (
+        <div class="tab-group">
+          <span class="label">{group.label}</span>
+          <div class="tabs">
+            {guides
+              .filter((guide) => guide.group === group.key)
+              .map((guide) => (
+                <button type="button" role="tab" id={`tab-${lang}-${guide.key}`} aria-controls={`guide-${lang}-${guide.key}`}>
+                  {copy.guides[guide.key].name}
+                </button>
+              ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  {
+    guides.map((guide) => (
+      <section class="panel" id={`guide-${lang}-${guide.key}`} data-panel aria-labelledby={`heading-${lang}-${guide.key}`}>
+        <h3 id={`heading-${lang}-${guide.key}`}>
+          <span class="label">{guide.group === "remote" ? copy.remote : copy.local}</span>
+          {copy.guides[guide.key].name}
+        </h3>
+        <ol>
+          {copy.guides[guide.key].steps.map((step) => (
+            <li>{step}</li>
+          ))}
+        </ol>
+        {guide.download && (
+          <p>
+            <a href={guide.download}>{copy.download}</a>
+          </p>
+        )}
+        {guide.code && (
+          <pre lang="en" tabindex="0"><code>{guide.code}</code></pre>
+        )}
+        {guide.address && <CopyField lang={lang} id={`address-${lang}-${guide.key}`} value={guide.address} />}
+        {guide.keys && (
+          <ul class="keys">
+            <li>{copy.keys.ttc}</li>
+            <li>{copy.keys.tbc}</li>
+          </ul>
+        )}
+      </section>
+    ))
+  }
+</div>
+
+<script>
+  import { enhanceTabs } from "../lib/tabs"
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-guides]")) enhanceTabs(root, "[data-panel]", "both")
+</script>
+
+<style>
+  .guides {
+    display: grid;
+    gap: calc(var(--u) * 6);
+  }
+
+  .tablist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 4) calc(var(--u) * 8);
+  }
+
+  .tablist[hidden] {
+    display: none;
+  }
+
+  .tab-group {
+    display: grid;
+    gap: calc(var(--u) * 2);
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 2);
+  }
+
+  [role="tab"] {
+    padding: calc(var(--u) * 2) calc(var(--u) * 4);
+    font: 500 0.92rem var(--body);
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  :lang(ka) [role="tab"] {
+    font-family: var(--geo);
+  }
+
+  [role="tab"][aria-selected="true"] {
+    color: var(--wine);
+    background: var(--wine-fill);
+    border-color: var(--wine);
+  }
+
+  .panel {
+    display: grid;
+    gap: calc(var(--u) * 4);
+    padding: calc(var(--u) * 6);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    min-width: 0;
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .panel h3 {
+    display: grid;
+    gap: var(--u);
+    font-size: var(--step-1);
+  }
+
+  .tabbed .panel h3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  ol {
+    display: grid;
+    gap: calc(var(--u) * 2);
+    margin: 0;
+    padding-left: 1.4em;
+  }
+
+  pre {
+    margin: 0;
+    padding: calc(var(--u) * 3) calc(var(--u) * 4);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    overflow-x: auto;
+  }
+
+  .keys {
+    display: grid;
+    gap: calc(var(--u) * 2);
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>

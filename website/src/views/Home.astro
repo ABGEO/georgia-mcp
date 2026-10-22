@@ -1,0 +1,208 @@
+---
+import Band from "../components/Band.astro"
+import ContextCard from "../components/ContextCard.astro"
+import HowItWorks from "../components/HowItWorks.astro"
+import InstallGuides from "../components/InstallGuides.astro"
+import Mark from "../components/Mark.astro"
+import Stamp from "../components/Stamp.astro"
+import ChatPlayer from "../components/ChatPlayer.astro"
+import ToolList from "../components/ToolList.astro"
+import { t } from "../i18n"
+import { getCatalog } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import Base from "../layouts/Base.astro"
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const copy = t(lang)
+const catalog = await getCatalog()
+---
+
+<Base lang={lang} path="/" title={copy.meta.title} description={copy.meta.description}>
+  <section id="intro" class="intro" aria-labelledby="intro-title">
+    <div class="wrap hero">
+      <div class="hero-text">
+        <span class="label eyebrow">{copy.intro.eyebrow}</span>
+        <h1 id="intro-title">{copy.intro.title} <em>{copy.intro.titleAccent}</em></h1>
+        <p class="lead">{copy.intro.lead}</p>
+        <div class="actions">
+          <a class="button primary" href="#install">{copy.intro.install}</a>
+          <a class="button ghost" href="#tools">{copy.intro.tools}</a>
+        </div>
+      </div>
+      <div class="hero-mark">
+        <Mark size={240} />
+        <div class="hero-stamp"><Stamp text={copy.intro.stamp} /></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="examples" class="wrap section" aria-labelledby="examples-title">
+    <div class="section-head">
+      <h2 id="examples-title">{copy.examples.heading}</h2>
+      <p>{copy.examples.lead}</p>
+    </div>
+    <div class="examples-grid">
+      <ChatPlayer lang={lang} catalog={catalog} />
+      <HowItWorks lang={lang} catalog={catalog} />
+    </div>
+  </section>
+
+  <div class="wrap"><Band /></div>
+
+  <section id="contexts" class="wrap section" aria-labelledby="contexts-title">
+    <div class="section-head">
+      <h2 id="contexts-title">{copy.contexts.heading}</h2>
+      <p>{copy.contexts.lead}</p>
+    </div>
+    <div class="cards">
+      {catalog.contexts.map((context) => <ContextCard lang={lang} context={context} />)}
+    </div>
+  </section>
+
+  <div class="wrap"><Band /></div>
+
+  <section id="install" class="wrap section" aria-labelledby="install-title">
+    <div class="section-head">
+      <h2 id="install-title">{copy.install.heading}</h2>
+      <p>{copy.install.lead}</p>
+    </div>
+    <InstallGuides lang={lang} />
+  </section>
+
+  <div class="wrap"><Band /></div>
+
+  <section id="tools" class="wrap section" aria-labelledby="tools-title">
+    <div class="section-head">
+      <h2 id="tools-title">{copy.tools.heading}</h2>
+      <p>{copy.tools.lead}</p>
+    </div>
+    <ToolList lang={lang} catalog={catalog} />
+  </section>
+
+</Base>
+
+<style>
+  .intro {
+    background: var(--wine-fill);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: calc(var(--u) * 6);
+    align-items: center;
+    padding-block: calc(var(--u) * 16);
+  }
+
+  .hero-text {
+    grid-column: span 7;
+    display: grid;
+    gap: calc(var(--u) * 5);
+    min-width: 0;
+  }
+
+  .eyebrow {
+    color: var(--wine);
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 6vw, var(--step-5));
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--wine);
+  }
+
+  .lead {
+    font-size: 1.15rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 3);
+  }
+
+  .button {
+    padding: calc(var(--u) * 3) calc(var(--u) * 5);
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--wine);
+    border-radius: var(--radius);
+  }
+
+  .button.primary {
+    color: var(--paper);
+    background: var(--wine);
+  }
+
+  .button.ghost {
+    color: var(--wine);
+  }
+
+  .hero-mark {
+    grid-column: span 5;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    color: var(--wine);
+  }
+
+  .hero-stamp {
+    position: absolute;
+    right: 8%;
+    bottom: -4%;
+  }
+
+  .examples-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: calc(var(--u) * 8);
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .examples-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: calc(var(--u) * 4);
+  }
+
+
+  @media (max-width: 760px) {
+    .hero {
+      padding-block: calc(var(--u) * 10);
+    }
+
+    .hero-text,
+    .hero-mark {
+      grid-column: 1 / -1;
+    }
+
+    .hero-mark {
+      order: -1;
+      justify-content: flex-start;
+    }
+
+    .hero-mark :global(svg) {
+      width: 96px;
+      height: 96px;
+    }
+
+    .hero-stamp {
+      position: static;
+      align-self: end;
+      margin-left: calc(var(--u) * 4);
+    }
+  }
+</style>

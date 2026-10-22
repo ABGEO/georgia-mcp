@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="{{lang}}">
+  <head>
+    <meta charset="utf-8" />
+    {{fonts}}
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+      }
+
+      body {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 330px;
+        align-items: center;
+        gap: 48px;
+        padding: 72px 80px;
+        background: #f4cfd3;
+        color: #2a2320;
+        font-family: var(--font-body), sans-serif;
+      }
+
+      .text {
+        display: grid;
+        gap: 28px;
+      }
+
+      .eyebrow {
+        font: 500 22px/1 var(--font-mono), monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #7a1f2b;
+      }
+
+      h1 {
+        margin: 0;
+        font: 600 66px/1.08 var(--font-display), serif;
+      }
+
+      h1 em {
+        font-style: normal;
+        color: #7a1f2b;
+      }
+
+      :lang(ka) h1 {
+        font: 700 54px/1.2 var(--font-georgian), sans-serif;
+      }
+
+      :lang(ka) .eyebrow {
+        font-family: var(--font-georgian), sans-serif;
+        letter-spacing: 0.02em;
+      }
+
+      .url {
+        font: 500 24px/1 var(--font-mono), monospace;
+        color: #2a2320;
+      }
+
+      .mark {
+        color: #7a1f2b;
+        justify-self: center;
+      }
+
+      .band {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 40px;
+        height: 12px;
+        background: #7a1f2b;
+        opacity: 0.35;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 8'%3E%3Cpath d='M0 1h16' stroke='black' stroke-width='1.5'/%3E%3Cpath d='M5 1v2.5a3 3 0 0 0 6 0V1' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x left center / 24px 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text">
+      <span class="eyebrow">{{eyebrow}}</span>
+      <h1>{{title}}</h1>
+      <span class="url">geo-mcp.abgeo.cloud</span>
+    </div>
+    <div class="mark">{{mark}}</div>
+    <div class="band"></div>
+  </body>
+</html>

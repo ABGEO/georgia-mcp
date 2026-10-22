@@ -1,0 +1,15 @@
+context: rates
+vendors: [tbc, bog, liberty, terabank, rico, kursi]
+summary:
+  en: The buy and sell rates of the commercial banks right now, to find where to exchange.
+  ka: კომერციული ბანკების ყიდვისა და გაყიდვის კურსი ახლა, რომ იპოვო, სად გაცვალო.
+examples:
+  - id: usd
+    question:
+      en: Which bank buys dollars at the best rate right now?
+      ka: რომელი ბანკი ყიდულობს ახლა დოლარს საუკეთესო კურსით?
+    answer:
+      en: "Rico Credit and Terabank buy dollars at the best rate, 2.596 lari. To sell you a dollar, Rico Credit asks the least: 2.60 lari."
+      ka: "დოლარს საუკეთესო კურსით, 2.596 ლარად, რიკო კრედიტი და ტერაბანკი ყიდულობენ. დოლარის მოსაყიდად ყველაზე ნაკლებს რიკო კრედიტი ითხოვს: 2.60 ლარს."
+    input:
+      currencies: [USD]

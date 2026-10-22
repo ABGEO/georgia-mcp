@@ -1,0 +1,15 @@
+context: fuel
+vendors: [wissol, rompetrol, socar, connect, lukoil, neogas, portal, gulf]
+summary:
+  en: Today's fuel prices of each company, grouped into grades that every company shares, so you can compare them.
+  ka: თითოეული კომპანიის დღევანდელი საწვავის ფასები, დაჯგუფებული საერთო კატეგორიებად, რომ შეადარო.
+examples:
+  - id: premium
+    question:
+      en: Where is premium fuel cheapest today?
+      ka: სად არის დღეს პრემიუმ საწვავი ყველაზე იაფი?
+    answer:
+      en: "Connect is the cheapest, at 4.15 lari a litre for Premium RON 96, or 3.95 lari at a self-service station. Portal asks 4.19 lari and Lukoil 4.25."
+      ka: "ყველაზე იაფი კონექტშია: Premium RON 96 ლიტრი 4.15 ლარი ღირს, თვითმომსახურების სადგურზე კი 3.95 ლარი. პორტალში 4.19 ლარია, ლუკოილში კი 4.25."
+    input:
+      grades: [premium]

@@ -1,0 +1,217 @@
+---
+import type { Catalog } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { localize, t } from "../i18n"
+import ContextIcon from "./ContextIcon.astro"
+
+interface Props {
+  lang: Lang
+  catalog: Catalog
+}
+
+const { lang, catalog } = Astro.props
+const copy = t(lang)
+---
+
+<div class="tool-tabs" data-tool-tabs>
+  <div class="tablist" role="tablist" aria-orientation="vertical" aria-label={copy.tools.heading} hidden>
+    {
+      catalog.contexts.map((context) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tooltab-${lang}-${context.key}`}
+          aria-controls={`tools-${lang}-${context.key}`}
+          data-hue={context.hue}
+        >
+          <ContextIcon name={context.icon} size={20} />
+          <span class="name">{context.name[lang]}</span>
+          <span class="count">{copy.contexts.tools(context.tools.length)}</span>
+        </button>
+      ))
+    }
+  </div>
+  <div class="panels">
+    {
+      catalog.contexts.map((context) => (
+        <section
+          class="group"
+          id={`tools-${lang}-${context.key}`}
+          data-tools-panel={context.key}
+          data-hue={context.hue}
+          aria-labelledby={`tools-title-${lang}-${context.key}`}
+        >
+          <h3 id={`tools-title-${lang}-${context.key}`}>{context.name[lang]}</h3>
+          <ul>
+            {context.tools.map((tool) => (
+              <li>
+                <a href={localize(`/tools/${tool.name}/`, lang)}>
+                  <code>
+                    {tool.name.split("_").map((part, i) => (
+                      <>
+                        {i > 0 && (
+                          <>
+                            _<wbr />
+                          </>
+                        )}
+                        {part}
+                      </>
+                    ))}
+                  </code>
+                </a>
+                <p>{tool.summary[lang]}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { enhanceTabs } from "../lib/tabs"
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-tool-tabs]")) enhanceTabs(root, "[data-tools-panel]", "vertical")
+</script>
+
+<style>
+  .tool-tabs {
+    display: grid;
+    gap: calc(var(--u) * 6);
+  }
+
+  .tool-tabs.tabbed {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .tablist {
+    display: grid;
+    gap: calc(var(--u) * 2);
+  }
+
+  .tablist[hidden] {
+    display: none;
+  }
+
+  [role="tab"] {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: calc(var(--u) * 3);
+    padding: calc(var(--u) * 3) calc(var(--u) * 4);
+    text-align: left;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--hue);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  [role="tab"] > :global(svg) {
+    grid-row: span 2;
+    color: var(--hue);
+  }
+
+  [role="tab"][aria-selected="true"] {
+    background: var(--hue-fill);
+    border-color: var(--hue);
+  }
+
+  .name {
+    font: 600 1rem / 1.3 var(--body);
+  }
+
+  :lang(ka) .name {
+    font-family: var(--geo);
+  }
+
+  .count {
+    font: 500 0.72rem / 1.3 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  :lang(ka) .count {
+    font-family: var(--geo);
+    letter-spacing: 0.02em;
+  }
+
+  [role="tab"][aria-selected="true"] .count {
+    color: var(--ink);
+  }
+
+  .panels {
+    display: grid;
+    gap: calc(var(--u) * 8);
+    min-width: 0;
+  }
+
+  .group {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 4);
+    border-top: 3px solid var(--hue);
+    padding-top: calc(var(--u) * 3);
+  }
+
+  .group[hidden] {
+    display: none;
+  }
+
+  .tabbed .group {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .tabbed .group h3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: calc(var(--u) * 3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    align-content: start;
+    gap: var(--u);
+    padding: calc(var(--u) * 4);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  a {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px) {
+    .tool-tabs.tabbed {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

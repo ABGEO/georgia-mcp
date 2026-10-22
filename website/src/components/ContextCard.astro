@@ -1,0 +1,69 @@
+---
+import type { CatalogContext } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+import ContextIcon from "./ContextIcon.astro"
+
+interface Props {
+  lang: Lang
+  context: CatalogContext
+}
+
+const { lang, context } = Astro.props
+const copy = t(lang).contexts
+const shown = context.vendors.slice(0, 3)
+const rest = context.vendors.length - shown.length
+---
+
+<article class="card" data-hue={context.hue}>
+  <ContextIcon name={context.icon} />
+  <span class="label tag">{copy.tools(context.tools.length)}</span>
+  <h3>{context.name[lang]}</h3>
+  <div class="sources">
+    <span class="label">{copy.sources}</span>
+    <ul>
+      {shown.map((vendor) => <li>{vendor[lang]}</li>)}
+      {rest > 0 && <li class="more">{copy.more(rest)}</li>}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 3);
+    padding: calc(var(--u) * 6);
+    background: var(--hue-fill);
+    border-radius: var(--radius);
+  }
+
+  .card > :global(svg) {
+    color: var(--hue);
+  }
+
+  .tag {
+    color: var(--hue);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  .sources .label {
+    color: var(--ink);
+    opacity: 0.7;
+  }
+
+  ul {
+    margin: var(--u) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+  }
+
+  .more {
+    opacity: 0.7;
+  }
+</style>

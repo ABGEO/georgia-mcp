@@ -1,0 +1,72 @@
+---
+import { Languages } from "@lucide/astro"
+
+import type { Lang } from "../lib/schemas"
+import { alternate, other, t } from "../i18n"
+
+interface Props {
+  lang: Lang
+  path: string
+}
+
+const { lang, path } = Astro.props
+const copy = t(lang).nav
+const target = other(lang)
+const codes: Record<Lang, string> = { en: "EN", ka: "ქა" }
+---
+
+<a class="lang-switch" href={alternate(path, lang)} hreflang={target}>
+  <Languages size={16} stroke-width={1.75} aria-hidden="true" />
+  {
+    (["en", "ka"] as const).map((code, i) => (
+      <>
+        {i > 0 && (
+          <span class="sep" aria-hidden="true">
+            /
+          </span>
+        )}
+        <span class:list={["code", { current: code === lang }]} lang={code} aria-hidden="true">
+          {codes[code]}
+        </span>
+      </>
+    ))
+  }
+  <span class="visually-hidden">{copy.languageLabel}</span>
+</a>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--u) * 1.5);
+    font: 500 0.85rem / 1.2 var(--body);
+    padding: calc(var(--u) * 2) calc(var(--u) * 3);
+    color: var(--wine);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  .lang-switch:hover {
+    border-color: var(--wine);
+  }
+
+  .code {
+    font: 600 0.85rem / 1.2 var(--mono);
+    letter-spacing: 0.04em;
+  }
+
+  .code:lang(ka) {
+    font-family: var(--geo);
+  }
+
+  .code.current {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .sep {
+    color: var(--line);
+  }
+</style>

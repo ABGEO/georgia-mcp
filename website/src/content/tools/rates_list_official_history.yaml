@@ -1,0 +1,17 @@
+context: rates
+vendors: [nbg]
+summary:
+  en: The official rate of one currency for each day of a period, to see how the lari moved.
+  ka: ერთი ვალუტის ოფიციალური კურსი პერიოდის ყოველი დღისთვის, რომ ნახო, როგორ შეიცვალა ლარი.
+examples:
+  - id: october
+    question:
+      en: How did the dollar move in the first half of October?
+      ka: როგორ შეიცვალა დოლარის კურსი ოქტომბრის პირველ ნახევარში?
+    answer:
+      en: "The dollar fell a little: from 2.6047 lari on 1 October to 2.5987 lari on 16 October, by the official rate of the National Bank of Georgia."
+      ka: "დოლარი ოდნავ გაიაფდა: ეროვნული ბანკის ოფიციალური კურსით 1 ოქტომბერს 2.6047 ლარი იყო, 16 ოქტომბერს კი 2.5987 ლარი."
+    input:
+      currency: USD
+      from: "2026-10-01"
+      to: "2026-10-16"

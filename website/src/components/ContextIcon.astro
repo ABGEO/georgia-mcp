@@ -1,0 +1,15 @@
+---
+import { Bus, CreditCard, Fuel, Landmark } from "@lucide/astro"
+
+interface Props {
+  name: string
+  size?: number
+}
+
+const icons = { landmark: Landmark, fuel: Fuel, bus: Bus, "credit-card": CreditCard }
+
+const { name, size = 28 } = Astro.props
+const Icon = icons[name as keyof typeof icons] ?? Landmark
+---
+
+<Icon size={size} stroke-width={1.5} aria-hidden="true" />

@@ -1,0 +1,16 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: Find the stops of Tbilisi by name or by code, with their kind and their place on the map.
+  ka: იპოვე თბილისის გაჩერებები სახელით ან კოდით, მათი ტიპითა და რუკაზე მდებარეობით.
+examples:
+  - id: rustaveli
+    question:
+      en: Find the stops at Rustaveli.
+      ka: მოძებნე რუსთაველის გაჩერებები.
+    answer:
+      en: "There are two stops named M/S \"Rustaveli\" next to the metro: 814 and 3873. A third stop, Rustaveli Street (3057), is in another part of the city."
+      ka: "რუსთაველის მეტროსთან ორი გაჩერებაა: 814 და 3873. მესამე, რუსთაველის ქუჩა (3057), ქალაქის სხვა ნაწილშია."
+    input:
+      query: Rustaveli
+      limit: 3

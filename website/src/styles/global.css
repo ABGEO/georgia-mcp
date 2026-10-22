@@ -1,0 +1,134 @@
+@import "./tokens.css";
+
+:root {
+  --display: var(--font-display), Georgia, serif;
+  --body: var(--font-body), system-ui, sans-serif;
+  --mono: var(--font-mono), ui-monospace, monospace;
+  --geo: var(--font-georgian), var(--font-body), sans-serif;
+  --u: 4px;
+  --radius: 4px;
+  --step-0: 1.0625rem;
+  --step-1: 1.328rem;
+  --step-2: 1.66rem;
+  --step-3: 2.075rem;
+  --step-4: 2.594rem;
+  --step-5: 3.242rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 var(--step-0) / 1.6 var(--body);
+  -webkit-text-size-adjust: 100%;
+}
+
+html:lang(ka) {
+  font-family: var(--geo);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+:lang(ka) :is(h1, h2, h3) {
+  font-family: var(--geo);
+  font-weight: 600;
+  /* Scales the Georgian letters to the x-height of Fraunces, so a heading keeps its size across the two languages. */
+  font-size-adjust: ex-height 0.482;
+}
+
+:lang(ka) :is(h1, h2, h3) code {
+  font-size-adjust: none;
+}
+
+p {
+  margin: 0;
+  max-width: 64ch;
+}
+
+a {
+  color: var(--wine);
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+code,
+pre {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+
+.label {
+  font: 500 0.72rem / 1.2 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+:lang(ka) .label {
+  font-family: var(--geo);
+  letter-spacing: 0.04em;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.section {
+  display: grid;
+  gap: calc(var(--u) * 8);
+  padding-block: calc(var(--u) * 16);
+}
+
+.section-head {
+  display: grid;
+  gap: calc(var(--u) * 2);
+}
+
+.section-head h2 {
+  font-size: var(--step-4);
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding-block: calc(var(--u) * 12);
+  }
+
+  .section-head h2 {
+    font-size: var(--step-3);
+  }
+}

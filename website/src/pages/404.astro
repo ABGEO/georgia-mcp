@@ -1,0 +1,33 @@
+---
+import Mark from "../components/Mark.astro"
+import { t } from "../i18n"
+import Base from "../layouts/Base.astro"
+
+const copy = t("en").notFound
+---
+
+<Base lang="en" path="/" title={`${copy.title} · Georgia MCP`} description={copy.text} noindex>
+  <div class="wrap lost">
+    <Mark size={72} />
+    <h1>{copy.title}</h1>
+    <p>{copy.text}</p>
+    <a href="/">{copy.home}</a>
+  </div>
+</Base>
+
+<style>
+  .lost {
+    display: grid;
+    justify-items: start;
+    gap: calc(var(--u) * 4);
+    padding-block: calc(var(--u) * 20);
+  }
+
+  .lost :global(.mark) {
+    color: var(--wine);
+  }
+
+  h1 {
+    font-size: var(--step-3);
+  }
+</style>

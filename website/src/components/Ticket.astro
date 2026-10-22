@@ -1,0 +1,149 @@
+---
+import type { CatalogContext, CatalogExample } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+import ContextIcon from "./ContextIcon.astro"
+
+interface Props {
+  lang: Lang
+  tool: string
+  context: CatalogContext
+  example: CatalogExample
+}
+
+const { lang, tool, context, example } = Astro.props
+const copy = t(lang).ticket
+const json = (value: unknown) => JSON.stringify(value, null, 2)
+---
+
+<article class="ticket" data-hue={context.hue}>
+  <div class="main">
+    <p class="question"><span class="label">{copy.asked}</span>{example.question[lang]}</p>
+    <div class="block">
+      <span class="label">{copy.input}</span>
+      <pre lang="en" tabindex="0"><code>{json(example.input)}</code></pre>
+    </div>
+    <div class="block">
+      <span class="label">{copy.output}</span>
+      <pre lang="en" tabindex="0" class="output"><code>{json(example.output)}</code></pre>
+    </div>
+    <div class="meta">
+      <code>{tool}</code>
+    </div>
+  </div>
+  <div class="stub">
+    <ContextIcon name={context.icon} size={26} />
+    <span class="label">{context.name[lang]}</span>
+  </div>
+</article>
+
+<style>
+  .ticket {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 112px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .ticket::before,
+  .ticket::after {
+    content: "";
+    position: absolute;
+    right: 105px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+
+  .ticket::before {
+    top: -8px;
+  }
+
+  .ticket::after {
+    bottom: -8px;
+  }
+
+  .main {
+    display: grid;
+    gap: calc(var(--u) * 4);
+    padding: calc(var(--u) * 6);
+    border-right: 2px dashed var(--line);
+    min-width: 0;
+  }
+
+  .question {
+    display: grid;
+    gap: var(--u);
+    font-size: 1.05rem;
+  }
+
+  .block {
+    display: grid;
+    gap: calc(var(--u) * 2);
+    min-width: 0;
+  }
+
+  pre {
+    margin: 0;
+    padding: calc(var(--u) * 3) calc(var(--u) * 4);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    overflow: auto;
+  }
+
+  .output {
+    max-height: 22rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 2) calc(var(--u) * 4);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .stub {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: var(--u);
+    padding: calc(var(--u) * 4) calc(var(--u) * 2);
+    text-align: center;
+    background: var(--hue-fill);
+    color: var(--hue);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .stub .label {
+    color: inherit;
+    font-weight: 600;
+  }
+
+  @media (max-width: 560px) {
+    .ticket {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ticket::before,
+    .ticket::after {
+      display: none;
+    }
+
+    .main {
+      border-right: 0;
+      border-bottom: 2px dashed var(--line);
+    }
+
+    .stub {
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+  }
+</style>

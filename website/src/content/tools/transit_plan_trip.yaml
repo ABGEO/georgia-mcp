@@ -1,0 +1,20 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: A trip by public transport between two points of Tbilisi, with each walk and each ride.
+  ka: მგზავრობა საზოგადოებრივი ტრანსპორტით თბილისის ორ წერტილს შორის, ყოველი ფეხით სვლითა და გადაადგილებით.
+examples:
+  - id: freedom-to-rustaveli
+    question:
+      en: How do I get from Freedom Square to the Rustaveli metro?
+      ka: როგორ მივიდე თავისუფლების მოედნიდან რუსთაველის მეტრომდე?
+    answer:
+      en: "About 13 minutes: walk 224 metres to the Liberty Square metro station, take the metro one stop to Rustaveli, then walk 210 metres."
+      ka: "დაახლოებით 13 წუთი: გაიარე 224 მეტრი თავისუფლების მოედნის მეტროსადგურამდე, მეტროთი ერთი გაჩერებით მიდი რუსთაველამდე, შემდეგ გაიარე 210 მეტრი."
+    input:
+      from:
+        lat: 41.6939
+        lon: 44.8013
+      to:
+        lat: 41.7032
+        lon: 44.7912

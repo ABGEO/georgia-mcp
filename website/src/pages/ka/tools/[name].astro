@@ -1,0 +1,12 @@
+---
+import type { GetStaticPaths } from "astro"
+
+import { toolPaths } from "../../../lib/catalog"
+import Tool from "../../../views/Tool.astro"
+
+export const getStaticPaths = toolPaths satisfies GetStaticPaths
+
+const { tool, context } = Astro.props
+---
+
+<Tool lang="ka" tool={tool} context={context} />

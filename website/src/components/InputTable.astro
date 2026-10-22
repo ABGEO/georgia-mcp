@@ -1,0 +1,97 @@
+---
+import { inputRows } from "../lib/inputs"
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+
+interface Props {
+  lang: Lang
+  schema: Record<string, unknown>
+}
+
+const { lang, schema } = Astro.props
+const copy = t(lang).tool
+const rows = inputRows(schema)
+---
+
+{
+  rows.length === 0 ? (
+    <p>{copy.noInputs}</p>
+  ) : (
+    <div class="scroll" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">{copy.columns.name}</th>
+            <th scope="col">{copy.columns.type}</th>
+            <th scope="col">{copy.columns.required}</th>
+            <th scope="col">{copy.columns.default}</th>
+            <th scope="col">{copy.columns.description}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr>
+              <th scope="row">
+                <code>{row.name}</code>
+              </th>
+              <td>
+                <code>{row.type}</code>
+              </td>
+              <td>{row.required ? copy.yes : copy.no}</td>
+              <td>{row.default === undefined ? "" : <code>{JSON.stringify(row.default)}</code>}</td>
+              <td lang="en">{row.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+<style>
+  .scroll {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: calc(var(--u) * 3) calc(var(--u) * 4);
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line);
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  thead th {
+    font: 500 0.72rem / 1.2 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  :lang(ka) thead th {
+    font-family: var(--geo);
+    letter-spacing: 0.04em;
+  }
+
+  tbody th {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td:last-child {
+    min-width: 18rem;
+  }
+</style>

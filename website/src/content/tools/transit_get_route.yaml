@@ -1,0 +1,15 @@
+context: transit
+vendors: [ttc]
+summary:
+  en: One route of Tbilisi with each direction and every stop in order.
+  ka: თბილისის ერთი მარშრუტი, ყოველი მიმართულებითა და ყველა გაჩერებით თანმიმდევრობით.
+examples:
+  - id: bus-393
+    question:
+      en: Show me the stops of bus 393.
+      ka: მაჩვენე 393-ე ავტობუსის გაჩერებები.
+    answer:
+      en: "Bus 393 runs between Kvareli Street (Metromsheni) and Baratashvili Street. It has 21 stops towards Baratashvili Street and 23 on the way back."
+      ka: "393-ე ავტობუსი დადის ყვარლის ქუჩასა (მეტრომშენი) და ბარათაშვილის ქუჩას შორის. ბარათაშვილის ქუჩისკენ 21 გაჩერება აქვს, უკან კი 23."
+    input:
+      route: "393"

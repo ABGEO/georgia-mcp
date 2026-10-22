@@ -1,0 +1,43 @@
+---
+interface Props {
+  text: string
+  hue?: "wine" | "butter" | "peach" | "sky" | "lilac"
+  tilt?: number
+}
+
+const { text, hue = "wine", tilt = -3 } = Astro.props
+---
+
+<span class="stamp" data-hue={hue} style={`--tilt: ${tilt}deg`}>{text}</span>
+
+<style>
+  .stamp {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 2px solid var(--hue);
+    border-radius: 2px;
+    color: var(--hue);
+    font: 600 0.8rem / 1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transform: rotate(var(--tilt));
+  }
+
+  :lang(ka) .stamp {
+    font-family: var(--geo);
+    letter-spacing: 0.04em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stamp {
+      animation: press 200ms ease-out 300ms both;
+    }
+
+    @keyframes press {
+      from {
+        transform: rotate(var(--tilt)) scale(1.25);
+        opacity: 0.4;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,1463 @@
+{
+  "fuel_get_prices.premium": {
+    "tool": "fuel_get_prices",
+    "example": "premium",
+    "recordedAt": "2026-10-22T19:00:56.294Z",
+    "output": {
+      "companies": [
+        {
+          "as_of": "2026-10-22T23:00:56.290119+04:00",
+          "company": "connect",
+          "prices": [
+            {
+              "grade": "premium",
+              "price": "4.15",
+              "product": "Premium RON 96",
+              "self_service_price": "3.95",
+              "unit": "litre"
+            }
+          ],
+          "source": "Connect",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:54.798138+04:00",
+          "company": "gulf",
+          "prices": [
+            {
+              "effective_date": "2026-10-19",
+              "grade": "premium",
+              "price": "4.39",
+              "product": "G-Force Premium",
+              "unit": "litre"
+            }
+          ],
+          "source": "Gulf",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:55.017418+04:00",
+          "company": "lukoil",
+          "prices": [
+            {
+              "effective_date": "2026-10-05",
+              "grade": "premium",
+              "price": "4.25",
+              "product": "Premium Avangard",
+              "unit": "litre"
+            }
+          ],
+          "source": "Lukoil",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:54.723022+04:00",
+          "company": "neogas",
+          "missing": [
+            "premium"
+          ],
+          "prices": [],
+          "source": "Neogas",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:55.25243+04:00",
+          "company": "portal",
+          "prices": [
+            {
+              "grade": "premium",
+              "price": "4.19",
+              "product": "PREMIUM",
+              "unit": "litre"
+            }
+          ],
+          "source": "Portal",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:54.934745+04:00",
+          "company": "rompetrol",
+          "prices": [
+            {
+              "grade": "premium",
+              "price": "4.32",
+              "product": "efix Euro Premium",
+              "self_service_price": "4.22",
+              "unit": "litre"
+            }
+          ],
+          "source": "Rompetrol",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:54.692749+04:00",
+          "company": "socar",
+          "prices": [
+            {
+              "grade": "premium",
+              "price": "4.37",
+              "product": "Nano Premium",
+              "unit": "litre"
+            }
+          ],
+          "source": "SOCAR",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:00:54.692759+04:00",
+          "company": "wissol",
+          "prices": [
+            {
+              "effective_date": "2026-10-21",
+              "grade": "premium",
+              "price": "4.39",
+              "product": "Eko Premium",
+              "self_service_price": "4.29",
+              "unit": "litre"
+            }
+          ],
+          "source": "Wissol",
+          "stale": false
+        }
+      ],
+      "meaning": "price: the price in GEL of one unit at a station with an attendant. self_service_price: the price in GEL of one unit at a self-service station of the same company. A product with no self_service_price has none."
+    }
+  },
+  "offers_get_offer.chicago-style": {
+    "tool": "offers_get_offer",
+    "example": "chicago-style",
+    "recordedAt": "2026-10-22T19:00:59.251Z",
+    "output": {
+      "as_of": "2026-10-22T23:00:59.238039+04:00",
+      "offer": {
+        "bank": "bog",
+        "bank_categories": [
+          "Restaurants"
+        ],
+        "benefit": "20% sCool Cashback, max. 100 GEL",
+        "cards": [
+          {
+            "code": "scool_card",
+            "name": "sCool Card"
+          }
+        ],
+        "categories": [
+          "dining"
+        ],
+        "end_date": "2027-01-31",
+        "id": "19503",
+        "kinds": [
+          "cashback"
+        ],
+        "start_date": "2026-10-19",
+        "tiers": [
+          "standard",
+          "premium",
+          "private"
+        ],
+        "title": "Chicago Style",
+        "url": "https://bankofgeorgia.ge/en/offers-hub/details/19503"
+      },
+      "source": "Bank of Georgia",
+      "stale": false,
+      "terms": "From October 19 to January 31 inclusive, sCool Card holders will receive 20% sCool cashback when paying at Chicago Style, up to a total of 100 GEL in sCool points. To benefit from the offer, payment at a Bank of Georgia terminal is required.\n\nChicago Style is an American, specifically traditional Chicago-style pizza concept restaurant, offering customers the famous deep-dish pizza.\n\nAddress\n11b Bakhtrioni St."
+    }
+  },
+  "offers_search_offers.dining-cashback": {
+    "tool": "offers_search_offers",
+    "example": "dining-cashback",
+    "recordedAt": "2026-10-22T19:01:12.278Z",
+    "output": {
+      "banks": [
+        {
+          "as_of": "2026-10-22T23:00:59.238039+04:00",
+          "bank": "bog",
+          "next_offset": 2,
+          "offers": [
+            {
+              "bank": "bog",
+              "bank_categories": [
+                "Restaurants"
+              ],
+              "benefit": "20% Cashback, Unlimited",
+              "cards": [
+                {
+                  "code": "solo",
+                  "name": "SOLO"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-10-26",
+              "id": "19046",
+              "kinds": [
+                "cashback"
+              ],
+              "start_date": "2026-09-26",
+              "tiers": [
+                "premium",
+                "private"
+              ],
+              "title": "Coffee Academy",
+              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19046"
+            },
+            {
+              "bank": "bog",
+              "bank_categories": [
+                "Restaurants"
+              ],
+              "benefit": "20% Cashback, max. 100 GEL",
+              "cards": [
+                {
+                  "code": "student_card",
+                  "name": "Student Card"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-10-28",
+              "id": "19099",
+              "kinds": [
+                "cashback"
+              ],
+              "start_date": "2026-09-28",
+              "tiers": [
+                "standard",
+                "premium",
+                "private"
+              ],
+              "title": "Fike",
+              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19099"
+            }
+          ],
+          "source": "Bank of Georgia",
+          "stale": false,
+          "total": 24
+        },
+        {
+          "as_of": "2026-10-22T23:00:59.252532+04:00",
+          "bank": "liberty",
+          "next_offset": 2,
+          "offers": [
+            {
+              "bank": "liberty",
+              "bank_categories": [
+                "Cafe / Restaurant"
+              ],
+              "benefit": "7% Cashback",
+              "cards": [
+                {
+                  "code": "mastercard",
+                  "name": "Mastercard"
+                },
+                {
+                  "code": "visa",
+                  "name": "Visa"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-12-31",
+              "id": "157",
+              "kinds": [
+                "cashback"
+              ],
+              "tiers": [
+                "premium"
+              ],
+              "title": "Badagi",
+              "url": "https://studioliberty.ge/en/studio-lifestyle/offers/details/157"
+            },
+            {
+              "bank": "liberty",
+              "bank_categories": [
+                "Cafe / Restaurant"
+              ],
+              "benefit": "5% Cashback",
+              "cards": [
+                {
+                  "code": "mastercard",
+                  "name": "Mastercard"
+                },
+                {
+                  "code": "visa",
+                  "name": "Visa"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-12-31",
+              "id": "70",
+              "kinds": [
+                "cashback"
+              ],
+              "tiers": [
+                "premium"
+              ],
+              "title": "MEAMA",
+              "url": "https://studioliberty.ge/en/studio-lifestyle/offers/details/70"
+            }
+          ],
+          "source": "Liberty Bank",
+          "stale": false,
+          "total": 5
+        },
+        {
+          "as_of": "2026-10-22T23:01:06.461198+04:00",
+          "bank": "tbc",
+          "next_offset": 2,
+          "offers": [
+            {
+              "bank": "tbc",
+              "bank_categories": [
+                "Cafe and Restaurant"
+              ],
+              "benefit": "From September 15th to October 31th, pay in KFC and get 20% cashback instantly, with the maximum amount of 30 GEL.",
+              "cards": [
+                {
+                  "code": "pupil_card",
+                  "name": "Pupil's Card"
+                },
+                {
+                  "code": "tbc_card",
+                  "name": "TBC Card"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-10-31",
+              "id": "4sbwhMQBPXIfaawK05yb15",
+              "kinds": [
+                "cashback"
+              ],
+              "partner": "KFC",
+              "tiers": [
+                "youth"
+              ],
+              "title": "KFC",
+              "url": "https://tbcbank.ge/en/offers/all-offers/kfc-qeshbeqi"
+            },
+            {
+              "bank": "tbc",
+              "bank_categories": [
+                "Cafe and Restaurant"
+              ],
+              "benefit": "As part of the TBC Concept offer, visit the Marjanishvili branch of Coffeeshop Company and receive an instant 10% cashback when paying with any TBC Concept debit card, up to a maximum of GEL 100 per day.",
+              "cards": [
+                {
+                  "code": "concept_card",
+                  "name": "TBC Concept Card"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-12-31",
+              "id": "1sBsejrul7B0jirmpUPkiC",
+              "kinds": [
+                "cashback"
+              ],
+              "partner": "Coffeeshop Company",
+              "tiers": [
+                "premium"
+              ],
+              "title": "Coffeeshop Company",
+              "url": "https://tbcconcept.ge/en/offers/coffeeshop-company-qeshbeqi"
+            }
+          ],
+          "source": "TBC Bank",
+          "stale": false,
+          "total": 29
+        }
+      ],
+      "meaning": "benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students."
+    }
+  },
+  "rates_get_commercial_rates.usd": {
+    "tool": "rates_get_commercial_rates",
+    "example": "usd",
+    "recordedAt": "2026-10-22T19:01:12.749Z",
+    "output": {
+      "banks": [
+        {
+          "as_of": "2026-10-22T23:01:12.567691+04:00",
+          "bank": "bog",
+          "rates": [
+            {
+              "buy": "2.565",
+              "currency": "USD",
+              "sell": "2.629"
+            }
+          ],
+          "source": "Bank of Georgia",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:01:12.445007+04:00",
+          "bank": "kursi",
+          "rates": [
+            {
+              "buy": "2.5942",
+              "currency": "USD",
+              "sell": "2.6022"
+            }
+          ],
+          "source": "Kursi.ge",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:01:12.412756+04:00",
+          "bank": "liberty",
+          "rates": [
+            {
+              "buy": "2.548",
+              "currency": "USD",
+              "sell": "2.648"
+            }
+          ],
+          "source": "Liberty Bank",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:01:12.451153+04:00",
+          "bank": "rico",
+          "rates": [
+            {
+              "buy": "2.596",
+              "currency": "USD",
+              "sell": "2.6"
+            }
+          ],
+          "source": "Rico Credit",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:01:12.747938+04:00",
+          "bank": "tbc",
+          "rates": [
+            {
+              "buy": "2.565",
+              "currency": "USD",
+              "sell": "2.627"
+            }
+          ],
+          "source": "TBC Bank",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-22T23:01:12.361918+04:00",
+          "bank": "terabank",
+          "rates": [
+            {
+              "buy": "2.596",
+              "currency": "USD",
+              "sell": "2.601"
+            }
+          ],
+          "source": "Terabank",
+          "stale": false
+        }
+      ],
+      "meaning": "buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it."
+    }
+  },
+  "rates_get_official_rates.today": {
+    "tool": "rates_get_official_rates",
+    "example": "today",
+    "recordedAt": "2026-10-22T19:01:12.831Z",
+    "output": {
+      "as_of": "2026-10-21T17:01:13.285+04:00",
+      "rates": [
+        {
+          "change": "0.0036",
+          "currency": "EUR",
+          "name": "Euro",
+          "quantity": 1,
+          "rate": "2.9163",
+          "rate_per_unit": "2.9163",
+          "valid_from": "2026-10-22"
+        },
+        {
+          "change": "-0.0002",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.5976",
+          "rate_per_unit": "2.5976",
+          "valid_from": "2026-10-22"
+        }
+      ],
+      "read_at": "2026-10-22T23:01:12.829317+04:00",
+      "source": "National Bank of Georgia",
+      "stale": false,
+      "valid_from": "2026-10-22"
+    }
+  },
+  "rates_list_official_history.october": {
+    "tool": "rates_list_official_history",
+    "example": "october",
+    "recordedAt": "2026-10-22T19:01:15.178Z",
+    "output": {
+      "as_of": "2026-10-15T17:01:15.076+04:00",
+      "currency": "USD",
+      "name": "US Dollar",
+      "points": [
+        {
+          "change": "-0.0004",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6047",
+          "rate_per_unit": "2.6047",
+          "valid_from": "2026-10-01"
+        },
+        {
+          "change": "-0.0005",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6042",
+          "rate_per_unit": "2.6042",
+          "valid_from": "2026-10-02"
+        },
+        {
+          "change": "-0.0003",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6039",
+          "rate_per_unit": "2.6039",
+          "valid_from": "2026-10-03"
+        },
+        {
+          "change": "-0.0007",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6032",
+          "rate_per_unit": "2.6032",
+          "valid_from": "2026-10-06"
+        },
+        {
+          "change": "-0.0007",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6025",
+          "rate_per_unit": "2.6025",
+          "valid_from": "2026-10-07"
+        },
+        {
+          "change": "-0.0004",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6021",
+          "rate_per_unit": "2.6021",
+          "valid_from": "2026-10-08"
+        },
+        {
+          "change": "-0.0002",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6019",
+          "rate_per_unit": "2.6019",
+          "valid_from": "2026-10-09"
+        },
+        {
+          "change": "-0.0014",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.6005",
+          "rate_per_unit": "2.6005",
+          "valid_from": "2026-10-10"
+        },
+        {
+          "change": "-0.0011",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.5994",
+          "rate_per_unit": "2.5994",
+          "valid_from": "2026-10-13"
+        },
+        {
+          "change": "-0.0005",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.5989",
+          "rate_per_unit": "2.5989",
+          "valid_from": "2026-10-14"
+        },
+        {
+          "change": "-0.0002",
+          "currency": "USD",
+          "name": "US Dollar",
+          "quantity": 1,
+          "rate": "2.5987",
+          "rate_per_unit": "2.5987",
+          "valid_from": "2026-10-16"
+        }
+      ],
+      "read_at": "2026-10-22T23:01:12.860472+04:00",
+      "source": "National Bank of Georgia",
+      "stale": false
+    }
+  },
+  "transit_get_route.bus-393": {
+    "tool": "transit_get_route",
+    "example": "bus-393",
+    "recordedAt": "2026-10-22T19:01:16.954Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:16+04:00",
+      "directions": [
+        {
+          "direction": 1,
+          "headsign": "Baratashvili St",
+          "stops": [
+            {
+              "code": "1879",
+              "id": "1:1879",
+              "kind": "bus",
+              "lat": 41.698567,
+              "lon": 44.840237,
+              "name": "Giorgi Ghviniashvili St #27"
+            },
+            {
+              "code": "1880",
+              "id": "1:1880",
+              "kind": "bus",
+              "lat": 41.697652,
+              "lon": 44.840977,
+              "name": "Kvareli Street #114"
+            },
+            {
+              "code": "1881",
+              "id": "1:1881",
+              "kind": "bus",
+              "lat": 41.696226,
+              "lon": 44.842576,
+              "name": "Kvareli Street #98"
+            },
+            {
+              "code": "1882",
+              "id": "1:1882",
+              "kind": "bus",
+              "lat": 41.694902,
+              "lon": 44.844097,
+              "name": "Kvareli Square"
+            },
+            {
+              "code": "1883",
+              "id": "1:1883",
+              "kind": "bus",
+              "lat": 41.693887,
+              "lon": 44.846256,
+              "name": "Kakabeti St #78"
+            },
+            {
+              "code": "1884",
+              "id": "1:1884",
+              "kind": "bus",
+              "lat": 41.6918,
+              "lon": 44.848576,
+              "name": "Sergi Durmishidze Street"
+            },
+            {
+              "code": "1885",
+              "id": "1:1885",
+              "kind": "bus",
+              "lat": 41.6903,
+              "lon": 44.850279,
+              "name": "Atanase Kharabadze Street"
+            },
+            {
+              "code": "1886",
+              "id": "1:1886",
+              "kind": "bus",
+              "lat": 41.688577,
+              "lon": 44.851599,
+              "name": "Public School #74"
+            },
+            {
+              "code": "2751",
+              "id": "1:2751",
+              "kind": "bus",
+              "lat": 41.688177,
+              "lon": 44.849244,
+              "name": "Tsalenjikha Street"
+            },
+            {
+              "code": "3028",
+              "id": "1:3028",
+              "kind": "bus",
+              "lat": 41.688361,
+              "lon": 44.84668,
+              "name": "Giorgi Shervashidze Street"
+            },
+            {
+              "code": "1017",
+              "id": "1:1017",
+              "kind": "bus",
+              "lat": 41.686728,
+              "lon": 44.841467,
+              "name": "M/S Isani"
+            },
+            {
+              "code": "4584",
+              "id": "1:4584",
+              "kind": "bus",
+              "lat": 41.686468,
+              "lon": 44.83992,
+              "name": "M/S Isani"
+            },
+            {
+              "code": "1016",
+              "id": "1:1016",
+              "kind": "bus",
+              "lat": 41.686883,
+              "lon": 44.836372,
+              "name": "Public School #87"
+            },
+            {
+              "code": "1014",
+              "id": "1:1014",
+              "kind": "bus",
+              "lat": 41.687166,
+              "lon": 44.833969,
+              "name": "Lech Kaczynski"
+            },
+            {
+              "code": "2123",
+              "id": "1:2123",
+              "kind": "bus",
+              "lat": 41.687475,
+              "lon": 44.830412,
+              "name": "Public School #96"
+            },
+            {
+              "code": "4351",
+              "id": "1:4351",
+              "kind": "bus",
+              "lat": 41.687473,
+              "lon": 44.8274,
+              "name": "M/S \"300 Aragveli\""
+            },
+            {
+              "code": "4348",
+              "id": "1:4348",
+              "kind": "bus",
+              "lat": 41.687502,
+              "lon": 44.824994,
+              "name": "Public School #89"
+            },
+            {
+              "code": "4324",
+              "id": "1:4324",
+              "kind": "bus",
+              "lat": 41.689276,
+              "lon": 44.820461,
+              "name": "Public School #202 the Visually Impaired"
+            },
+            {
+              "code": "4342",
+              "id": "1:4342",
+              "kind": "bus",
+              "lat": 41.692179,
+              "lon": 44.81493,
+              "name": "M/S \"Avlabari\""
+            },
+            {
+              "code": "3983",
+              "id": "1:3983",
+              "kind": "bus",
+              "lat": 41.696689,
+              "lon": 44.805062,
+              "name": "Nikoloz Baratashvili Street"
+            },
+            {
+              "code": "851",
+              "id": "1:851",
+              "kind": "bus",
+              "lat": 41.69638,
+              "lon": 44.804341,
+              "name": "Nikoloz Baratashvili Street"
+            }
+          ]
+        },
+        {
+          "direction": 0,
+          "headsign": "Kvareli Street (Metromsheni)",
+          "stops": [
+            {
+              "code": "851",
+              "id": "1:851",
+              "kind": "bus",
+              "lat": 41.69638,
+              "lon": 44.804341,
+              "name": "Nikoloz Baratashvili Street"
+            },
+            {
+              "code": "4354",
+              "id": "1:4354",
+              "kind": "bus",
+              "lat": 41.696619,
+              "lon": 44.809546,
+              "name": "Baratashvii Bridge"
+            },
+            {
+              "code": "3703",
+              "id": "1:3703",
+              "kind": "bus",
+              "lat": 41.692443,
+              "lon": 44.812331,
+              "name": "Wine Rise"
+            },
+            {
+              "code": "4320",
+              "id": "1:4320",
+              "kind": "bus",
+              "lat": 41.691508,
+              "lon": 44.815453,
+              "name": "M/S \"Avlabari\""
+            },
+            {
+              "code": "826",
+              "id": "1:826",
+              "kind": "bus",
+              "lat": 41.689236,
+              "lon": 44.820131,
+              "name": "Public School #202 the Visually Impaired"
+            },
+            {
+              "code": "4349",
+              "id": "1:4349",
+              "kind": "bus",
+              "lat": 41.687303,
+              "lon": 44.824616,
+              "name": "Public School #89"
+            },
+            {
+              "code": "831",
+              "id": "1:831",
+              "kind": "bus",
+              "lat": 41.687311,
+              "lon": 44.827032,
+              "name": "M/S \"300 Aragveli\""
+            },
+            {
+              "code": "4353",
+              "id": "1:4353",
+              "kind": "bus",
+              "lat": 41.687297,
+              "lon": 44.830412,
+              "name": "Public School #96"
+            },
+            {
+              "code": "1063",
+              "id": "1:1063",
+              "kind": "bus",
+              "lat": 41.686997,
+              "lon": 44.833679,
+              "name": "Lech Kaczynski"
+            },
+            {
+              "code": "1013",
+              "id": "1:1013",
+              "kind": "bus",
+              "lat": 41.686751,
+              "lon": 44.83576,
+              "name": "Public School #87"
+            },
+            {
+              "code": "2601",
+              "id": "1:2601",
+              "kind": "bus",
+              "lat": 41.686724,
+              "lon": 44.841548,
+              "name": "M/S Isani"
+            },
+            {
+              "code": "3198",
+              "id": "1:3198",
+              "kind": "bus",
+              "lat": 41.68791,
+              "lon": 44.846409,
+              "name": "Giorgi Shervashidze Street"
+            },
+            {
+              "code": "3197",
+              "id": "1:3197",
+              "kind": "bus",
+              "lat": 41.687676,
+              "lon": 44.849394,
+              "name": "Tsalenjikha Street"
+            },
+            {
+              "code": "2750",
+              "id": "1:2750",
+              "kind": "bus",
+              "lat": 41.687858,
+              "lon": 44.852647,
+              "name": "Metromsheni Underpass"
+            },
+            {
+              "code": "1871",
+              "id": "1:1871",
+              "kind": "bus",
+              "lat": 41.688445,
+              "lon": 44.851755,
+              "name": "Public School #74"
+            },
+            {
+              "code": "1872",
+              "id": "1:1872",
+              "kind": "bus",
+              "lat": 41.690262,
+              "lon": 44.850461,
+              "name": "Atanase Kharabadze Street"
+            },
+            {
+              "code": "1873",
+              "id": "1:1873",
+              "kind": "bus",
+              "lat": 41.692054,
+              "lon": 44.848434,
+              "name": "Sergi Durmishidze Street"
+            },
+            {
+              "code": "1874",
+              "id": "1:1874",
+              "kind": "bus",
+              "lat": 41.694005,
+              "lon": 44.846275,
+              "name": "Kakabeti St #73"
+            },
+            {
+              "code": "1875",
+              "id": "1:1875",
+              "kind": "bus",
+              "lat": 41.694938,
+              "lon": 44.845108,
+              "name": "Kvareli Square"
+            },
+            {
+              "code": "4034",
+              "id": "1:4034",
+              "kind": "bus",
+              "lat": 41.696957,
+              "lon": 44.845333,
+              "name": "Meskheti street"
+            },
+            {
+              "code": "4035",
+              "id": "1:4035",
+              "kind": "bus",
+              "lat": 41.698393,
+              "lon": 44.84506,
+              "name": "Mtisdziri Street"
+            },
+            {
+              "code": "1878",
+              "id": "1:1878",
+              "kind": "bus",
+              "lat": 41.698421,
+              "lon": 44.842541,
+              "name": "Giorgi Ghviniashvili St #11"
+            },
+            {
+              "code": "1879",
+              "id": "1:1879",
+              "kind": "bus",
+              "lat": 41.698567,
+              "lon": 44.840237,
+              "name": "Giorgi Ghviniashvili St #27"
+            }
+          ]
+        }
+      ],
+      "route": {
+        "id": "1:R97730",
+        "kind": "bus",
+        "name": "Kvareli Street (Metromsheni) - Baratashvili St",
+        "number": "393"
+      },
+      "source": "TTC",
+      "stale": false
+    }
+  },
+  "transit_get_timetable.kvareli-square": {
+    "tool": "transit_get_timetable",
+    "example": "kvareli-square",
+    "recordedAt": "2026-10-22T19:01:17.644Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:17+04:00",
+      "date": "2026-10-22",
+      "direction": 1,
+      "headsign": "Baratashvili St",
+      "route": {
+        "id": "1:R97730",
+        "kind": "bus",
+        "name": "Kvareli Street (Metromsheni) - Baratashvili St",
+        "number": "393"
+      },
+      "source": "TTC",
+      "stale": false,
+      "stop": {
+        "code": "1882",
+        "id": "1:1882",
+        "kind": "bus",
+        "lat": 41.694902,
+        "lon": 44.844097,
+        "name": "Kvareli Square"
+      },
+      "times": [
+        "07:16",
+        "07:31",
+        "07:46",
+        "08:01",
+        "08:16",
+        "08:31",
+        "08:46",
+        "09:01",
+        "09:16",
+        "09:31",
+        "09:46",
+        "10:01",
+        "10:16",
+        "10:31",
+        "10:46",
+        "11:01",
+        "11:16",
+        "11:31",
+        "11:46",
+        "12:01",
+        "12:31",
+        "12:46",
+        "13:01",
+        "13:16",
+        "13:46",
+        "14:01",
+        "14:16",
+        "14:31",
+        "14:46",
+        "15:01",
+        "15:16",
+        "15:31",
+        "15:46",
+        "16:01",
+        "16:16",
+        "16:31",
+        "16:46",
+        "17:01",
+        "17:16",
+        "17:31",
+        "17:46",
+        "18:01",
+        "18:16",
+        "18:31",
+        "18:46",
+        "19:01",
+        "19:16",
+        "19:31",
+        "19:46",
+        "20:01",
+        "20:16",
+        "20:31",
+        "20:46",
+        "21:01",
+        "21:16",
+        "21:31",
+        "22:01",
+        "22:31",
+        "23:01"
+      ]
+    }
+  },
+  "transit_list_arrivals.rustaveli-metro": {
+    "tool": "transit_list_arrivals",
+    "example": "rustaveli-metro",
+    "recordedAt": "2026-10-22T19:01:17.698Z",
+    "output": {
+      "arrivals": [],
+      "as_of": "2026-10-22T23:01:17+04:00",
+      "note": "No vehicle is expected at this stop now.",
+      "source": "TTC",
+      "stop": {
+        "code": "814",
+        "id": "1:814",
+        "kind": "bus",
+        "lat": 41.703223,
+        "lon": 44.791209,
+        "name": "M/S \"Rustaveli\""
+      }
+    }
+  },
+  "transit_list_nearby_stops.freedom-square": {
+    "tool": "transit_list_nearby_stops",
+    "example": "freedom-square",
+    "recordedAt": "2026-10-22T19:01:17.700Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:16+04:00",
+      "source": "TTC",
+      "stale": false,
+      "stops": [
+        {
+          "distance_m": 26,
+          "stop": {
+            "code": "822",
+            "id": "1:822",
+            "kind": "bus",
+            "lat": 41.694033,
+            "lon": 44.801559,
+            "name": "Freedom Square"
+          }
+        },
+        {
+          "distance_m": 70,
+          "stop": {
+            "code": "3894",
+            "id": "1:3894",
+            "kind": "bus",
+            "lat": 41.693715,
+            "lon": 44.802107,
+            "name": "Freedom Square"
+          }
+        },
+        {
+          "distance_m": 139,
+          "stop": {
+            "code": "4675",
+            "id": "1:4675",
+            "kind": "bus",
+            "lat": 41.693068,
+            "lon": 44.802552,
+            "name": "Freedom Square"
+          }
+        },
+        {
+          "distance_m": 144,
+          "stop": {
+            "code": "3639",
+            "id": "1:3639",
+            "kind": "bus",
+            "lat": 41.692739,
+            "lon": 44.802056,
+            "name": "Freedom Square"
+          }
+        },
+        {
+          "distance_m": 168,
+          "stop": {
+            "id": "1:metro_1_11",
+            "kind": "metro",
+            "lat": 41.695003,
+            "lon": 44.799919,
+            "name": "M/S Liberty Square"
+          }
+        }
+      ]
+    }
+  },
+  "transit_plan_trip.freedom-to-rustaveli": {
+    "tool": "transit_plan_trip",
+    "example": "freedom-to-rustaveli",
+    "recordedAt": "2026-10-22T19:01:18.113Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:18+04:00",
+      "itineraries": [
+        {
+          "duration_minutes": 13,
+          "end": "2026-10-22T23:18:37+04:00",
+          "legs": [
+            {
+              "distance_m": 224,
+              "end": "2026-10-22T23:11:17+04:00",
+              "from": {
+                "lat": 41.6939,
+                "lon": 44.8013,
+                "name": "Origin"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:06:07+04:00",
+              "to": {
+                "lat": 41.695003,
+                "lon": 44.799919,
+                "name": "M/S Liberty Square",
+                "stop_id": "1:metro_1_11"
+              }
+            },
+            {
+              "distance_m": 1328,
+              "end": "2026-10-22T23:13:43+04:00",
+              "from": {
+                "lat": 41.695003,
+                "lon": 44.799919,
+                "name": "M/S Liberty Square",
+                "stop_id": "1:metro_1_11"
+              },
+              "kind": "metro",
+              "route_name": "M/S Akhmeteli - M/S Varketili",
+              "route_number": "1",
+              "start": "2026-10-22T23:11:17+04:00",
+              "stops": 1,
+              "to": {
+                "lat": 41.704138,
+                "lon": 44.789613,
+                "name": "M/S Rustaveli",
+                "stop_id": "1:metro_1_10"
+              }
+            },
+            {
+              "distance_m": 210,
+              "end": "2026-10-22T23:18:37+04:00",
+              "from": {
+                "lat": 41.704138,
+                "lon": 44.789613,
+                "name": "M/S Rustaveli",
+                "stop_id": "1:metro_1_10"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:13:43+04:00",
+              "to": {
+                "lat": 41.7032,
+                "lon": 44.7912,
+                "name": "Destination"
+              }
+            }
+          ],
+          "start": "2026-10-22T23:06:07+04:00",
+          "transfers": 0,
+          "walk_m": 434
+        },
+        {
+          "duration_minutes": 17,
+          "end": "2026-10-22T23:20:06+04:00",
+          "legs": [
+            {
+              "distance_m": 58,
+              "end": "2026-10-22T23:04:31+04:00",
+              "from": {
+                "lat": 41.6939,
+                "lon": 44.8013,
+                "name": "Origin"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:03:38+04:00",
+              "to": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              }
+            },
+            {
+              "distance_m": 3947,
+              "end": "2026-10-22T23:15:23+04:00",
+              "from": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              },
+              "kind": "bus",
+              "route_name": "Kvemo Ponichala Settlement - Vake-Bagebi",
+              "route_number": "345",
+              "start": "2026-10-22T23:04:31+04:00",
+              "stops": 2,
+              "to": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              }
+            },
+            {
+              "distance_m": 335,
+              "end": "2026-10-22T23:20:06+04:00",
+              "from": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:15:23+04:00",
+              "to": {
+                "lat": 41.7032,
+                "lon": 44.7912,
+                "name": "Destination"
+              }
+            }
+          ],
+          "start": "2026-10-22T23:03:38+04:00",
+          "transfers": 0,
+          "walk_m": 393
+        },
+        {
+          "duration_minutes": 17,
+          "end": "2026-10-22T23:21:25+04:00",
+          "legs": [
+            {
+              "distance_m": 58,
+              "end": "2026-10-22T23:05:41+04:00",
+              "from": {
+                "lat": 41.6939,
+                "lon": 44.8013,
+                "name": "Origin"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:04:48+04:00",
+              "to": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              }
+            },
+            {
+              "distance_m": 3947,
+              "end": "2026-10-22T23:16:42+04:00",
+              "from": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              },
+              "kind": "bus",
+              "route_name": "Station Square - Airport",
+              "route_number": "337",
+              "start": "2026-10-22T23:05:41+04:00",
+              "stops": 2,
+              "to": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              }
+            },
+            {
+              "distance_m": 335,
+              "end": "2026-10-22T23:21:25+04:00",
+              "from": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              },
+              "kind": "walk",
+              "start": "2026-10-22T23:16:42+04:00",
+              "to": {
+                "lat": 41.7032,
+                "lon": 44.7912,
+                "name": "Destination"
+              }
+            }
+          ],
+          "start": "2026-10-22T23:04:48+04:00",
+          "transfers": 0,
+          "walk_m": 393
+        }
+      ],
+      "source": "TTC"
+    }
+  },
+  "transit_search_places.freedom-square": {
+    "tool": "transit_search_places",
+    "example": "freedom-square",
+    "recordedAt": "2026-10-22T19:01:18.203Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:18+04:00",
+      "places": [
+        {
+          "district": "Sololaki",
+          "lat": 41.6938707,
+          "lon": 44.8013443,
+          "name": "Freedom Square"
+        },
+        {
+          "district": "Mtatsminda District",
+          "lat": 41.69351655,
+          "lon": 44.80153523441645,
+          "name": "Freedom Square"
+        }
+      ],
+      "source": "TTC, from OpenStreetMap",
+      "stale": false
+    }
+  },
+  "transit_search_routes.baratashvili": {
+    "tool": "transit_search_routes",
+    "example": "baratashvili",
+    "recordedAt": "2026-10-22T19:01:18.205Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:15+04:00",
+      "routes": [
+        {
+          "id": "1:R98445",
+          "kind": "bus",
+          "name": "Baratashvili St - Kiketi",
+          "number": "316"
+        },
+        {
+          "id": "1:R97493",
+          "kind": "bus",
+          "name": "Baratashvili St - Politkovskaya St",
+          "number": "326"
+        },
+        {
+          "id": "1:R98389",
+          "kind": "bus",
+          "name": "Baratashvili St - Saburtalo-Vake",
+          "number": "397"
+        }
+      ],
+      "source": "TTC",
+      "stale": false
+    }
+  },
+  "transit_search_stops.rustaveli": {
+    "tool": "transit_search_stops",
+    "example": "rustaveli",
+    "recordedAt": "2026-10-22T19:01:18.210Z",
+    "output": {
+      "as_of": "2026-10-22T23:01:16+04:00",
+      "source": "TTC",
+      "stale": false,
+      "stops": [
+        {
+          "code": "3057",
+          "id": "1:3057",
+          "kind": "bus",
+          "lat": 41.695515,
+          "lon": 44.697313,
+          "name": "Rustaveli Street"
+        },
+        {
+          "code": "3873",
+          "id": "1:3873",
+          "kind": "bus",
+          "lat": 41.704243,
+          "lon": 44.791405,
+          "name": "M/S \"Rustaveli\""
+        },
+        {
+          "code": "814",
+          "id": "1:814",
+          "kind": "bus",
+          "lat": 41.703223,
+          "lon": 44.791209,
+          "name": "M/S \"Rustaveli\""
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "georgia-mcp-website",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "astro check && oxlint",
+    "test": "astro build && vitest run && playwright test",
+    "refresh": "node --experimental-strip-types scripts/refresh.ts",
+    "og": "astro build && node --experimental-strip-types scripts/og.ts"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "@lucide/astro": "1.60.0",
+    "ajv": "8.20.0",
+    "astro": "7.4.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.11",
+    "@axe-core/playwright": "4.14.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "node-html-parser": "9.0.4",
+    "oxlint": "1.89.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5",
+    "yaml": "2.9.1"
+  }
+}

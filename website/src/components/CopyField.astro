@@ -1,0 +1,86 @@
+---
+import type { Lang } from "../lib/schemas"
+import { t } from "../i18n"
+
+interface Props {
+  lang: Lang
+  id: string
+  value: string
+  label?: string
+}
+
+const { lang, id, value, label } = Astro.props
+const copy = t(lang).install
+---
+
+<div class="copy-field" data-copy-field data-copied={copy.copied} data-fallback={copy.fallback}>
+  <label class="label" for={id}>{label ?? copy.address}</label>
+  <div class="row">
+    <input id={id} type="text" value={value} readonly lang="en" spellcheck="false" />
+    <button type="button" data-copy>{copy.copy}</button>
+  </div>
+  <p class="status" aria-live="polite"></p>
+</div>
+
+<script>
+  for (const field of document.querySelectorAll<HTMLElement>("[data-copy-field]")) {
+    const input = field.querySelector("input")
+    const button = field.querySelector<HTMLButtonElement>("[data-copy]")
+    const status = field.querySelector(".status")
+    if (!input || !button || !status) continue
+
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(input.value)
+        status.textContent = field.dataset.copied ?? ""
+      } catch {
+        input.focus()
+        input.select()
+        status.textContent = field.dataset.fallback ?? ""
+      }
+    })
+  }
+</script>
+
+<style>
+  .copy-field {
+    display: grid;
+    gap: calc(var(--u) * 2);
+  }
+
+  .row {
+    display: flex;
+    gap: calc(var(--u) * 2);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: calc(var(--u) * 2.5) calc(var(--u) * 3);
+    font: 500 0.88rem var(--mono);
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  button {
+    padding: calc(var(--u) * 2.5) calc(var(--u) * 4);
+    font: 600 0.9rem var(--body);
+    color: var(--paper);
+    background: var(--wine);
+    border: 1px solid var(--wine);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  :lang(ka) button {
+    font-family: var(--geo);
+  }
+
+  .status {
+    min-height: 1.2em;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>
