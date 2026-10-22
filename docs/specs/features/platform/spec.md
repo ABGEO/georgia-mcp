@@ -319,7 +319,7 @@ A context passes the client to a vendor client with `vendorhttp.WithHTTPClient` 
 | `build/package/Dockerfile` | Stage `build`: `golang:1.27.2`, `COPY . .`, `CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp` with cache mounts for the module cache and the build cache (`NBGRATE-DD-010`). Stage final: `gcr.io/distroless/static-debian13:nonroot`, the labels of `BLD-005` from `ARG VERSION=dev` and `ARG REVISION=unknown`, `EXPOSE 8080`, `ENTRYPOINT ["/georgia-mcp"]`, `CMD ["serve"]`. |
 | `build/package/Dockerfile.dockerignore` | `.env`, `bin/`, `dist/`, `docs/specs/`. It keeps `.git` (`BLD-005`). |
 | `deployments/compose.yaml` | Service `georgia-mcp`: builds `..` with `build/package/Dockerfile`, `env_file: ../.env` with `required: false`, port `8080:8080`. |
-| `Taskfile.yml`     | Tasks `lint`, `test`, `build`, `vuln`: take `MODULE`, default `.`, and run in that directory. `release-check`: the build with `GOWORK=off` and `vuln` (`BLD-003`). `run`: `go run ./cmd/georgia-mcp serve`. `compose-up`, `compose-start`, `compose-stop`, `compose-down`: the compose file. `build-image`: the image with its build arguments. |
+| `Taskfile.yml`     | Tasks `lint`, `test`, `build`, `vuln`: take `MODULE`, default `.`, and run in that directory. `release-check`: the build with `GOWORK=off` and `vuln` (`BLD-003`). `run`: `go run ./cmd/georgia-mcp serve`. `compose:up`, `compose:start`, `compose:stop`, `compose:down`: the compose file. `image`: the image with its build arguments. `website:dev`, `website:lint`, `website:test`, `website:build`, `website:refresh`, `website:image`: the commands of `website/` (`PLATFORM-DD-009`). |
 | `test/e2e/`        | The tests that build and start the binary: `PLATFORM-SC-029`, `PLATFORM-SC-031`, `PLATFORM-SC-032`. |
 
 ### 4.2 Domain model
@@ -495,8 +495,12 @@ the vendor client still ends the load (`RSL-001`).
 ### `PLATFORM-DD-009`
 
 **Realizes:** `PLATFORM-FR-024`
-**Decision:** `Taskfile.yml` holds the commands of `BLD-001`.
-**Rationale:** A task has a directory, so one task serves every module of `go.work`.
+**Decision:** `Taskfile.yml` holds the commands of `BLD-001`. The tasks of the website
+carry the prefix `website:`: `dev`, `lint`, `test`, `build`, `refresh`, and `image`. Each
+one, except `image`, first checks the version of Node against `website/.nvmrc`.
+**Rationale:** A task has a directory, so one task serves every module of `go.work`. The
+website runs pnpm, not Go, so its tasks have names of their own. Task cannot switch the
+version of Node, so a check gives the reason before pnpm fails.
 **Alternatives:** A Makefile, with a `cd` in each recipe.
 
 ### `PLATFORM-DD-010`

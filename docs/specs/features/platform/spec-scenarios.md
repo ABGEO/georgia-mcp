@@ -373,7 +373,7 @@ limit of 8 bytes.
 **Verifies:** `PLATFORM-FR-022`
 **Layer:** manual
 
-**Given** `task build-image`.
+**Given** `task image`.
 **When** the owner runs the image with port 8080 published.
 **Then** `GET /readyz` answers 200, the process runs as the user `nonroot`, and the image
 labels hold the version and the commit.
@@ -384,7 +384,7 @@ labels hold the version and the commit.
 **Layer:** manual
 
 **Given** a `.env` copied from `configs/.env.example`.
-**When** the owner runs `task compose-up`.
+**When** the owner runs `task compose:up`.
 **Then** `GET http://localhost:8080/readyz` answers 200.
 
 ### `PLATFORM-SC-028`
@@ -401,7 +401,7 @@ labels hold the version and the commit.
 **Verifies:** `PLATFORM-NFR-003`
 **Layer:** manual
 
-**Given** `task build-image`.
+**Given** `task image`.
 **When** the owner reads the size with `docker image inspect`.
 **Then** the size is less than 40 MB.
 

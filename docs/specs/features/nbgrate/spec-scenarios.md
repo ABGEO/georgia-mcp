@@ -4,7 +4,7 @@ title: The official exchange rates of the NBG, the scenarios
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-18
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -370,7 +370,7 @@ with the defaults, and an empty cache.
 **Verifies:** `NBGRATE-FR-001`
 **Layer:** manual
 
-**Given** `task build-image` and `task compose-up`.
+**Given** `task image` and `task compose:up`.
 **When** the owner calls `rates_get_official_rates` for `USD` over HTTP.
 **Then** the answer holds the official rate of today.
 

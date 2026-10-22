@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-21
+updated: 2026-10-22
 scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -23,6 +23,11 @@ Every command must pass before the work is complete.
 | `website/`         | `cd website && pnpm lint && pnpm test && pnpm build`                         |
 
 A change in a vendor client touches the server. Run the server commands too.
+
+`Taskfile.yml` runs each row with one command: `task lint`, `task test`, and `task build`
+take `MODULE=pkg/<vendor>`, and `task website:lint`, `task website:test`, and
+`task website:build` run the commands of `website/`. A task of the website stops when
+the version of Node is older than `website/.nvmrc`.
 
 ## BLD-002
 
@@ -67,7 +72,7 @@ that runs as a user that is not root. Its command is `georgia-mcp serve`.
 
 The final stage carries the OpenContainers labels `title`, `description`, `source`,
 `version`, and `revision`. The build arguments `VERSION` and `REVISION` give the
-last two. `task build-image` passes `git describe` and the commit.
+last two. `task image` passes `git describe` and the commit.
 
 ## BLD-006
 
