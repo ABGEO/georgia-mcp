@@ -91,6 +91,7 @@ linters:
             - "!**/pkg/rico/**"
             - "!**/pkg/neogas/**"
             - "!**/pkg/lukoil/**"
+            - "!**/pkg/gulf/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg
@@ -117,6 +118,20 @@ linters:
             - github.com/abgeo/georgia-mcp/pkg/neogas
             - github.com/abgeo/georgia-mcp/pkg/lukoil
             - golang.org/x/net/html
+          deny:
+            - pkg: github.com/abgeo/georgia-mcp/internal
+              desc: a vendor client imports no package of the server
+            - pkg: github.com/modelcontextprotocol
+              desc: a vendor client imports no MCP package
+        browser-handshake-clients:
+          list-mode: strict
+          files:
+            - "**/pkg/gulf/**"
+          allow:
+            - $gostd
+            - github.com/abgeo/georgia-mcp/pkg/gulf
+            - golang.org/x/net/html
+            - github.com/refraction-networking/utls
           deny:
             - pkg: github.com/abgeo/georgia-mcp/internal
               desc: a vendor client imports no package of the server
