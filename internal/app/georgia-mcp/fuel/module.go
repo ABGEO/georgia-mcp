@@ -3,7 +3,6 @@
 package fuel
 
 import (
-	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -21,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 	connectclient "github.com/abgeo/georgia-mcp/pkg/connect"
 	gulfclient "github.com/abgeo/georgia-mcp/pkg/gulf"
 	lukoilclient "github.com/abgeo/georgia-mcp/pkg/lukoil"
@@ -42,15 +42,6 @@ const (
 	gulfSwitchVariable      = "GEOMCP_FUEL_GULF_ENABLED"
 )
 
-// companySource is one fuel company of the configuration: its switch, and the builder of
-// its cache.
-type companySource struct {
-	enabled  bool
-	name     string
-	variable string
-	build    func() (*fuelcache.PriceCache, error)
-}
-
 // Module holds the use case of the context and the cache of each fuel company.
 type Module struct {
 	prices    *app.GetPrices
@@ -68,21 +59,14 @@ func New(cfg Config, logger *slog.Logger) (*Module, error) {
 func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, error) {
 	logger = logger.With(slog.String("component", "context"), slog.String("context", "fuel"))
 
-	var companies []*fuelcache.PriceCache
+	registry := vendors.New[*fuelcache.PriceCache](logger)
+	for _, company := range companySources(cfg, logger, now) {
+		registry.Add(company)
+	}
 
-	for _, source := range companySources(cfg, logger, now) {
-		if !source.enabled {
-			logger.Info(source.name+" is off", slog.String("variable", source.variable))
-
-			continue
-		}
-
-		company, err := source.build()
-		if err != nil {
-			return nil, err
-		}
-
-		companies = append(companies, company)
+	companies, err := registry.Build()
+	if err != nil {
+		return nil, fmt.Errorf("building the fuel companies: %w", err)
 	}
 
 	sources := make([]app.PriceSource, 0, len(companies))
@@ -95,58 +79,58 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	return &Module{prices: app.NewGetPrices(sources), companies: companies}, nil
 }
 
-// companySources lists each fuel company in the order of the build.
+// companySources lists each fuel company, with its switch, in the order of the build.
 func companySources(
 	cfg Config,
 	logger *slog.Logger,
 	now func() time.Time,
-) []companySource {
-	return []companySource{
+) []vendors.Entry[*fuelcache.PriceCache] {
+	return []vendors.Entry[*fuelcache.PriceCache]{
 		{
-			enabled: cfg.Wissol.Enabled, name: "Wissol", variable: wissolSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Wissol.Enabled, Name: "Wissol", Variable: wissolSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return wissolSource(cfg.Wissol, logger, now)
 			},
 		},
 		{
-			enabled: cfg.Rompetrol.Enabled, name: "Rompetrol", variable: rompetrolSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Rompetrol.Enabled, Name: "Rompetrol", Variable: rompetrolSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return rompetrolSource(cfg.Rompetrol, logger, now)
 			},
 		},
 		{
-			enabled: cfg.SOCAR.Enabled, name: "SOCAR", variable: socarSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.SOCAR.Enabled, Name: "SOCAR", Variable: socarSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return socarSource(cfg.SOCAR, logger, now)
 			},
 		},
 		{
-			enabled: cfg.Connect.Enabled, name: "Connect", variable: connectSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Connect.Enabled, Name: "Connect", Variable: connectSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return connectSource(cfg.Connect, logger, now)
 			},
 		},
 		{
-			enabled: cfg.Lukoil.Enabled, name: "Lukoil", variable: lukoilSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Lukoil.Enabled, Name: "Lukoil", Variable: lukoilSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return lukoilSource(cfg.Lukoil, logger, now)
 			},
 		},
 		{
-			enabled: cfg.Neogas.Enabled, name: "Neogas", variable: neogasSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Neogas.Enabled, Name: "Neogas", Variable: neogasSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return neogasSource(cfg.Neogas, now)
 			},
 		},
 		{
-			enabled: cfg.Portal.Enabled, name: "Portal", variable: portalSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Portal.Enabled, Name: "Portal", Variable: portalSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return portalSource(cfg.Portal, logger, now)
 			},
 		},
 		{
-			enabled: cfg.Gulf.Enabled, name: "Gulf", variable: gulfSwitchVariable,
-			build: func() (*fuelcache.PriceCache, error) {
+			Enabled: cfg.Gulf.Enabled, Name: "Gulf", Variable: gulfSwitchVariable,
+			Build: func() (*fuelcache.PriceCache, error) {
 				return gulfSource(cfg.Gulf, logger, now)
 			},
 		},
@@ -289,12 +273,7 @@ func (m *Module) Register(registry *mcpserver.Registry) error {
 
 // Close stops every cache.
 func (m *Module) Close() error {
-	errs := make([]error, 0, len(m.companies))
-	for _, company := range m.companies {
-		errs = append(errs, company.Close())
-	}
-
-	return errors.Join(errs...)
+	return vendors.CloseAll(m.companies)
 }
 
 func gulfSource(
