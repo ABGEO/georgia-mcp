@@ -88,7 +88,7 @@ func TestTheSwitchOfTerabank(t *testing.T) {
 	cfg := withBOG(t, commercialConfig(t, http.NotFoundHandler(), ""), bogVendor(t))
 	session := serve(t, cfg, debugLogger(sink))
 
-	if got := len(recordsOf(sink, "INFO", terabankSwitch)); got != 1 {
+	if got := len(infosOf(sink, terabankSwitch)); got != 1 {
 		t.Errorf("info records that name %s = %d, want 1", terabankSwitch, got)
 	}
 

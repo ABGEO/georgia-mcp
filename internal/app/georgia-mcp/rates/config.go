@@ -40,15 +40,25 @@ func (c NBGConfig) Validate() error {
 	return nil
 }
 
-// TBCConfig is the configuration of the calls to TBC Bank. An empty APIKey turns TBC off.
+// TBCConfig is the configuration of the calls to TBC Bank. Enabled turns TBC off. The key
+// does not: while TBC is on, the key is required. A Config built in Go leaves TBC off.
 type TBCConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
 	APIKey  string  `env:"API_KEY"`
 	BaseURL url.URL `env:"BASE_URL" envDefault:"https://api.tbcbank.ge"`
 	HTTP    TBCHTTPConfig
 }
 
-// Validate checks the address.
+// Validate refuses an empty key while TBC is on, and checks the address.
 func (c TBCConfig) Validate() error {
+	if c.Enabled && c.APIKey == "" {
+		return &config.FieldError{
+			Field: "APIKey",
+			Problem: "must be set while TBC is on. " +
+				"Set it, or set GEOMCP_RATES_TBC_ENABLED=false",
+		}
+	}
+
 	return validateBaseURL(c.BaseURL)
 }
 

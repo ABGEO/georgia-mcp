@@ -124,7 +124,7 @@ func TestTheSwitchOfLiberty(t *testing.T) {
 			sink := &syncBuffer{}
 			session := serve(t, cfg, debugLogger(sink))
 
-			if got := len(recordsOf(sink, "INFO", libertySwitch)); got != tt.wantInfos {
+			if got := len(infosOf(sink, libertySwitch)); got != tt.wantInfos {
 				t.Errorf(
 					"info records that name %s = %d, want %d",
 					libertySwitch,

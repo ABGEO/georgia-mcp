@@ -159,14 +159,14 @@ func TestTheSwitchOfBankOfGeorgia(t *testing.T) {
 		on           bool
 		key          string
 		wantTools    []string
-		wantWarnings int
+		wantTBCInfos int
 		wantInfos    int
 		wantRefusal  bool
 	}{
-		{name: "on, no key", on: true, wantTools: withCommercial, wantWarnings: 1},
-		{name: "off, no key", wantTools: official, wantWarnings: 1, wantInfos: 1},
+		{name: "on, TBC off", on: true, wantTools: withCommercial, wantTBCInfos: 1},
+		{name: "off, TBC off", wantTools: official, wantTBCInfos: 1, wantInfos: 1},
 		{
-			name:        "off, key",
+			name:        "off, TBC on",
 			key:         "test-key",
 			wantTools:   withCommercial,
 			wantInfos:   1,
@@ -190,15 +190,10 @@ func TestTheSwitchOfBankOfGeorgia(t *testing.T) {
 				t.Errorf("tools mismatch (-want +got):\n%s", diff)
 			}
 
-			warnings := warningsOf(sink)
-			if got := len(recordsOf(sink, "WARN", tbcKey)); len(warnings) != tt.wantWarnings ||
-				got != tt.wantWarnings {
-				t.Errorf("warnings = %q, want %d that name %s", warnings, tt.wantWarnings, tbcKey)
-			}
-
-			if got := len(recordsOf(sink, "INFO", bogSwitch)); got != tt.wantInfos {
-				t.Errorf("info records that name %s = %d, want %d", bogSwitch, got, tt.wantInfos)
-			}
+			assertSwitchRecords(t, sink, map[string]int{
+				tbcSwitch: tt.wantTBCInfos,
+				bogSwitch: tt.wantInfos,
+			})
 
 			if tt.on {
 				assertDescriptionLists(t, session, bogCode)
@@ -208,6 +203,22 @@ func TestTheSwitchOfBankOfGeorgia(t *testing.T) {
 				assertRefusesBankOfGeorgia(t, session)
 			}
 		})
+	}
+}
+
+// assertSwitchRecords checks that the log holds no warning, and the count of info
+// records that name each switch.
+func assertSwitchRecords(t *testing.T, sink *syncBuffer, want map[string]int) {
+	t.Helper()
+
+	if warnings := warningsOf(sink); len(warnings) != 0 {
+		t.Errorf("warnings = %q, want none", warnings)
+	}
+
+	for variable, count := range want {
+		if got := len(infosOf(sink, variable)); got != count {
+			t.Errorf("info records that name %s = %d, want %d", variable, got, count)
+		}
 	}
 }
 
@@ -240,11 +251,11 @@ func assertRefusesBankOfGeorgia(t *testing.T, session *mcp.ClientSession) {
 	}
 }
 
-func recordsOf(sink *syncBuffer, level, needle string) []string {
+func infosOf(sink *syncBuffer, needle string) []string {
 	var records []string
 
 	for line := range strings.Lines(sink.String()) {
-		if strings.Contains(line, `"level":"`+level+`"`) && strings.Contains(line, needle) {
+		if strings.Contains(line, `"level":"INFO"`) && strings.Contains(line, needle) {
 			records = append(records, line)
 		}
 	}

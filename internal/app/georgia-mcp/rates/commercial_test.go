@@ -23,7 +23,7 @@ import (
 const (
 	tbcTestdata   = "../../../../pkg/tbc/testdata"
 	getCommercial = "rates_get_commercial_rates"
-	tbcKey        = "GEOMCP_RATES_TBC_API_KEY"
+	tbcSwitch     = "GEOMCP_RATES_TBC_ENABLED"
 	// clockInstant is the instant of the fixed clock of serve, in Tbilisi.
 	clockInstant = "2026-10-18T14:00:00+04:00"
 )
@@ -88,6 +88,8 @@ func tbcRecorded(t *testing.T, status int, name string) http.HandlerFunc {
 }
 
 // commercialConfig points TBC at the vendor. The NBG is never called.
+// commercialConfig turns TBC on at the vendor with the key, or turns it off when the key
+// is empty.
 func commercialConfig(t *testing.T, vendor http.Handler, key string) rates.Config {
 	t.Helper()
 
@@ -104,6 +106,7 @@ func commercialConfig(t *testing.T, vendor http.Handler, key string) rates.Confi
 	return rates.Config{
 		NBG: nbgConfig(*nbgURL),
 		TBC: rates.TBCConfig{
+			Enabled: key != "",
 			APIKey:  key,
 			BaseURL: *tbcURL,
 			HTTP:    rates.TBCHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
@@ -170,21 +173,21 @@ func TestGetCommercialRatesKeepsTheKeySecret(t *testing.T) {
 	}
 }
 
-// TBCRATE-SC-020: With a key, the server offers the commercial tool. With none, it offers
-// the official tools only, and warns once.
-func TestTheCommercialToolNeedsAKey(t *testing.T) {
+// TBCRATE-SC-025: With TBC on, the server offers the commercial tool. With TBC off, it
+// offers the official tools only, and logs one info record that names the switch.
+func TestTheSwitchOfTBC(t *testing.T) {
 	t.Parallel()
 
 	official := []string{getRates, "rates_list_official_history"}
 
 	tests := []struct {
-		name         string
-		key          string
-		wantTools    []string
-		wantWarnings int
+		name      string
+		key       string
+		wantTools []string
+		wantInfos int
 	}{
-		{name: "key", key: "test-key", wantTools: append(slices.Clone(official), getCommercial)},
-		{name: "no key", key: "", wantTools: official, wantWarnings: 1},
+		{name: "on", key: "test-key", wantTools: append(slices.Clone(official), getCommercial)},
+		{name: "off", key: "", wantTools: official, wantInfos: 1},
 	}
 
 	for _, tt := range tests {
@@ -203,14 +206,18 @@ func TestTheCommercialToolNeedsAKey(t *testing.T) {
 				t.Errorf("tools mismatch (-want +got):\n%s", diff)
 			}
 
-			warnings := warningsOf(sink)
-			if len(warnings) != tt.wantWarnings {
-				t.Fatalf("warnings = %q, want %d", warnings, tt.wantWarnings)
+			if warnings := warningsOf(sink); len(warnings) != 0 {
+				t.Errorf("warnings = %q, want none", warnings)
 			}
 
-			for _, warning := range warnings {
-				if !strings.Contains(warning, tbcKey) {
-					t.Errorf("warning = %q, want the variable %s", warning, tbcKey)
+			infos := infosOf(sink, tbcSwitch)
+			if len(infos) != tt.wantInfos {
+				t.Fatalf("info records that name %s = %q, want %d", tbcSwitch, infos, tt.wantInfos)
+			}
+
+			for _, info := range infos {
+				if !strings.Contains(info, "TBC Bank is off") {
+					t.Errorf("info = %q, want the message TBC Bank is off", info)
 				}
 			}
 		})

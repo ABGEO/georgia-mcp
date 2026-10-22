@@ -20,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/app"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 	bogclient "github.com/abgeo/georgia-mcp/pkg/bog"
 	kursiclient "github.com/abgeo/georgia-mcp/pkg/kursi"
 	libertyclient "github.com/abgeo/georgia-mcp/pkg/libertyrates"
@@ -30,7 +31,7 @@ import (
 )
 
 const (
-	tbcKeyVariable         = "GEOMCP_RATES_TBC_API_KEY"
+	tbcSwitchVariable      = "GEOMCP_RATES_TBC_ENABLED"
 	kursiSwitchVariable    = "GEOMCP_RATES_KURSI_ENABLED"
 	bogSwitchVariable      = "GEOMCP_RATES_BOG_ENABLED"
 	libertySwitchVariable  = "GEOMCP_RATES_LIBERTY_ENABLED"
@@ -49,8 +50,8 @@ type Module struct {
 
 var _ mcpserver.Module = (*Module)(nil)
 
-// New builds the clients, the adapters, the caches, and the use cases. A bank with no
-// key is left out, with a warning. A bank that the operator turned off is left out.
+// New builds the clients, the adapters, the caches, and the use cases. A bank that the
+// operator turned off is left out.
 func New(cfg Config, logger *slog.Logger) (*Module, error) {
 	return newModule(cfg, logger, time.Now)
 }
@@ -94,15 +95,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}, nil
 }
 
-// switchedBank is a bank that needs no key, so the operator turns it off with a switch.
-type switchedBank struct {
-	enabled  bool
-	name     string
-	variable string
-	adapter  func() app.CommercialRateSource
-}
-
-// commercialSources builds the cached source of each bank that the server can read.
+// commercialSources builds the cached source of each bank that is on.
 func commercialSources(
 	cfg Config,
 	logger *slog.Logger,
@@ -110,75 +103,50 @@ func commercialSources(
 ) ([]*ratecache.CommercialRateCache, error) {
 	logger = logger.With(slog.String("component", "context"), slog.String("context", "rates"))
 
-	var adapters []app.CommercialRateSource
+	banks := vendors.New[*ratecache.CommercialRateCache](logger)
 
-	if cfg.TBC.APIKey == "" {
-		logger.Warn("TBC Bank is off: no API key", slog.String("variable", tbcKeyVariable))
-	} else {
-		adapters = append(adapters, tbcAdapter(cfg.TBC, now))
+	for _, bank := range []vendors.Entry[*ratecache.CommercialRateCache]{
+		{
+			Name: "TBC Bank", Enabled: cfg.TBC.Enabled, Variable: tbcSwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(tbcAdapter(cfg.TBC, now))
+			},
+		},
+		{
+			Name: "Bank of Georgia", Enabled: cfg.BOG.Enabled, Variable: bogSwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(bogAdapter(cfg.BOG, now))
+			},
+		},
+		{
+			Name: "Liberty Bank", Enabled: cfg.Liberty.Enabled, Variable: libertySwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(libertyAdapter(cfg.Liberty, now))
+			},
+		},
+		{
+			Name: "Terabank", Enabled: cfg.Terabank.Enabled, Variable: terabankSwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(terabankAdapter(cfg.Terabank, now))
+			},
+		},
+		{
+			Name: "Rico Credit", Enabled: cfg.Rico.Enabled, Variable: ricoSwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(ricoAdapter(cfg.Rico, now))
+			},
+		},
+		{
+			Name: "Kursi.ge", Enabled: cfg.Kursi.Enabled, Variable: kursiSwitchVariable,
+			Build: func() (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(kursiAdapter(cfg.Kursi, now))
+			},
+		},
+	} {
+		banks.Add(bank)
 	}
 
-	for _, bank := range switchedBanks(cfg, now) {
-		if !bank.enabled {
-			logger.Info(bank.name+" is off", slog.String("variable", bank.variable))
-
-			continue
-		}
-
-		adapters = append(adapters, bank.adapter())
-	}
-
-	banks := make([]*ratecache.CommercialRateCache, 0, len(adapters))
-
-	for _, adapter := range adapters {
-		bank, err := ratecache.NewCommercial(adapter)
-		if err != nil {
-			for _, built := range banks {
-				_ = built.Close()
-			}
-
-			return nil, fmt.Errorf("building the cache of %s: %w", adapter.Bank().Name, err)
-		}
-
-		banks = append(banks, bank)
-	}
-
-	return banks, nil
-}
-
-func switchedBanks(cfg Config, now func() time.Time) []switchedBank {
-	return []switchedBank{
-		{
-			cfg.BOG.Enabled,
-			"Bank of Georgia",
-			bogSwitchVariable,
-			func() app.CommercialRateSource { return bogAdapter(cfg.BOG, now) },
-		},
-		{
-			cfg.Liberty.Enabled,
-			"Liberty Bank",
-			libertySwitchVariable,
-			func() app.CommercialRateSource { return libertyAdapter(cfg.Liberty, now) },
-		},
-		{
-			cfg.Terabank.Enabled,
-			"Terabank",
-			terabankSwitchVariable,
-			func() app.CommercialRateSource { return terabankAdapter(cfg.Terabank, now) },
-		},
-		{
-			cfg.Rico.Enabled,
-			"Rico Credit",
-			ricoSwitchVariable,
-			func() app.CommercialRateSource { return ricoAdapter(cfg.Rico, now) },
-		},
-		{
-			cfg.Kursi.Enabled,
-			"Kursi.ge",
-			kursiSwitchVariable,
-			func() app.CommercialRateSource { return kursiAdapter(cfg.Kursi, now) },
-		},
-	}
+	return banks.Build()
 }
 
 func bogAdapter(cfg BOGConfig, now func() time.Time) *bogadapter.Adapter {
@@ -239,12 +207,5 @@ func (m *Module) Register(registry *mcpserver.Registry) error {
 
 // Close stops every cache.
 func (m *Module) Close() error {
-	errs := make([]error, 0, 1+len(m.banks))
-	errs = append(errs, m.rateSets.Close())
-
-	for _, bank := range m.banks {
-		errs = append(errs, bank.Close())
-	}
-
-	return errors.Join(errs...)
+	return errors.Join(m.rateSets.Close(), vendors.CloseAll(m.banks))
 }

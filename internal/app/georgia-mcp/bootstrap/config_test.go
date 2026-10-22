@@ -15,13 +15,28 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/bootstrap"
 )
 
-// testKey is a key of the TTC. Every configuration of the server needs one while the TTC is on.
+// testKey is a key of the TTC and of TBC. Every configuration of the server needs both
+// while the TTC and TBC are on.
 const testKey = "test-key"
+
+const (
+	ttcKeyVariable = "GEOMCP_TRANSIT_TTC_API_KEY"
+	tbcKeyVariable = "GEOMCP_RATES_TBC_API_KEY"
+	tbcSwitch      = "GEOMCP_RATES_TBC_ENABLED"
+)
+
+// setKeys sets the key of each vendor that is on by default and needs one.
+func setKeys(t *testing.T) {
+	t.Helper()
+
+	t.Setenv(ttcKeyVariable, testKey)
+	t.Setenv(tbcKeyVariable, testKey)
+}
 
 // PLATFORM-SC-012: A variable of the environment sets a value. A missing one keeps its default.
 func TestLoadConfigReadsTheEnvironment(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 	t.Setenv("GEOMCP_HTTP_RATE_LIMIT", "30")
 
 	cfg, err := bootstrap.LoadConfig()
@@ -48,7 +63,7 @@ func TestLoadConfigReadsTheLocalFile(t *testing.T) {
 	}
 
 	t.Chdir(dir)
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 	t.Setenv("GEOMCP_HTTP_RATE_LIMIT", "20")
 
 	cfg, err := bootstrap.LoadConfig()
@@ -82,7 +97,7 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.variable+"="+tt.value, func(t *testing.T) {
 			t.Chdir(t.TempDir())
-			t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+			setKeys(t)
 
 			if tt.variable != "" {
 				t.Setenv(tt.variable, tt.value)
@@ -108,8 +123,7 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 // TBCRATE-SC-024: With the key only, the calls to TBC default to 1 each second, burst 1.
 func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
-	t.Setenv("GEOMCP_RATES_TBC_API_KEY", "test-key")
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -125,7 +139,7 @@ func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 // address, with 0.8 calls each second and a burst of 10.
 func TestLoadConfigGivesTheDefaultsOfBankOfGeorgia(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -154,7 +168,7 @@ func TestLoadConfigGivesTheDefaultsOfBankOfGeorgia(t *testing.T) {
 // the first 60 seconds, under the 60 calls in a minute that the bank allows.
 func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -191,7 +205,7 @@ func TestTheDefaultLimitOfBankOfGeorgiaStaysUnderItsQuota(t *testing.T) {
 // burst of 1.
 func TestLoadConfigGivesTheDefaultsOfWissol(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -216,7 +230,7 @@ func TestLoadConfigGivesTheDefaultsOfWissol(t *testing.T) {
 // timeout of 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfRompetrol(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -241,7 +255,7 @@ func TestLoadConfigGivesTheDefaultsOfRompetrol(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -266,7 +280,7 @@ func TestLoadConfigGivesTheDefaultsOfSOCAR(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfConnect(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -291,7 +305,7 @@ func TestLoadConfigGivesTheDefaultsOfConnect(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfLukoil(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -316,7 +330,7 @@ func TestLoadConfigGivesTheDefaultsOfLukoil(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfNeogas(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -341,7 +355,7 @@ func TestLoadConfigGivesTheDefaultsOfNeogas(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfPortal(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -365,6 +379,7 @@ func TestLoadConfigGivesTheDefaultsOfPortal(t *testing.T) {
 // TTCTRANS-SC-044: With no key of the TTC, the configuration fails and names the variable.
 func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 	t.Chdir(t.TempDir())
+	t.Setenv(tbcKeyVariable, testKey)
 
 	_, err := bootstrap.LoadConfig()
 	if err == nil || !strings.Contains(err.Error(), "GEOMCP_TRANSIT_TTC_API_KEY") {
@@ -376,6 +391,7 @@ func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 func TestLoadConfigTurnsTheTTCOff(t *testing.T) {
 	t.Chdir(t.TempDir())
 	t.Setenv("GEOMCP_TRANSIT_TTC_ENABLED", "false")
+	t.Setenv(tbcKeyVariable, testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -391,7 +407,7 @@ func TestLoadConfigTurnsTheTTCOff(t *testing.T) {
 // calls each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfTheTTC(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -421,7 +437,7 @@ func TestLoadConfigGivesTheDefaultsOfTheTTC(t *testing.T) {
 // address, with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfLiberty(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -450,7 +466,7 @@ func TestLoadConfigGivesTheDefaultsOfLiberty(t *testing.T) {
 // address, with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfTerabank(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -479,7 +495,7 @@ func TestLoadConfigGivesTheDefaultsOfTerabank(t *testing.T) {
 // address, with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfRicoCredit(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -508,7 +524,7 @@ func TestLoadConfigGivesTheDefaultsOfRicoCredit(t *testing.T) {
 // with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfKursi(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -537,7 +553,7 @@ func TestLoadConfigGivesTheDefaultsOfKursi(t *testing.T) {
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfGulf(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+	setKeys(t)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -555,5 +571,52 @@ func TestLoadConfigGivesTheDefaultsOfGulf(t *testing.T) {
 
 	if http := gulf.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
 		t.Errorf("Gulf.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
+
+// TBCRATE-SC-026: While TBC is on, the configuration needs its key, and the error names
+// the key and the switch. With TBC off, no key is needed.
+func TestLoadConfigNeedsTheKeyOfTBC(t *testing.T) {
+	tests := []struct {
+		name        string
+		key         string
+		off         bool
+		wantErr     bool
+		wantEnabled bool
+	}{
+		{name: "no key, no switch", wantErr: true},
+		{name: "no key, off", off: true},
+		{name: "key, no switch", key: testKey, wantEnabled: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Chdir(t.TempDir())
+			t.Setenv(ttcKeyVariable, testKey)
+			t.Setenv(tbcKeyVariable, tt.key)
+
+			if tt.off {
+				t.Setenv(tbcSwitch, "false")
+			}
+
+			cfg, err := bootstrap.LoadConfig()
+			if tt.wantErr {
+				if err == nil || !strings.Contains(err.Error(), tbcKeyVariable) ||
+					!strings.Contains(err.Error(), tbcSwitch) {
+					t.Errorf("LoadConfig() error = %v, want one that names %s and %s",
+						err, tbcKeyVariable, tbcSwitch)
+				}
+
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("LoadConfig() error = %v", err)
+			}
+
+			if cfg.Rates.TBC.Enabled != tt.wantEnabled {
+				t.Errorf("TBC.Enabled = %v, want %v", cfg.Rates.TBC.Enabled, tt.wantEnabled)
+			}
+		})
 	}
 }
