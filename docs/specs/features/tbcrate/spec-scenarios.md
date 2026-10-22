@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank, the scenarios
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-18
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -230,16 +230,6 @@ The test runs in `synctest`.
 **When** a client calls the tool.
 **Then** the tool error, the log, and every error of the stack hold no `secret-tbc-key`.
 
-### `TBCRATE-SC-020`
-
-**Verifies:** `TBCRATE-FR-010`
-**Layer:** integration
-
-| Key              | Tools of the server                                   | Log                              |
-| ---------------- | ----------------------------------------------------- | -------------------------------- |
-| `test-key`       | The official tools and `rates_get_commercial_rates`   | No warning                       |
-| empty            | The official tools only                               | One warning that names `GEOMCP_RATES_TBC_API_KEY` |
-
 ### `TBCRATE-SC-021`
 
 **Verifies:** `TBCRATE-FR-003`
@@ -281,6 +271,29 @@ bank counts 2 calls. The test runs in `synctest`.
 **When** the configuration loads.
 **Then** `TBC.HTTP.Rate` is 1 and `TBC.HTTP.Burst` is 1.
 
+### `TBCRATE-SC-025`
+
+**Verifies:** `TBCRATE-FR-012`
+**Layer:** integration
+
+| TBC | Tools of the server                                 | Log                                                  |
+| --- | --------------------------------------------------- | ---------------------------------------------------- |
+| on  | The official tools and `rates_get_commercial_rates` | No record that TBC is off                            |
+| off | The official tools only                             | `TBC Bank is off` with `variable=GEOMCP_RATES_TBC_ENABLED` |
+
+### `TBCRATE-SC-026`
+
+**Verifies:** `TBCRATE-FR-013`
+**Layer:** unit
+
+| Settings                                | Result of `LoadConfig`                                        |
+| --------------------------------------- | ------------------------------------------------------------- |
+| No key, no switch                       | An error that names `GEOMCP_RATES_TBC_API_KEY` and `GEOMCP_RATES_TBC_ENABLED`. |
+| No key, `GEOMCP_RATES_TBC_ENABLED=false` | No error. TBC is off.                                         |
+| A key, no switch                        | No error. TBC is on.                                          |
+
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID             | Retired    | Reason                                                   |
+| -------------- | ---------- | -------------------------------------------------------- |
+| TBCRATE-SC-020 | 2026-10-22 | It verified `TBCRATE-FR-010`. `TBCRATE-SC-025` and `TBCRATE-SC-026` replace it. |

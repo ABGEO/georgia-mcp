@@ -4,7 +4,7 @@ title: The platform of the server
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-18
+updated: 2026-10-22
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -50,6 +50,7 @@ It adds the container image, the local compose file, and the task file.
 | `PLATFORM-FR-022`  | 4.1 `build/package/Dockerfile`                          |
 | `PLATFORM-FR-023`  | 4.1 `deployments/compose.yaml`                          |
 | `PLATFORM-FR-024`  | 4.1 `Taskfile.yml`. `PLATFORM-DD-009`                   |
+| `PLATFORM-FR-025`  | 4.1 `vendors`. `PLATFORM-DD-011`                        |
 | `PLATFORM-NFR-001` | 4.4. `PLATFORM-SC-029`                                  |
 | `PLATFORM-NFR-002` | 4.4. `PLATFORM-SC-016`                                  |
 | `PLATFORM-NFR-003` | 4.1 `build/package/Dockerfile`. `PLATFORM-SC-030`       |
@@ -133,6 +134,7 @@ Every path is new. Each package with more than one file has `doc.go` (`PKG-006`)
 | `internal/pkg/httpserver/`       | See below.                                                            |
 | `internal/pkg/cache/`            | See below.                                                            |
 | `internal/pkg/httpclient/`       | See below.                                                            |
+| `internal/pkg/vendors/`          | See below.                                                            |
 
 **`mcpserver`.**
 
@@ -237,6 +239,27 @@ type Config struct {
 func (c Config) Validate() error
 func New(cfg Config) *http.Client
 ```
+
+**`vendors`.**
+
+```go
+type Entry[T io.Closer] struct {
+    Name     string // "Lukoil", for the log
+    Enabled  bool
+    Variable string // the switch: "GEOMCP_FUEL_LUKOIL_ENABLED"
+    Build    func() (T, error)
+}
+func New[T io.Closer](logger *slog.Logger) *Registry[T]
+func (r *Registry[T]) Add(entry Entry[T])
+func (r *Registry[T]) Build() ([]T, error)
+func CloseAll[T io.Closer](sources []T) error
+```
+
+`Build` calls `Build` of each entry that is on, in the order of `Add`, and returns the
+results in that order. It logs each entry that is off at info level: `<Name> is off`,
+with the attribute `variable`. When one `Build` fails, it closes each source that it
+built, and returns the error wrapped with the name. `CloseAll` closes each source and
+joins the errors.
 
 `New` returns a client with `Timeout` and a transport that calls `rate.Limiter.Wait`
 with the context of the request before the base transport. A failed wait returns
@@ -441,9 +464,21 @@ helpers, because a client forges the header and so picks its own bucket. A list 
 ranges states the trust of the deployment.
 **Alternatives:** `RealIP` behind a flag. A client then escapes the limit with one header.
 
+### `PLATFORM-DD-011`
+
+**Realizes:** `PLATFORM-FR-025`, `CFG-008`
+**Decision:** `internal/pkg/vendors` holds a generic registry. A context adds each vendor
+with its switch, whether it is on or off. `Build` returns the cached source of each
+vendor that is on. The use case receives that list. The type parameter is the cache of
+the port: rates, fuel, and offers each give one.
+**Rationale:** Three contexts repeated the loop: the switch, the log, the build, and the
+close after a failure. The offers context wrote it as one `if` for each bank.
+**Alternatives:** A context adds a vendor only when it is on. Each context then writes
+the log of a vendor that is off again.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-034`.
+`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-035`.
 
 ## 7. Build plan
 
@@ -458,6 +493,7 @@ ranges states the trust of the deployment.
 | 7   | `httpclient`.                                                                  | `PLATFORM-FR-021`                               | [x]  |
 | 8   | `bootstrap.App`, `cli`, `main`.                                                | `PLATFORM-FR-013`, `PLATFORM-NFR-001`, `PLATFORM-INV-002` | [x]  |
 | 9   | `build/package/`, `deployments/compose.yaml`, `Taskfile.yml`.                  | `PLATFORM-FR-022` to `PLATFORM-FR-024`, `PLATFORM-NFR-003` | [x]  |
+| 10  | `vendors`. The modules of rates, fuel, and offers build their vendors with it. | `PLATFORM-FR-025`                               | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -4,7 +4,7 @@ title: The platform of the server, the scenarios
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-18
+updated: 2026-10-22
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -311,6 +311,22 @@ Each test of the cache runs in `synctest.Test` and uses `Cache[string]` and `Cac
 | ---------------------------------------- | --------------------------------------------------------- |
 | Two requests, no deadline                | Both reach the server. The second waits about 1 second.   |
 | A second request with a 100 ms deadline  | The error wraps `kernel.ErrSourceUnavailable`. The server counts 1. |
+
+## The vendors
+
+### `PLATFORM-SC-035`
+
+**Verifies:** `PLATFORM-FR-025`
+**Layer:** unit
+
+**Given** a registry with a logger that records, and entries whose sources record a close.
+
+| Entries                                          | Result                                                     |
+| ------------------------------------------------ | ---------------------------------------------------------- |
+| A on, B off, C on                                | A and C, in this order. One info record: `B is off`, with the variable of B. |
+| A on, B on with a failing `Build`                | An error that wraps the failure and names B. A is closed.  |
+| A off, B off                                     | No source, no error. Two info records.                     |
+| `CloseAll` of two sources, the first fails       | Both are closed. The error is the failure of the first.    |
 
 ## The packaging
 

@@ -4,7 +4,7 @@ title: The commercial exchange rates of Bank of Georgia
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-21
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -402,11 +402,13 @@ clock, `buy` is `2.565`, and `sell` is `2.629`.
 **Verifies:** `BOGRATE-FR-003`
 **Layer:** integration
 
-| Bank of Georgia | TBC key    | Tools of the server                                  | Log                                         |
-| --------------- | ---------- | ---------------------------------------------------- | ------------------------------------------- |
-| on              | empty      | The official tools and `rates_get_commercial_rates`. Its description lists `bog`. | One warning for TBC |
-| off             | empty      | The official tools only                              | One info record that names `GEOMCP_RATES_BOG_ENABLED` |
-| off             | `test-key` | The official tools and `rates_get_commercial_rates`. A call with the bank `bog` reads `banks: "bog" is not a bank of this server. Use one of: tbc.` | One info record |
+| Bank of Georgia | TBC | Tools of the server                                  | Log                                         |
+| --------------- | --- | ---------------------------------------------------- | ------------------------------------------- |
+| on              | off | The official tools and `rates_get_commercial_rates`. Its description lists `bog`. | One info record that names `GEOMCP_RATES_TBC_ENABLED` |
+| off             | off | The official tools only                              | One info record for each switch: `GEOMCP_RATES_BOG_ENABLED` and `GEOMCP_RATES_TBC_ENABLED` |
+| off             | on  | The official tools and `rates_get_commercial_rates`. A call with the bank `bog` reads `banks: "bog" is not a bank of this server. Use one of: tbc.` | One info record that names `GEOMCP_RATES_BOG_ENABLED` |
+
+No case logs a warning.
 
 ## 7. Build plan
 

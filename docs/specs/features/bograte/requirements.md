@@ -4,7 +4,7 @@ title: The commercial exchange rates of Bank of Georgia
 type: requirements
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -102,7 +102,7 @@ Bank of Georgia off. It is on by default.
 **Examples:**
 
 - Normal case: no configuration. The server offers `bog`.
-- Limit case: Bank of Georgia off, and no key of TBC. The server offers no commercial rate.
+- Limit case: Bank of Georgia off, and TBC off. The server offers no commercial rate.
 - Unwanted case: a request names `bog` while it is off. The server refuses it as a bank
   that it cannot read.
 

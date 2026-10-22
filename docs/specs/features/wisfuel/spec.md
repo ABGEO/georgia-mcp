@@ -447,7 +447,7 @@ a civil date of Wissol, in Tbilisi.
 **Realizes:** `WISFUEL-FR-016`
 **Decision:** `GEOMCP_FUEL_WISSOL_ENABLED` turns Wissol off. With no source, the module
 adds no tool.
-**Rationale:** `BOGRATE-DD-006` and `TBCRATE-DD-005`. A tool that can only fail confuses
+**Rationale:** `BOGRATE-DD-006` and `TBCRATE-DD-013`. A tool that can only fail confuses
 the model.
 **Alternatives:** A tool that answers "no fuel company configured".
 

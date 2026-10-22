@@ -4,7 +4,7 @@ title: Package layout
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-22
 scope: [., cmd/, internal/, pkg/, build/, deployments/, configs/, test/]
 related: [ARC, DOM, CLT, GO]
 ---
@@ -30,6 +30,7 @@ internal/
     logger/                      The logger. See LOG.
     httpserver/                  The router and the middleware. See API.
     httpclient/                  The client of a vendor call. See RSL.
+    vendors/                     The registry of the vendors of a context. See PKG-003.
     mcpserver/                   The MCP server and its middleware. See MCP.
     cache/                       The cache. See RSL.
 pkg/<vendor>/                    One vendor client module. See CLT.
@@ -69,7 +70,8 @@ func (m *Module) Register(registry *mcpserver.Registry) error
 ```
 
 `New` builds the adapters, wraps each driven adapter in the cache, and builds the
-use cases. `Register` adds every tool of the context with `mcpserver.AddTool`, and
+use cases. A context with more than one vendor adds each one to a `vendors.Registry`,
+with its switch of `CFG-008`. The registry builds the vendors that are on. `Register` adds every tool of the context with `mcpserver.AddTool`, and
 returns the error of a duplicate name. `module.go` holds no domain
 logic.
 

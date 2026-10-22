@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank
 type: requirements
 status: approved
 created: 2026-10-18
-updated: 2026-10-18
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -141,20 +141,6 @@ a bank does not answer.
 **Why:** A bank changes its rates during the day. A rate older than 1 hour misleads more
 than it helps.
 
-### `TBCRATE-FR-010`
-
-The server must start with no key of TBC. It must then log a warning, and must not offer
-TBC in an answer.
-
-**Why:** A deployment with no key still serves the official rates.
-
-**Examples:**
-
-- Normal case: a key is present. The server offers TBC.
-- Limit case: no key, and TBC is the only bank. The server offers no commercial rate.
-- Unwanted case: a request names `tbc` with no key. The server refuses it as a bank that
-  it cannot read.
-
 ### `TBCRATE-FR-011`
 
 The server must refuse a request that names no currency, or more than 10 currencies. The
@@ -168,6 +154,26 @@ message must give the limit.
 - Limit case: 10 codes, or `USD` twice and nothing else. The server answers: a code named
   twice counts once.
 - Unwanted case: no code, or 11 codes. The server refuses the request.
+
+### `TBCRATE-FR-012`
+
+The operator must be able to turn TBC off. It is on by default. When TBC is off, the
+server must not offer TBC in an answer.
+
+**Examples:**
+
+- Normal case: TBC is on with a key. The server offers TBC.
+- Limit case: TBC is off, and TBC is the only bank. The server offers no commercial rate.
+- Unwanted case: a request names `tbc` while TBC is off. The server refuses it as a bank
+  that it cannot read.
+
+### `TBCRATE-FR-013`
+
+If TBC is on and its key is empty, the server must not start. The error must name the
+setting of the key and the setting of the switch.
+
+**Why:** `CFG-008`. A missing key is a mistake of the deployment, not a choice. The TTC
+behaves the same way (`TTCTRANS-FR-022`).
 
 ## 7. Non-functional requirements
 
@@ -221,4 +227,6 @@ A commercial rate in an answer has the exact digits that the bank publishes, for
 
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID             | Retired    | Reason                                                              |
+| -------------- | ---------- | ------------------------------------------------------------------- |
+| TBCRATE-FR-010 | 2026-10-22 | An empty key no longer turns TBC off. `TBCRATE-FR-012` and `TBCRATE-FR-013` replace it (`CFG-008`). |

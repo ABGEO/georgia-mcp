@@ -4,7 +4,7 @@ title: Configuration and secrets
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-22
 scope: [internal/pkg/config/, internal/app/georgia-mcp/bootstrap/, internal/app/georgia-mcp/*/config.go, configs/]
 related: [ARC, LIF, LOG]
 ---
@@ -62,6 +62,21 @@ A listen address is a `host:port` string.
 
 A secret does not go into the repository. `.env` stays in `.gitignore`.
 `configs/.env.example` lists every variable, with its default or an empty value.
+
+## CFG-008
+
+A vendor that its context can serve without has a switch `<PREFIX>_ENABLED`, on by
+default. The operator turns the vendor off with `false`. A vendor with a key needs the
+key while it is on: an empty key fails the start, and the error names the key and the
+switch.
+
+```
+GEOMCP_RATES_TBC_ENABLED=true
+GEOMCP_RATES_TBC_API_KEY=
+```
+
+**Why:** One rule for every vendor. A vendor never goes off because a value is missing,
+so a wrong deployment fails at the start. See `CFG-005`.
 
 ## Retired identifiers
 

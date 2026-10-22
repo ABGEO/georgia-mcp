@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-18
+updated: 2026-10-22
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -35,8 +35,9 @@ scenarios.
 | `TBCRATE-FR-007`  | 4.2 `CommercialRatesResult.ReadAt`. `TBCRATE-DD-011`    |
 | `TBCRATE-FR-008`  | 4.2 `CommercialRates.Unavailable`. 4.4                  |
 | `TBCRATE-FR-009`  | 4.3 cache. `TBCRATE-DD-012`                             |
-| `TBCRATE-FR-010`  | 4.1 `module.go`. `TBCRATE-DD-005`                       |
 | `TBCRATE-FR-011`  | 4.2 `MaxCommercialCurrencies`. 4.5                      |
+| `TBCRATE-FR-012`  | 4.1 `module.go`. `TBCRATE-DD-013`                       |
+| `TBCRATE-FR-013`  | 4.3 configuration. `TBCRATE-DD-013`                     |
 | `TBCRATE-NFR-001` | 4.3 cache. `TBCRATE-SC-016`                             |
 | `TBCRATE-NFR-002` | 4.3 cache. `TBCRATE-DD-009`, `TBCRATE-DD-010`           |
 | `TBCRATE-INV-001` | `TBCRATE-DD-006`, `TBCRATE-SC-019`                      |
@@ -131,9 +132,9 @@ the sorted keys joined with commas. `load` returns a value for each key it gets.
 key it loaded, if every one of them is inside the maximum stale age. Else it returns the
 error (`TBCRATE-DD-012`).
 
-**`module.go` (change).** `newModule` builds the TBC source only when `cfg.TBC.APIKey` is
-not empty. Else it logs a warning with the attribute `variable=GEOMCP_RATES_TBC_API_KEY`.
-`Register` adds the commercial tool only when one source or more exists. `Close` closes
+**`module.go` (change).** `newModule` adds TBC to the `vendors.Registry` of the banks,
+with the switch `cfg.TBC.Enabled` and the variable `GEOMCP_RATES_TBC_ENABLED`
+(`PLATFORM-FR-025`). `Register` adds the commercial tool only when one source or more exists. `Close` closes
 each cache.
 
 ### 4.2 Domain model
@@ -268,14 +269,17 @@ oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is sta
 
 | Variable                      | Type     | Default                  | Secret | Realizes          |
 | ----------------------------- | -------- | ------------------------ | ------ | ----------------- |
-| `GEOMCP_RATES_TBC_API_KEY`    | string   | empty: TBC is off        | Yes    | `TBCRATE-FR-010`  |
+| `GEOMCP_RATES_TBC_ENABLED`    | bool     | `true`                   | No     | `TBCRATE-FR-012`  |
+| `GEOMCP_RATES_TBC_API_KEY`    | string   | none, required while on  | Yes    | `TBCRATE-FR-013`  |
 | `GEOMCP_RATES_TBC_BASE_URL`   | URL      | `https://api.tbcbank.ge` | No     | `TBCRATE-FR-001`  |
 | `GEOMCP_RATES_TBC_TIMEOUT`    | duration | `10s`                    | No     | `TBCRATE-FR-008`  |
 | `GEOMCP_RATES_TBC_RATE`       | float    | `1`                      | No     | `TBCRATE-NFR-002` |
 | `GEOMCP_RATES_TBC_BURST`      | int      | `1`                      | No     | `TBCRATE-NFR-002` |
 
-`rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` holds `APIKey`,
-`BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `TBCHTTPConfig` has the fields of
+`rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` holds `Enabled`,
+`APIKey`, `BaseURL url.URL`, and `HTTP TBCHTTPConfig`. `Validate` refuses an empty key
+while `Enabled` is true, with the problem "must be set while TBC is on. Set it, or set
+GEOMCP_RATES_TBC_ENABLED=false". `TBCHTTPConfig` has the fields of
 `httpclient.Config` with the defaults of this table, and converts to it. A default lives
 in a struct tag, so `httpclient.Config` cannot carry a second set.
 
@@ -364,14 +368,6 @@ its description at registration.
 schema would list a bank with no key.
 **Alternatives:** A `jsonschema` enum. It needs the set at compile time.
 
-### `TBCRATE-DD-005`
-
-**Realizes:** `TBCRATE-FR-010`
-**Decision:** An empty key leaves TBC out of the sources. With no source, the module adds
-no commercial tool. A warning names the variable.
-**Rationale:** A tool that can only fail confuses the model. The warning tells the operator.
-**Alternatives:** A tool that answers "no bank configured". A model calls it for nothing.
-
 ### `TBCRATE-DD-006`
 
 **Realizes:** `TBCRATE-INV-001`, `LOG-008`
@@ -438,9 +434,20 @@ code inside the stale age. Else the bank is unavailable.
 **Alternatives:** The held codes, and a third list of codes that the bank did not answer.
 One more field for the model to read, for a short outage.
 
+### `TBCRATE-DD-013`
+
+**Realizes:** `TBCRATE-FR-012`, `TBCRATE-FR-013`, `CFG-008`
+**Decision:** TBC has the switch `Enabled`, on by default, as each other bank. While it is
+on, `TBCConfig.Validate` needs the key, so the server does not start with an empty key.
+With no bank on, the module adds no commercial tool.
+**Rationale:** The key turned TBC off in silence. A deployment that forgot the key served
+the commercial rates with no TBC, and only a warning told the operator.
+**Alternatives:** A switch that the key overrides: on with no key warns and leaves TBC
+out. Two settings then decide one state.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `TBCRATE-SC-001` to `TBCRATE-SC-024`.
+`spec-scenarios.md` holds `TBCRATE-SC-001` to `TBCRATE-SC-026`. `TBCRATE-SC-020` is retired.
 
 ## 7. Build plan
 
@@ -454,7 +461,8 @@ One more field for the model to read, for a short outage.
 | 6   | `internal/pkg/cache`: `GetMany`.                                             | `TBCRATE-NFR-002`                              | [x]  |
 | 7   | `adapter/cache`: `CommercialRateCache`.                                      | `TBCRATE-FR-009`, `TBCRATE-NFR-001`, `TBCRATE-NFR-002` | [x]  |
 | 8   | `adapter/tool`: `RegisterCommercial`.                                        | `TBCRATE-FR-006`, `TBCRATE-FR-007`             | [x]  |
-| 9   | `module.go`, `config.go`, `configs/.env.example`.                            | `TBCRATE-FR-010`                               | [x]  |
+| 9   | `module.go`, `config.go`, `configs/.env.example`.                            | `TBCRATE-FR-012`, `TBCRATE-FR-013`             | [x]  |
+| 10  | The switch of TBC, and TBC in the registry of the banks.                     | `TBCRATE-FR-012`, `TBCRATE-FR-013`             | [x]  |
 
 ## 8. Out of scope for this specification
 
@@ -462,4 +470,6 @@ Nothing that the requirements demand.
 
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID             | Retired    | Reason                                             |
+| -------------- | ---------- | -------------------------------------------------- |
+| TBCRATE-DD-005 | 2026-10-22 | It realized `TBCRATE-FR-010`. `TBCRATE-DD-013` replaces it. |

@@ -4,7 +4,7 @@ title: The platform of the server
 type: requirements
 status: approved
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-22
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -213,6 +213,24 @@ The owner must start the server with the local configuration with one command.
 ### `PLATFORM-FR-024`
 
 The owner must run the linter, the tests, or the build of a module with one command each.
+
+### `PLATFORM-FR-025`
+
+The server must leave out each vendor that the operator turned off, log one record that
+names its switch, and serve the other vendors of the context. If a vendor that is on
+cannot start, the server must not start.
+
+**Why:** Each context with more than one vendor repeats this behavior. `CFG-008` gives
+the switch.
+
+**Examples:**
+
+- Normal case: Lukoil is off. The log holds `Lukoil is off` with its switch. The fuel
+  tool serves the other companies.
+- Limit case: every bank of the commercial rates is off. The server offers no
+  commercial tool.
+- Unwanted case: the cache of one company cannot start. The server stops, and the
+  error names the company.
 
 ## 6. Non-functional requirements
 
