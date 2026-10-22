@@ -42,7 +42,7 @@ Observed behavior of the source on 2026-10-21:
 - `latestOnlinePrice` is the price of a "QR liter" bought online, 20 tetri less. The page
   does not show it.
 - The names are in English in each language of the page: `SUPER`, `EURO REGULAR`.
-- The SUPER of Portal has the octane number 100. The page shows it.
+- The data gives SUPER the octane number 100. The number is wrong: SUPER is a super 98.
 - The page shows no date and no self-service price.
 
 | Slug            | Name          | Type   | Octane | Price | Online price |
@@ -82,17 +82,17 @@ The server must return the standard price of each product of Portal.
 
 The server must give each product of Portal its grade.
 
-**Why:** The SUPER of Portal has the octane number 100. The SUPER of SOCAR has 98.
+**Why:** The SUPER of Portal is a super 98, as the SUPER of SOCAR is. The octane number of the data is wrong.
 
 **Examples:**
 
-- Normal case: SUPER has the grade `super_100`.
+- Normal case: SUPER has the grade `super`, not `super_100`.
 - Limit case: EURO DIESEL and EFFECT DIESEL have the grade `diesel`.
 - Unwanted case: a slug that the server does not know. The product has the grade `other`.
 
 | Slug            | Grade       |
 | --------------- | ----------- |
-| `super`         | `super_100` |
+| `super`         | `super`     |
 | `premium`       | `premium`   |
 | `euro-regular`  | `regular`   |
 | `euro-diesel`   | `diesel`    |
@@ -177,7 +177,7 @@ It is on by default.
 | #   | Question | Owner | Answer |
 | --- | -------- | ----- | ------ |
 | 1   | Does the server return the online price of a QR liter? | Temuri | No (2026-10-21). |
-| 2   | Is the SUPER of Portal `super_100`? | Temuri | Yes. Portal states the octane number 100 (2026-10-21). |
+| 2   | Is the SUPER of Portal `super_100`? | Temuri | No. It is a super 98. The octane number 100 of the data is a mistake (2026-10-21). |
 
 ## Retired identifiers
 
