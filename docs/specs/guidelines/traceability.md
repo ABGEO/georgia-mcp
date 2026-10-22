@@ -4,7 +4,7 @@ title: Traceability
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-21
+updated: 2026-10-22
 scope: [docs/specs/, tests]
 related: [LNG, PRC, GIT, SPC]
 ---
@@ -186,6 +186,7 @@ Add a row before you create the file or the directory.
 | `LUKFUEL`  | `features/lukfuel/`  | `fuel`     | The fuel prices of Lukoil, with the date of the last change.    | Approved |
 | `NEOFUEL`  | `features/neofuel/`  | `fuel`     | The price of compressed natural gas of Neogas.                  | Approved |
 | `PORFUEL`  | `features/porfuel/`  | `fuel`     | The fuel prices of Portal, read from the data of its web page.  | Approved |
+| `GULFUEL`  | `features/gulfuel/`  | `fuel`     | The fuel prices of Gulf, read from a page behind a bot filter.  | Approved |
 | `TTCTRANS` | `features/ttctrans/` | `transit`  | The stops, routes, arrivals, timetables, and trip plans of the TTC. | Approved |
 | `BOGOFFER` | `features/bogoffer/` | `offers`   | The card offers of Bank of Georgia, and the tools of every bank. | Approved |
 | `TBCOFFER` | `features/tbcoffer/` | `offers`   | The card offers of TBC Bank.                                    | Approved |

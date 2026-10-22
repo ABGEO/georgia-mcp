@@ -4,7 +4,7 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-21
+updated: 2026-10-22
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
@@ -27,7 +27,8 @@ A client imports the standard library only. It imports no package of the server
 module, no other client, and no MCP package. A third-party library needs a requirement
 that the API of the vendor demands, for example a protocol that the standard library
 does not offer. A client of a web page imports `golang.org/x/net/html`. No other client
-imports it. `ADR-0003`.
+imports it. `ADR-0003`. A client of a vendor whose filter refuses the TLS handshake of Go
+imports `github.com/refraction-networking/utls`. No other client imports it.
 
 **Why:** A dependency of a client is a dependency of every project that uses it.
 
@@ -48,6 +49,10 @@ the body with `encoding/json` or `encoding/xml`. A client of a web page parses t
 with `golang.org/x/net/html`. A client of a data stream finds the JSON value in the
 body and decodes it with `encoding/json`. It reads at most a fixed count of bytes from
 a body.
+
+A client of a vendor whose filter refuses the TLS handshake of Go exports `NewTransport`.
+Its transport dials each TLS connection with the handshake of one fixed browser, over
+HTTP/1.1. The default `http.Client` of the client uses it.
 
 **Why:** A GET with a query and two headers needs no library. The standard library has
 no major version to migrate.
