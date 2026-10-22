@@ -3,11 +3,14 @@ version: "3"
 vars:
   MODULE: '{{.MODULE | default "."}}'
   IMAGE: georgia-mcp:dev
+  WEBSITE_IMAGE: georgia-mcp-website:dev
   COMPOSE: docker compose -f deployments/compose.yaml
   VERSION:
     sh: git describe --tags --always --dirty 2>/dev/null || echo dev
   REVISION:
     sh: git rev-parse HEAD 2>/dev/null || echo unknown
+  NODE_VERSION:
+    sh: cat website/.nvmrc
 
 tasks:
   lint:
@@ -46,27 +49,27 @@ tasks:
     cmds:
       - go run ./cmd/georgia-mcp serve
 
-  compose-up:
+  compose:up:
     desc: Build and start the server in a container, with the local configuration.
     cmds:
       - "{{.COMPOSE}} up -d --build"
 
-  compose-start:
+  compose:start:
     desc: Start the stopped container.
     cmds:
       - "{{.COMPOSE}} start"
 
-  compose-stop:
+  compose:stop:
     desc: Stop the container and keep it.
     cmds:
       - "{{.COMPOSE}} stop"
 
-  compose-down:
+  compose:down:
     desc: Stop and remove the container and its network.
     cmds:
       - "{{.COMPOSE}} down"
 
-  build-image:
+  image:
     desc: Build the container image.
     cmds:
       - >-
@@ -74,3 +77,55 @@ tasks:
         --build-arg VERSION={{.VERSION}}
         --build-arg REVISION={{.REVISION}}
         -t {{.IMAGE}} .
+
+  website:dev:
+    desc: Serve the website with reload.
+    dir: website
+    preconditions: &node
+      - sh: |
+          node -e "
+            const v = (s) => s.trim().replace(/^v/, '').split('.').map(Number)
+            const [have, want] = [v(process.version), v(require('fs').readFileSync('{{.ROOT_DIR}}/website/.nvmrc', 'utf8'))]
+            const i = have.findIndex((n, j) => n !== want[j])
+            process.exit(i === -1 || have[i] > want[i] ? 0 : 1)
+          "
+        msg: Node {{.NODE_VERSION}} or later is needed (website/.nvmrc). Run nvm use in website/.
+    cmds:
+      - pnpm dev
+
+  website:lint:
+    desc: Run the checks of the website.
+    dir: website
+    preconditions: *node
+    cmds:
+      - pnpm lint
+
+  website:test:
+    desc: Build the website and run its unit, build, and browser tests.
+    dir: website
+    preconditions: *node
+    cmds:
+      - pnpm test
+
+  website:build:
+    desc: Build the website into website/dist.
+    dir: website
+    preconditions: *node
+    cmds:
+      - pnpm build
+
+  website:refresh:
+    desc: Record the tool definitions and the tool examples of the website from the local server.
+    dir: website
+    preconditions: *node
+    cmds:
+      - pnpm refresh
+
+  website:image:
+    desc: Build the container image of the website.
+    cmds:
+      - >-
+        docker build -f website/.docker/Dockerfile
+        --build-arg VERSION={{.VERSION}}
+        --build-arg REVISION={{.REVISION}}
+        -t {{.WEBSITE_IMAGE}} website
