@@ -345,6 +345,7 @@ Each test of the cache runs in `synctest.Test` and uses `Cache[string]` and `Cac
 | A on, B on with a failing `Build`                | An error that wraps the failure and names B. A is closed.  |
 | A off, B off                                     | No source, no error. Two info records.                     |
 | `CloseAll` of two sources, the first fails       | Both are closed. The error is the failure of the first.    |
+| A on, at the address of an `httptest` server     | A client of the options that `Build` gets reaches the server. |
 
 ## The vendor clients
 

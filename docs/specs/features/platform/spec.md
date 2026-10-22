@@ -253,11 +253,13 @@ type Config struct {
 func Defaults(baseURL string) Config // on, at baseURL, with httpclient.Defaults
 func (c Config) WithLimit(rate float64, burst int) Config
 type Entry[T io.Closer] struct {
-    Name     string // "Lukoil", for the log
-    Enabled  bool
-    Variable string // the switch: "GEOMCP_FUEL_LUKOIL_ENABLED"
-    Build    func() (T, error)
+    Name      string // "Lukoil", for the log
+    Variable  string // the switch: "GEOMCP_FUEL_LUKOIL_ENABLED"
+    Config    Config
+    Transport http.RoundTripper // nil: the default transport
+    Build     func(opts ...vendorhttp.Option) (T, error)
 }
+func (c Config) ClientOptions(transport http.RoundTripper) []vendorhttp.Option
 func New[T io.Closer](logger *slog.Logger) *Registry[T]
 func (r *Registry[T]) Add(entry Entry[T])
 func (r *Registry[T]) Build() ([]T, error)
@@ -296,8 +298,9 @@ type StatusError struct { StatusCode int; Body string } // Unwrap gives the sent
 `Do` returns the answer for any status. `Fetch` returns the body of a 200, and a
 `*StatusError` for any other status. `FetchJSON` decodes the body of `Fetch`.
 
-`Build` calls `Build` of each entry that is on, in the order of `Add`, and returns the
-results in that order. It logs each entry that is off at info level: `<Name> is off`,
+`Build` calls `Build` of each entry whose `Config.Enabled` is true, in the order of
+`Add`, with the client options of its `Config`: the base address, and an HTTP client
+with its timeout and limit over `Transport`. It returns the results in that order. It logs each entry that is off at info level: `<Name> is off`,
 with the attribute `variable`. When one `Build` fails, it closes each source that it
 built, and returns the error wrapped with the name. `CloseAll` closes each source and
 joins the errors.
@@ -515,8 +518,11 @@ vendor that is on. The use case receives that list. The type parameter is the ca
 the port: rates, fuel, and offers each give one.
 **Rationale:** Three contexts repeated the loop: the switch, the log, the build, and the
 close after a failure. The offers context wrote it as one `if` for each bank.
+The entry holds the `vendors.Config` of the vendor, so the registry builds the options of
+its client, and `Build` names only the client, the adapter, and the cache.
 **Alternatives:** A context adds a vendor only when it is on. Each context then writes
-the log of a vendor that is off again.
+the log of a vendor that is off again. A function for each vendor that builds its client
+options: 17 functions of 15 lines that differ in one name.
 
 ### `PLATFORM-DD-012`
 
@@ -611,6 +617,7 @@ struct used one time then has its default far from its field.
 | 11  | `config` validates with tags. Every `Validate` method becomes a tag.           | `PLATFORM-FR-012`                               | [x]  |
 | 12  | `pkg/vendorhttp`. Each vendor client sends its requests with it.               | `PLATFORM-FR-026`                               | [x]  |
 | 13  | `Defaults()` of each context. `vendors.Config` for each vendor.                | `CFG-005`, `CFG-008`                            | [x]  |
+| 14  | The registry builds the client options of each vendor from its `Config`.       | `PLATFORM-FR-025`                               | [x]  |
 
 ## 8. Out of scope for this specification
 
