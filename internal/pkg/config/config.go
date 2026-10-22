@@ -32,11 +32,11 @@ func (e *FieldError) Error() string {
 	return e.Variable + ": " + e.Problem
 }
 
-// Load reads the configuration into T, then checks the validate tag of each field. A
-// variable of the environment wins over the local file. Each invalid value gives a
-// *FieldError.
-func Load[T any]() (T, error) {
-	var cfg T
+// Load reads the configuration into a copy of defaults: a variable that is set replaces
+// its field. Then it checks the validate tag of each field. A variable of the environment
+// wins over the local file. Each invalid value gives a *FieldError.
+func Load[T any](defaults T) (T, error) {
+	cfg := defaults
 
 	environment, err := readEnvironment()
 	if err != nil {
@@ -55,6 +55,17 @@ func Load[T any]() (T, error) {
 	}
 
 	return cfg, nil
+}
+
+// URL returns the address of a default. An address that does not parse gives the empty
+// URL, which the validation of Load refuses.
+func URL(text string) url.URL {
+	address, err := url.Parse(text)
+	if err != nil {
+		return url.URL{}
+	}
+
+	return *address
 }
 
 func readEnvironment() (map[string]string, error) {

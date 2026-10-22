@@ -1,148 +1,29 @@
 package fuel
 
-import (
-	"net/url"
-	"time"
-)
+import "github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 
-// Config is the configuration of the fuel context.
+// Config is the configuration of the fuel context: one vendor for each fuel company.
 type Config struct {
-	Wissol    WissolConfig    `envPrefix:"WISSOL_"`
-	Rompetrol RompetrolConfig `envPrefix:"ROMPETROL_"`
-	SOCAR     SOCARConfig     `envPrefix:"SOCAR_"`
-	Connect   ConnectConfig   `envPrefix:"CONNECT_"`
-	Lukoil    LukoilConfig    `envPrefix:"LUKOIL_"`
-	Neogas    NeogasConfig    `envPrefix:"NEOGAS_"`
-	Portal    PortalConfig    `envPrefix:"PORTAL_"`
-	Gulf      GulfConfig      `envPrefix:"GULF_"`
+	Wissol    vendors.Config `envPrefix:"WISSOL_"`
+	Rompetrol vendors.Config `envPrefix:"ROMPETROL_"`
+	SOCAR     vendors.Config `envPrefix:"SOCAR_"`
+	Connect   vendors.Config `envPrefix:"CONNECT_"`
+	Lukoil    vendors.Config `envPrefix:"LUKOIL_"`
+	Neogas    vendors.Config `envPrefix:"NEOGAS_"`
+	Portal    vendors.Config `envPrefix:"PORTAL_"`
+	Gulf      vendors.Config `envPrefix:"GULF_"`
 }
 
-// WissolConfig is the configuration of the calls to Wissol. Wissol needs no key, so
-// Enabled turns it off. A Config built in Go leaves Wissol off.
-type WissolConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://api.wissol.ge" validate:"http_url"`
-	HTTP    WissolHTTPConfig
-}
-
-// WissolHTTPConfig holds the fields of httpclient.Config with the defaults of Wissol: 1
-// call each second. Wissol publishes no limit, and the cache sends about 2 calls in an
-// hour. A default lives in a struct tag, so httpclient.Config cannot carry a second one.
-type WissolHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// RompetrolConfig is the configuration of the reads of the page of Rompetrol. Rompetrol
-// needs no key, so Enabled turns it off. A Config built in Go leaves Rompetrol off.
-type RompetrolConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://www.rompetrol.ge" validate:"http_url"`
-	HTTP    RompetrolHTTPConfig
-}
-
-// RompetrolHTTPConfig holds the fields of httpclient.Config with the defaults of
-// Rompetrol: 1 call each second. Rompetrol publishes no limit, and the cache sends about
-// 2 calls in an hour.
-type RompetrolHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// SOCARConfig is the configuration of the calls to SOCAR. SOCAR needs no key, so Enabled
-// turns it off. A Config built in Go leaves SOCAR off.
-type SOCARConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://sgp.ge/sgp-backend/api" validate:"http_url"`
-	HTTP    SOCARHTTPConfig
-}
-
-// SOCARHTTPConfig holds the fields of httpclient.Config with the defaults of SOCAR: 1 call
-// each second. SOCAR publishes no limit, and the cache sends about 2 calls in an hour.
-type SOCARHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// ConnectConfig is the configuration of the calls to Connect. Connect needs no key, so
-// Enabled turns it off. A Config built in Go leaves Connect off.
-type ConnectConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://connect.com.ge/wp-json/fuel-prices/v1" validate:"http_url"`
-	HTTP    ConnectHTTPConfig
-}
-
-// ConnectHTTPConfig holds the fields of httpclient.Config with the defaults of Connect: 1
-// call each second. Connect publishes no limit, and the cache sends about 2 calls in an hour.
-type ConnectHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// LukoilConfig is the configuration of the reads of the price history page of Lukoil. Lukoil needs no key, so
-// Enabled turns it off. A Config built in Go leaves Lukoil off.
-type LukoilConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://www.lukoil.ge" validate:"http_url"`
-	HTTP    LukoilHTTPConfig
-}
-
-// LukoilHTTPConfig holds the fields of httpclient.Config with the defaults of Lukoil: 1
-// call each second. Lukoil publishes no limit, and the cache sends about 2 calls in an hour.
-type LukoilHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// NeogasConfig is the configuration of the reads of the home page of Neogas. Neogas needs no key, so
-// Enabled turns it off. A Config built in Go leaves Neogas off.
-type NeogasConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://neogas.ge" validate:"http_url"`
-	HTTP    NeogasHTTPConfig
-}
-
-// NeogasHTTPConfig holds the fields of httpclient.Config with the defaults of Neogas: 1
-// call each second. Neogas publishes no limit, and the cache sends about 2 calls in an hour.
-type NeogasHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// PortalConfig is the configuration of the reads of the price page of Portal. Portal needs no key, so
-// Enabled turns it off. A Config built in Go leaves Portal off.
-type PortalConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://portal.com.ge" validate:"http_url"`
-	HTTP    PortalHTTPConfig
-}
-
-// PortalHTTPConfig holds the fields of httpclient.Config with the defaults of Portal: 1
-// call each second. Portal publishes no limit, and the cache sends about 2 calls in an hour.
-type PortalHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
-}
-
-// GulfConfig is the configuration of the reads of the fuel prices page of Gulf. Gulf needs no key, so
-// Enabled turns it off. A Config built in Go leaves Gulf off.
-type GulfConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://gulf.ge" validate:"http_url"`
-	HTTP    GulfHTTPConfig
-}
-
-// GulfHTTPConfig holds the fields of httpclient.Config with the defaults of Gulf: 1
-// call each second. Gulf publishes no limit, and the cache sends about 2 calls in an hour.
-type GulfHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"1"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
+// Defaults returns the configuration of the context with no variable set.
+func Defaults() Config {
+	return Config{
+		Wissol:    vendors.Defaults("https://api.wissol.ge"),
+		Rompetrol: vendors.Defaults("https://www.rompetrol.ge"),
+		SOCAR:     vendors.Defaults("https://sgp.ge/sgp-backend/api"),
+		Connect:   vendors.Defaults("https://connect.com.ge/wp-json/fuel-prices/v1"),
+		Lukoil:    vendors.Defaults("https://www.lukoil.ge"),
+		Neogas:    vendors.Defaults("https://neogas.ge"),
+		Portal:    vendors.Defaults("https://portal.com.ge"),
+		Gulf:      vendors.Defaults("https://gulf.ge"),
+	}
 }

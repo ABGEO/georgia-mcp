@@ -12,11 +12,30 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
+const (
+	defaultTimeout = 10 * time.Second
+	defaultRate    = 1
+	defaultBurst   = 1
+)
+
 // Config is the configuration of the calls to one vendor.
 type Config struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"5"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"5"   validate:"min=1"`
+	Timeout time.Duration `env:"TIMEOUT" validate:"gt=0"`
+	Rate    float64       `env:"RATE"    validate:"gt=0"`
+	Burst   int           `env:"BURST"   validate:"min=1"`
+}
+
+// Defaults returns the calls of most vendors: a timeout of 10 seconds, and 1 call each
+// second with a burst of 1.
+func Defaults() Config {
+	return Config{Timeout: defaultTimeout, Rate: defaultRate, Burst: defaultBurst}
+}
+
+// WithLimit returns the configuration with rate calls each second and a burst.
+func (c Config) WithLimit(rate float64, burst int) Config {
+	c.Rate, c.Burst = rate, burst
+
+	return c
 }
 
 // New returns a client that waits for a free slot of the limit before each call.

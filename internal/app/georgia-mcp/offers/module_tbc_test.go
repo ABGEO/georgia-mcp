@@ -16,6 +16,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -101,10 +103,10 @@ func tbcKey(r *http.Request) string {
 func tbcConfig(t *testing.T) offers.Config {
 	t.Helper()
 
-	return offers.Config{TBC: offers.TBCConfig{
+	return offers.Config{TBC: vendors.Config{
 		Enabled: true,
 		BaseURL: tbcServer(t),
-		HTTP:    offers.TBCHTTPConfig{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
 	}}
 }
 
@@ -227,7 +229,7 @@ func TestSearchOfTBCWhenOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := config(newBOGServer(t))
-	cfg.TBC = offers.TBCConfig{Enabled: false}
+	cfg.TBC = vendors.Config{Enabled: false}
 
 	result := call(t, serve(t, cfg), searchOffers, map[string]any{argBanks: []string{tbcCode}})
 

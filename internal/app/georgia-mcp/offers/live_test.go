@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 func mustURL(t *testing.T, text string) url.URL {
@@ -46,10 +48,10 @@ func checkColdSearch(t *testing.T, cfg offers.Config, bank string, limit time.Du
 func TestLiveSearchOfBOG(t *testing.T) {
 	t.Parallel()
 
-	checkColdSearch(t, offers.Config{BOG: offers.BOGConfig{
+	checkColdSearch(t, offers.Config{BOG: vendors.Config{
 		Enabled: true,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: mustURL(t, "https://bankofgeorgia.ge/api/bog-b/offers-hub"),
-		HTTP:    offers.BOGHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}}, bogCode, 10*time.Second)
 }
 
@@ -58,10 +60,10 @@ func TestLiveSearchOfBOG(t *testing.T) {
 func TestLiveSearchOfTBC(t *testing.T) {
 	t.Parallel()
 
-	checkColdSearch(t, offers.Config{TBC: offers.TBCConfig{
+	checkColdSearch(t, offers.Config{TBC: vendors.Config{
 		Enabled: true,
 		BaseURL: mustURL(t, "https://apigw.tbcbank.ge/api/v1/marketing"),
-		HTTP:    offers.TBCHTTPConfig{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
 	}}, tbcCode, 30*time.Second)
 }
 
@@ -70,9 +72,9 @@ func TestLiveSearchOfTBC(t *testing.T) {
 func TestLiveSearchOfLiberty(t *testing.T) {
 	t.Parallel()
 
-	checkColdSearch(t, offers.Config{Liberty: offers.LibertyConfig{
+	checkColdSearch(t, offers.Config{Liberty: vendors.Config{
 		Enabled: true,
 		BaseURL: mustURL(t, "https://studioliberty.ge"),
-		HTTP:    offers.LibertyHTTPConfig{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 5, Burst: 5},
 	}}, libertyCode, 30*time.Second)
 }

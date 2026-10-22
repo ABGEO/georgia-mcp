@@ -150,45 +150,45 @@ func commercialSources(
 	return banks.Build()
 }
 
-func bogAdapter(cfg BOGConfig, now func() time.Time) *bogadapter.Adapter {
+func bogAdapter(cfg vendors.Config, now func() time.Time) *bogadapter.Adapter {
 	return bogadapter.NewAdapter(bogclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	), now)
 }
 
-func libertyAdapter(cfg LibertyConfig, now func() time.Time) *libertyadapter.Adapter {
+func libertyAdapter(cfg vendors.Config, now func() time.Time) *libertyadapter.Adapter {
 	return libertyadapter.NewAdapter(libertyclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	), now)
 }
 
-func terabankAdapter(cfg TerabankConfig, now func() time.Time) *terabankadapter.Adapter {
+func terabankAdapter(cfg vendors.Config, now func() time.Time) *terabankadapter.Adapter {
 	return terabankadapter.NewAdapter(terabankclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	), now)
 }
 
-func ricoAdapter(cfg RicoConfig, now func() time.Time) *ricoadapter.Adapter {
+func ricoAdapter(cfg vendors.Config, now func() time.Time) *ricoadapter.Adapter {
 	return ricoadapter.NewAdapter(ricoclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	), now)
 }
 
-func kursiAdapter(cfg KursiConfig, now func() time.Time) *kursiadapter.Adapter {
+func kursiAdapter(cfg vendors.Config, now func() time.Time) *kursiadapter.Adapter {
 	return kursiadapter.NewAdapter(kursiclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	), now)
 }
 
 func tbcAdapter(cfg TBCConfig, now func() time.Time) *tbcadapter.Adapter {
 	return tbcadapter.NewAdapter(tbcclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 		tbcclient.WithAPIKey(cfg.APIKey),
 	), now)
 }

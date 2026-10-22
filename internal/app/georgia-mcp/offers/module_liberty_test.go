@@ -16,6 +16,8 @@ import (
 	"time"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -109,11 +111,11 @@ func libertyKey(r *http.Request) string {
 	}
 }
 
-func libertyConfig(base url.URL) offers.LibertyConfig {
-	return offers.LibertyConfig{
+func libertyConfig(base url.URL) vendors.Config {
+	return vendors.Config{
 		Enabled: true,
 		BaseURL: base,
-		HTTP:    offers.LibertyHTTPConfig{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
 	}
 }
 

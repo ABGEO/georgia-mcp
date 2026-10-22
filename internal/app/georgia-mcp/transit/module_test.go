@@ -20,6 +20,7 @@ import (
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit"
 	"github.com/abgeo/georgia-mcp/internal/pkg/buildinfo"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 )
@@ -144,7 +145,7 @@ func (f *fakeTTC) config(t *testing.T) transit.Config {
 		Enabled: true,
 		APIKey:  testKey,
 		BaseURL: *base,
-		HTTP:    transit.TTCHTTPConfig{Timeout: 10 * time.Second, Rate: 4, Burst: 1},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 4, Burst: 1},
 	}}
 }
 

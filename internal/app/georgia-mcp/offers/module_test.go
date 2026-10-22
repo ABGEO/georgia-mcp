@@ -20,7 +20,9 @@ import (
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/pkg/buildinfo"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -125,10 +127,10 @@ func (b *bogServer) count(language string) int32 {
 }
 
 func config(bog *bogServer) offers.Config {
-	return offers.Config{BOG: offers.BOGConfig{
+	return offers.Config{BOG: vendors.Config{
 		Enabled: true,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
 		BaseURL: bog.url,
-		HTTP:    offers.BOGHTTPConfig{Timeout: 10 * time.Second, Rate: 100, Burst: 100},
 	}}
 }
 

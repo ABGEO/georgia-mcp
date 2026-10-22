@@ -15,6 +15,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -68,10 +70,10 @@ func withBOG(t *testing.T, cfg rates.Config, vendor http.Handler) rates.Config {
 		t.Fatal(err)
 	}
 
-	cfg.BOG = rates.BOGConfig{
+	cfg.BOG = vendors.Config{
 		Enabled: true,
 		BaseURL: *bogURL,
-		HTTP:    rates.BOGHTTPConfig{Timeout: 10 * time.Second, Rate: 0.8, Burst: 10},
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 0.8, Burst: 10},
 	}
 
 	return cfg

@@ -1,8 +1,12 @@
 package transit
 
-import (
-	"net/url"
-	"time"
+import "github.com/abgeo/georgia-mcp/internal/pkg/vendors"
+
+// A burst of 1 and 4 calls each second keep any second at 5 calls or fewer, since a token
+// bucket lets through at most its burst plus its rate in one second.
+const (
+	ttcRate  = 4
+	ttcBurst = 1
 )
 
 // Config is the configuration of the transit context.
@@ -11,21 +15,17 @@ type Config struct {
 }
 
 // TTCConfig is the configuration of the calls to the TTC. Enabled turns the TTC off. The
-// key does not: while the TTC is on, the key is required. A Config built in Go leaves the
-// TTC off.
+// key does not: while the TTC is on, the key is required.
 type TTCConfig struct {
-	Enabled bool    `env:"ENABLED"  envDefault:"true"`
-	APIKey  string  `env:"API_KEY"  validate:"required_if=Enabled true"`
-	BaseURL url.URL `env:"BASE_URL" envDefault:"https://transit.ttc.com.ge/pis-gateway/api" validate:"http_url"`
-	HTTP    TTCHTTPConfig
+	vendors.Config
+
+	APIKey string `env:"API_KEY" validate:"required_if=Enabled true"`
 }
 
-// TTCHTTPConfig holds the fields of httpclient.Config with the defaults of the TTC: a
-// burst of 1 and 4 calls each second keep any second at 5 calls or fewer, since a token
-// bucket lets through at most its burst plus its rate in one second. A default lives in
-// a struct tag, so httpclient.Config cannot carry a second one.
-type TTCHTTPConfig struct {
-	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s" validate:"gt=0"`
-	Rate    float64       `env:"RATE"    envDefault:"4"   validate:"gt=0"`
-	Burst   int           `env:"BURST"   envDefault:"1"   validate:"min=1"`
+// Defaults returns the configuration of the context with no variable set.
+func Defaults() Config {
+	return Config{TTC: TTCConfig{
+		Config: vendors.Defaults("https://transit.ttc.com.ge/pis-gateway/api").
+			WithLimit(ttcRate, ttcBurst),
+	}}
 }

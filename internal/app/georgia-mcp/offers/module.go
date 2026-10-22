@@ -82,13 +82,13 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 }
 
 func bogSource(
-	cfg BOGConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := bogoffers.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	bog, err := offercache.New(bogadapter.NewAdapter(client, now, logger))
@@ -100,13 +100,13 @@ func bogSource(
 }
 
 func tbcSource(
-	cfg TBCConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := tbcoffers.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	tbc, err := offercache.New(tbcadapter.NewAdapter(client, now, logger))
@@ -118,13 +118,13 @@ func tbcSource(
 }
 
 func libertySource(
-	cfg LibertyConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := libertyclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	liberty, err := offercache.New(libertyadapter.NewAdapter(client, now, logger))

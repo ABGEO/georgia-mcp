@@ -39,7 +39,7 @@ func TestLoadNamesTheVariableOfAParseError(t *testing.T) {
 	t.Chdir(t.TempDir())
 	t.Setenv("GEOMCP_SECOND_TIMEOUT", "soon")
 
-	_, err := config.Load[root]()
+	_, err := config.Load(root{})
 	if err == nil || !strings.Contains(err.Error(), "GEOMCP_SECOND_TIMEOUT") {
 		t.Fatalf("Load() error = %v, want an error that names GEOMCP_SECOND_TIMEOUT", err)
 	}
@@ -51,7 +51,7 @@ func TestLoadNamesTheVariableOfAValidationError(t *testing.T) {
 	t.Chdir(t.TempDir())
 	t.Setenv("GEOMCP_SECOND_COUNT", "0")
 
-	_, err := config.Load[root]()
+	_, err := config.Load(root{})
 
 	fieldErr, ok := errors.AsType[*config.FieldError](err)
 	if !ok {
@@ -67,7 +67,7 @@ func TestLoadNamesTheVariableOfAValidationError(t *testing.T) {
 func TestLoadAppliesTheDefaults(t *testing.T) {
 	t.Chdir(t.TempDir())
 
-	got, err := config.Load[inner]()
+	got, err := config.Load(inner{})
 	if err != nil {
 		t.Fatalf("Load() error = %v", err)
 	}
@@ -119,7 +119,7 @@ func TestLoadGivesTheMessageOfEachRule(t *testing.T) {
 				t.Setenv("GEOMCP_VENDOR_"+key, value)
 			}
 
-			_, err := config.Load[vendorRoot]()
+			_, err := config.Load(vendorRoot{})
 			if tt.want == "" {
 				if err != nil {
 					t.Fatalf("Load() error = %v, want none", err)
@@ -147,7 +147,7 @@ func TestLoadGivesEachError(t *testing.T) {
 	t.Setenv("GEOMCP_VENDOR_BASE_URL", "ftp://example.com")
 	t.Setenv("GEOMCP_VENDOR_API_KEY", "k")
 
-	_, err := config.Load[vendorRoot]()
+	_, err := config.Load(vendorRoot{})
 
 	joined, ok := errors.AsType[interface {
 		error

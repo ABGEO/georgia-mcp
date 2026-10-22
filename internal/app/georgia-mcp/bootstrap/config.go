@@ -22,5 +22,15 @@ type Config struct {
 
 // LoadConfig reads and validates the configuration.
 func LoadConfig() (Config, error) {
-	return config.Load[Config]()
+	return config.Load(Defaults())
+}
+
+// Defaults returns the configuration of the process with no variable set.
+func Defaults() Config {
+	return Config{
+		Rates:   rates.Defaults(),
+		Fuel:    fuel.Defaults(),
+		Transit: transit.Defaults(),
+		Offers:  offers.Defaults(),
+	}
 }

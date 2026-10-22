@@ -18,6 +18,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -106,10 +108,12 @@ func commercialConfig(t *testing.T, vendor http.Handler, key string) rates.Confi
 	return rates.Config{
 		NBG: nbgConfig(*nbgURL),
 		TBC: rates.TBCConfig{
-			Enabled: key != "",
-			APIKey:  key,
-			BaseURL: *tbcURL,
-			HTTP:    rates.TBCHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
+			Config: vendors.Config{
+				Enabled: key != "",
+				HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
+				BaseURL: *tbcURL,
+			},
+			APIKey: key,
 		},
 	}
 }

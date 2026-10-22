@@ -12,6 +12,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -46,10 +48,10 @@ func withTerabank(t *testing.T, cfg rates.Config, vendor http.Handler) rates.Con
 		t.Fatal(err)
 	}
 
-	cfg.Terabank = rates.TerabankConfig{
+	cfg.Terabank = vendors.Config{
 		Enabled: true,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: *terabankURL,
-		HTTP:    rates.TerabankHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}
 
 	return cfg

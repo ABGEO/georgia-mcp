@@ -139,13 +139,13 @@ func companySources(
 }
 
 func wissolSource(
-	cfg WissolConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := wissolclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	wissol, err := fuelcache.New(wissoladapter.NewAdapter(client, now, logger))
@@ -157,13 +157,13 @@ func wissolSource(
 }
 
 func rompetrolSource(
-	cfg RompetrolConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := rompetrolclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	rompetrol, err := fuelcache.New(rompetroladapter.NewAdapter(client, now, logger))
@@ -175,13 +175,13 @@ func rompetrolSource(
 }
 
 func socarSource(
-	cfg SOCARConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := socarclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	socar, err := fuelcache.New(socaradapter.NewAdapter(client, now, logger))
@@ -193,13 +193,13 @@ func socarSource(
 }
 
 func connectSource(
-	cfg ConnectConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := connectclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	connect, err := fuelcache.New(connectadapter.NewAdapter(client, now, logger))
@@ -211,13 +211,13 @@ func connectSource(
 }
 
 func lukoilSource(
-	cfg LukoilConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := lukoilclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	lukoil, err := fuelcache.New(lukoiladapter.NewAdapter(client, now, logger))
@@ -229,12 +229,12 @@ func lukoilSource(
 }
 
 func neogasSource(
-	cfg NeogasConfig,
+	cfg vendors.Config,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := neogasclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	neogas, err := fuelcache.New(neogasadapter.NewAdapter(client, now))
@@ -246,13 +246,13 @@ func neogasSource(
 }
 
 func portalSource(
-	cfg PortalConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := portalclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
 	)
 
 	portal, err := fuelcache.New(portaladapter.NewAdapter(client, now, logger))
@@ -278,14 +278,14 @@ func (m *Module) Close() error {
 }
 
 func gulfSource(
-	cfg GulfConfig,
+	cfg vendors.Config,
 	logger *slog.Logger,
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := gulfclient.New(
 		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
 		vendorhttp.WithHTTPClient(
-			httpclient.NewWithTransport(httpclient.Config(cfg.HTTP), gulfclient.NewTransport()),
+			httpclient.NewWithTransport(cfg.HTTP, gulfclient.NewTransport()),
 		),
 	)
 

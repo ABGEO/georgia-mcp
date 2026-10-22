@@ -14,6 +14,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -50,10 +52,10 @@ func withLiberty(t *testing.T, cfg rates.Config, vendor http.Handler) rates.Conf
 		t.Fatal(err)
 	}
 
-	cfg.Liberty = rates.LibertyConfig{
+	cfg.Liberty = vendors.Config{
 		Enabled: true,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: *libertyURL,
-		HTTP:    rates.LibertyHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}
 
 	return cfg

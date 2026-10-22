@@ -46,7 +46,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 
 	client := ttcclient.New(
 		vendorhttp.WithBaseURL(cfg.TTC.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.TTC.HTTP))),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.TTC.HTTP)),
 		ttcclient.WithAPIKey(cfg.TTC.APIKey),
 	)
 	adapter := ttcadapter.NewAdapter(client, now, logger)

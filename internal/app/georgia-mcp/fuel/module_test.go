@@ -21,7 +21,9 @@ import (
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
 	"github.com/abgeo/georgia-mcp/internal/pkg/buildinfo"
+	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
+	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 )
 
 const (
@@ -107,10 +109,10 @@ func wissolConfig(t *testing.T, enabled bool) fuel.Config {
 		t.Fatal(err)
 	}
 
-	return fuel.Config{Wissol: fuel.WissolConfig{
+	return fuel.Config{Wissol: vendors.Config{
 		Enabled: enabled,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: *base,
-		HTTP:    fuel.WissolHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}}
 }
 
@@ -334,7 +336,7 @@ func TestTheToolNeedsACompany(t *testing.T) {
 }
 
 // rompetrolConfig points Rompetrol at a server that serves a recorded page.
-func rompetrolConfig(t *testing.T, enabled bool, page string) fuel.RompetrolConfig {
+func rompetrolConfig(t *testing.T, enabled bool, page string) vendors.Config {
 	t.Helper()
 
 	path := filepath.Join("../../../../pkg/rompetrol/testdata", page)
@@ -354,10 +356,10 @@ func rompetrolConfig(t *testing.T, enabled bool, page string) fuel.RompetrolConf
 		t.Fatal(err)
 	}
 
-	return fuel.RompetrolConfig{
+	return vendors.Config{
 		Enabled: enabled,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: *base,
-		HTTP:    fuel.RompetrolHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}
 }
 
@@ -564,7 +566,7 @@ func TestRompetrolOff(t *testing.T) {
 }
 
 // socarConfig points SOCAR at a server that answers with a status and a recorded body.
-func socarConfig(t *testing.T, enabled bool, answer string, status int) fuel.SOCARConfig {
+func socarConfig(t *testing.T, enabled bool, answer string, status int) vendors.Config {
 	t.Helper()
 
 	path := filepath.Join("../../../../pkg/socar/testdata", answer)
@@ -585,10 +587,10 @@ func socarConfig(t *testing.T, enabled bool, answer string, status int) fuel.SOC
 		t.Fatal(err)
 	}
 
-	return fuel.SOCARConfig{
+	return vendors.Config{
 		Enabled: enabled,
+		HTTP:    httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 		BaseURL: *base,
-		HTTP:    fuel.SOCARHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1},
 	}
 }
 
@@ -755,36 +757,48 @@ func failingCompanies(t *testing.T) fuel.Config {
 		t.Fatal(err)
 	}
 
-	limits := fuel.WissolHTTPConfig{Timeout: 10 * time.Second, Rate: 1, Burst: 1}
+	limits := httpclient.Config{Timeout: 10 * time.Second, Rate: 1, Burst: 1}
 
 	return fuel.Config{
-		Wissol: fuel.WissolConfig{Enabled: true, BaseURL: *base, HTTP: limits},
-		Rompetrol: fuel.RompetrolConfig{
-			Enabled: true, BaseURL: *base, HTTP: fuel.RompetrolHTTPConfig(limits),
-		},
-		SOCAR: fuel.SOCARConfig{Enabled: true, BaseURL: *base, HTTP: fuel.SOCARHTTPConfig(limits)},
-		Connect: fuel.ConnectConfig{
-			Enabled: true, BaseURL: *base, HTTP: fuel.ConnectHTTPConfig(limits),
-		},
-		Lukoil: fuel.LukoilConfig{
+		Wissol: vendors.Config{
 			Enabled: true,
+			HTTP:    limits,
 			BaseURL: *base,
-			HTTP:    fuel.LukoilHTTPConfig(limits),
 		},
-		Neogas: fuel.NeogasConfig{
+		Rompetrol: vendors.Config{
 			Enabled: true,
+			HTTP:    limits,
 			BaseURL: *base,
-			HTTP:    fuel.NeogasHTTPConfig(limits),
 		},
-		Portal: fuel.PortalConfig{
+		SOCAR: vendors.Config{
 			Enabled: true,
+			HTTP:    limits,
 			BaseURL: *base,
-			HTTP:    fuel.PortalHTTPConfig(limits),
 		},
-		Gulf: fuel.GulfConfig{
+		Connect: vendors.Config{
 			Enabled: true,
+			HTTP:    limits,
 			BaseURL: *base,
-			HTTP:    fuel.GulfHTTPConfig(limits),
+		},
+		Lukoil: vendors.Config{
+			Enabled: true,
+			HTTP:    limits,
+			BaseURL: *base,
+		},
+		Neogas: vendors.Config{
+			Enabled: true,
+			HTTP:    limits,
+			BaseURL: *base,
+		},
+		Portal: vendors.Config{
+			Enabled: true,
+			HTTP:    limits,
+			BaseURL: *base,
+		},
+		Gulf: vendors.Config{
+			Enabled: true,
+			HTTP:    limits,
+			BaseURL: *base,
 		},
 	}
 }
@@ -875,7 +889,7 @@ func TestConnectOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := wissolConfig(t, true)
-	cfg.Connect = fuel.ConnectConfig{Enabled: false}
+	cfg.Connect = vendors.Config{Enabled: false}
 
 	checkOff(t, cfg, "Connect", "connect", "GEOMCP_FUEL_CONNECT_ENABLED")
 }
@@ -915,7 +929,7 @@ func TestNeogasOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := wissolConfig(t, true)
-	cfg.Neogas = fuel.NeogasConfig{Enabled: false}
+	cfg.Neogas = vendors.Config{Enabled: false}
 
 	checkOff(t, cfg, "Neogas", "neogas", "GEOMCP_FUEL_NEOGAS_ENABLED")
 }
@@ -949,7 +963,7 @@ func TestPortalOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := wissolConfig(t, true)
-	cfg.Portal = fuel.PortalConfig{Enabled: false}
+	cfg.Portal = vendors.Config{Enabled: false}
 
 	checkOff(t, cfg, "Portal", "portal", "GEOMCP_FUEL_PORTAL_ENABLED")
 }
@@ -986,7 +1000,7 @@ func TestLukoilOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := wissolConfig(t, true)
-	cfg.Lukoil = fuel.LukoilConfig{Enabled: false}
+	cfg.Lukoil = vendors.Config{Enabled: false}
 
 	checkOff(t, cfg, "Lukoil", "lukoil", "GEOMCP_FUEL_LUKOIL_ENABLED")
 }
@@ -1029,7 +1043,7 @@ func TestGulfOff(t *testing.T) {
 	t.Parallel()
 
 	cfg := wissolConfig(t, true)
-	cfg.Gulf = fuel.GulfConfig{Enabled: false}
+	cfg.Gulf = vendors.Config{Enabled: false}
 
 	checkOff(t, cfg, "Gulf", "gulf", "GEOMCP_FUEL_GULF_ENABLED")
 }
