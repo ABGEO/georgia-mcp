@@ -13,7 +13,6 @@ import (
 	tbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tbc"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/adapter/tool"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/app"
-	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
@@ -47,20 +46,29 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	logger = logger.With(slog.String("component", "context"), slog.String("context", "offers"))
 
 	registry := vendors.New[*offercache.OfferCache](logger)
-	registry.Add(vendors.Entry[*offercache.OfferCache]{
-		Name: "BOG", Enabled: cfg.BOG.Enabled, Variable: bogSwitchVariable,
-		Build: func() (*offercache.OfferCache, error) { return bogSource(cfg.BOG, logger, now) },
-	})
-	registry.Add(vendors.Entry[*offercache.OfferCache]{
-		Name: "TBC", Enabled: cfg.TBC.Enabled, Variable: tbcSwitchVariable,
-		Build: func() (*offercache.OfferCache, error) { return tbcSource(cfg.TBC, logger, now) },
-	})
-	registry.Add(vendors.Entry[*offercache.OfferCache]{
-		Name: "Liberty", Enabled: cfg.Liberty.Enabled, Variable: libertySwitchVariable,
-		Build: func() (*offercache.OfferCache, error) {
-			return libertySource(cfg.Liberty, logger, now)
+
+	for _, bank := range []vendors.Entry[*offercache.OfferCache]{
+		{
+			Name: "BOG", Variable: bogSwitchVariable, Config: cfg.BOG,
+			Build: func(opts ...vendorhttp.Option) (*offercache.OfferCache, error) {
+				return offercache.New(bogadapter.NewAdapter(bogoffers.New(opts...), now, logger))
+			},
 		},
-	})
+		{
+			Name: "TBC", Variable: tbcSwitchVariable, Config: cfg.TBC,
+			Build: func(opts ...vendorhttp.Option) (*offercache.OfferCache, error) {
+				return offercache.New(tbcadapter.NewAdapter(tbcoffers.New(opts...), now, logger))
+			},
+		},
+		{
+			Name: "Liberty", Variable: libertySwitchVariable, Config: cfg.Liberty,
+			Build: func(opts ...vendorhttp.Option) (*offercache.OfferCache, error) {
+				return offercache.New(libertyadapter.NewAdapter(libertyclient.New(opts...), now, logger))
+			},
+		},
+	} {
+		registry.Add(bank)
+	}
 
 	banks, err := registry.Build()
 	if err != nil {
@@ -79,60 +87,6 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		get:    app.NewGetOffer(sources, now),
 		banks:  banks,
 	}, nil
-}
-
-func bogSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*offercache.OfferCache, error) {
-	client := bogoffers.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	bog, err := offercache.New(bogadapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of BOG: %w", err)
-	}
-
-	return bog, nil
-}
-
-func tbcSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*offercache.OfferCache, error) {
-	client := tbcoffers.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	tbc, err := offercache.New(tbcadapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of TBC: %w", err)
-	}
-
-	return tbc, nil
-}
-
-func libertySource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*offercache.OfferCache, error) {
-	client := libertyclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	liberty, err := offercache.New(libertyadapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Liberty: %w", err)
-	}
-
-	return liberty, nil
 }
 
 // Register adds the tools of the context. The tools need one bank or more.

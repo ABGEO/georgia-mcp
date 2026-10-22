@@ -7,18 +7,24 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"net/http"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 // Entry is one vendor of a context, with the switch of the operator.
 type Entry[T io.Closer] struct {
 	// Name names the vendor in the log: "Lukoil".
-	Name    string
-	Enabled bool
+	Name string
 	// Variable is the switch of the vendor: "GEOMCP_FUEL_LUKOIL_ENABLED".
 	Variable string
-	// Build returns the source of the vendor. The registry calls it only when the vendor
-	// is on.
-	Build func() (T, error)
+	Config   Config
+	// Transport carries the calls of a vendor that needs its own, for example a TLS
+	// handshake of a browser. Nil gives the default transport.
+	Transport http.RoundTripper
+	// Build returns the source of the vendor from the options of its client. The registry
+	// calls it only when the vendor is on.
+	Build func(opts ...vendorhttp.Option) (T, error)
 }
 
 // Registry holds the vendors of one context.
@@ -44,13 +50,13 @@ func (r *Registry[T]) Build() ([]T, error) {
 	var sources []T
 
 	for _, entry := range r.entries {
-		if !entry.Enabled {
+		if !entry.Config.Enabled {
 			r.logger.Info(entry.Name+" is off", slog.String("variable", entry.Variable))
 
 			continue
 		}
 
-		source, err := entry.Build()
+		source, err := entry.Build(entry.Config.ClientOptions(entry.Transport)...)
 		if err != nil {
 			return nil, errors.Join(
 				fmt.Errorf("building %s: %w", entry.Name, err),

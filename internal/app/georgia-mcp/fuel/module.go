@@ -18,7 +18,6 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/tool"
 	wissoladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/wissol"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
-	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
 	connectclient "github.com/abgeo/georgia-mcp/pkg/connect"
@@ -88,179 +87,64 @@ func companySources(
 ) []vendors.Entry[*fuelcache.PriceCache] {
 	return []vendors.Entry[*fuelcache.PriceCache]{
 		{
-			Enabled: cfg.Wissol.Enabled, Name: "Wissol", Variable: wissolSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return wissolSource(cfg.Wissol, logger, now)
-			},
+			Name: "Wissol", Variable: wissolSwitchVariable, Config: cfg.Wissol,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return wissoladapter.NewAdapter(wissolclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.Rompetrol.Enabled, Name: "Rompetrol", Variable: rompetrolSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return rompetrolSource(cfg.Rompetrol, logger, now)
-			},
+			Name: "Rompetrol", Variable: rompetrolSwitchVariable, Config: cfg.Rompetrol,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return rompetroladapter.NewAdapter(rompetrolclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.SOCAR.Enabled, Name: "SOCAR", Variable: socarSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return socarSource(cfg.SOCAR, logger, now)
-			},
+			Name: "SOCAR", Variable: socarSwitchVariable, Config: cfg.SOCAR,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return socaradapter.NewAdapter(socarclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.Connect.Enabled, Name: "Connect", Variable: connectSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return connectSource(cfg.Connect, logger, now)
-			},
+			Name: "Connect", Variable: connectSwitchVariable, Config: cfg.Connect,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return connectadapter.NewAdapter(connectclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.Lukoil.Enabled, Name: "Lukoil", Variable: lukoilSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return lukoilSource(cfg.Lukoil, logger, now)
-			},
+			Name: "Lukoil", Variable: lukoilSwitchVariable, Config: cfg.Lukoil,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return lukoiladapter.NewAdapter(lukoilclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.Neogas.Enabled, Name: "Neogas", Variable: neogasSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return neogasSource(cfg.Neogas, now)
-			},
+			Name: "Neogas", Variable: neogasSwitchVariable, Config: cfg.Neogas,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return neogasadapter.NewAdapter(neogasclient.New(opts...), now)
+			}),
 		},
 		{
-			Enabled: cfg.Portal.Enabled, Name: "Portal", Variable: portalSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return portalSource(cfg.Portal, logger, now)
-			},
+			Name: "Portal", Variable: portalSwitchVariable, Config: cfg.Portal,
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return portaladapter.NewAdapter(portalclient.New(opts...), now, logger)
+			}),
 		},
 		{
-			Enabled: cfg.Gulf.Enabled, Name: "Gulf", Variable: gulfSwitchVariable,
-			Build: func() (*fuelcache.PriceCache, error) {
-				return gulfSource(cfg.Gulf, logger, now)
-			},
+			Name: "Gulf", Variable: gulfSwitchVariable, Config: cfg.Gulf,
+			Transport: gulfclient.NewTransport(),
+			Build: cached(func(opts ...vendorhttp.Option) app.PriceSource {
+				return gulfadapter.NewAdapter(gulfclient.New(opts...), now, logger)
+			}),
 		},
 	}
 }
 
-func wissolSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := wissolclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	wissol, err := fuelcache.New(wissoladapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Wissol: %w", err)
+// cached returns the Build of a company: its adapter, in a price cache.
+func cached(
+	adapter func(opts ...vendorhttp.Option) app.PriceSource,
+) func(opts ...vendorhttp.Option) (*fuelcache.PriceCache, error) {
+	return func(opts ...vendorhttp.Option) (*fuelcache.PriceCache, error) {
+		return fuelcache.New(adapter(opts...))
 	}
-
-	return wissol, nil
-}
-
-func rompetrolSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := rompetrolclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	rompetrol, err := fuelcache.New(rompetroladapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Rompetrol: %w", err)
-	}
-
-	return rompetrol, nil
-}
-
-func socarSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := socarclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	socar, err := fuelcache.New(socaradapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of SOCAR: %w", err)
-	}
-
-	return socar, nil
-}
-
-func connectSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := connectclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	connect, err := fuelcache.New(connectadapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Connect: %w", err)
-	}
-
-	return connect, nil
-}
-
-func lukoilSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := lukoilclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	lukoil, err := fuelcache.New(lukoiladapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Lukoil: %w", err)
-	}
-
-	return lukoil, nil
-}
-
-func neogasSource(
-	cfg vendors.Config,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := neogasclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	neogas, err := fuelcache.New(neogasadapter.NewAdapter(client, now))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Neogas: %w", err)
-	}
-
-	return neogas, nil
-}
-
-func portalSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := portalclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	)
-
-	portal, err := fuelcache.New(portaladapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Portal: %w", err)
-	}
-
-	return portal, nil
 }
 
 // Register adds the tool of the context. The tool needs one fuel company or more.
@@ -275,24 +159,4 @@ func (m *Module) Register(registry *mcpserver.Registry) error {
 // Close stops every cache.
 func (m *Module) Close() error {
 	return vendors.CloseAll(m.companies)
-}
-
-func gulfSource(
-	cfg vendors.Config,
-	logger *slog.Logger,
-	now func() time.Time,
-) (*fuelcache.PriceCache, error) {
-	client := gulfclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(
-			httpclient.NewWithTransport(cfg.HTTP, gulfclient.NewTransport()),
-		),
-	)
-
-	gulf, err := fuelcache.New(gulfadapter.NewAdapter(client, now, logger))
-	if err != nil {
-		return nil, fmt.Errorf("building the cache of Gulf: %w", err)
-	}
-
-	return gulf, nil
 }

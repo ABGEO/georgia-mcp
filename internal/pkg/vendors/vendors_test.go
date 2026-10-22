@@ -3,18 +3,24 @@ package vendors_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"log/slog"
+	"net/http"
+	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/abgeo/georgia-mcp/internal/pkg/vendors"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 var (
-	errBuild = errors.New("the cache cannot start")
-	errClose = errors.New("the cache cannot stop")
+	errBuild  = errors.New("the cache cannot start")
+	errClose  = errors.New("the cache cannot stop")
+	errStatus = errors.New("a: unexpected status")
 )
 
 // source is a source that records its close.
@@ -33,9 +39,9 @@ func (s *source) Close() error {
 func entry(name string, enabled bool, built *source, err error) vendors.Entry[*source] {
 	return vendors.Entry[*source]{
 		Name:     name,
-		Enabled:  enabled,
 		Variable: "GEOMCP_TEST_" + name + "_ENABLED",
-		Build: func() (*source, error) {
+		Config:   vendors.Config{Enabled: enabled},
+		Build: func(...vendorhttp.Option) (*source, error) {
 			if err != nil {
 				return nil, err
 			}
@@ -156,6 +162,43 @@ func TestCloseAllClosesEverySource(t *testing.T) {
 
 	if !failing.closed || !second.closed {
 		t.Errorf("closed = %v, %v, want both", failing.closed, second.closed)
+	}
+}
+
+// PLATFORM-SC-035: The registry gives Build the options of a client at the base address
+// of the configuration.
+func TestBuildGivesTheClientOptions(t *testing.T) {
+	t.Parallel()
+
+	var calls atomic.Int32
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		calls.Add(1)
+		w.WriteHeader(http.StatusOK)
+	}))
+	t.Cleanup(server.Close)
+
+	registry := vendors.New[*source](slog.New(slog.DiscardHandler))
+	registry.Add(vendors.Entry[*source]{
+		Name:     "A",
+		Variable: "GEOMCP_TEST_A_ENABLED",
+		Config:   vendors.Defaults(server.URL),
+		Build: func(opts ...vendorhttp.Option) (*source, error) {
+			client := vendorhttp.New("example.com/pkg/a", errStatus, opts...)
+			if _, err := client.Fetch(t.Context(), vendorhttp.Request{}); err != nil {
+				return nil, fmt.Errorf("calling the vendor: %w", err)
+			}
+
+			return &source{name: "A"}, nil
+		},
+	})
+
+	if _, err := registry.Build(); err != nil {
+		t.Fatalf("Build() error = %v", err)
+	}
+
+	if got := calls.Load(); got != 1 {
+		t.Errorf("the server got %d calls, want 1", got)
 	}
 }
 

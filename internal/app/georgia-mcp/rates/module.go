@@ -108,39 +108,41 @@ func commercialSources(
 
 	for _, bank := range []vendors.Entry[*ratecache.CommercialRateCache]{
 		{
-			Name: "TBC Bank", Enabled: cfg.TBC.Enabled, Variable: tbcSwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(tbcAdapter(cfg.TBC, now))
+			Name: "TBC Bank", Variable: tbcSwitchVariable, Config: cfg.TBC.Config,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				client := tbcclient.New(append(opts, tbcclient.WithAPIKey(cfg.TBC.APIKey))...)
+
+				return ratecache.NewCommercial(tbcadapter.NewAdapter(client, now))
 			},
 		},
 		{
-			Name: "Bank of Georgia", Enabled: cfg.BOG.Enabled, Variable: bogSwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(bogAdapter(cfg.BOG, now))
+			Name: "Bank of Georgia", Variable: bogSwitchVariable, Config: cfg.BOG,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(bogadapter.NewAdapter(bogclient.New(opts...), now))
 			},
 		},
 		{
-			Name: "Liberty Bank", Enabled: cfg.Liberty.Enabled, Variable: libertySwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(libertyAdapter(cfg.Liberty, now))
+			Name: "Liberty Bank", Variable: libertySwitchVariable, Config: cfg.Liberty,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(libertyadapter.NewAdapter(libertyclient.New(opts...), now))
 			},
 		},
 		{
-			Name: "Terabank", Enabled: cfg.Terabank.Enabled, Variable: terabankSwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(terabankAdapter(cfg.Terabank, now))
+			Name: "Terabank", Variable: terabankSwitchVariable, Config: cfg.Terabank,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(terabankadapter.NewAdapter(terabankclient.New(opts...), now))
 			},
 		},
 		{
-			Name: "Rico Credit", Enabled: cfg.Rico.Enabled, Variable: ricoSwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(ricoAdapter(cfg.Rico, now))
+			Name: "Rico Credit", Variable: ricoSwitchVariable, Config: cfg.Rico,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(ricoadapter.NewAdapter(ricoclient.New(opts...), now))
 			},
 		},
 		{
-			Name: "Kursi.ge", Enabled: cfg.Kursi.Enabled, Variable: kursiSwitchVariable,
-			Build: func() (*ratecache.CommercialRateCache, error) {
-				return ratecache.NewCommercial(kursiAdapter(cfg.Kursi, now))
+			Name: "Kursi.ge", Variable: kursiSwitchVariable, Config: cfg.Kursi,
+			Build: func(opts ...vendorhttp.Option) (*ratecache.CommercialRateCache, error) {
+				return ratecache.NewCommercial(kursiadapter.NewAdapter(kursiclient.New(opts...), now))
 			},
 		},
 	} {
@@ -148,49 +150,6 @@ func commercialSources(
 	}
 
 	return banks.Build()
-}
-
-func bogAdapter(cfg vendors.Config, now func() time.Time) *bogadapter.Adapter {
-	return bogadapter.NewAdapter(bogclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	), now)
-}
-
-func libertyAdapter(cfg vendors.Config, now func() time.Time) *libertyadapter.Adapter {
-	return libertyadapter.NewAdapter(libertyclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	), now)
-}
-
-func terabankAdapter(cfg vendors.Config, now func() time.Time) *terabankadapter.Adapter {
-	return terabankadapter.NewAdapter(terabankclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	), now)
-}
-
-func ricoAdapter(cfg vendors.Config, now func() time.Time) *ricoadapter.Adapter {
-	return ricoadapter.NewAdapter(ricoclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	), now)
-}
-
-func kursiAdapter(cfg vendors.Config, now func() time.Time) *kursiadapter.Adapter {
-	return kursiadapter.NewAdapter(kursiclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-	), now)
-}
-
-func tbcAdapter(cfg TBCConfig, now func() time.Time) *tbcadapter.Adapter {
-	return tbcadapter.NewAdapter(tbcclient.New(
-		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.HTTP)),
-		tbcclient.WithAPIKey(cfg.APIKey),
-	), now)
 }
 
 // Register adds the tools of the context. The commercial tool needs one bank or more.

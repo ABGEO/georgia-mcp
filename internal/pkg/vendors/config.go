@@ -1,10 +1,12 @@
 package vendors
 
 import (
+	"net/http"
 	"net/url"
 
 	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 // Config is the configuration of a vendor that its context can serve without: the switch
@@ -27,4 +29,19 @@ func (c Config) WithLimit(rate float64, burst int) Config {
 	c.HTTP = c.HTTP.WithLimit(rate, burst)
 
 	return c
+}
+
+// ClientOptions returns the options of the client of the vendor: its base address, and an
+// HTTP client with its timeout and its limit over transport. A nil transport gives the
+// default transport.
+func (c Config) ClientOptions(transport http.RoundTripper) []vendorhttp.Option {
+	httpClient := httpclient.New(c.HTTP)
+	if transport != nil {
+		httpClient = httpclient.NewWithTransport(c.HTTP, transport)
+	}
+
+	return []vendorhttp.Option{
+		vendorhttp.WithBaseURL(c.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpClient),
+	}
 }
