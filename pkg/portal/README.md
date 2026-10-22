@@ -45,4 +45,4 @@ The page needs no key. This client mirrors what the page sent on 2026-10-21:
 - `robots.txt` disallows `/api/`. The client reads the page, not that path.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

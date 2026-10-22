@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/portal"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_FuelPrices() {
@@ -18,7 +19,7 @@ func ExampleClient_FuelPrices() {
 
 	defer server.Close()
 
-	client := portal.New(portal.WithBaseURL(server.URL))
+	client := portal.New(vendorhttp.WithBaseURL(server.URL))
 
 	prices, err := client.FuelPrices(context.Background())
 	if err != nil {

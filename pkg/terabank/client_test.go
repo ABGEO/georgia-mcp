@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/terabank"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const dollar = "USD"
@@ -23,7 +24,7 @@ func serve(t *testing.T, status int, body string) *terabank.Client {
 	}))
 	t.Cleanup(server.Close)
 
-	return terabank.New(terabank.WithBaseURL(server.URL))
+	return terabank.New(vendorhttp.WithBaseURL(server.URL))
 }
 
 func recorded(t *testing.T, name string) string {
@@ -55,7 +56,7 @@ func TestCrossRatesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := terabank.New(terabank.WithBaseURL(server.URL)).
+	if _, err := terabank.New(vendorhttp.WithBaseURL(server.URL)).
 		CrossRates(t.Context()); err != nil {
 		t.Fatalf("CrossRates() error = %v", err)
 	}

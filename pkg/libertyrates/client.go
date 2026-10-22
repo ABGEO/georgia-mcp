@@ -4,28 +4,23 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"net/http"
-	"net/url"
-	"runtime/debug"
 	"slices"
 	"strings"
-	"time"
 
 	"golang.org/x/net/html"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
 	// DefaultBaseURL is the production address of the site of Liberty Bank.
 	DefaultBaseURL = "https://www.libertybank.ge"
 
-	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
-	modulePath     = "github.com/abgeo/georgia-mcp/pkg/libertyrates"
-	defaultTimeout = 10 * time.Second
+	modulePath = "github.com/abgeo/georgia-mcp/pkg/libertyrates"
 
 	// maxBodyBytes bounds the read of an answer. The home page is about 124 KB.
 	maxBodyBytes = 2 << 20
-	maxErrorBody = 1 << 10
 
 	classBlock       = "currency-rates"
 	classHead        = "currency-rates__row-head"
@@ -47,43 +42,23 @@ const (
 
 // Client reads the site of Liberty Bank. It is safe for concurrent use.
 type Client struct {
-	baseURL    string
-	httpClient *http.Client
-	userAgent  string
+	http *vendorhttp.Client
 }
 
 // Option sets one value of a Client.
-type Option func(*Client)
-
-// WithBaseURL sets the address of the site. The default is DefaultBaseURL.
-func WithBaseURL(baseURL string) Option {
-	return func(c *Client) { c.baseURL = baseURL }
-}
-
-// WithHTTPClient sets the HTTP client. The default has a timeout of 10 seconds.
-func WithHTTPClient(httpClient *http.Client) Option {
-	return func(c *Client) { c.httpClient = httpClient }
-}
-
-// WithUserAgent sets the User-Agent header. The default is
-// georgia-mcp-libertyrates/<version> (+https://github.com/abgeo/georgia-mcp).
-func WithUserAgent(userAgent string) Option {
-	return func(c *Client) { c.userAgent = userAgent }
-}
+type Option = vendorhttp.Option
 
 // New returns a client of the site of Liberty Bank.
 func New(opts ...Option) *Client {
-	client := &Client{
-		baseURL:    DefaultBaseURL,
-		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-libertyrates/" + version() + " (+" + repositoryURL + ")",
+	defaults := []Option{
+		vendorhttp.WithBaseURL(DefaultBaseURL),
+		vendorhttp.WithHeader("Accept", "text/html"),
+		vendorhttp.WithMaxBody(maxBodyBytes),
 	}
 
-	for _, opt := range opts {
-		opt(client)
+	return &Client{
+		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
-
-	return client
 }
 
 // Rates returns each currency of the rate block of the home page, in the order of the
@@ -277,58 +252,17 @@ func text(node *html.Node) string {
 }
 
 // get sends a GET of the Georgian home page and returns the body of a 200. Any other
-// status is an *APIError.
+// status is an *APIError. The APIError of this client compares by value, so it stays
+// its own type.
 func (c *Client) get(ctx context.Context) ([]byte, error) {
-	endpoint, err := url.JoinPath(c.baseURL, "ka/")
+	resp, err := c.http.Do(ctx, vendorhttp.Request{Path: []string{"ka/"}})
 	if err != nil {
-		return nil, fmt.Errorf("building the address: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("building the request: %w", err)
-	}
-
-	req.Header.Set("Accept", "text/html")
-	req.Header.Set("User-Agent", c.userAgent)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("sending the request: %w", err)
-	}
-
-	defer func() { _ = resp.Body.Close() }()
-
-	body, err := io.ReadAll(io.LimitReader(resp.Body, maxBodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("reading the answer: %w", err)
+		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, &APIError{
-			StatusCode: resp.StatusCode,
-			Body:       string(body[:min(len(body), maxErrorBody)]),
-		}
+		return nil, &APIError{StatusCode: resp.StatusCode, Body: resp.ErrorBody()}
 	}
 
-	return body, nil
-}
-
-func version() string {
-	build, ok := debug.ReadBuildInfo()
-	if !ok {
-		return "dev"
-	}
-
-	if build.Main.Path == modulePath && build.Main.Version != "" {
-		return build.Main.Version
-	}
-
-	for _, dep := range build.Deps {
-		if dep.Path == modulePath {
-			return dep.Version
-		}
-	}
-
-	return "dev"
+	return resp.Body, nil
 }

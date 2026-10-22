@@ -19,6 +19,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	tbcclient "github.com/abgeo/georgia-mcp/pkg/tbc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -35,7 +36,7 @@ func adapterFor(t *testing.T, handler http.HandlerFunc) *tbc.Adapter {
 	readAt := time.Date(2026, 10, 18, 10, 0, 0, 0, time.UTC)
 
 	return tbc.NewAdapter(
-		tbcclient.New(tbcclient.WithBaseURL(server.URL), tbcclient.WithAPIKey("test-key")),
+		tbcclient.New(vendorhttp.WithBaseURL(server.URL), tbcclient.WithAPIKey("test-key")),
 		func() time.Time { return readAt },
 	)
 }
@@ -195,7 +196,7 @@ func TestCommercialRatesKeepTheKeyOutOfTheError(t *testing.T) {
 	t.Cleanup(server.Close)
 
 	adapter := tbc.NewAdapter(
-		tbcclient.New(tbcclient.WithBaseURL(server.URL), tbcclient.WithAPIKey(key)),
+		tbcclient.New(vendorhttp.WithBaseURL(server.URL), tbcclient.WithAPIKey(key)),
 		time.Now,
 	)
 

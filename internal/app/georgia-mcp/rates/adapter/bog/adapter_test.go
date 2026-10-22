@@ -20,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	bogclient "github.com/abgeo/georgia-mcp/pkg/bog"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -39,7 +40,7 @@ func adapterFor(t *testing.T, handler http.Handler) *bog.Adapter {
 	t.Cleanup(server.Close)
 
 	return bog.NewAdapter(
-		bogclient.New(bogclient.WithBaseURL(server.URL)),
+		bogclient.New(vendorhttp.WithBaseURL(server.URL)),
 		readAt,
 	)
 }
@@ -240,8 +241,8 @@ func TestCommercialRatesReadTheCodesAtOnce(t *testing.T) {
 
 	adapter := bog.NewAdapter(
 		bogclient.New(
-			bogclient.WithBaseURL(server.URL),
-			bogclient.WithHTTPClient(&http.Client{Timeout: 5 * time.Second}),
+			vendorhttp.WithBaseURL(server.URL),
+			vendorhttp.WithHTTPClient(&http.Client{Timeout: 5 * time.Second}),
 		),
 		readAt,
 	)

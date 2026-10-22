@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/gulf"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_PriceArchive() {
@@ -18,7 +19,7 @@ func ExampleClient_PriceArchive() {
 
 	defer server.Close()
 
-	client := gulf.New(gulf.WithBaseURL(server.URL))
+	client := gulf.New(vendorhttp.WithBaseURL(server.URL))
 
 	table, err := client.PriceArchive(context.Background())
 	if err != nil {

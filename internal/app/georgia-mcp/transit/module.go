@@ -15,6 +15,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	ttcclient "github.com/abgeo/georgia-mcp/pkg/ttc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const switchVariable = "GEOMCP_TRANSIT_TTC_ENABLED"
@@ -44,8 +45,8 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}
 
 	client := ttcclient.New(
-		ttcclient.WithBaseURL(cfg.TTC.BaseURL.String()),
-		ttcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.TTC.HTTP))),
+		vendorhttp.WithBaseURL(cfg.TTC.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.TTC.HTTP))),
 		ttcclient.WithAPIKey(cfg.TTC.APIKey),
 	)
 	adapter := ttcadapter.NewAdapter(client, now, logger)

@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/tbc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -64,7 +65,7 @@ func TestCommercialRatesSendsTheRequest(t *testing.T) {
 			)
 			t.Cleanup(server.Close)
 
-			client := tbc.New(tbc.WithBaseURL(server.URL), tbc.WithAPIKey("test-key"))
+			client := tbc.New(vendorhttp.WithBaseURL(server.URL), tbc.WithAPIKey("test-key"))
 			if _, err := client.CommercialRates(t.Context(), tt.currencies); err != nil {
 				t.Fatalf("CommercialRates() error = %v", err)
 			}
@@ -100,7 +101,7 @@ func TestCommercialRatesDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, http.StatusOK, "testdata/commercial.json")
 
-	got, err := tbc.New(tbc.WithBaseURL(server.URL)).
+	got, err := tbc.New(vendorhttp.WithBaseURL(server.URL)).
 		CommercialRates(t.Context(), []string{dollar, euro, "GBP", "JPY", "XXX"})
 	if err != nil {
 		t.Fatalf("CommercialRates() error = %v", err)
@@ -126,7 +127,7 @@ func TestCommercialRatesReportsAProblem(t *testing.T) {
 
 	server := serveFile(t, http.StatusUnauthorized, "testdata/problem-401.json")
 
-	_, err := tbc.New(tbc.WithBaseURL(server.URL)).CommercialRates(t.Context(), nil)
+	_, err := tbc.New(vendorhttp.WithBaseURL(server.URL)).CommercialRates(t.Context(), nil)
 
 	apiErr, ok := errors.AsType[*tbc.APIError](err)
 	if !ok {
@@ -158,7 +159,7 @@ func TestAPIErrorWithABodyThatIsNotAProblem(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := tbc.New(tbc.WithBaseURL(server.URL)).CommercialRates(t.Context(), nil)
+	_, err := tbc.New(vendorhttp.WithBaseURL(server.URL)).CommercialRates(t.Context(), nil)
 
 	want := "tbc: unexpected status: 502: Bad Gateway"
 	if err == nil || !strings.HasSuffix(err.Error(), want) {

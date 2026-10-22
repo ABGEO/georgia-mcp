@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/tbc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_CommercialRates() {
@@ -18,7 +19,7 @@ func ExampleClient_CommercialRates() {
 
 	defer server.Close()
 
-	client := tbc.New(tbc.WithBaseURL(server.URL), tbc.WithAPIKey("your-key"))
+	client := tbc.New(vendorhttp.WithBaseURL(server.URL), tbc.WithAPIKey("your-key"))
 
 	rates, err := client.CommercialRates(context.Background(), []string{dollar})
 	if err != nil {

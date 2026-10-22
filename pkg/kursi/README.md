@@ -46,4 +46,4 @@ The client mirrors what the API answers today:
   calls.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

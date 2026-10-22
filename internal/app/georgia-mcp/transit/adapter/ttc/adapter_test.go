@@ -20,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	ttcclient "github.com/abgeo/georgia-mcp/pkg/ttc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -156,7 +157,7 @@ func adapterWith(
 	server := fakeTTC(t, overrides)
 
 	return ttc.NewAdapter(
-		ttcclient.New(ttcclient.WithBaseURL(server.URL), ttcclient.WithAPIKey(key)),
+		ttcclient.New(vendorhttp.WithBaseURL(server.URL), ttcclient.WithAPIKey(key)),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
 	)

@@ -15,6 +15,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	terabankclient "github.com/abgeo/georgia-mcp/pkg/terabank"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -55,7 +56,7 @@ func adapterFor(t *testing.T, status int, body string) *terabank.Adapter {
 	}))
 	t.Cleanup(server.Close)
 
-	return terabank.NewAdapter(terabankclient.New(terabankclient.WithBaseURL(server.URL)), readAt)
+	return terabank.NewAdapter(terabankclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
 }
 
 // TERARATE-SC-005: The adapter gives the price of each code, with the trailing zeros dropped.

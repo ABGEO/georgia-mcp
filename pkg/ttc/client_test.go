@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/ttc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -50,7 +51,7 @@ func serveFile(t *testing.T, path string) *recorder {
 }
 
 func (r *recorder) client() *ttc.Client {
-	return ttc.New(ttc.WithBaseURL(r.server.URL), ttc.WithAPIKey(testKey))
+	return ttc.New(vendorhttp.WithBaseURL(r.server.URL), ttc.WithAPIKey(testKey))
 }
 
 func checkPath(t *testing.T, request *http.Request, want string) {
@@ -354,7 +355,7 @@ func TestAStatusIsAnAPIError(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := ttc.New(ttc.WithBaseURL(server.URL)).Stops(t.Context(), english)
+	_, err := ttc.New(vendorhttp.WithBaseURL(server.URL)).Stops(t.Context(), english)
 
 	apiErr, ok := errors.AsType[*ttc.APIError](err)
 	if !ok {

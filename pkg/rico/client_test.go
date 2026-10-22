@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/rico"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -54,7 +55,7 @@ func serve(t *testing.T, status int, body string) *rico.Client {
 	}))
 	t.Cleanup(server.Close)
 
-	return rico.New(rico.WithBaseURL(server.URL))
+	return rico.New(vendorhttp.WithBaseURL(server.URL))
 }
 
 // RICORATE-SC-001: The client asks for the Georgian home page as HTML, with the
@@ -71,7 +72,7 @@ func TestRatesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := rico.New(rico.WithBaseURL(server.URL)).Rates(t.Context()); err != nil {
+	if _, err := rico.New(vendorhttp.WithBaseURL(server.URL)).Rates(t.Context()); err != nil {
 		t.Fatalf("Rates() error = %v", err)
 	}
 

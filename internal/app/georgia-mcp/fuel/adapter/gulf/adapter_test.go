@@ -25,6 +25,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	gulfclient "github.com/abgeo/georgia-mcp/pkg/gulf"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const testdata = "../../../../../../pkg/gulf/testdata"
@@ -67,8 +68,8 @@ func adapterFor(t *testing.T, body string, status int, sink *syncBuffer) *gulf.A
 
 	return gulf.NewAdapter(
 		gulfclient.New(
-			gulfclient.WithBaseURL(server.URL),
-			gulfclient.WithHTTPClient(server.Client()),
+			vendorhttp.WithBaseURL(server.URL),
+			vendorhttp.WithHTTPClient(server.Client()),
 		),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
@@ -327,8 +328,8 @@ func TestTheCacheBoundsTheCalls(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		transport := &countingTransport{body: body}
 		client := gulfclient.New(
-			gulfclient.WithBaseURL("https://gulf.test"),
-			gulfclient.WithHTTPClient(&http.Client{Transport: transport}),
+			vendorhttp.WithBaseURL("https://gulf.test"),
+			vendorhttp.WithHTTPClient(&http.Client{Transport: transport}),
 		)
 
 		prices, err := cache.New(

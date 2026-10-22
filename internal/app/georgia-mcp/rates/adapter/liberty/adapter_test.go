@@ -18,6 +18,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	libertyclient "github.com/abgeo/georgia-mcp/pkg/libertyrates"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -74,7 +75,7 @@ func adapterFor(t *testing.T, status int, body string, calls *atomic.Int32) *lib
 	}))
 	t.Cleanup(server.Close)
 
-	return liberty.NewAdapter(libertyclient.New(libertyclient.WithBaseURL(server.URL)), readAt)
+	return liberty.NewAdapter(libertyclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
 }
 
 func formatted(rates []domain.CommercialRate) map[domain.CurrencyCode][2]string {

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/abgeo/georgia-mcp/pkg/nbg"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const dollar = "USD"
@@ -106,7 +107,7 @@ func recordRequest(t *testing.T, send func(*nbg.Client) error) *http.Request {
 	}))
 	t.Cleanup(server.Close)
 
-	if err := send(nbg.New(nbg.WithBaseURL(server.URL))); err != nil {
+	if err := send(nbg.New(vendorhttp.WithBaseURL(server.URL))); err != nil {
 		t.Fatalf("request error = %v", err)
 	}
 
@@ -117,7 +118,7 @@ func TestRateSetsDecodesARecordedAnswer(t *testing.T) {
 	t.Parallel()
 
 	server := serveFile(t, "testdata/en-2026-10-17.json")
-	client := nbg.New(nbg.WithBaseURL(server.URL))
+	client := nbg.New(vendorhttp.WithBaseURL(server.URL))
 
 	sets, err := client.RateSets(
 		t.Context(),
@@ -170,7 +171,7 @@ func TestRateSetsReportsAFailure(t *testing.T) {
 			)
 			t.Cleanup(server.Close)
 
-			_, err := nbg.New(nbg.WithBaseURL(server.URL)).
+			_, err := nbg.New(vendorhttp.WithBaseURL(server.URL)).
 				RateSets(t.Context(), nbg.LanguageEnglish, nbg.RateSetsQuery{})
 			if err == nil {
 				t.Fatal("RateSets() error = nil, want an error")

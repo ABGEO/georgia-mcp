@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/abgeo/georgia-mcp/pkg/nbg"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_RateSets() {
@@ -19,7 +20,7 @@ func ExampleClient_RateSets() {
 
 	defer server.Close()
 
-	client := nbg.New(nbg.WithBaseURL(server.URL))
+	client := nbg.New(vendorhttp.WithBaseURL(server.URL))
 
 	sets, err := client.RateSets(
 		context.Background(),

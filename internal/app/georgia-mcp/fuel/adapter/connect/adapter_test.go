@@ -25,6 +25,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	connectclient "github.com/abgeo/georgia-mcp/pkg/connect"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const testdata = "../../../../../../pkg/connect/testdata"
@@ -63,7 +64,7 @@ func adapterFor(t *testing.T, body string, status int, sink *syncBuffer) *connec
 	t.Cleanup(server.Close)
 
 	return connect.NewAdapter(
-		connectclient.New(connectclient.WithBaseURL(server.URL)),
+		connectclient.New(vendorhttp.WithBaseURL(server.URL)),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
 	)
@@ -269,8 +270,8 @@ func TestTheCacheBoundsTheCalls(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		transport := &countingTransport{body: body}
 		client := connectclient.New(
-			connectclient.WithBaseURL("https://connect.test"),
-			connectclient.WithHTTPClient(&http.Client{Transport: transport}),
+			vendorhttp.WithBaseURL("https://connect.test"),
+			vendorhttp.WithHTTPClient(&http.Client{Transport: transport}),
 		)
 
 		prices, err := cache.New(

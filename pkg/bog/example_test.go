@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/bog"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_CommercialRate() {
@@ -18,7 +19,7 @@ func ExampleClient_CommercialRate() {
 
 	defer server.Close()
 
-	client := bog.New(bog.WithBaseURL(server.URL))
+	client := bog.New(vendorhttp.WithBaseURL(server.URL))
 
 	rate, err := client.CommercialRate(context.Background(), dollar)
 	if err != nil {

@@ -2,31 +2,13 @@ package bogoffers
 
 import (
 	"errors"
-	"fmt"
-	"net/http"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 // ErrUnexpectedStatus tells that Bank of Georgia answered with a status that is not a success.
 var ErrUnexpectedStatus = errors.New("bogoffers: unexpected status")
 
-// APIError is an answer of Bank of Georgia with a status that is not a success.
-type APIError struct {
-	StatusCode int
-	// Body is the first 1 KiB of the answer.
-	Body string
-}
-
-// Error returns the status.
-func (e *APIError) Error() string {
-	return fmt.Sprintf(
-		"%s: %d: %s",
-		ErrUnexpectedStatus,
-		e.StatusCode,
-		http.StatusText(e.StatusCode),
-	)
-}
-
-// Unwrap returns ErrUnexpectedStatus.
-func (e *APIError) Unwrap() error {
-	return ErrUnexpectedStatus
-}
+// APIError is an answer of Bank of Georgia with a status that is not a success. It wraps
+// ErrUnexpectedStatus.
+type APIError = vendorhttp.StatusError

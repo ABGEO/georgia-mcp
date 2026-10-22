@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Offers() {
@@ -19,7 +20,7 @@ func ExampleClient_Offers() {
 
 	defer server.Close()
 
-	client := bogoffers.New(bogoffers.WithBaseURL(server.URL))
+	client := bogoffers.New(vendorhttp.WithBaseURL(server.URL))
 
 	page, err := client.Offers(
 		context.Background(),

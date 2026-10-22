@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/libertyrates"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -37,7 +38,7 @@ func serve(t *testing.T, status int, body string) *libertyrates.Client {
 	}))
 	t.Cleanup(server.Close)
 
-	return libertyrates.New(libertyrates.WithBaseURL(server.URL))
+	return libertyrates.New(vendorhttp.WithBaseURL(server.URL))
 }
 
 // LIBRATE-SC-001: The client asks for the Georgian home page as HTML, with the
@@ -54,7 +55,7 @@ func TestRatesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := libertyrates.New(libertyrates.WithBaseURL(server.URL)).
+	if _, err := libertyrates.New(vendorhttp.WithBaseURL(server.URL)).
 		Rates(t.Context()); err != nil {
 		t.Fatalf("Rates() error = %v", err)
 	}

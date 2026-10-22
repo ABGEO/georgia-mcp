@@ -41,4 +41,4 @@ The page needs no key. This client mirrors what the page showed on 2026-10-19:
   two gives `ErrMalformedTable`.
 
 The client parses the page with `golang.org/x/net/html`. It does not retry and does not
-cache. Pass an `http.Client` with `WithHTTPClient` to set a timeout or a rate limit.
+cache. Pass an `http.Client` with `vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

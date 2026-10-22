@@ -25,6 +25,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	portalclient "github.com/abgeo/georgia-mcp/pkg/portal"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const testdata = "../../../../../../pkg/portal/testdata"
@@ -63,7 +64,7 @@ func adapterFor(t *testing.T, body string, status int, sink *syncBuffer) *portal
 	t.Cleanup(server.Close)
 
 	return portal.NewAdapter(
-		portalclient.New(portalclient.WithBaseURL(server.URL)),
+		portalclient.New(vendorhttp.WithBaseURL(server.URL)),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
 	)
@@ -259,8 +260,8 @@ func TestTheCacheBoundsTheCalls(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		transport := &countingTransport{body: body}
 		client := portalclient.New(
-			portalclient.WithBaseURL("https://portal.test"),
-			portalclient.WithHTTPClient(&http.Client{Transport: transport}),
+			vendorhttp.WithBaseURL("https://portal.test"),
+			vendorhttp.WithHTTPClient(&http.Client{Transport: transport}),
 		)
 
 		prices, err := cache.New(

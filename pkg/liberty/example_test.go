@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/abgeo/georgia-mcp/pkg/liberty"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Offers() {
@@ -19,7 +20,7 @@ func ExampleClient_Offers() {
 
 	defer server.Close()
 
-	client := liberty.New(liberty.WithBaseURL(server.URL))
+	client := liberty.New(vendorhttp.WithBaseURL(server.URL))
 
 	offers, err := client.Offers(context.Background(), liberty.OffersQuery{Page: 1, Language: "en"})
 	if err != nil {

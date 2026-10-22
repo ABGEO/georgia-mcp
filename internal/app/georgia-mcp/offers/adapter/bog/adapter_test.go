@@ -20,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -84,7 +85,7 @@ func adapterFor(
 	}))
 	t.Cleanup(server.Close)
 
-	client := bogoffers.New(bogoffers.WithBaseURL(server.URL))
+	client := bogoffers.New(vendorhttp.WithBaseURL(server.URL))
 
 	return bog.NewAdapter(client, readAt, slog.New(slog.NewTextHandler(sink, nil)))
 }

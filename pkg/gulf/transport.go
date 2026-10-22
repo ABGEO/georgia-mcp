@@ -19,7 +19,8 @@ const (
 
 // NewTransport returns a transport that dials each TLS connection with the handshake of
 // Chrome 131, over HTTP/1.1. The bot filter of Gulf refuses the handshake of Go. The
-// transport uses no proxy.
+// transport uses no proxy. The default client of New uses it. An HTTP client that a
+// caller passes with vendorhttp.WithHTTPClient needs it too, or Gulf answers 403.
 func NewTransport() *http.Transport {
 	return newTransport(nil)
 }

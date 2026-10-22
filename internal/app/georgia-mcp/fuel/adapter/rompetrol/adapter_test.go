@@ -25,6 +25,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	rompetrolclient "github.com/abgeo/georgia-mcp/pkg/rompetrol"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -67,7 +68,7 @@ func adapterFor(t *testing.T, body string, status int, sink *syncBuffer) *rompet
 	t.Cleanup(server.Close)
 
 	return rompetrol.NewAdapter(
-		rompetrolclient.New(rompetrolclient.WithBaseURL(server.URL)),
+		rompetrolclient.New(vendorhttp.WithBaseURL(server.URL)),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
 	)
@@ -322,8 +323,8 @@ func TestTheCacheBoundsTheCalls(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		transport := &countingTransport{body: body}
 		client := rompetrolclient.New(
-			rompetrolclient.WithBaseURL("https://rompetrol.test"),
-			rompetrolclient.WithHTTPClient(&http.Client{Transport: transport}),
+			vendorhttp.WithBaseURL("https://rompetrol.test"),
+			vendorhttp.WithHTTPClient(&http.Client{Transport: transport}),
 		)
 
 		prices, err := cache.New(

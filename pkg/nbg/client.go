@@ -5,24 +5,20 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
-	"runtime/debug"
+	"slices"
 	"strings"
 	"time"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
 	// DefaultBaseURL is the production address of the API of the NBG.
 	DefaultBaseURL = "https://nbg.gov.ge/gw/api/ct/monetarypolicy"
 
-	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
-	modulePath     = "github.com/abgeo/georgia-mcp/pkg/nbg"
-	defaultTimeout = 10 * time.Second
-
-	// maxBodyBytes bounds the read of an answer. A rate set is about 10 KiB.
-	maxBodyBytes = 1 << 20
+	modulePath = "github.com/abgeo/georgia-mcp/pkg/nbg"
 
 	acceptJSON = "application/json"
 	acceptRSS  = "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8"
@@ -40,43 +36,19 @@ const (
 
 // Client calls the API of the NBG. It is safe for concurrent use.
 type Client struct {
-	baseURL    string
-	httpClient *http.Client
-	userAgent  string
+	http *vendorhttp.Client
 }
 
 // Option sets one value of a Client.
-type Option func(*Client)
-
-// WithBaseURL sets the address of the API. The default is DefaultBaseURL.
-func WithBaseURL(baseURL string) Option {
-	return func(c *Client) { c.baseURL = baseURL }
-}
-
-// WithHTTPClient sets the HTTP client. The default has a timeout of 10 seconds.
-func WithHTTPClient(httpClient *http.Client) Option {
-	return func(c *Client) { c.httpClient = httpClient }
-}
-
-// WithUserAgent sets the User-Agent header. The default is
-// georgia-mcp-nbg/<version> (+https://github.com/abgeo/georgia-mcp).
-func WithUserAgent(userAgent string) Option {
-	return func(c *Client) { c.userAgent = userAgent }
-}
+type Option = vendorhttp.Option
 
 // New returns a client of the API of the NBG.
 func New(opts ...Option) *Client {
-	client := &Client{
-		baseURL:    DefaultBaseURL,
-		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-nbg/" + version() + " (+" + repositoryURL + ")",
-	}
+	defaults := []Option{vendorhttp.WithBaseURL(DefaultBaseURL)}
 
-	for _, opt := range opts {
-		opt(client)
+	return &Client{
+		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
-
-	return client
 }
 
 // RateSetsQuery selects the rate sets of a request.
@@ -164,65 +136,25 @@ func (c *Client) getJSON(ctx context.Context, path []string, query url.Values, t
 	return nil
 }
 
-// get sends a GET to the path under the base address and returns the body of a
-// successful answer. Any other status is an *APIError.
+// get returns the body of an answer with a 2xx status. Any other status is an *APIError.
 func (c *Client) get(
 	ctx context.Context,
 	path []string,
 	query url.Values,
 	accept string,
 ) ([]byte, error) {
-	endpoint, err := url.JoinPath(c.baseURL, path...)
+	resp, err := c.http.Do(ctx, vendorhttp.Request{
+		Path:   path,
+		Query:  query,
+		Header: http.Header{"Accept": {accept}},
+	})
 	if err != nil {
-		return nil, fmt.Errorf("building the address: %w", err)
-	}
-
-	if len(query) > 0 {
-		endpoint += "?" + query.Encode()
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("building the request: %w", err)
-	}
-
-	req.Header.Set("Accept", accept)
-	req.Header.Set("User-Agent", c.userAgent)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("sending the request: %w", err)
-	}
-
-	defer func() { _ = resp.Body.Close() }()
-
-	body, err := io.ReadAll(io.LimitReader(resp.Body, maxBodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("reading the answer: %w", err)
+		return nil, err
 	}
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
-		return nil, newAPIError(resp.StatusCode, body)
+		return nil, &APIError{StatusCode: resp.StatusCode, Body: resp.ErrorBody()}
 	}
 
-	return body, nil
-}
-
-func version() string {
-	build, ok := debug.ReadBuildInfo()
-	if !ok {
-		return "dev"
-	}
-
-	if build.Main.Path == modulePath && build.Main.Version != "" {
-		return build.Main.Version
-	}
-
-	for _, dep := range build.Deps {
-		if dep.Path == modulePath {
-			return dep.Version
-		}
-	}
-
-	return "dev"
+	return resp.Body, nil
 }

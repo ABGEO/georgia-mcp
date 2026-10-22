@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/terabank"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_CrossRates() {
@@ -18,7 +19,7 @@ func ExampleClient_CrossRates() {
 
 	defer server.Close()
 
-	client := terabank.New(terabank.WithBaseURL(server.URL))
+	client := terabank.New(vendorhttp.WithBaseURL(server.URL))
 
 	rates, err := client.CrossRates(context.Background())
 	if err != nil {

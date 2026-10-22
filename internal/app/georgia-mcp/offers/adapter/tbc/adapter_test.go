@@ -23,6 +23,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -132,7 +133,7 @@ func (f *fakeTBC) adapter(t *testing.T, sink *syncBuffer) *tbc.Adapter {
 	}))
 	t.Cleanup(server.Close)
 
-	client := tbcoffers.New(tbcoffers.WithBaseURL(server.URL))
+	client := tbcoffers.New(vendorhttp.WithBaseURL(server.URL))
 
 	return tbc.NewAdapter(client, readAt, slog.New(slog.NewTextHandler(sink, nil)))
 }

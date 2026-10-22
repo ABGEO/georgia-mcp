@@ -45,4 +45,4 @@ The API needs no key. This client mirrors what the API answered on 2026-10-20:
 - The page of one offer holds its terms as a tree of nodes.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

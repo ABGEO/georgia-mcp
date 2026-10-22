@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/neogas"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serve(t *testing.T, body string, status int) *httptest.Server {
@@ -44,7 +45,7 @@ func TestGasPricesReadsTheRecordedPage(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	prices, err := neogas.New(neogas.WithBaseURL(server.URL)).GasPrices(t.Context())
+	prices, err := neogas.New(vendorhttp.WithBaseURL(server.URL)).GasPrices(t.Context())
 	if err != nil {
 		t.Fatalf("GasPrices() error = %v", err)
 	}
@@ -73,13 +74,13 @@ func TestGasPricesReadsTheRecordedPage(t *testing.T) {
 func TestGasPricesMirrorsThePage(t *testing.T) {
 	t.Parallel()
 
-	prices, err := neogas.New(neogas.WithBaseURL(serve(t, "<html><body></body></html>", 200).URL)).
+	prices, err := neogas.New(vendorhttp.WithBaseURL(serve(t, "<html><body></body></html>", 200).URL)).
 		GasPrices(t.Context())
 	if err != nil || len(prices) != 0 {
 		t.Errorf("GasPrices() = %q, %v, want an empty list and no error", prices, err)
 	}
 
-	_, err = neogas.New(neogas.WithBaseURL(serve(t, "busy", http.StatusServiceUnavailable).URL)).
+	_, err = neogas.New(vendorhttp.WithBaseURL(serve(t, "busy", http.StatusServiceUnavailable).URL)).
 		GasPrices(t.Context())
 
 	apiErr, ok := errors.AsType[*neogas.APIError](err)

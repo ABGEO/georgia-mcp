@@ -2,27 +2,22 @@ package ttc
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"net/url"
-	"runtime/debug"
+	"slices"
 	"strconv"
 	"strings"
-	"time"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
 	// DefaultBaseURL is the production address of the API of the TTC.
 	DefaultBaseURL = "https://transit.ttc.com.ge/pis-gateway/api"
 
-	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
-	modulePath     = "github.com/abgeo/georgia-mcp/pkg/ttc"
-	defaultTimeout = 10 * time.Second
+	modulePath = "github.com/abgeo/georgia-mcp/pkg/ttc"
 	// maxBodyBytes bounds the read of an answer. The list of every stop is 325 KB.
 	maxBodyBytes = 4 << 20
-	maxErrorBody = 1 << 10
 	leaveNow     = "leaveNow"
 	localeKey    = "locale"
 	apiKeyHeader = "X-Api-Key" //nolint:gosec // The name of a header, not a key.
@@ -30,49 +25,33 @@ const (
 
 // Client calls the API of the TTC. It is safe for concurrent use.
 type Client struct {
-	baseURL    string
-	httpClient *http.Client
-	userAgent  string
-	apiKey     string
+	http *vendorhttp.Client
 }
 
 // Option sets one value of a Client.
-type Option func(*Client)
+type Option = vendorhttp.Option
 
-// WithBaseURL sets the address of the API. The default is DefaultBaseURL.
-func WithBaseURL(baseURL string) Option {
-	return func(c *Client) { c.baseURL = baseURL }
-}
-
-// WithHTTPClient sets the HTTP client. The default has a timeout of 10 seconds.
-func WithHTTPClient(httpClient *http.Client) Option {
-	return func(c *Client) { c.httpClient = httpClient }
-}
-
-// WithUserAgent sets the User-Agent header. The default is
-// georgia-mcp-ttc/<version> (+https://github.com/abgeo/georgia-mcp).
-func WithUserAgent(userAgent string) Option {
-	return func(c *Client) { c.userAgent = userAgent }
-}
-
-// WithAPIKey sets the key that the client sends in the header X-api-key.
+// WithAPIKey sets the key that the client sends in the header X-api-key. An empty key
+// sends no header.
 func WithAPIKey(apiKey string) Option {
-	return func(c *Client) { c.apiKey = apiKey }
+	if apiKey == "" {
+		return func(*vendorhttp.Client) {}
+	}
+
+	return vendorhttp.WithHeader(apiKeyHeader, apiKey)
 }
 
 // New returns a client of the API of the TTC.
 func New(opts ...Option) *Client {
-	client := &Client{
-		baseURL:    DefaultBaseURL,
-		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-ttc/" + version() + " (+" + repositoryURL + ")",
+	defaults := []Option{
+		vendorhttp.WithBaseURL(DefaultBaseURL),
+		vendorhttp.WithHeader("Accept", "application/json"),
+		vendorhttp.WithMaxBody(maxBodyBytes),
 	}
 
-	for _, opt := range opts {
-		opt(client)
+	return &Client{
+		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
-
-	return client
 }
 
 // Stops returns every stop of the TTC, with the names in the locale: ka or en.
@@ -195,89 +174,17 @@ func (c *Client) Geocode(ctx context.Context, q GeocodeQuery) (FeatureCollection
 	return places, nil
 }
 
-// get sends a GET to the path under the base address and decodes the body of a 200
-// into target. Any other status is an *APIError. Each segment of the path is escaped.
+// get decodes the body of a 200 into target. Any other status is an *APIError. Each
+// segment of the path is escaped.
 func (c *Client) get(ctx context.Context, target any, query url.Values, segments ...string) error {
 	escaped := make([]string, len(segments))
 	for i, segment := range segments {
 		escaped[i] = url.PathEscape(segment)
 	}
 
-	endpoint, err := url.Parse(
-		strings.TrimSuffix(c.baseURL, "/") + "/" + strings.Join(escaped, "/"),
-	)
-	if err != nil {
-		return fmt.Errorf("building the address: %w", err)
-	}
-
-	endpoint.RawQuery = query.Encode()
-
-	body, err := c.send(ctx, endpoint.String())
-	if err != nil {
-		return err
-	}
-
-	if err := json.Unmarshal(body, target); err != nil {
-		return fmt.Errorf("decoding the answer: %w", err)
-	}
-
-	return nil
-}
-
-func (c *Client) send(ctx context.Context, endpoint string) ([]byte, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("building the request: %w", err)
-	}
-
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("User-Agent", c.userAgent)
-
-	if c.apiKey != "" {
-		req.Header.Set(apiKeyHeader, c.apiKey)
-	}
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("sending the request: %w", err)
-	}
-
-	defer func() { _ = resp.Body.Close() }()
-
-	body, err := io.ReadAll(io.LimitReader(resp.Body, maxBodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("reading the answer: %w", err)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, &APIError{
-			StatusCode: resp.StatusCode,
-			Body:       string(body[:min(len(body), maxErrorBody)]),
-		}
-	}
-
-	return body, nil
+	return c.http.FetchJSON(ctx, vendorhttp.Request{Path: escaped, Query: query}, target)
 }
 
 func coordinates(lat, lon float64) string {
 	return strconv.FormatFloat(lat, 'f', -1, 64) + "," + strconv.FormatFloat(lon, 'f', -1, 64)
-}
-
-func version() string {
-	build, ok := debug.ReadBuildInfo()
-	if !ok {
-		return "dev"
-	}
-
-	if build.Main.Path == modulePath && build.Main.Version != "" {
-		return build.Main.Version
-	}
-
-	for _, dep := range build.Deps {
-		if dep.Path == modulePath {
-			return dep.Version
-		}
-	}
-
-	return "dev"
 }

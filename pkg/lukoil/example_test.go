@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/lukoil"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_PriceHistory() {
@@ -18,7 +19,7 @@ func ExampleClient_PriceHistory() {
 
 	defer server.Close()
 
-	client := lukoil.New(lukoil.WithBaseURL(server.URL))
+	client := lukoil.New(vendorhttp.WithBaseURL(server.URL))
 
 	table, err := client.PriceHistory(context.Background())
 	if err != nil {

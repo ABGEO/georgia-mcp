@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/rompetrol"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Prices() {
@@ -18,7 +19,7 @@ func ExampleClient_Prices() {
 
 	defer server.Close()
 
-	client := rompetrol.New(rompetrol.WithBaseURL(server.URL))
+	client := rompetrol.New(vendorhttp.WithBaseURL(server.URL))
 
 	rows, err := client.Prices(context.Background())
 	if err != nil {

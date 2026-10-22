@@ -16,6 +16,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	ricoclient "github.com/abgeo/georgia-mcp/pkg/rico"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -67,7 +68,7 @@ func adapterFor(t *testing.T, status int, body string) *rico.Adapter {
 	}))
 	t.Cleanup(server.Close)
 
-	return rico.NewAdapter(ricoclient.New(ricoclient.WithBaseURL(server.URL)), readAt)
+	return rico.NewAdapter(ricoclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
 }
 
 // RICORATE-SC-005: The adapter gives the price of one unit, with the trailing zeros dropped.

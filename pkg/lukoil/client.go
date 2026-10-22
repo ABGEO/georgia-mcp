@@ -4,76 +4,51 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
-	"runtime/debug"
+	"slices"
 	"strings"
-	"time"
 
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
 	// DefaultBaseURL is the production address of the site of Lukoil Georgia.
 	DefaultBaseURL = "https://www.lukoil.ge"
 
-	repositoryURL  = "https://github.com/abgeo/georgia-mcp"
-	modulePath     = "github.com/abgeo/georgia-mcp/pkg/lukoil"
-	defaultTimeout = 10 * time.Second
+	modulePath = "github.com/abgeo/georgia-mcp/pkg/lukoil"
 
 	// maxBodyBytes bounds the read of an answer. The page is about 97 KiB, and a change
 	// of the prices adds about 1 KiB.
 	maxBodyBytes = 2 << 20
-	maxErrorBody = 1 << 10
 )
 
 // Client reads the site of Lukoil Georgia. It is safe for concurrent use.
 type Client struct {
-	baseURL    string
-	httpClient *http.Client
-	userAgent  string
+	http *vendorhttp.Client
 }
 
 // Option sets one value of a Client.
-type Option func(*Client)
-
-// WithBaseURL sets the address of the site. The default is DefaultBaseURL.
-func WithBaseURL(baseURL string) Option {
-	return func(c *Client) { c.baseURL = baseURL }
-}
-
-// WithHTTPClient sets the HTTP client. The default has a timeout of 10 seconds.
-func WithHTTPClient(httpClient *http.Client) Option {
-	return func(c *Client) { c.httpClient = httpClient }
-}
-
-// WithUserAgent sets the User-Agent header. The default is
-// georgia-mcp-lukoil/<version> (+https://github.com/abgeo/georgia-mcp).
-func WithUserAgent(userAgent string) Option {
-	return func(c *Client) { c.userAgent = userAgent }
-}
+type Option = vendorhttp.Option
 
 // New returns a client of the site of Lukoil Georgia.
 func New(opts ...Option) *Client {
-	client := &Client{
-		baseURL:    DefaultBaseURL,
-		httpClient: &http.Client{Timeout: defaultTimeout},
-		userAgent:  "georgia-mcp-lukoil/" + version() + " (+" + repositoryURL + ")",
+	defaults := []Option{
+		vendorhttp.WithBaseURL(DefaultBaseURL),
+		vendorhttp.WithHeader("Accept", "text/html"),
+		vendorhttp.WithMaxBody(maxBodyBytes),
 	}
 
-	for _, opt := range opts {
-		opt(client)
+	return &Client{
+		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
-
-	return client
 }
 
 // PriceHistory returns the head and each row of the table of the price history page, in
 // the order of the page. A table with no row gives no row.
 func (c *Client) PriceHistory(ctx context.Context) (PriceTable, error) {
-	body, err := c.get(ctx)
+	body, err := c.http.Fetch(ctx, vendorhttp.Request{Path: []string{"prices-history"}})
 	if err != nil {
 		return PriceTable{}, fmt.Errorf("getting the price history page: %w", err)
 	}
@@ -197,61 +172,4 @@ func text(node *html.Node) string {
 	}
 
 	return strings.Join(strings.Fields(builder.String()), " ")
-}
-
-// get sends a GET of the price history page and returns the body of a 200. Any other status is
-// an *APIError.
-func (c *Client) get(ctx context.Context) ([]byte, error) {
-	endpoint, err := url.JoinPath(c.baseURL, "prices-history")
-	if err != nil {
-		return nil, fmt.Errorf("building the address: %w", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, http.NoBody)
-	if err != nil {
-		return nil, fmt.Errorf("building the request: %w", err)
-	}
-
-	req.Header.Set("Accept", "text/html")
-	req.Header.Set("User-Agent", c.userAgent)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("sending the request: %w", err)
-	}
-
-	defer func() { _ = resp.Body.Close() }()
-
-	body, err := io.ReadAll(io.LimitReader(resp.Body, maxBodyBytes))
-	if err != nil {
-		return nil, fmt.Errorf("reading the answer: %w", err)
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, &APIError{
-			StatusCode: resp.StatusCode,
-			Body:       string(body[:min(len(body), maxErrorBody)]),
-		}
-	}
-
-	return body, nil
-}
-
-func version() string {
-	build, ok := debug.ReadBuildInfo()
-	if !ok {
-		return "dev"
-	}
-
-	if build.Main.Path == modulePath && build.Main.Version != "" {
-		return build.Main.Version
-	}
-
-	for _, dep := range build.Deps {
-		if dep.Path == modulePath {
-			return dep.Version
-		}
-	}
-
-	return "dev"
 }

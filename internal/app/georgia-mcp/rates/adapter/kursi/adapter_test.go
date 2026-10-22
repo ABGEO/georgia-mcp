@@ -16,6 +16,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	kursiclient "github.com/abgeo/georgia-mcp/pkg/kursi"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -55,7 +56,7 @@ func adapterFor(t *testing.T, status int, body string) *kursi.Adapter {
 	}))
 	t.Cleanup(server.Close)
 
-	return kursi.NewAdapter(kursiclient.New(kursiclient.WithBaseURL(server.URL)), readAt)
+	return kursi.NewAdapter(kursiclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
 }
 
 // KURSRATE-SC-005: The adapter reads the pairs against the lari, with the trailing

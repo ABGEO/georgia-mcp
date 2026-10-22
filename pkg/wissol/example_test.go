@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"os"
 
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 	"github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
@@ -18,7 +19,7 @@ func ExampleClient_FuelPrices() {
 
 	defer server.Close()
 
-	client := wissol.New(wissol.WithBaseURL(server.URL))
+	client := wissol.New(vendorhttp.WithBaseURL(server.URL))
 
 	prices, err := client.FuelPrices(context.Background())
 	if err != nil {

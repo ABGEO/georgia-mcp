@@ -21,6 +21,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	neogasclient "github.com/abgeo/georgia-mcp/pkg/neogas"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const testdata = "../../../../../../pkg/neogas/testdata"
@@ -38,7 +39,7 @@ func adapterFor(t *testing.T, body string, status int) *neogas.Adapter {
 	}))
 	t.Cleanup(server.Close)
 
-	return neogas.NewAdapter(neogasclient.New(neogasclient.WithBaseURL(server.URL)), readAt)
+	return neogas.NewAdapter(neogasclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
 }
 
 func recorded(t *testing.T, name string) string {
@@ -175,8 +176,8 @@ func TestTheCacheBoundsTheCalls(t *testing.T) {
 	synctest.Test(t, func(t *testing.T) {
 		transport := &countingTransport{body: body}
 		client := neogasclient.New(
-			neogasclient.WithBaseURL("https://neogas.test"),
-			neogasclient.WithHTTPClient(&http.Client{Transport: transport}),
+			vendorhttp.WithBaseURL("https://neogas.test"),
+			vendorhttp.WithHTTPClient(&http.Client{Transport: transport}),
 		)
 
 		prices, err := cache.New(neogas.NewAdapter(client, time.Now))

@@ -43,4 +43,4 @@ The page needs no key. This client mirrors what the page showed on 2026-10-22:
   meaning of the table belongs to the caller.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

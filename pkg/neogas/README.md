@@ -40,4 +40,4 @@ The page needs no key. This client mirrors what the page showed on 2026-10-21:
 - The page holds the text of PHP notices. They sit outside the price.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

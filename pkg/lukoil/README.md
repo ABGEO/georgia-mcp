@@ -43,4 +43,4 @@ The page needs no key. This client mirrors what the page showed on 2026-10-21:
 - The page sets the cookies `XSRF-TOKEN` and `laravel_session`. The client sends none.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

@@ -47,4 +47,4 @@ documentation of the API. This client mirrors what the API answers today:
 - The codes hold Georgian names only. The list can name a code that no rate set holds.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

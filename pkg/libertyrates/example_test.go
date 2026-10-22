@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/libertyrates"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Rates() {
@@ -18,7 +19,7 @@ func ExampleClient_Rates() {
 
 	defer server.Close()
 
-	client := libertyrates.New(libertyrates.WithBaseURL(server.URL))
+	client := libertyrates.New(vendorhttp.WithBaseURL(server.URL))
 
 	rows, err := client.Rates(context.Background())
 	if err != nil {

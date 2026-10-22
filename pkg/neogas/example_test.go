@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/neogas"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_GasPrices() {
@@ -18,7 +19,7 @@ func ExampleClient_GasPrices() {
 
 	defer server.Close()
 
-	client := neogas.New(neogas.WithBaseURL(server.URL))
+	client := neogas.New(vendorhttp.WithBaseURL(server.URL))
 
 	prices, err := client.GasPrices(context.Background())
 	if err != nil {

@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serveFile(t *testing.T, path string, status int) *httptest.Server {
@@ -51,7 +52,7 @@ func TestOffersSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	client := bogoffers.New(bogoffers.WithBaseURL(server.URL))
+	client := bogoffers.New(vendorhttp.WithBaseURL(server.URL))
 
 	_, err := client.Offers(
 		t.Context(),
@@ -111,7 +112,7 @@ func TestOffersSendsNoLanguage(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := bogoffers.New(bogoffers.WithBaseURL(server.URL)).
+	_, err := bogoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), bogoffers.OffersQuery{PageSize: 100})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -128,7 +129,7 @@ func TestOffersDecodesARecordedPage(t *testing.T) {
 
 	server := serveFile(t, "testdata/offers-en-0.json", http.StatusOK)
 
-	page, err := bogoffers.New(bogoffers.WithBaseURL(server.URL)).
+	page, err := bogoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), bogoffers.OffersQuery{Language: "en", PageSize: 100})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -172,7 +173,7 @@ func TestOffersReportsAStatus(t *testing.T) {
 
 	server := serveFile(t, "testdata/error.json", http.StatusInternalServerError)
 
-	_, err := bogoffers.New(bogoffers.WithBaseURL(server.URL)).
+	_, err := bogoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), bogoffers.OffersQuery{PageSize: 100})
 
 	apiErr, ok := errors.AsType[*bogoffers.APIError](err)
@@ -199,7 +200,7 @@ func TestOffersReportsABody(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := bogoffers.New(bogoffers.WithBaseURL(server.URL)).
+	_, err := bogoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), bogoffers.OffersQuery{PageSize: 100})
 	if err == nil {
 		t.Error("Offers() error = nil, want a decode error")

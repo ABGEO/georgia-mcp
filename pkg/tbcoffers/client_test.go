@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -79,7 +80,7 @@ func TestOffersSendsTheRequest(t *testing.T) {
 
 	server, got := recordingServer(t, `{"pagingDetails":{},"list":[]}`)
 
-	_, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).
+	_, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), tbcoffers.OffersRequest{Locale: locale, PageSize: 1000})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -112,7 +113,7 @@ func TestOffersDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, "testdata/offers.json")
 
-	page, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).
+	page, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), tbcoffers.OffersRequest{Locale: locale, PageSize: 1000})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -156,7 +157,7 @@ func TestOffersSendsAFilter(t *testing.T) {
 
 	server, got := recordingServer(t, `{"pagingDetails":{},"list":[]}`)
 
-	_, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).
+	_, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), tbcoffers.OffersRequest{
 			Filter: []string{"Category:Leisure"}, Locale: locale, PageSize: 1000,
 		})
@@ -182,7 +183,7 @@ func TestFiltersOfASegment(t *testing.T) {
 
 	server, got := recordingServer(t, string(mustRead(t, "testdata/filters-concept.json")))
 
-	filters, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).
+	filters, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Filters(t.Context(), "Concept", locale)
 	if err != nil {
 		t.Fatalf("Filters() error = %v", err)
@@ -215,7 +216,7 @@ func TestOfferReadsThePage(t *testing.T) {
 
 	server, got := recordingServer(t, string(mustRead(t, "testdata/offer-oktopusi-qeshbeqi.json")))
 
-	entry, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).
+	entry, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).
 		Offer(t.Context(), "oktopusi-qeshbeqi", locale)
 	if err != nil {
 		t.Fatalf("Offer() error = %v", err)
@@ -244,7 +245,7 @@ func TestReportsAStatus(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := tbcoffers.New(tbcoffers.WithBaseURL(server.URL)).Filters(t.Context(), "", locale)
+	_, err := tbcoffers.New(vendorhttp.WithBaseURL(server.URL)).Filters(t.Context(), "", locale)
 
 	apiErr, ok := errors.AsType[*tbcoffers.APIError](err)
 	if !ok {

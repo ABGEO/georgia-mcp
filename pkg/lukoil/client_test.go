@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/lukoil"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serve(t *testing.T, body string, status int) *httptest.Server {
@@ -38,7 +39,8 @@ func TestPriceHistorySendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := lukoil.New(lukoil.WithBaseURL(server.URL)).PriceHistory(t.Context()); err != nil {
+	if _, err := lukoil.New(vendorhttp.WithBaseURL(server.URL)).
+		PriceHistory(t.Context()); err != nil {
 		t.Fatalf("PriceHistory() error = %v", err)
 	}
 
@@ -67,7 +69,7 @@ func TestPriceHistoryReadsTheRecordedPage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	table, err := lukoil.New(lukoil.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
+	table, err := lukoil.New(vendorhttp.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
 		PriceHistory(t.Context())
 	if err != nil {
 		t.Fatalf("PriceHistory() error = %v", err)
@@ -119,7 +121,7 @@ func TestPriceHistoryMirrorsThePage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			_, err := lukoil.New(lukoil.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
+			_, err := lukoil.New(vendorhttp.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
 				PriceHistory(t.Context())
 			if !errors.Is(err, tt.want) {
 				t.Errorf("PriceHistory() error = %v, want %v", err, tt.want)
@@ -129,13 +131,13 @@ func TestPriceHistoryMirrorsThePage(t *testing.T) {
 
 	empty := `<table>` + head + `<tbody></tbody></table>`
 
-	table, err := lukoil.New(lukoil.WithBaseURL(serve(t, empty, http.StatusOK).URL)).
+	table, err := lukoil.New(vendorhttp.WithBaseURL(serve(t, empty, http.StatusOK).URL)).
 		PriceHistory(t.Context())
 	if err != nil || len(table.Header) != 3 || len(table.Rows) != 0 {
 		t.Errorf("PriceHistory() = %+v, %v, want a head of 3 and no row", table, err)
 	}
 
-	_, err = lukoil.New(lukoil.WithBaseURL(serve(t, "down", http.StatusInternalServerError).URL)).
+	_, err = lukoil.New(vendorhttp.WithBaseURL(serve(t, "down", http.StatusInternalServerError).URL)).
 		PriceHistory(t.Context())
 
 	apiErr, ok := errors.AsType[*lukoil.APIError](err)

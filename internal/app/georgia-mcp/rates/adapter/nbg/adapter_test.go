@@ -14,6 +14,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	nbgclient "github.com/abgeo/georgia-mcp/pkg/nbg"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const testdata = "../../../../../../pkg/nbg/testdata"
@@ -27,7 +28,7 @@ func adapterFor(t *testing.T, handler http.HandlerFunc) *nbg.Adapter {
 	readAt := time.Date(2026, 10, 18, 10, 0, 0, 0, time.UTC)
 
 	return nbg.NewAdapter(
-		nbgclient.New(nbgclient.WithBaseURL(server.URL)),
+		nbgclient.New(vendorhttp.WithBaseURL(server.URL)),
 		func() time.Time { return readAt },
 	)
 }

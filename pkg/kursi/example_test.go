@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/kursi"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Currencies() {
@@ -18,7 +19,7 @@ func ExampleClient_Currencies() {
 
 	defer server.Close()
 
-	client := kursi.New(kursi.WithBaseURL(server.URL))
+	client := kursi.New(vendorhttp.WithBaseURL(server.URL))
 
 	pairs, err := client.Currencies(context.Background())
 	if err != nil {

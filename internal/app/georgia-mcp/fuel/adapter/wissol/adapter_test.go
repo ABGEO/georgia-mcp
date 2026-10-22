@@ -20,6 +20,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 	wissolclient "github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
@@ -62,7 +63,7 @@ func adapterFor(t *testing.T, body string, status int, sink *syncBuffer) *wissol
 	t.Cleanup(server.Close)
 
 	return wissol.NewAdapter(
-		wissolclient.New(wissolclient.WithBaseURL(server.URL)),
+		wissolclient.New(vendorhttp.WithBaseURL(server.URL)),
 		readAt,
 		slog.New(slog.NewJSONHandler(sink, nil)),
 	)

@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/connect"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serveFile(t *testing.T, path string, status int) *httptest.Server {
@@ -42,7 +43,7 @@ func TestCurrentSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := connect.New(connect.WithBaseURL(server.URL)).Current(t.Context()); err != nil {
+	if _, err := connect.New(vendorhttp.WithBaseURL(server.URL)).Current(t.Context()); err != nil {
 		t.Fatalf("Current() error = %v", err)
 	}
 
@@ -67,7 +68,7 @@ func TestCurrentDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, "testdata/current.json", http.StatusOK)
 
-	got, err := connect.New(connect.WithBaseURL(server.URL)).Current(t.Context())
+	got, err := connect.New(vendorhttp.WithBaseURL(server.URL)).Current(t.Context())
 	if err != nil {
 		t.Fatalf("Current() error = %v", err)
 	}
@@ -94,7 +95,7 @@ func TestCurrentReportsAStatus(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := connect.New(connect.WithBaseURL(server.URL)).Current(t.Context())
+	_, err := connect.New(vendorhttp.WithBaseURL(server.URL)).Current(t.Context())
 
 	apiErr, ok := errors.AsType[*connect.APIError](err)
 	if !ok {

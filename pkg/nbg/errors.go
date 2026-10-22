@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-const maxErrorBodyBytes = 1 << 10
-
 // ErrUnexpectedStatus tells that the NBG answered with a status that is not a success.
 var ErrUnexpectedStatus = errors.New("nbg: unexpected status")
 
@@ -15,14 +13,6 @@ type APIError struct {
 	StatusCode int
 	// Body holds the first 1 KiB of the answer.
 	Body string
-}
-
-func newAPIError(status int, body []byte) *APIError {
-	if len(body) > maxErrorBodyBytes {
-		body = body[:maxErrorBodyBytes]
-	}
-
-	return &APIError{StatusCode: status, Body: string(body)}
 }
 
 // Error returns the status and the body.

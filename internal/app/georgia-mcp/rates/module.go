@@ -28,6 +28,7 @@ import (
 	ricoclient "github.com/abgeo/georgia-mcp/pkg/rico"
 	tbcclient "github.com/abgeo/georgia-mcp/pkg/tbc"
 	terabankclient "github.com/abgeo/georgia-mcp/pkg/terabank"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -58,8 +59,8 @@ func New(cfg Config, logger *slog.Logger) (*Module, error) {
 
 func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, error) {
 	client := nbgclient.New(
-		nbgclient.WithBaseURL(cfg.NBG.BaseURL.String()),
-		nbgclient.WithHTTPClient(httpclient.New(cfg.NBG.HTTP)),
+		vendorhttp.WithBaseURL(cfg.NBG.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(cfg.NBG.HTTP)),
 	)
 
 	rateSets, err := ratecache.New(nbgadapter.NewAdapter(client, now), cfg.NBG.CacheEntries, now)
@@ -151,43 +152,43 @@ func commercialSources(
 
 func bogAdapter(cfg BOGConfig, now func() time.Time) *bogadapter.Adapter {
 	return bogadapter.NewAdapter(bogclient.New(
-		bogclient.WithBaseURL(cfg.BaseURL.String()),
-		bogclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	), now)
 }
 
 func libertyAdapter(cfg LibertyConfig, now func() time.Time) *libertyadapter.Adapter {
 	return libertyadapter.NewAdapter(libertyclient.New(
-		libertyclient.WithBaseURL(cfg.BaseURL.String()),
-		libertyclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	), now)
 }
 
 func terabankAdapter(cfg TerabankConfig, now func() time.Time) *terabankadapter.Adapter {
 	return terabankadapter.NewAdapter(terabankclient.New(
-		terabankclient.WithBaseURL(cfg.BaseURL.String()),
-		terabankclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	), now)
 }
 
 func ricoAdapter(cfg RicoConfig, now func() time.Time) *ricoadapter.Adapter {
 	return ricoadapter.NewAdapter(ricoclient.New(
-		ricoclient.WithBaseURL(cfg.BaseURL.String()),
-		ricoclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	), now)
 }
 
 func kursiAdapter(cfg KursiConfig, now func() time.Time) *kursiadapter.Adapter {
 	return kursiadapter.NewAdapter(kursiclient.New(
-		kursiclient.WithBaseURL(cfg.BaseURL.String()),
-		kursiclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	), now)
 }
 
 func tbcAdapter(cfg TBCConfig, now func() time.Time) *tbcadapter.Adapter {
 	return tbcadapter.NewAdapter(tbcclient.New(
-		tbcclient.WithBaseURL(cfg.BaseURL.String()),
-		tbcclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 		tbcclient.WithAPIKey(cfg.APIKey),
 	), now)
 }

@@ -2,8 +2,8 @@ package liberty
 
 import (
 	"errors"
-	"fmt"
-	"net/http"
+
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 var (
@@ -15,24 +15,6 @@ var (
 	ErrNoTerms = errors.New("liberty: the page has no block of terms")
 )
 
-// APIError is an answer of Liberty with a status that is not a success.
-type APIError struct {
-	StatusCode int
-	// Body is the first 1 KiB of the answer.
-	Body string
-}
-
-// Error returns the status.
-func (e *APIError) Error() string {
-	return fmt.Sprintf(
-		"%s: %d: %s",
-		ErrUnexpectedStatus,
-		e.StatusCode,
-		http.StatusText(e.StatusCode),
-	)
-}
-
-// Unwrap returns ErrUnexpectedStatus.
-func (e *APIError) Unwrap() error {
-	return ErrUnexpectedStatus
-}
+// APIError is an answer of Liberty with a status that is not a success. It wraps
+// ErrUnexpectedStatus.
+type APIError = vendorhttp.StatusError

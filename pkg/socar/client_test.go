@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/socar"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serveFile(t *testing.T, path string, status int) *httptest.Server {
@@ -42,7 +43,8 @@ func TestCurrentPricesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := socar.New(socar.WithBaseURL(server.URL)).CurrentPrices(t.Context()); err != nil {
+	if _, err := socar.New(vendorhttp.WithBaseURL(server.URL)).
+		CurrentPrices(t.Context()); err != nil {
 		t.Fatalf("CurrentPrices() error = %v", err)
 	}
 
@@ -68,7 +70,7 @@ func TestCurrentPricesDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, "testdata/current-prices.json", http.StatusOK)
 
-	got, err := socar.New(socar.WithBaseURL(server.URL)).CurrentPrices(t.Context())
+	got, err := socar.New(vendorhttp.WithBaseURL(server.URL)).CurrentPrices(t.Context())
 	if err != nil {
 		t.Fatalf("CurrentPrices() error = %v", err)
 	}
@@ -110,7 +112,7 @@ func TestCurrentPricesReportsAStatus(t *testing.T) {
 
 	server := serveFile(t, "testdata/error.json", http.StatusBadRequest)
 
-	_, err = socar.New(socar.WithBaseURL(server.URL)).CurrentPrices(t.Context())
+	_, err = socar.New(vendorhttp.WithBaseURL(server.URL)).CurrentPrices(t.Context())
 
 	apiErr, ok := errors.AsType[*socar.APIError](err)
 	if !ok {

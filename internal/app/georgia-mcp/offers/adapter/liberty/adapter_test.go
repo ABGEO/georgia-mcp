@@ -26,6 +26,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/pkg/liberty"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -148,7 +149,7 @@ func (f *fakeLiberty) adapter(t *testing.T, sink *syncBuffer) *libertyadapter.Ad
 	}))
 	t.Cleanup(server.Close)
 
-	client := liberty.New(liberty.WithBaseURL(server.URL))
+	client := liberty.New(vendorhttp.WithBaseURL(server.URL))
 
 	return libertyadapter.NewAdapter(client, readAt, slog.New(slog.NewTextHandler(sink, nil)))
 }

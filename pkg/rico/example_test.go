@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/rico"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Rates() {
@@ -18,7 +19,7 @@ func ExampleClient_Rates() {
 
 	defer server.Close()
 
-	client := rico.New(rico.WithBaseURL(server.URL))
+	client := rico.New(vendorhttp.WithBaseURL(server.URL))
 
 	rows, err := client.Rates(context.Background())
 	if err != nil {

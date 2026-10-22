@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/connect"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Current() {
@@ -18,7 +19,7 @@ func ExampleClient_Current() {
 
 	defer server.Close()
 
-	client := connect.New(connect.WithBaseURL(server.URL))
+	client := connect.New(vendorhttp.WithBaseURL(server.URL))
 
 	snapshot, err := client.Current(context.Background())
 	if err != nil {

@@ -28,6 +28,7 @@ import (
 	portalclient "github.com/abgeo/georgia-mcp/pkg/portal"
 	rompetrolclient "github.com/abgeo/georgia-mcp/pkg/rompetrol"
 	socarclient "github.com/abgeo/georgia-mcp/pkg/socar"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 	wissolclient "github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
@@ -143,8 +144,8 @@ func wissolSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := wissolclient.New(
-		wissolclient.WithBaseURL(cfg.BaseURL.String()),
-		wissolclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	wissol, err := fuelcache.New(wissoladapter.NewAdapter(client, now, logger))
@@ -161,8 +162,8 @@ func rompetrolSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := rompetrolclient.New(
-		rompetrolclient.WithBaseURL(cfg.BaseURL.String()),
-		rompetrolclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	rompetrol, err := fuelcache.New(rompetroladapter.NewAdapter(client, now, logger))
@@ -179,8 +180,8 @@ func socarSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := socarclient.New(
-		socarclient.WithBaseURL(cfg.BaseURL.String()),
-		socarclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	socar, err := fuelcache.New(socaradapter.NewAdapter(client, now, logger))
@@ -197,8 +198,8 @@ func connectSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := connectclient.New(
-		connectclient.WithBaseURL(cfg.BaseURL.String()),
-		connectclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	connect, err := fuelcache.New(connectadapter.NewAdapter(client, now, logger))
@@ -215,8 +216,8 @@ func lukoilSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := lukoilclient.New(
-		lukoilclient.WithBaseURL(cfg.BaseURL.String()),
-		lukoilclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	lukoil, err := fuelcache.New(lukoiladapter.NewAdapter(client, now, logger))
@@ -232,8 +233,8 @@ func neogasSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := neogasclient.New(
-		neogasclient.WithBaseURL(cfg.BaseURL.String()),
-		neogasclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	neogas, err := fuelcache.New(neogasadapter.NewAdapter(client, now))
@@ -250,8 +251,8 @@ func portalSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := portalclient.New(
-		portalclient.WithBaseURL(cfg.BaseURL.String()),
-		portalclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	portal, err := fuelcache.New(portaladapter.NewAdapter(client, now, logger))
@@ -282,8 +283,8 @@ func gulfSource(
 	now func() time.Time,
 ) (*fuelcache.PriceCache, error) {
 	client := gulfclient.New(
-		gulfclient.WithBaseURL(cfg.BaseURL.String()),
-		gulfclient.WithHTTPClient(
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(
 			httpclient.NewWithTransport(httpclient.Config(cfg.HTTP), gulfclient.NewTransport()),
 		),
 	)

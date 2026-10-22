@@ -42,4 +42,4 @@ The client mirrors what the API answers today:
 - The answer holds no instant. Terabank publishes no limit of the calls.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

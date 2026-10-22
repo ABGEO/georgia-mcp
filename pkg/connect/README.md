@@ -47,4 +47,4 @@ The API needs no key. This client mirrors what the API answered on 2026-10-21:
   with a JSON message. The client does not cover them.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

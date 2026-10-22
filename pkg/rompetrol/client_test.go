@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/rompetrol"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serve(t *testing.T, body []byte) *httptest.Server {
@@ -54,7 +55,7 @@ func TestPricesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := rompetrol.New(rompetrol.WithBaseURL(server.URL)).Prices(t.Context()); err != nil {
+	if _, err := rompetrol.New(vendorhttp.WithBaseURL(server.URL)).Prices(t.Context()); err != nil {
 		t.Fatalf("Prices() error = %v", err)
 	}
 
@@ -79,7 +80,7 @@ func TestPricesReadsARecordedPage(t *testing.T) {
 
 	server := serveFile(t, "testdata/home.html")
 
-	got, err := rompetrol.New(rompetrol.WithBaseURL(server.URL)).Prices(t.Context())
+	got, err := rompetrol.New(vendorhttp.WithBaseURL(server.URL)).Prices(t.Context())
 	if err != nil {
 		t.Fatalf("Prices() error = %v", err)
 	}
@@ -130,7 +131,7 @@ func TestPricesReportsAStatus(t *testing.T) {
 			)
 			t.Cleanup(server.Close)
 
-			_, err := rompetrol.New(rompetrol.WithBaseURL(server.URL)).Prices(t.Context())
+			_, err := rompetrol.New(vendorhttp.WithBaseURL(server.URL)).Prices(t.Context())
 
 			var apiErr *rompetrol.APIError
 			if !errors.As(err, &apiErr) {
@@ -188,7 +189,7 @@ func TestPricesReportsTheShapeOfTheTable(t *testing.T) {
 
 			server := serve(t, tt.body)
 
-			_, err := rompetrol.New(rompetrol.WithBaseURL(server.URL)).Prices(t.Context())
+			_, err := rompetrol.New(vendorhttp.WithBaseURL(server.URL)).Prices(t.Context())
 			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("Prices() error = %v, want %v", err, tt.wantErr)
 			}
@@ -203,7 +204,7 @@ func TestPricesReportsTheShapeOfTheTable(t *testing.T) {
 			page(`<table><thead><tr><th>პროდუქტი</th><th>ლარი / ლ</th></tr></thead></table>`),
 		)
 
-		got, err := rompetrol.New(rompetrol.WithBaseURL(server.URL)).Prices(t.Context())
+		got, err := rompetrol.New(vendorhttp.WithBaseURL(server.URL)).Prices(t.Context())
 		if err != nil {
 			t.Fatalf("Prices() error = %v, want none", err)
 		}

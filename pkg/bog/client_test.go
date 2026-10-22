@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/bog"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const dollar = "USD"
@@ -44,7 +45,7 @@ func TestCommercialRateSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := bog.New(bog.WithBaseURL(server.URL)).
+	if _, err := bog.New(vendorhttp.WithBaseURL(server.URL)).
 		CommercialRate(t.Context(), dollar); err != nil {
 		t.Fatalf("CommercialRate() error = %v", err)
 	}
@@ -76,7 +77,7 @@ func TestCommercialRateDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, "testdata/commercial-usd.json")
 
-	got, err := bog.New(bog.WithBaseURL(server.URL)).CommercialRate(t.Context(), dollar)
+	got, err := bog.New(vendorhttp.WithBaseURL(server.URL)).CommercialRate(t.Context(), dollar)
 	if err != nil {
 		t.Fatalf("CommercialRate() error = %v", err)
 	}
@@ -96,7 +97,7 @@ func TestCommercialRateReportsNoRate(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	rate, err := bog.New(bog.WithBaseURL(server.URL)).CommercialRate(t.Context(), "GEL")
+	rate, err := bog.New(vendorhttp.WithBaseURL(server.URL)).CommercialRate(t.Context(), "GEL")
 	if rate != nil || !errors.Is(err, bog.ErrNoRate) {
 		t.Errorf("CommercialRate() = %+v, %v, want nil and ErrNoRate", rate, err)
 	}
@@ -147,7 +148,8 @@ func TestCommercialRateReportsAStatus(t *testing.T) {
 			)
 			t.Cleanup(server.Close)
 
-			_, err := bog.New(bog.WithBaseURL(server.URL)).CommercialRate(t.Context(), dollar)
+			_, err := bog.New(vendorhttp.WithBaseURL(server.URL)).
+				CommercialRate(t.Context(), dollar)
 
 			apiErr, ok := errors.AsType[*bog.APIError](err)
 			if !ok {
@@ -205,7 +207,7 @@ func TestCommercialRateEscapesTheCode(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, _ = bog.New(bog.WithBaseURL(server.URL)).CommercialRate(t.Context(), "a/b?c")
+	_, _ = bog.New(vendorhttp.WithBaseURL(server.URL)).CommercialRate(t.Context(), "a/b?c")
 
 	if got != "/api/rates/commercial/a%2Fb%3Fc" {
 		t.Errorf("path = %q, want %q", got, "/api/rates/commercial/a%2Fb%3Fc")

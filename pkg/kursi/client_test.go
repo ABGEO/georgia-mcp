@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/kursi"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const dollar = "USD"
@@ -23,7 +24,7 @@ func serve(t *testing.T, status int, body string) *kursi.Client {
 	}))
 	t.Cleanup(server.Close)
 
-	return kursi.New(kursi.WithBaseURL(server.URL))
+	return kursi.New(vendorhttp.WithBaseURL(server.URL))
 }
 
 func recorded(t *testing.T) string {
@@ -51,7 +52,7 @@ func TestCurrenciesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := kursi.New(kursi.WithBaseURL(server.URL)).Currencies(t.Context()); err != nil {
+	if _, err := kursi.New(vendorhttp.WithBaseURL(server.URL)).Currencies(t.Context()); err != nil {
 		t.Fatalf("Currencies() error = %v", err)
 	}
 

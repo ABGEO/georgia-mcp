@@ -19,6 +19,7 @@ import (
 	"github.com/abgeo/georgia-mcp/pkg/bogoffers"
 	libertyclient "github.com/abgeo/georgia-mcp/pkg/liberty"
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const (
@@ -86,8 +87,8 @@ func bogSource(
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := bogoffers.New(
-		bogoffers.WithBaseURL(cfg.BaseURL.String()),
-		bogoffers.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	bog, err := offercache.New(bogadapter.NewAdapter(client, now, logger))
@@ -104,8 +105,8 @@ func tbcSource(
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := tbcoffers.New(
-		tbcoffers.WithBaseURL(cfg.BaseURL.String()),
-		tbcoffers.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	tbc, err := offercache.New(tbcadapter.NewAdapter(client, now, logger))
@@ -122,8 +123,8 @@ func libertySource(
 	now func() time.Time,
 ) (*offercache.OfferCache, error) {
 	client := libertyclient.New(
-		libertyclient.WithBaseURL(cfg.BaseURL.String()),
-		libertyclient.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
+		vendorhttp.WithBaseURL(cfg.BaseURL.String()),
+		vendorhttp.WithHTTPClient(httpclient.New(httpclient.Config(cfg.HTTP))),
 	)
 
 	liberty, err := offercache.New(libertyadapter.NewAdapter(client, now, logger))

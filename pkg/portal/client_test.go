@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/portal"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serve(t *testing.T, body string, status int) *httptest.Server {
@@ -37,7 +38,8 @@ func TestFuelPricesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := portal.New(portal.WithBaseURL(server.URL)).FuelPrices(t.Context()); err != nil {
+	if _, err := portal.New(vendorhttp.WithBaseURL(server.URL)).
+		FuelPrices(t.Context()); err != nil {
 		t.Fatalf("FuelPrices() error = %v", err)
 	}
 
@@ -69,7 +71,7 @@ func TestFuelPricesDecodesTheRecordedStream(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	prices, err := portal.New(portal.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
+	prices, err := portal.New(vendorhttp.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
 		FuelPrices(t.Context())
 	if err != nil {
 		t.Fatalf("FuelPrices() error = %v", err)
@@ -108,7 +110,7 @@ func TestFuelPricesMirrorsTheStream(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			prices, err := portal.New(portal.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
+			prices, err := portal.New(vendorhttp.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
 				FuelPrices(t.Context())
 			if !errors.Is(err, tt.want) || prices != nil {
 				t.Errorf("FuelPrices() = %v, %v, want %v", prices, err, tt.want)
@@ -116,13 +118,13 @@ func TestFuelPricesMirrorsTheStream(t *testing.T) {
 		})
 	}
 
-	prices, err := portal.New(portal.WithBaseURL(serve(t, `6:{"fuelPricesData":[]}`, 200).URL)).
+	prices, err := portal.New(vendorhttp.WithBaseURL(serve(t, `6:{"fuelPricesData":[]}`, 200).URL)).
 		FuelPrices(t.Context())
 	if err != nil || len(prices) != 0 {
 		t.Errorf("FuelPrices() = %v, %v, want an empty list and no error", prices, err)
 	}
 
-	_, err = portal.New(portal.WithBaseURL(serve(t, "down", http.StatusInternalServerError).URL)).
+	_, err = portal.New(vendorhttp.WithBaseURL(serve(t, "down", http.StatusInternalServerError).URL)).
 		FuelPrices(t.Context())
 
 	apiErr, ok := errors.AsType[*portal.APIError](err)

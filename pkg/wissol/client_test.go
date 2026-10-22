@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 	"github.com/abgeo/georgia-mcp/pkg/wissol"
 )
 
@@ -41,7 +42,8 @@ func TestFuelPricesSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := wissol.New(wissol.WithBaseURL(server.URL)).FuelPrices(t.Context()); err != nil {
+	if _, err := wissol.New(vendorhttp.WithBaseURL(server.URL)).
+		FuelPrices(t.Context()); err != nil {
 		t.Fatalf("FuelPrices() error = %v", err)
 	}
 
@@ -66,7 +68,7 @@ func TestFuelPricesDecodesARecordedAnswer(t *testing.T) {
 
 	server := serveFile(t, "testdata/fuelprice.json")
 
-	got, err := wissol.New(wissol.WithBaseURL(server.URL)).FuelPrices(t.Context())
+	got, err := wissol.New(vendorhttp.WithBaseURL(server.URL)).FuelPrices(t.Context())
 	if err != nil {
 		t.Fatalf("FuelPrices() error = %v", err)
 	}
@@ -138,7 +140,7 @@ func TestFuelPricesReportsAStatus(t *testing.T) {
 			)
 			t.Cleanup(server.Close)
 
-			prices, err := wissol.New(wissol.WithBaseURL(server.URL)).FuelPrices(t.Context())
+			prices, err := wissol.New(vendorhttp.WithBaseURL(server.URL)).FuelPrices(t.Context())
 			if prices != nil {
 				t.Errorf("FuelPrices() = %+v, want nil", prices)
 			}
@@ -168,7 +170,8 @@ func TestFuelPricesReportsABody(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := wissol.New(wissol.WithBaseURL(server.URL)).FuelPrices(t.Context()); err == nil {
+	if _, err := wissol.New(vendorhttp.WithBaseURL(server.URL)).
+		FuelPrices(t.Context()); err == nil {
 		t.Error("FuelPrices() error = nil, want a decode error")
 	}
 }

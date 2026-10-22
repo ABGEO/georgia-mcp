@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/socar"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_CurrentPrices() {
@@ -18,7 +19,7 @@ func ExampleClient_CurrentPrices() {
 
 	defer server.Close()
 
-	client := socar.New(socar.WithBaseURL(server.URL))
+	client := socar.New(vendorhttp.WithBaseURL(server.URL))
 
 	prices, err := client.CurrentPrices(context.Background())
 	if err != nil {

@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/gulf"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func serve(t *testing.T, body string, status int) *httptest.Server {
@@ -46,7 +47,8 @@ func TestPriceArchiveSendsTheRequest(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	if _, err := gulf.New(gulf.WithBaseURL(server.URL)).PriceArchive(t.Context()); err != nil {
+	if _, err := gulf.New(vendorhttp.WithBaseURL(server.URL)).
+		PriceArchive(t.Context()); err != nil {
 		t.Fatalf("PriceArchive() error = %v", err)
 	}
 
@@ -75,7 +77,7 @@ func TestPriceArchiveReadsTheRecordedPage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	table, err := gulf.New(gulf.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
+	table, err := gulf.New(vendorhttp.WithBaseURL(serve(t, string(body), http.StatusOK).URL)).
 		PriceArchive(t.Context())
 	if err != nil {
 		t.Fatalf("PriceArchive() error = %v", err)
@@ -142,7 +144,7 @@ func TestPriceArchiveMirrorsThePage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			_, err := gulf.New(gulf.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
+			_, err := gulf.New(vendorhttp.WithBaseURL(serve(t, tt.body, http.StatusOK).URL)).
 				PriceArchive(t.Context())
 			if !errors.Is(err, tt.want) {
 				t.Errorf("PriceArchive() error = %v, want %v", err, tt.want)
@@ -157,7 +159,7 @@ func TestPriceArchiveReadsAHeadWithNoRow(t *testing.T) {
 
 	empty := `<table id="price_archive_tbl">` + head + `<tbody></tbody></table>`
 
-	table, err := gulf.New(gulf.WithBaseURL(serve(t, empty, http.StatusOK).URL)).
+	table, err := gulf.New(vendorhttp.WithBaseURL(serve(t, empty, http.StatusOK).URL)).
 		PriceArchive(t.Context())
 	if err != nil || len(table.Columns) != 3 || len(table.Rows) != 0 {
 		t.Errorf("PriceArchive() = %+v, %v, want a head of 3 and no row", table, err)
@@ -173,7 +175,7 @@ func TestPriceArchiveReadsAHeadWithNoRow(t *testing.T) {
 func TestPriceArchiveReportsAStatus(t *testing.T) {
 	t.Parallel()
 
-	_, err := gulf.New(gulf.WithBaseURL(serve(t, "refused", http.StatusForbidden).URL)).
+	_, err := gulf.New(vendorhttp.WithBaseURL(serve(t, "refused", http.StatusForbidden).URL)).
 		PriceArchive(t.Context())
 
 	apiErr, ok := errors.AsType[*gulf.APIError](err)

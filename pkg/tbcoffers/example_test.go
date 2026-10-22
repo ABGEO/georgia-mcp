@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/tbcoffers"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_Offers() {
@@ -18,7 +19,7 @@ func ExampleClient_Offers() {
 
 	defer server.Close()
 
-	client := tbcoffers.New(tbcoffers.WithBaseURL(server.URL))
+	client := tbcoffers.New(vendorhttp.WithBaseURL(server.URL))
 
 	page, err := client.Offers(
 		context.Background(),

@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/abgeo/georgia-mcp/pkg/ttc"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 func ExampleClient_ArrivalTimes() {
@@ -18,7 +19,7 @@ func ExampleClient_ArrivalTimes() {
 
 	defer server.Close()
 
-	client := ttc.New(ttc.WithBaseURL(server.URL), ttc.WithAPIKey("<key>"))
+	client := ttc.New(vendorhttp.WithBaseURL(server.URL), ttc.WithAPIKey("<key>"))
 
 	arrivals, err := client.ArrivalTimes(
 		context.Background(),

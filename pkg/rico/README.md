@@ -43,4 +43,4 @@ The client mirrors what the page shows today:
 - The page holds no instant.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

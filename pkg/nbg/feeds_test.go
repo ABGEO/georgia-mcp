@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/nbg"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 // NBGRATE-SC-035: The RSS feed decodes into its channel and items.
@@ -24,7 +25,7 @@ func TestRSSDecodesTheFeed(t *testing.T) {
 	}))
 	t.Cleanup(recording.Close)
 
-	feed, err := nbg.New(nbg.WithBaseURL(recording.URL)).
+	feed, err := nbg.New(vendorhttp.WithBaseURL(recording.URL)).
 		RSS(t.Context(), nbg.LanguageEnglish, nbg.RateSetsQuery{Date: date(t, "2026-10-17")})
 	if err != nil {
 		t.Fatalf("RSS() error = %v", err)
@@ -61,7 +62,7 @@ func TestCodesDecodesTheList(t *testing.T) {
 	}))
 	t.Cleanup(recording.Close)
 
-	codes, err := nbg.New(nbg.WithBaseURL(recording.URL)).Codes(t.Context())
+	codes, err := nbg.New(vendorhttp.WithBaseURL(recording.URL)).Codes(t.Context())
 	if err != nil {
 		t.Fatalf("Codes() error = %v", err)
 	}
@@ -85,7 +86,7 @@ func TestFeedsReportAFailure(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	client := nbg.New(nbg.WithBaseURL(server.URL))
+	client := nbg.New(vendorhttp.WithBaseURL(server.URL))
 
 	_, rssErr := client.RSS(t.Context(), nbg.LanguageEnglish, nbg.RateSetsQuery{})
 	_, codesErr := client.Codes(t.Context())

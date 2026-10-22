@@ -41,4 +41,4 @@ describes the method. It needs no key. This client mirrors what the API answers 
   `Retry-After`, in `APIError.RetryAfter`.
 
 The client does not retry and does not cache. Pass an `http.Client` with
-`WithHTTPClient` to set a timeout or a rate limit.
+`vendorhttp.WithHTTPClient` to set a timeout or a rate limit.

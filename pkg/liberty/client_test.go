@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/abgeo/georgia-mcp/pkg/liberty"
+	"github.com/abgeo/georgia-mcp/pkg/vendorhttp"
 )
 
 const english = "en"
@@ -69,7 +70,7 @@ func TestOffersSendsTheRequest(t *testing.T) {
 
 	server, got := recordingServer(t, mustRead(t, "testdata/offers-1.json"))
 
-	offers, err := liberty.New(liberty.WithBaseURL(server.URL)).
+	offers, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), liberty.OffersQuery{Page: 1, Language: english})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -99,7 +100,7 @@ func TestOffersSendsAFilter(t *testing.T) {
 
 	server, got := recordingServer(t, mustRead(t, "testdata/category-6-1.json"))
 
-	_, err := liberty.New(liberty.WithBaseURL(server.URL)).
+	_, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), liberty.OffersQuery{CategoryID: 6, TypeID: 2, Page: 3, Language: "ka"})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -127,7 +128,7 @@ func TestOffersDecodesAnOffer(t *testing.T) {
 
 	server, _ := recordingServer(t, mustRead(t, "testdata/offers-1.json"))
 
-	offers, err := liberty.New(liberty.WithBaseURL(server.URL)).
+	offers, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), liberty.OffersQuery{Page: 1, Language: english})
 	if err != nil {
 		t.Fatalf("Offers() error = %v", err)
@@ -152,7 +153,8 @@ func TestCategories(t *testing.T) {
 
 	server, got := recordingServer(t, mustRead(t, "testdata/categories.json"))
 
-	categories, err := liberty.New(liberty.WithBaseURL(server.URL)).Categories(t.Context(), english)
+	categories, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
+		Categories(t.Context(), english)
 	if err != nil {
 		t.Fatalf("Categories() error = %v", err)
 	}
@@ -173,7 +175,7 @@ func TestTypes(t *testing.T) {
 
 	server, got := recordingServer(t, mustRead(t, "testdata/types.json"))
 
-	types, err := liberty.New(liberty.WithBaseURL(server.URL)).Types(t.Context(), english)
+	types, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).Types(t.Context(), english)
 	if err != nil {
 		t.Fatalf("Types() error = %v", err)
 	}
@@ -196,7 +198,7 @@ func TestOffersReportsNoSuccess(t *testing.T) {
 		[]byte(`{"data":{"list":[]},"succeeded":false,"message":"error"}`),
 	)
 
-	_, err := liberty.New(liberty.WithBaseURL(server.URL)).
+	_, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
 		Offers(t.Context(), liberty.OffersQuery{Page: 1})
 	if !errors.Is(err, liberty.ErrNoSuccess) {
 		t.Errorf("Offers() error = %v, want ErrNoSuccess", err)
@@ -213,7 +215,7 @@ func TestReportsAStatus(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	_, err := liberty.New(liberty.WithBaseURL(server.URL)).Types(t.Context(), english)
+	_, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).Types(t.Context(), english)
 
 	apiErr, ok := errors.AsType[*liberty.APIError](err)
 	if !ok {
@@ -236,7 +238,8 @@ func TestOfferPage(t *testing.T) {
 
 	server, got := recordingServer(t, mustRead(t, "testdata/details-727.html"))
 
-	page, err := liberty.New(liberty.WithBaseURL(server.URL)).OfferPage(t.Context(), 727, english)
+	page, err := liberty.New(vendorhttp.WithBaseURL(server.URL)).
+		OfferPage(t.Context(), 727, english)
 	if err != nil {
 		t.Fatalf("OfferPage() error = %v", err)
 	}
@@ -259,7 +262,8 @@ func TestOfferPage(t *testing.T) {
 		[]byte(`<html><body><h1 class="featured-hero__title">X</h1></body></html>`),
 	)
 
-	_, err = liberty.New(liberty.WithBaseURL(emptyServer.URL)).OfferPage(t.Context(), 727, english)
+	_, err = liberty.New(vendorhttp.WithBaseURL(emptyServer.URL)).
+		OfferPage(t.Context(), 727, english)
 	if !errors.Is(err, liberty.ErrNoTerms) {
 		t.Errorf("OfferPage(no terms) error = %v, want ErrNoTerms", err)
 	}
