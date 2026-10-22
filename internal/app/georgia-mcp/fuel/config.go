@@ -17,6 +17,7 @@ type Config struct {
 	Lukoil    LukoilConfig    `envPrefix:"LUKOIL_"`
 	Neogas    NeogasConfig    `envPrefix:"NEOGAS_"`
 	Portal    PortalConfig    `envPrefix:"PORTAL_"`
+	Gulf      GulfConfig      `envPrefix:"GULF_"`
 }
 
 // WissolConfig is the configuration of the calls to Wissol. Wissol needs no key, so
@@ -209,4 +210,30 @@ func validateBaseURL(base url.URL) error {
 	}
 
 	return nil
+}
+
+// GulfConfig is the configuration of the reads of the fuel prices page of Gulf. Gulf needs no key, so
+// Enabled turns it off. A Config built in Go leaves Gulf off.
+type GulfConfig struct {
+	Enabled bool    `env:"ENABLED"  envDefault:"true"`
+	BaseURL url.URL `env:"BASE_URL" envDefault:"https://gulf.ge"`
+	HTTP    GulfHTTPConfig
+}
+
+// Validate checks the address.
+func (c GulfConfig) Validate() error {
+	return validateBaseURL(c.BaseURL)
+}
+
+// GulfHTTPConfig holds the fields of httpclient.Config with the defaults of Gulf: 1
+// call each second. Gulf publishes no limit, and the cache sends about 2 calls in an hour.
+type GulfHTTPConfig struct {
+	Timeout time.Duration `env:"TIMEOUT" envDefault:"10s"`
+	Rate    float64       `env:"RATE"    envDefault:"1"`
+	Burst   int           `env:"BURST"   envDefault:"1"`
+}
+
+// Validate checks each value as httpclient.Config does.
+func (c GulfHTTPConfig) Validate() error {
+	return httpclient.Config(c).Validate()
 }

@@ -33,7 +33,7 @@ cache do not change.
 | `GULFUEL-FR-005`  | `GULFUEL-DD-006`                                        |
 | `GULFUEL-FR-006`  | 4.1 `pkg/gulf`, `adapter/gulf`. `GULFUEL-DD-001`        |
 | `GULFUEL-FR-007`  | 4.1 `adapter/gulf`. `GULFUEL-DD-005`                    |
-| `GULFUEL-FR-008`  | 4.1 `pkg/gulf`, `httpclient`. `GULFUEL-DD-002`          |
+| `GULFUEL-FR-008`  | 4.1 `pkg/gulf`, `httpclient`. `GULFUEL-DD-002`. `GULFUEL-SC-003`, `GULFUEL-SC-004`, `GULFUEL-SC-012` |
 | `GULFUEL-FR-009`  | 4.3 configuration                                       |
 
 `WISFUEL-NFR-001`, `WISFUEL-NFR-002`, `WISFUEL-INV-001`, and `WISFUEL-INV-003` apply
@@ -69,6 +69,7 @@ Every path is new unless the table says "change". `F` is `internal/app/georgia-m
 | Module         | `F/module.go`, `F/config.go` (change) | `Config.Gulf`, `GulfConfig`, `GulfHTTPConfig`, `gulfSource`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                      |
 | Workspace      | `go.work` (change)                    | `use ./pkg/gulf`.                                          |
+| Linter         | `.golangci.yaml` (change)             | The depguard list `browser-handshake-clients`: `pkg/gulf` imports `x/net/html` and `utls`. `CLT-002`. |
 | Website        | `website/src/content/contexts.yaml` (change) | Gulf, გალფი, in the list of `fuel`.                 |
 
 **`pkg/gulf`.** The shape of `pkg/lukoil`, with one method and one transport.
@@ -287,7 +288,8 @@ behind a filter for 5 fixed names.
 
 `pkg/gulf/testdata/` holds `fuel-prices.html`, the real page `/en/` of 2026-10-22 with
 100 rows, and `fuel-prices-edge.html`: the oldest row first, a column `G-Force Hydro` of
-class `g_col`, and G-Force Super at `0.00` in the newest row. An integration test serves
+class `g_col`, G-Force Super at `0.00` in the newest row, and after it a second row of
+the same date with Euro Diesel at `4.95`. An integration test serves
 the pages from `httptest` and calls the tool through the in-memory MCP transport.
 
 ### `GULFUEL-SC-001`
@@ -348,11 +350,12 @@ price. `ReadAt` is the instant of the clock. `Company` is `{gulf, Gulf, true}`.
 
 ### `GULFUEL-SC-006`
 
-**Verifies:** `GULFUEL-FR-002`, `GULFUEL-FR-003`, `GULFUEL-FR-004` **Layer:** unit
+**Verifies:** `GULFUEL-FR-001` to `GULFUEL-FR-004` **Layer:** unit
 
 **Given** the vendor serves `fuel-prices-edge.html`.
 **When** the adapter reads the prices two times.
-**Then** the effective date is the date of the last row of the document. The answer
+**Then** the effective date is `2026-10-19`, the latest date of the document. Euro Diesel
+has `4.99`, from the earlier of the two rows of that date. The answer
 holds no `g_force_super`. `g_force_hydro` has the grade `other` and the name
 "G-Force Hydro" in `ka`. The log holds one warning with `G-Force Hydro`.
 
@@ -368,6 +371,7 @@ Each case fails with an error that wraps `kernel.ErrSourceUnavailable`.
 | Euro Diesel `-1.00`                            | A negative price.               |
 | Euro Diesel `4,99`                             | A price that is not a number.   |
 | The date `19.10.2026`                          | A date that does not parse.     |
+| A head with no column of class `first`         | No date column.                 |
 | A head with no column of class `g_col`         | No column of the tier.          |
 | A head and no row                              | No row.                         |
 | 403                                            | An error of the client.         |
@@ -407,19 +411,32 @@ the rate 1, and the burst 1.
 **Then** the log holds `Gulf is off` with `variable=GEOMCP_FUEL_GULF_ENABLED`. The tool
 result is an error: `gulf` is not a fuel company of this server.
 
+### `GULFUEL-SC-012`
+
+**Verifies:** `GULFUEL-FR-008`, `WISFUEL-NFR-002` **Layer:** unit
+
+**Given** the client of `httpclient.NewWithTransport` over a transport that counts its
+calls, with the rate 1 and the burst 1.
+**When** a request runs, then a second request with a deadline of 100 ms.
+**Then** the second request fails with `kernel.ErrSourceUnavailable`, and the transport
+counts 1 call: the limit applies over the transport of Gulf.
+
 ## 7. Build plan
 
 | #   | Step                                                                   | Realizes                            | Done |
 | --- | ---------------------------------------------------------------------- | ----------------------------------- | ---- |
-| 1   | `pkg/gulf` module, transport, recorded pages, README, example. `go.work`. | `GULFUEL-FR-001`, `GULFUEL-FR-006`, `GULFUEL-FR-008` | [ ]  |
-| 2   | `httpclient.NewWithTransport`.                                         | `GULFUEL-FR-008`                    | [ ]  |
-| 3   | `adapter/gulf`.                                                        | `GULFUEL-FR-001` to `GULFUEL-FR-007` | [ ]  |
-| 4   | `module.go`, `config.go`, `configs/.env.example`.                      | `GULFUEL-FR-009`                    | [ ]  |
-| 5   | Move the terms "Gulf" and "browser handshake" to the glossary. Add Gulf to the website. | `DOM-002`           | [ ]  |
+| 1   | `pkg/gulf` module, transport, recorded pages, README, example. `go.work`. | `GULFUEL-FR-001`, `GULFUEL-FR-006`, `GULFUEL-FR-008` | [x]  |
+| 2   | `httpclient.NewWithTransport`.                                         | `GULFUEL-FR-008`                    | [x]  |
+| 3   | `adapter/gulf`.                                                        | `GULFUEL-FR-001` to `GULFUEL-FR-007` | [x]  |
+| 4   | `module.go`, `config.go`, `configs/.env.example`.                      | `GULFUEL-FR-009`                    | [x]  |
+| 5   | Move the terms "Gulf" and "browser handshake" to the glossary. Add Gulf to the website. | `DOM-002`           | [x]  |
 
 ## 8. Out of scope for this specification
 
 Nothing that the requirements demand.
+
+Step 5 adds a fuel company to the website. `WEBSITE-SC-040` and `WEBSITE-SC-046`
+change with it: 16 vendors, and "+5 more" on the card of `fuel`.
 
 ## Retired identifiers
 

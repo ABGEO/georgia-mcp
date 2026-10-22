@@ -10,6 +10,7 @@ import (
 
 	fuelcache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/cache"
 	connectadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/connect"
+	gulfadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/gulf"
 	lukoiladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/lukoil"
 	neogasadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/neogas"
 	portaladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel/adapter/portal"
@@ -21,6 +22,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpclient"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 	connectclient "github.com/abgeo/georgia-mcp/pkg/connect"
+	gulfclient "github.com/abgeo/georgia-mcp/pkg/gulf"
 	lukoilclient "github.com/abgeo/georgia-mcp/pkg/lukoil"
 	neogasclient "github.com/abgeo/georgia-mcp/pkg/neogas"
 	portalclient "github.com/abgeo/georgia-mcp/pkg/portal"
@@ -37,6 +39,7 @@ const (
 	lukoilSwitchVariable    = "GEOMCP_FUEL_LUKOIL_ENABLED"
 	neogasSwitchVariable    = "GEOMCP_FUEL_NEOGAS_ENABLED"
 	portalSwitchVariable    = "GEOMCP_FUEL_PORTAL_ENABLED"
+	gulfSwitchVariable      = "GEOMCP_FUEL_GULF_ENABLED"
 )
 
 // companySource is one fuel company of the configuration: its switch, and the builder of
@@ -139,6 +142,12 @@ func companySources(
 			enabled: cfg.Portal.Enabled, name: "Portal", variable: portalSwitchVariable,
 			build: func() (*fuelcache.PriceCache, error) {
 				return portalSource(cfg.Portal, logger, now)
+			},
+		},
+		{
+			enabled: cfg.Gulf.Enabled, name: "Gulf", variable: gulfSwitchVariable,
+			build: func() (*fuelcache.PriceCache, error) {
+				return gulfSource(cfg.Gulf, logger, now)
 			},
 		},
 	}
@@ -286,4 +295,24 @@ func (m *Module) Close() error {
 	}
 
 	return errors.Join(errs...)
+}
+
+func gulfSource(
+	cfg GulfConfig,
+	logger *slog.Logger,
+	now func() time.Time,
+) (*fuelcache.PriceCache, error) {
+	client := gulfclient.New(
+		gulfclient.WithBaseURL(cfg.BaseURL.String()),
+		gulfclient.WithHTTPClient(
+			httpclient.NewWithTransport(httpclient.Config(cfg.HTTP), gulfclient.NewTransport()),
+		),
+	)
+
+	gulf, err := fuelcache.New(gulfadapter.NewAdapter(client, now, logger))
+	if err != nil {
+		return nil, fmt.Errorf("building the cache of Gulf: %w", err)
+	}
+
+	return gulf, nil
 }

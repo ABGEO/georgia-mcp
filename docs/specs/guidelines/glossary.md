@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Glossary
@@ -26,6 +26,7 @@ define it. The identifier of a term is `GLO-<term>`.
 | source             | The system of a vendor that the server reads.                                                          |
 | vendor client      | A Go module in `pkg/` that calls the API of one vendor, or reads its web page. See `CLT`.              |
 | web page source    | A source that is a page for people, not an API. See `ADR-0003`.                                        |
+| browser handshake  | The TLS handshake that a browser sends. A bot filter can refuse any other. See `CLT-002`.              |
 | unofficial API     | An API that a vendor uses in its own application and does not document for others.                     |
 
 ## The architecture
@@ -88,6 +89,7 @@ define it. The identifier of a term is `GLO-<term>`.
 | Lukoil             | Lukoil Georgia, a fuel company of Georgia. Company code `lukoil`.                                      |
 | Neogas             | A network of gas stations of Georgia. Company code `neogas`.                                           |
 | Portal             | A fuel company of Georgia. Company code `portal`.                                                      |
+| Gulf               | Gulf Georgia, a fuel company of Georgia. Company code `gulf`.                                          |
 
 ## Offers
 

@@ -532,3 +532,28 @@ func TestLoadConfigGivesTheDefaultsOfKursi(t *testing.T) {
 		)
 	}
 }
+
+// GULFUEL-SC-010: With no variable of fuel, Gulf is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfGulf(t *testing.T) {
+	t.Chdir(t.TempDir())
+	t.Setenv("GEOMCP_TRANSIT_TTC_API_KEY", testKey)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	gulf := cfg.Fuel.Gulf
+	if !gulf.Enabled {
+		t.Error("Gulf.Enabled = false, want true")
+	}
+
+	if got := gulf.BaseURL.String(); got != "https://gulf.ge" {
+		t.Errorf("Gulf.BaseURL = %q, want https://gulf.ge", got)
+	}
+
+	if http := gulf.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Gulf.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}

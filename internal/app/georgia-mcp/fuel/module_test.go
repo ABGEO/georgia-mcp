@@ -781,6 +781,11 @@ func failingCompanies(t *testing.T) fuel.Config {
 			BaseURL: *base,
 			HTTP:    fuel.PortalHTTPConfig(limits),
 		},
+		Gulf: fuel.GulfConfig{
+			Enabled: true,
+			BaseURL: *base,
+			HTTP:    fuel.GulfHTTPConfig(limits),
+		},
 	}
 }
 
@@ -984,4 +989,47 @@ func TestLukoilOff(t *testing.T) {
 	cfg.Lukoil = fuel.LukoilConfig{Enabled: false}
 
 	checkOff(t, cfg, "Lukoil", "lukoil", "GEOMCP_FUEL_LUKOIL_ENABLED")
+}
+
+// GULFUEL-SC-008: The description lists Gulf with no note on the date, and each diesel of
+// the tier Gulf carries the date of the newest change.
+func TestGetPricesOfGulf(t *testing.T) {
+	t.Parallel()
+
+	cfg := failingCompanies(t)
+	cfg.Gulf.BaseURL = serveVendor(t, "gulf", "fuel-prices.html")
+
+	session := serve(t, cfg, slog.New(slog.DiscardHandler))
+
+	tool := description(t, session)
+	if !strings.Contains(tool, "gulf (Gulf)") ||
+		strings.Contains(tool, "gulf (Gulf, publishes no effective date)") {
+		t.Errorf("description = %q, want gulf (Gulf) with no note on the date", tool)
+	}
+
+	gulf := onlyCompany(t, session, map[string]any{argGrades: []string{gradeDiesel}}, "gulf")
+
+	want := []priceOutput{
+		{
+			Product: "Euro Diesel", Grade: gradeDiesel, Unit: litre, Price: "4.99",
+			EffectiveDate: "2026-10-19",
+		},
+		{
+			Product: "G-Force Euro Diesel", Grade: gradeDiesel, Unit: litre, Price: "5.05",
+			EffectiveDate: "2026-10-19",
+		},
+	}
+	if diff := cmp.Diff(want, gulf.Prices); diff != "" {
+		t.Errorf("prices of Gulf (-want +got):\n%s", diff)
+	}
+}
+
+// GULFUEL-SC-011: Gulf off logs the variable, and a request for it is a tool error.
+func TestGulfOff(t *testing.T) {
+	t.Parallel()
+
+	cfg := wissolConfig(t, true)
+	cfg.Gulf = fuel.GulfConfig{Enabled: false}
+
+	checkOff(t, cfg, "Gulf", "gulf", "GEOMCP_FUEL_GULF_ENABLED")
 }
