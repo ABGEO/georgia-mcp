@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
@@ -131,4 +131,11 @@ describe("the legal pages", () => {
     expect(links).toContain(`${prefix}/privacy/`)
     expect(links).toContain(`${prefix}/terms/`)
   })
+})
+
+// WEBSITE-SC-050: The token of the domain verification is one line of base64url.
+test("serves the token of the domain verification", () => {
+  const token = readFileSync(join(dist, ".well-known", "openai-apps-challenge"), "utf8")
+
+  expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/)
 })
