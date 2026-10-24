@@ -491,7 +491,7 @@ in-memory MCP transport.
 | #   | Step                                                                          | Realizes                                | Done |
 | --- | ----------------------------------------------------------------------------- | --------------------------------------- | ---- |
 | 1   | `pkg/gpost` module, recorded answers, README, example, live test. `go.work`, `.golangci.yaml`. | `POSTCODE-FR-001`, `POSTCODE-FR-009`, `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | [x]  |
-| 2   | `domain`: `PostalCode`, `Address`, errors, fuzz test.                         | `POSTCODE-INV-001`, `POSTCODE-INV-002`  | [ ]  |
+| 2   | `domain`: `PostalCode`, `Address`, errors, fuzz test.                         | `POSTCODE-INV-001`, `POSTCODE-INV-002`  | [x]  |
 | 3   | `app`: port, `SearchCodes`, errors.                                           | `POSTCODE-FR-002`, `POSTCODE-FR-005` to `POSTCODE-FR-007` | [ ]  |
 | 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [ ]  |
 | 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [ ]  |
