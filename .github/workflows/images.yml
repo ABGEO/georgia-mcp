@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     tags: [ "v*.*.*" ]
   pull_request:
+    types: [ opened, reopened, synchronize, ready_for_review ]
   workflow_dispatch:
 
 permissions: { }
@@ -16,6 +17,7 @@ concurrency:
 jobs:
   image:
     name: ${{ matrix.name }}
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

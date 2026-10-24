@@ -9,6 +9,7 @@
     "helpers:pinGitHubActionDigests",
     "docker:pinDigests"
   ],
+  "draftPR": true,
   "postUpdateOptions": [
     "gomodTidy",
     "pnpmDedupe"

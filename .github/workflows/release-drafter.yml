@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    types: [ opened, reopened, edited, synchronize ]
+    types: [ opened, reopened, edited, synchronize, ready_for_review ]
 
 permissions: { }
 
@@ -22,7 +22,7 @@ jobs:
       - uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
 
   check-pr:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     permissions:
       contents: read
