@@ -1,8 +1,17 @@
+# Only the files that git ignores. A tracked file left out of the context makes Go
+# mark the build as modified.
 .env
 .idea/
 .vscode/
+.claude/
 bin/
 dist/
-docs/
 *.test
 *.out
+coverage.*
+docs/specs/work/
+website/node_modules/
+website/dist/
+website/.astro/
+website/test-results/
+website/playwright-report/
