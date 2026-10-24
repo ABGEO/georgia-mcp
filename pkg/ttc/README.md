@@ -6,7 +6,7 @@ search of Tbilisi.
 
 The API is unofficial. The TTC publishes no documentation of it: the web application
 [transit.ttc.com.ge](https://transit.ttc.com.ge/) reads it. The API can change with no
-notice, so the module stays at `v0`.
+notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/ttc

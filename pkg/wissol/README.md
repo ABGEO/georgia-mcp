@@ -4,7 +4,7 @@ A Go client of the fuel price API of Wissol. It covers the current prices.
 
 The API is unofficial. Wissol publishes no documentation of it: the page
 [wissol.ge/en/fuel-prices](https://wissol.ge/en/fuel-prices) reads it. The API can
-change with no notice, so the module stays at `v0`.
+change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/wissol

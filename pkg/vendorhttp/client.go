@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"path"
 	"runtime/debug"
 	"time"
 )
@@ -62,12 +61,12 @@ func WithMaxBody(maxBody int64) Option {
 	return func(c *Client) { c.maxBody = maxBody }
 }
 
-// New returns a client for the vendor client of the module path, for example
-// github.com/abgeo/georgia-mcp/pkg/nbg. A status error wraps sentinel.
-func New(module string, sentinel error, opts ...Option) *Client {
+// New returns a client for the vendor client of the name, for example nbg. A status error
+// wraps sentinel.
+func New(vendor string, sentinel error, opts ...Option) *Client {
 	client := &Client{
 		httpClient: &http.Client{Timeout: DefaultTimeout},
-		userAgent:  userAgent(module),
+		userAgent:  userAgent(vendor),
 		header:     http.Header{},
 		maxBody:    defaultMaxBody,
 		sentinel:   sentinel,
@@ -204,27 +203,16 @@ func (e *StatusError) Unwrap() error {
 	return e.sentinel
 }
 
-// userAgent returns georgia-mcp-<the last part of the module path>/<its version>
-// (+<repository>).
-func userAgent(module string) string {
-	return "georgia-mcp-" + path.Base(module) + "/" + version(module) + " (+" + repositoryURL + ")"
+// userAgent returns georgia-mcp-<vendor>/<the version of the server> (+<repository>).
+func userAgent(vendor string) string {
+	return "georgia-mcp-" + vendor + "/" + version() + " (+" + repositoryURL + ")"
 }
 
-func version(module string) string {
+func version() string {
 	build, ok := debug.ReadBuildInfo()
-	if !ok {
+	if !ok || build.Main.Version == "" || build.Main.Version == "(devel)" {
 		return "dev"
 	}
 
-	if build.Main.Path == module && build.Main.Version != "" {
-		return build.Main.Version
-	}
-
-	for _, dep := range build.Deps {
-		if dep.Path == module {
-			return dep.Version
-		}
-	}
-
-	return "dev"
+	return build.Main.Version
 }

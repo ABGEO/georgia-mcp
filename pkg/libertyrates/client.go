@@ -17,7 +17,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Liberty Bank.
 	DefaultBaseURL = "https://www.libertybank.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/libertyrates"
+	vendorName = "libertyrates"
 
 	// maxBodyBytes bounds the read of an answer. The home page is about 124 KB.
 	maxBodyBytes = 2 << 20
@@ -57,7 +57,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

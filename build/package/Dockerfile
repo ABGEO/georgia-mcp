@@ -8,7 +8,7 @@ ARG TARGETARCH
 
 WORKDIR /src
 
-# The whole repository, so go.work resolves each module of pkg/ before it has a tag.
+# The whole repository, .git included, so Go writes the commit into the binary.
 COPY . .
 
 # The repository belongs to another user in the build stage. Git refuses it, and

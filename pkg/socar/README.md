@@ -3,8 +3,8 @@
 A Go client of the fuel price API of SOCAR Georgia Petroleum. It covers the current prices.
 
 The API is unofficial. SOCAR publishes no documentation of it: the page
-[sgp.ge](https://sgp.ge/) reads it. The API can change with no notice, so the module
-stays at `v0`.
+[sgp.ge](https://sgp.ge/) reads it. The API can change with no notice, so this package
+can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/socar

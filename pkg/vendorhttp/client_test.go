@@ -14,7 +14,7 @@ import (
 
 var errUnexpectedStatus = errors.New("acme: unexpected status")
 
-const module = "example.com/pkg/acme"
+const vendor = "acme"
 
 // recorded is the last request that the server got.
 type recorded struct {
@@ -47,7 +47,7 @@ func serve(t *testing.T, status int, body string) (*httptest.Server, *recorded) 
 }
 
 func client(server *httptest.Server) *vendorhttp.Client {
-	return vendorhttp.New(module, errUnexpectedStatus,
+	return vendorhttp.New(vendor, errUnexpectedStatus,
 		vendorhttp.WithBaseURL(server.URL),
 		vendorhttp.WithHeader("Accept", "application/json"),
 		vendorhttp.WithMaxBody(8),

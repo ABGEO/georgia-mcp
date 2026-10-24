@@ -17,7 +17,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Lukoil Georgia.
 	DefaultBaseURL = "https://www.lukoil.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/lukoil"
+	vendorName = "lukoil"
 
 	// maxBodyBytes bounds the read of an answer. The page is about 97 KiB, and a change
 	// of the prices adds about 1 KiB.
@@ -41,7 +41,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

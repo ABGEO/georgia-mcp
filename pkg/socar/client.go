@@ -12,7 +12,7 @@ const (
 	// DefaultBaseURL is the production address of the API of SOCAR.
 	DefaultBaseURL = "https://sgp.ge/sgp-backend/api"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/socar"
+	vendorName = "socar"
 )
 
 // Client calls the API of SOCAR. It is safe for concurrent use.
@@ -31,7 +31,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

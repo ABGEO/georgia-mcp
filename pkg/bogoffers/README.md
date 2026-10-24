@@ -4,7 +4,7 @@ A Go client of the offers API of Bank of Georgia. It covers the list of card off
 
 The API is unofficial. Bank of Georgia publishes no documentation of it: the page
 [bankofgeorgia.ge/ka/offers-hub/catalog](https://bankofgeorgia.ge/ka/offers-hub/catalog)
-reads it. The API can change with no notice, so the module stays at `v0`.
+reads it. The API can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/bogoffers

@@ -16,7 +16,7 @@ const (
 	// DefaultBaseURL is the production address of the API of TBC.
 	DefaultBaseURL = "https://api.tbcbank.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/tbc"
+	vendorName = "tbc"
 )
 
 // Client calls the API of TBC. It is safe for concurrent use.
@@ -45,7 +45,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

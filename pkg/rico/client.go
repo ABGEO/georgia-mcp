@@ -18,7 +18,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Rico Credit.
 	DefaultBaseURL = "https://www.rico.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/rico"
+	vendorName = "rico"
 
 	classTableBody = "currencies-table-body"
 	classRow       = "currency-row"
@@ -46,7 +46,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

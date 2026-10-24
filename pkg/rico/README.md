@@ -5,7 +5,7 @@ Georgia. It reads the rate table of the Georgian home page.
 
 The source is unofficial. Rico Credit publishes no API of its rates: the client reads
 [www.rico.ge/ka/](https://www.rico.ge/ka/), a page for people. The page can change
-with no notice, so the module stays at `v0`.
+with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/rico

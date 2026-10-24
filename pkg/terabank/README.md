@@ -4,7 +4,7 @@ A Go client of the exchange rates of Terabank.
 
 The API is unofficial. Terabank publishes no documentation of it: the page
 [terabank.ge/ka/retail/exchangerates](https://terabank.ge/ka/retail/exchangerates)
-reads it. The API can change with no notice, so the module stays at `v0`.
+reads it. The API can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/terabank

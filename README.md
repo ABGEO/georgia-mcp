@@ -169,7 +169,7 @@ task run                      # serve over HTTP on :8080
 task lint test build          # check the server
 ```
 
-Each vendor client is its own Go module under `pkg/<vendor>`. `task --list` shows every task.
+Each vendor client is a package under `pkg/<vendor>` that another project can import. `task --list` shows every task.
 
 ## Contributing
 

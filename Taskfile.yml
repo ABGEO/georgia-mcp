@@ -1,7 +1,6 @@
 version: "3"
 
 vars:
-  MODULE: '{{.MODULE | default "."}}'
   IMAGE: georgia-mcp:dev
   WEBSITE_IMAGE: georgia-mcp-website:dev
   COMPOSE: docker compose -f deployments/compose.yaml
@@ -14,33 +13,29 @@ vars:
 
 tasks:
   lint:
-    desc: Run the linter in one module. MODULE=pkg/<vendor> selects a vendor client.
-    dir: "{{.MODULE}}"
+    desc: Run the linter.
     cmds:
       - golangci-lint run ./...
 
   test:
-    desc: Run the tests with the race detector in one module.
-    dir: "{{.MODULE}}"
+    desc: Run the tests with the race detector.
     cmds:
       - go test -race ./...
 
   build:
-    desc: Build one module with the workspace.
-    dir: "{{.MODULE}}"
+    desc: Build every package.
     cmds:
       - go build ./...
 
   release-check:
-    desc: Check a release of the server. The build without the workspace needs a tag of each client.
+    desc: Check a release of the server.
     cmds:
-      - cmd: GOWORK=off go build ./...
+      - cmd: go build ./...
         platforms: [linux, darwin]
       - task: vuln
 
   vuln:
-    desc: Check one module for a known vulnerability.
-    dir: "{{.MODULE}}"
+    desc: Check the module for a known vulnerability.
     cmds:
       - go tool govulncheck ./...
 

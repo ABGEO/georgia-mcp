@@ -15,7 +15,7 @@ const (
 	// DefaultBaseURL is the production address of the offers API of Bank of Georgia.
 	DefaultBaseURL = "https://bankofgeorgia.ge/api/bog-b/offers-hub"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/bogoffers"
+	vendorName = "bogoffers"
 
 	// maxBodyBytes bounds the read of an answer. A page of 100 offers in Georgian is
 	// under 300 KiB.
@@ -39,7 +39,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

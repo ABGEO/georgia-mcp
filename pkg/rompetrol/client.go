@@ -17,7 +17,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Rompetrol Georgia.
 	DefaultBaseURL = "https://www.rompetrol.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/rompetrol"
+	vendorName = "rompetrol"
 
 	// tableAnchor is the id of the element directly before the price table. Two links
 	// of the page name it, so it outlives a change of the style of the table.
@@ -41,7 +41,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

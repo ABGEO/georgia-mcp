@@ -19,7 +19,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Georgian Post.
 	DefaultBaseURL = "https://www.gpost.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/gpost"
+	vendorName = "gpost"
 
 	tokenName     = "__RequestVerificationToken" //nolint:gosec // The name of a field, not a token.
 	tokenFormID   = "__AjaxAntiForgeryForm"      //nolint:gosec // The id of a form, not a token.
@@ -50,7 +50,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

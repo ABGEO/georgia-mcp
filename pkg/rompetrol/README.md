@@ -4,7 +4,7 @@ A Go client of the fuel prices of Rompetrol Georgia. It covers the current price
 
 Rompetrol publishes no API. The client reads the price table of the home page
 [www.rompetrol.ge](https://www.rompetrol.ge/), a page for people. The page can change
-with no notice, so the module stays at `v0`.
+with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/rompetrol

@@ -15,7 +15,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Studio.
 	DefaultBaseURL = "https://studioliberty.ge"
 
-	modulePath = "github.com/abgeo/georgia-mcp/pkg/liberty"
+	vendorName = "liberty"
 	apiPath    = "_mvcapi/offersapi"
 
 	// maxBodyBytes bounds the read of an answer. The page of an offer is under 60 KiB.
@@ -39,7 +39,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(modulePath, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

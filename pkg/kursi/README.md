@@ -6,7 +6,7 @@ The method is unofficial. Kursi.ge documents a
 [merchant API](https://docs.kursi.ge/merchant/), whose method of the rates
 `GET /api/currency` needs the token of a merchant account. This client reads the public
 method that the page [kursi.ge](https://kursi.ge/ka/) reads. It needs no token and is
-not in the documentation, so the module stays at `v0`.
+not in the documentation, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/kursi

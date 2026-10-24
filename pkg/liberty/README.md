@@ -6,7 +6,7 @@ offers API of studioliberty.ge and the page of each offer.
 The API is unofficial. Liberty Bank publishes no documentation of it: the page
 [studioliberty.ge/ka/studio-lifestyle/offers](https://studioliberty.ge/ka/studio-lifestyle/offers)
 reads it. The page of an offer is a page for people. Both can change with no notice, so
-the module stays at `v0`.
+this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/liberty

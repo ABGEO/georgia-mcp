@@ -6,7 +6,7 @@ and the page of one offer.
 The API is unofficial. TBC Bank publishes no documentation of it: the pages
 [tbcbank.ge/ka/offers](https://tbcbank.ge/ka/offers) and
 [tbcconcept.ge/ge/offers](https://tbcconcept.ge/ge/offers) read it. The API can change
-with no notice, so the module stays at `v0`.
+with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/tbcoffers

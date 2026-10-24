@@ -5,7 +5,7 @@ compressed natural gas.
 
 Neogas publishes no API and no price list. The client reads the price of the calculator
 of the home page [neogas.ge](https://neogas.ge/ka/), a web page for people. The page can
-change with no notice, so the module stays at `v0`.
+change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/neogas

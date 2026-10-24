@@ -5,7 +5,7 @@ address, a street, a town, or a village of Georgia.
 
 Georgian Post publishes no API. The client reads the search of the page
 [www.gpost.ge/help/postal-codes](https://www.gpost.ge/help/postal-codes), a page for
-people. The page can change with no notice, so the module stays at `v0`.
+people. The page can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/gpost

@@ -4,7 +4,7 @@ A Go client of the price history of Lukoil Georgia, a fuel company of Georgia.
 
 Lukoil publishes no API. The client reads the table of the page
 [www.lukoil.ge/prices-history](https://www.lukoil.ge/prices-history), a web page for
-people. The page can change with no notice, so the module stays at `v0`.
+people. The page can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/lukoil

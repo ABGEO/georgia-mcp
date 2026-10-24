@@ -4,7 +4,7 @@ A Go client of the fuel prices of Gulf Georgia, a fuel company of Georgia.
 
 Gulf publishes no API. The client reads the table of the page
 [gulf.ge/en/fuel_prices](https://gulf.ge/en/fuel_prices), a web page for people. The
-page can change with no notice, so the module stays at `v0`.
+page can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/gulf
@@ -32,7 +32,7 @@ The page needs no key. This client mirrors what the page showed on 2026-10-22:
 
 - A bot filter guards the site. It answers 403 to the TLS handshake of Go. The default
   client dials with the handshake of Chrome 131 over HTTP/1.1, with the User-Agent of
-  this module. Use `NewTransport` if you pass your own `http.Client`.
+  this package. Use `NewTransport` if you pass your own `http.Client`.
 - One table, `#price_archive_tbl`. The head holds the date (class `first`), then 5
   products of the tier Gulf (class `g_col`), then the same 5 of the tier Gulf+ (class
   `gp_col`). Gulf+ applies at the stations named "Gulf + ...".

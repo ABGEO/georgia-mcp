@@ -6,7 +6,7 @@ Portal publishes no API. The page
 [portal.com.ge/ka/fuel-prices](https://portal.com.ge/ka/fuel-prices) renders on the
 server, and sends its data to the script of the page as a stream of JSON. The client asks
 for that stream and reads the price list from it. The data of a web page can change with
-no notice, so the module stays at `v0`.
+no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/portal

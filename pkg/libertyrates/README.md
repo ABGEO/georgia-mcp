@@ -5,7 +5,7 @@ Georgian home page.
 
 The source is unofficial. Liberty Bank publishes no API of its rates: the client reads
 [www.libertybank.ge/ka/](https://www.libertybank.ge/ka/), a page for people. The page
-can change with no notice, so the module stays at `v0`.
+can change with no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/libertyrates

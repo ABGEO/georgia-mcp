@@ -6,7 +6,7 @@ current prices.
 The API is unofficial. A plugin of the site serves it, and the page
 [connect.com.ge/საწვავი](https://connect.com.ge/%E1%83%A1%E1%83%90%E1%83%AC%E1%83%95%E1%83%90%E1%83%95%E1%83%98/)
 shows the same prices. Connect publishes no documentation of it. The API can change with
-no notice, so the module stays at `v0`.
+no notice, so this package can change in any release.
 
 ```
 go get github.com/abgeo/georgia-mcp/pkg/connect
