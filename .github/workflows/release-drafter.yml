@@ -1,0 +1,30 @@
+name: release-drafter
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [ opened, reopened, edited, synchronize ]
+
+permissions: { }
+
+jobs:
+  draft:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    concurrency:
+      group: release-drafter
+      cancel-in-progress: false
+    steps:
+      - uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
+
+  check-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: release-drafter/release-drafter/check-pr@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0

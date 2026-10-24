@@ -1,0 +1,69 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+change-template: '- $TITLE (#$NUMBER)'
+no-changes-template: '- No changes'
+template: |
+  $CHANGES
+
+  **Full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+categories:
+  - type: pre-exclude
+    when:
+      label: skip-changelog
+
+  - title: Breaking changes
+    exclusive: true
+    semver-increment: major
+    when:
+      conventional:
+        breaking: true
+
+  - title: Dependencies
+    exclusive: true
+    collapse-after: 0
+    when:
+      conventional:
+        scope: deps
+
+  - title: Website
+    exclusive: true
+    when:
+      - conventional:
+          scope: website
+      - paths: [ 'website/**' ]
+        paths-mode: only
+
+  - title: Features
+    exclusive: true
+    semver-increment: minor
+    when:
+      conventional:
+        type: feat
+
+  - title: Bug fixes
+    exclusive: true
+    when:
+      conventional:
+        type: fix
+
+  - title: Maintenance
+    exclusive: true
+    collapse-after: 0
+    when:
+      conventional:
+        types: [ refactor, perf, test, docs, build, chore ]
+
+  - title: Other changes
+    collapse-after: 0
+
+replacers:
+  - target: change-title
+    search: '/^[a-z]+\(website\)!?: (.+)$/'
+    replace: '\u$1'
+  - target: change-title
+    search: '/^[a-z]+\(([^)]+)\)!?: (.+)$/'
+    replace: '**$1:** \u$2'
+  - target: change-title
+    search: '/^[a-z]+!?: (.+)$/'
+    replace: '\u$1'
