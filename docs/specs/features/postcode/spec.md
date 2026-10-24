@@ -459,8 +459,11 @@ markup.
 | `find-malformed.html`       | A copy of `find-rustavi-en.html`. The first row has no code.      |
 | `find-short-code.html`      | A copy of `find-rustavi-en.html`. The first code is `370`.        |
 
-An integration test serves the files from `httptest` and calls the tool through the
-in-memory MCP transport.
+The tests of `adapter/tool` call the tool through the in-memory MCP transport, with the
+real `SearchCodes` and a fake port: `POSTCODE-SC-013` to `POSTCODE-SC-015`. The test of
+`module.go` serves the files from `httptest` and calls the tool through the whole
+context: `POSTCODE-SC-014` with the recorded answer, `POSTCODE-SC-018`, and
+`POSTCODE-SC-020`.
 
 | ID                | Verifies | Layer | Given, when, then |
 | ----------------- | -------- | ----- | ----------------- |
@@ -496,7 +499,7 @@ in-memory MCP transport.
 | 3   | `app`: port, `SearchCodes`, errors.                                           | `POSTCODE-FR-002`, `POSTCODE-FR-005` to `POSTCODE-FR-007` | [x]  |
 | 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [x]  |
 | 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [x]  |
-| 6   | `adapter/tool`.                                                               | `POSTCODE-FR-001` to `POSTCODE-FR-008`  | [ ]  |
+| 6   | `adapter/tool`.                                                               | `POSTCODE-FR-001` to `POSTCODE-FR-008`  | [x]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `POSTCODE-FR-010`, `POSTCODE-NFR-005`   | [ ]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Postal. | `DOM-002`                       | [x]  |
 
