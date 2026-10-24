@@ -84,6 +84,7 @@ Every path is new unless the table says "change". `P` is `internal/app/georgia-m
 | Composition    | `internal/app/georgia-mcp/bootstrap/` (change) | `Config.Postal` with `envPrefix:"POSTAL_"`. `modules.go` builds `postal.New` after `offers`. |
 | Configuration  | `configs/.env.example` (change)       | The variables of 4.3.                                          |
 | Workspace      | `go.work` (change)                    | `use ./pkg/gpost`.                                             |
+| Linter         | `.golangci.yaml` (change)             | `pkg/gpost` in the list `web-page-clients` of `depguard`.      |
 | Documentation  | `README.md` (change)                  | The tool in the list of tools.                                 |
 
 **`pkg/gpost`.** The shape of `pkg/rompetrol`, with one method.
@@ -338,12 +339,14 @@ variables only:
 2. `POST /Help/FindPostalCode` with the body
    `__RequestVerificationToken=<form token>&regionTypeId=1&postalCodeSearchValue=<text>`,
    and the headers `Content-Type: application/x-www-form-urlencoded`,
-   `X-Requested-With: XMLHttpRequest`, `Referer: <base URL>/help/postal-codes`, and
+   `X-Requested-With: XMLHttpRequest`, `Referer: https://www.gpost.ge/help/postal-codes`, and
    `Cookie: __RequestVerificationToken=<cookie token>; lang=<lang>`.
 
 **Rationale:** The owner chose no state between two searches (requirements, question 2).
 The client stays inside `CLT-008`, and needs no ADR. The page sends `regionTypeId=1` in
-a hidden field with no other value. The form of the page sends the two headers.
+a hidden field with no other value. The form of the page sends the two headers. The
+`Referer` names the production page with any base address: `vendorhttp.Client` does not
+expose its base address.
 **Alternatives:** A token that the adapter keeps and renews on a 500. It saves one call
 of two, and needs a retry and an ADR.
 
@@ -453,7 +456,8 @@ markup.
 | `find-chavchavadze-ka.html` | The real answer for `ჭავჭავაძის` in `ka`: 63 rows, 3 districts.    |
 | `find-rustavi-en.html`      | The real answer for `რუსთავი` in `en`: 12 rows, 3 districts.      |
 | `find-none-ka.html`         | The real answer for `ზზზზზქქ` in `ka`: the `p`, no row.            |
-| `find-malformed.html`       | A copy of `find-rustavi-en.html`. The first row has no code. A second copy holds a code `370`. |
+| `find-malformed.html`       | A copy of `find-rustavi-en.html`. The first row has no code.      |
+| `find-short-code.html`      | A copy of `find-rustavi-en.html`. The first code is `370`.        |
 
 An integration test serves the files from `httptest` and calls the tool through the
 in-memory MCP transport.
@@ -469,7 +473,7 @@ in-memory MCP transport.
 | `POSTCODE-SC-007` | `POSTCODE-FR-009` | unit | `find-malformed.html` gives `ErrMalformedResult`. A row before a district, and an answer with no row and no `p`, give it too. |
 | `POSTCODE-SC-008` | `POSTCODE-FR-009` | unit | A 500 on the GET, and a 500 on the POST, give an `*APIError` with 500. `errors.Is(err, ErrUnexpectedStatus)` holds. |
 | `POSTCODE-SC-009` | `POSTCODE-INV-001` | unit | `ParsePostalCode`: `0186` is valid and keeps `"0186"`. `186`, `01860`, `01a6`, `٠١٨٦`, and the empty text give `ErrInvalidPostalCode`. A fuzz test holds that each valid result has 4 ASCII digits. |
-| `POSTCODE-SC-010` | `POSTCODE-FR-009` | unit | The adapter with the second copy of `find-malformed.html` (`370`) returns an error that wraps `kernel.ErrSourceUnavailable`. A client error wraps it too. |
+| `POSTCODE-SC-010` | `POSTCODE-FR-009` | unit | The adapter with `find-short-code.html` returns an error that wraps `kernel.ErrSourceUnavailable`. A client error wraps it too. |
 | `POSTCODE-SC-011` | `POSTCODE-FR-005` | unit | `Search` with `ab`, `  ab  `, and 101 runes returns `ErrInvalidQuery` and calls no source. `ვაკე` calls the source with `ვაკე`. `"  ილია   ჭავჭავაძის "` calls it with `ილია ჭავჭავაძის`. |
 | `POSTCODE-SC-012` | `POSTCODE-FR-002`, `POSTCODE-FR-006`, `POSTCODE-FR-007` | unit | A fake source with 63 addresses. The limit 20 gives the first 20 in order and `Total` 63. The limit 100 gives 63 and `Total` 63. |
 | `POSTCODE-SC-013` | `POSTCODE-FR-006` | integration | The tool with `limit` 500, and with `limit` -1, returns `IsError` with `limit: 500 is out of range. Use 1 to 100.` No limit gives 20 addresses. |
@@ -486,7 +490,7 @@ in-memory MCP transport.
 
 | #   | Step                                                                          | Realizes                                | Done |
 | --- | ----------------------------------------------------------------------------- | --------------------------------------- | ---- |
-| 1   | `pkg/gpost` module, recorded answers, README, example, live test. `go.work`.  | `POSTCODE-FR-001`, `POSTCODE-FR-009`, `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | [ ]  |
+| 1   | `pkg/gpost` module, recorded answers, README, example, live test. `go.work`, `.golangci.yaml`. | `POSTCODE-FR-001`, `POSTCODE-FR-009`, `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | [x]  |
 | 2   | `domain`: `PostalCode`, `Address`, errors, fuzz test.                         | `POSTCODE-INV-001`, `POSTCODE-INV-002`  | [ ]  |
 | 3   | `app`: port, `SearchCodes`, errors.                                           | `POSTCODE-FR-002`, `POSTCODE-FR-005` to `POSTCODE-FR-007` | [ ]  |
 | 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [ ]  |

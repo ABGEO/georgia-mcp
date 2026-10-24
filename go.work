@@ -5,6 +5,7 @@ use (
 	./pkg/bog
 	./pkg/bogoffers
 	./pkg/connect
+	./pkg/gpost
 	./pkg/gulf
 	./pkg/kursi
 	./pkg/liberty

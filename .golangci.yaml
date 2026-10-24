@@ -86,6 +86,7 @@ linters:
             - "**/pkg/**"
             - "!**/internal/pkg/**"
             - "!**/pkg/rompetrol/**"
+            - "!**/pkg/gpost/**"
             - "!**/pkg/liberty/**"
             - "!**/pkg/libertyrates/**"
             - "!**/pkg/rico/**"
@@ -104,6 +105,7 @@ linters:
           list-mode: strict
           files:
             - "**/pkg/rompetrol/**"
+            - "**/pkg/gpost/**"
             - "**/pkg/liberty/**"
             - "**/pkg/libertyrates/**"
             - "**/pkg/rico/**"
@@ -112,6 +114,7 @@ linters:
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg/rompetrol
+            - github.com/abgeo/georgia-mcp/pkg/gpost
             - github.com/abgeo/georgia-mcp/pkg/liberty
             - github.com/abgeo/georgia-mcp/pkg/libertyrates
             - github.com/abgeo/georgia-mcp/pkg/rico
