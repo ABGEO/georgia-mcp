@@ -14,8 +14,6 @@ const (
 	// DefaultBaseURL is the production address of the site of Portal.
 	DefaultBaseURL = "https://portal.com.ge"
 
-	vendorName = "portal"
-
 	// priceListKey starts the price list in the data stream of the page.
 	priceListKey = `"fuelPricesData":`
 
@@ -41,7 +39,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

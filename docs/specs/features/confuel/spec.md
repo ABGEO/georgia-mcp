@@ -100,7 +100,7 @@ type APIError struct {
 `Current` sends `GET /current` with `Accept: application/json`. Any status other than
 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 1 MiB.
 The default User-Agent is
-`georgia-mcp-connect/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 
 **`adapter/connect`.** `Company` returns
 `{Code: "connect", Name: "Connect", PublishesEffectiveDate: false}`. `Prices` sends one
@@ -239,7 +239,7 @@ the tool through the in-memory MCP transport.
 **Given** an `httptest` server that records the request and serves `current.json`.
 **When** `Current` runs.
 **Then** the path is `/current`, `Accept` is `application/json`, the User-Agent starts
-with `georgia-mcp-connect/`, and `Prices` holds 5 keys. `super_ron98` has the
+with `georgia-mcp/`, and `Prices` holds 5 keys. `super_ron98` has the
 `Standard` text `4.3499999999999996447286321199499070644378662109375`.
 
 ### `CONFUEL-SC-002`

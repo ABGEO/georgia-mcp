@@ -121,7 +121,7 @@ Each answer is `{"data":{"list":[…]},"succeeded":true,"message":""}`. `succeed
 returns an error that wraps `ErrNoSuccess`. `OfferPage` sends
 `GET /<language>/studio-lifestyle/offers/details/<id>` and parses the body with
 `golang.org/x/net/html`. A page with no `div.featured-hero__text` returns `ErrNoTerms`.
-The body limit is 2 MiB. The User-Agent is `georgia-mcp-liberty/<version> (+…)`.
+The body limit is 2 MiB. The User-Agent is `georgia-mcp/<version> (+…)`.
 
 **`adapter/liberty`.** `Bank` returns `{Code: "liberty", Name: "Liberty Bank"}`. `Cards`
 returns the cards of `LIBOFFER-DD-002`. `Offers` follows `LIBOFFER-DD-001`. The mapping:

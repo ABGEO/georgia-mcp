@@ -15,8 +15,6 @@ import (
 const (
 	// DefaultBaseURL is the production address of the API of TBC.
 	DefaultBaseURL = "https://api.tbcbank.ge"
-
-	vendorName = "tbc"
 )
 
 // Client calls the API of TBC. It is safe for concurrent use.
@@ -45,7 +43,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

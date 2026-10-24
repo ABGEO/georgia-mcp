@@ -108,7 +108,7 @@ type APIError struct {
 `Accept: application/json`, and returns the object under `GetCurrentPrices`. Any status
 other than 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is
 1 MiB. The default User-Agent is
-`georgia-mcp-socar/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 
 **`adapter/socar`.** `Company` returns
 `{Code: "socar", Name: "SOCAR", PublishesEffectiveDate: false}`. `Prices` sends one call

@@ -15,8 +15,7 @@ const (
 	// DefaultBaseURL is the production address of the site of Studio.
 	DefaultBaseURL = "https://studioliberty.ge"
 
-	vendorName = "liberty"
-	apiPath    = "_mvcapi/offersapi"
+	apiPath = "_mvcapi/offersapi"
 
 	// maxBodyBytes bounds the read of an answer. The page of an offer is under 60 KiB.
 	maxBodyBytes = 2 << 20
@@ -39,7 +38,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

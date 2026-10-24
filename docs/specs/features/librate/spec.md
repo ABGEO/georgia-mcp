@@ -102,7 +102,7 @@ type APIError struct {
 `Rates` sends `GET /ka/` with `Accept: text/html`. Any status other than 200 returns an
 `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 2 MiB: the page has
 124 KB. The default User-Agent is
-`georgia-mcp-libertyrates/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `LIBRATE-DD-001` gives the parse.
 
 **`adapter/liberty`.** `Bank` returns `{Code: "liberty", Name: "Liberty Bank"}`, with
@@ -272,7 +272,7 @@ lacks would wait 10 seconds, the timeout of the call.
 **Given** an `httptest` server that records the request.
 **When** `Rates` runs.
 **Then** the path is `/ka/`, `Accept` is `text/html`, the User-Agent starts with
-`georgia-mcp-libertyrates/`, and the request carries no key header.
+`georgia-mcp/`, and the request carries no key header.
 
 ### `LIBRATE-SC-002`
 

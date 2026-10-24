@@ -59,9 +59,9 @@ func TestCommercialRateSendsTheRequest(t *testing.T) {
 	}
 
 	agent := got.Header.Get("User-Agent")
-	if !strings.HasPrefix(agent, "georgia-mcp-bog/") ||
+	if !strings.HasPrefix(agent, "georgia-mcp/") ||
 		!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-		t.Errorf("User-Agent = %q, want georgia-mcp-bog/<version> (+<repository>)", agent)
+		t.Errorf("User-Agent = %q, want georgia-mcp/<version> (+<repository>)", agent)
 	}
 
 	for _, name := range []string{"Apikey", "Authorization"} {

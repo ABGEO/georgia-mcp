@@ -13,8 +13,6 @@ import (
 const (
 	// DefaultBaseURL is the production address of the site of Terabank.
 	DefaultBaseURL = "https://terabank.ge"
-
-	vendorName = "terabank"
 )
 
 // Client calls the rate API of Terabank. It is safe for concurrent use.
@@ -33,7 +31,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

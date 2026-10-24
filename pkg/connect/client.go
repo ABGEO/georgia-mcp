@@ -11,8 +11,6 @@ import (
 const (
 	// DefaultBaseURL is the production address of the price API of Connect.
 	DefaultBaseURL = "https://connect.com.ge/wp-json/fuel-prices/v1"
-
-	vendorName = "connect"
 )
 
 // Client calls the price API of Connect. It is safe for concurrent use.
@@ -31,7 +29,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

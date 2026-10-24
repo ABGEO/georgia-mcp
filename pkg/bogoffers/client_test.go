@@ -93,9 +93,9 @@ func checkRequest(t *testing.T, got *http.Request, gotBody string) {
 	}
 
 	agent := got.Header.Get("User-Agent")
-	if !strings.HasPrefix(agent, "georgia-mcp-bogoffers/") ||
+	if !strings.HasPrefix(agent, "georgia-mcp/") ||
 		!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-		t.Errorf("User-Agent = %q, want georgia-mcp-bogoffers/<version> (+<repository>)", agent)
+		t.Errorf("User-Agent = %q, want georgia-mcp/<version> (+<repository>)", agent)
 	}
 }
 

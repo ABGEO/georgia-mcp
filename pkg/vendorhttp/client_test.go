@@ -14,8 +14,6 @@ import (
 
 var errUnexpectedStatus = errors.New("acme: unexpected status")
 
-const vendor = "acme"
-
 // recorded is the last request that the server got.
 type recorded struct {
 	method string
@@ -47,7 +45,7 @@ func serve(t *testing.T, status int, body string) (*httptest.Server, *recorded) 
 }
 
 func client(server *httptest.Server) *vendorhttp.Client {
-	return vendorhttp.New(vendor, errUnexpectedStatus,
+	return vendorhttp.New(errUnexpectedStatus,
 		vendorhttp.WithBaseURL(server.URL),
 		vendorhttp.WithHeader("Accept", "application/json"),
 		vendorhttp.WithMaxBody(8),
@@ -55,7 +53,7 @@ func client(server *httptest.Server) *vendorhttp.Client {
 }
 
 // PLATFORM-SC-037: Fetch sends the path, the query, the header of the client, and the
-// User-Agent of the module, and returns the body of a 200.
+// User-Agent of the server, and returns the body of a 200.
 func TestFetchSendsTheRequest(t *testing.T) {
 	t.Parallel()
 
@@ -82,9 +80,9 @@ func TestFetchSendsTheRequest(t *testing.T) {
 	}
 
 	agent := got.header.Get("User-Agent")
-	if !strings.HasPrefix(agent, "georgia-mcp-acme/") ||
+	if !strings.HasPrefix(agent, "georgia-mcp/") ||
 		!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-		t.Errorf("User-Agent = %q, want georgia-mcp-acme/<version> (+<repository>)", agent)
+		t.Errorf("User-Agent = %q, want georgia-mcp/<version> (+<repository>)", agent)
 	}
 }
 

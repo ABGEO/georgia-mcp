@@ -15,7 +15,6 @@ const (
 	// DefaultBaseURL is the production address of the API of the TTC.
 	DefaultBaseURL = "https://transit.ttc.com.ge/pis-gateway/api"
 
-	vendorName = "ttc"
 	// maxBodyBytes bounds the read of an answer. The list of every stop is 325 KB.
 	maxBodyBytes = 4 << 20
 	leaveNow     = "leaveNow"
@@ -50,7 +49,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

@@ -18,7 +18,6 @@ const (
 	// DefaultBaseURL is the production address of the site of Gulf Georgia.
 	DefaultBaseURL = "https://gulf.ge"
 
-	vendorName   = "gulf"
 	priceTableID = "price_archive_tbl"
 )
 
@@ -41,7 +40,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

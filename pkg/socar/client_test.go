@@ -57,9 +57,9 @@ func TestCurrentPricesSendsTheRequest(t *testing.T) {
 	}
 
 	agent := got.Header.Get("User-Agent")
-	if !strings.HasPrefix(agent, "georgia-mcp-socar/") ||
+	if !strings.HasPrefix(agent, "georgia-mcp/") ||
 		!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-		t.Errorf("User-Agent = %q, want georgia-mcp-socar/<version> (+<repository>)", agent)
+		t.Errorf("User-Agent = %q, want georgia-mcp/<version> (+<repository>)", agent)
 	}
 }
 

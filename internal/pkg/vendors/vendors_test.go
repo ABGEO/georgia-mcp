@@ -184,7 +184,7 @@ func TestBuildGivesTheClientOptions(t *testing.T) {
 		Variable: "GEOMCP_TEST_A_ENABLED",
 		Config:   vendors.Defaults(server.URL),
 		Build: func(opts ...vendorhttp.Option) (*source, error) {
-			client := vendorhttp.New("example.com/pkg/a", errStatus, opts...)
+			client := vendorhttp.New(errStatus, opts...)
 			if _, err := client.Fetch(t.Context(), vendorhttp.Request{}); err != nil {
 				return nil, fmt.Errorf("calling the vendor: %w", err)
 			}

@@ -39,7 +39,7 @@ in-memory MCP transport.
 **When** `Offers` runs with `{Language: "en", PageNumber: 0, PageSize: 100}`.
 **Then** the method is `POST`, the path is `/get-offers`, the query holds `pageNumber=0`
 and `pageSize=100`, the body is `{}`, `Accept-Language` is `en`, the User-Agent starts with
-`georgia-mcp-bogoffers/`, and the page holds 100 offers with `totalPageCount` 3.
+`georgia-mcp/`, and the page holds 100 offers with `totalPageCount` 3.
 
 ### `BOGOFFER-SC-002`
 

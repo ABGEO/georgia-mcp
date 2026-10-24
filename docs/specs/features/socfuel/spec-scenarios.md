@@ -35,7 +35,7 @@ the tool through the in-memory MCP transport.
 **Given** an `httptest` server that records the request and serves `current-prices.json`.
 **When** `CurrentPrices` runs.
 **Then** the path is `/integration/info/current-prices`, `Accept` is `application/json`,
-the User-Agent starts with `georgia-mcp-socar/`, `Status` is `1`, and the list holds 7
+the User-Agent starts with `georgia-mcp/`, `Status` is `1`, and the list holds 7
 products. `EURREG` has the price `4.02`. `LPG` has the English name `"LPG "` and the price
 `2.09`. `DIESEL` has the price `4.9`.
 

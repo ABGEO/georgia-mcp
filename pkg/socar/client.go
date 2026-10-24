@@ -11,8 +11,6 @@ import (
 const (
 	// DefaultBaseURL is the production address of the API of SOCAR.
 	DefaultBaseURL = "https://sgp.ge/sgp-backend/api"
-
-	vendorName = "socar"
 )
 
 // Client calls the API of SOCAR. It is safe for concurrent use.
@@ -31,7 +29,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

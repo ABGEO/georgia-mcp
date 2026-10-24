@@ -68,7 +68,7 @@ does not declare that option again. An option sets one value:
 | ---------------------------- | -------------------------------------------- |
 | `vendorhttp.WithBaseURL`     | `DefaultBaseURL` of the client.              |
 | `vendorhttp.WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
-| `vendorhttp.WithUserAgent`   | `georgia-mcp-<vendor>/<version of the server> (+https://github.com/abgeo/georgia-mcp)`. |
+| `vendorhttp.WithUserAgent`   | `georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`. |
 | `WithAPIKey` of the client   | None. Only a client whose vendor needs a key. |
 
 A value of one vendor is an option of its client that returns a `vendorhttp.Option`.

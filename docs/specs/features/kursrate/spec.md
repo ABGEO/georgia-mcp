@@ -99,7 +99,7 @@ type APIError struct {
 
 `Currencies` sends `GET /api/public/currencies`. Any status other than 200 returns an
 `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 1 MiB. The default
-User-Agent is `georgia-mcp-kursi/<version> (+https://github.com/abgeo/georgia-mcp)`.
+User-Agent is `georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 
 **`adapter/kursi`.** `Bank` returns
 `{Code: "kursi", Name: "Kursi.ge", Kind: domain.KindExchangeBureau}`. `CommercialRates`
@@ -222,7 +222,7 @@ gives `as_of`, so the model knows the age of the rate.
 **Given** an `httptest` server that records the request.
 **When** `Currencies` runs.
 **Then** the method is `GET`, the path is `/api/public/currencies`, `Accept` is
-`application/json`, the User-Agent starts with `georgia-mcp-kursi/`, and the request
+`application/json`, the User-Agent starts with `georgia-mcp/`, and the request
 carries no `Authorization` header.
 
 ### `KURSRATE-SC-002`

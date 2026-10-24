@@ -99,7 +99,7 @@ type APIError struct {
 
 `Prices` sends `GET /` with `Accept: text/html`. Any status other than 200 returns an
 `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 1 MiB. The default
-User-Agent is `georgia-mcp-rompetrol/<version> (+https://github.com/abgeo/georgia-mcp)`.
+User-Agent is `georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `ROMFUEL-DD-001` gives the parse. A page with no table returns `ErrNoPriceTable`. A row
 that has `td` cells, but not exactly 2, returns `ErrMalformedTable`. An empty table
 returns an empty list and no error: the client does not interpret (`CLT-003`).

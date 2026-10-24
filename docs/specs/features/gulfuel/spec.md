@@ -108,7 +108,7 @@ type APIError struct {
 `PriceArchive` sends `GET /en/fuel_prices` with `Accept: text/html`. Any status other
 than 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is
 1 MiB: the page has 111 KB, and holds 100 rows at most. The default User-Agent is
-`georgia-mcp-gulf/<version> (+https://github.com/abgeo/georgia-mcp)`. The default HTTP
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`. The default HTTP
 client has a timeout of 10 seconds and the transport of `NewTransport`.
 `GULFUEL-DD-001` gives the parse. `GULFUEL-DD-002` gives the transport.
 
@@ -298,7 +298,7 @@ the pages from `httptest` and calls the tool through the in-memory MCP transport
 **Given** an `httptest` server that records the request and serves `fuel-prices.html`.
 **When** `PriceArchive` runs.
 **Then** the path is `/en/fuel_prices`, `Accept` is `text/html`, the User-Agent starts
-with `georgia-mcp-gulf/`, `Columns` holds 11 columns, and `Rows` holds 100 rows.
+with `georgia-mcp/`, `Columns` holds 11 columns, and `Rows` holds 100 rows.
 `Columns[1]` is `{"G-Force Super", "g_col"}`, and `Columns[6]` is `{"G-Force Super", "gp_col"}`.
 The first row is `["2026-10-19", "4.69", "4.39", "4.09", "5.05", "4.99", "4.59", "4.29", "3.99", "4.95", "4.89"]`.
 

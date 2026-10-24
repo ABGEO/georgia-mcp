@@ -21,11 +21,17 @@ func TestLivePriceArchive(t *testing.T) {
 	}
 
 	hasClass := func(class string) bool {
-		return slices.ContainsFunc(table.Columns, func(c gulf.Column) bool { return c.Class == class })
+		return slices.ContainsFunc(
+			table.Columns,
+			func(c gulf.Column) bool { return c.Class == class },
+		)
 	}
 
 	if !hasClass("first") || !hasClass("g_col") {
-		t.Fatalf("Columns = %+v, want a column of class first and one of class g_col", table.Columns)
+		t.Fatalf(
+			"Columns = %+v, want a column of class first and one of class g_col",
+			table.Columns,
+		)
 	}
 
 	for _, row := range table.Rows {

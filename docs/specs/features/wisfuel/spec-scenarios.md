@@ -34,7 +34,7 @@ A unit test of `app` uses fake sources. An integration test serves the files fro
 **Given** an `httptest` server that records the request and serves `fuelprice.json`.
 **When** `FuelPrices` runs.
 **Then** the path is `/FuelPrice`, `Accept` is `application/json`, the User-Agent starts
-with `georgia-mcp-wissol/`, and the list holds 8 products. Euro Regular has the price
+with `georgia-mcp/`, and the list holds 8 products. Euro Regular has the price
 `4.08` and the self-service price `3.93`. `A1 SUPER 100` has an empty self-service price.
 
 ### `WISFUEL-SC-002`

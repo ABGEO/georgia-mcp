@@ -101,7 +101,7 @@ Every path is new unless the table says "change". `T` is `internal/app/georgia-m
 **`pkg/ttc`.** The client sends the header `X-api-key` on every call, and the query
 `locale` where the method takes a locale. It escapes each identifier with
 `url.PathEscape`, which keeps the `:` of `1:1000`. The TTC accepts `1:1000` and `1%3A1000`. The body limit is 4 MiB: the list of stops
-is 325 KB. The default User-Agent is `georgia-mcp-ttc/<version> (+https://github.com/abgeo/georgia-mcp)`.
+is 325 KB. The default User-Agent is `georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 The gateway accepts it. It refuses the User-Agent of Python with 403.
 
 ```go

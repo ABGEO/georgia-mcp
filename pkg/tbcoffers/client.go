@@ -15,8 +15,6 @@ const (
 	// DefaultBaseURL is the production address of the marketing API of TBC Bank.
 	DefaultBaseURL = "https://apigw.tbcbank.ge/api/v1/marketing"
 
-	vendorName = "tbcoffers"
-
 	// maxBodyBytes bounds the read of an answer. The list of 518 offers is under 1 MiB.
 	maxBodyBytes = 8 << 20
 
@@ -40,7 +38,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

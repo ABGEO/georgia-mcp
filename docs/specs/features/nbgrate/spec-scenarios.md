@@ -261,7 +261,7 @@ The adapter wraps both with `kernel.ErrSourceUnavailable`.
 **When** `RateSets` runs for `ka`, 2026-10-17, and the currencies `USD` and `GBP`.
 **Then** the path is `/currencies/ka/json/`, the query holds `date=2026-10-17` and
 `currencies=USD,GBP`, `Accept` is `application/json`, and `User-Agent` starts with
-`georgia-mcp-nbg/` and ends with `(+https://github.com/abgeo/georgia-mcp)`. With no date and no currencies, the query is empty.
+`georgia-mcp/` and ends with `(+https://github.com/abgeo/georgia-mcp)`. With no date and no currencies, the query is empty.
 
 ### `NBGRATE-SC-023`
 

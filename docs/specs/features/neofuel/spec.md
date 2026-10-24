@@ -85,7 +85,7 @@ type APIError struct {
 `GasPrices` sends `GET /ka/` with `Accept: text/html`. Any status other than 200 returns
 an `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 1 MiB: the page has
 44 KB. The default User-Agent is
-`georgia-mcp-neogas/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `NEOFUEL-DD-001` gives the parse.
 
 **`adapter/neogas`.** `Company` returns
@@ -197,7 +197,7 @@ the pages from `httptest` and calls the tool through the in-memory MCP transport
 **Given** an `httptest` server that records the request and serves `home.html`.
 **When** `GasPrices` runs.
 **Then** the path is `/ka/`, `Accept` is `text/html`, the User-Agent starts with
-`georgia-mcp-neogas/`, and the list is `["1.60", "1.60"]`.
+`georgia-mcp/`, and the list is `["1.60", "1.60"]`.
 
 ### `NEOFUEL-SC-002`
 

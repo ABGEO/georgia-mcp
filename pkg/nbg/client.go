@@ -18,8 +18,6 @@ const (
 	// DefaultBaseURL is the production address of the API of the NBG.
 	DefaultBaseURL = "https://nbg.gov.ge/gw/api/ct/monetarypolicy"
 
-	vendorName = "nbg"
-
 	acceptJSON = "application/json"
 	acceptRSS  = "application/rss+xml, application/xml;q=0.9, text/xml;q=0.8"
 )
@@ -47,7 +45,7 @@ func New(opts ...Option) *Client {
 	defaults := []Option{vendorhttp.WithBaseURL(DefaultBaseURL)}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

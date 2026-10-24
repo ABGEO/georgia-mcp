@@ -11,8 +11,6 @@ import (
 const (
 	// DefaultBaseURL is the production address of the API of Wissol.
 	DefaultBaseURL = "https://api.wissol.ge"
-
-	vendorName = "wissol"
 )
 
 // Client calls the API of Wissol. It is safe for concurrent use.
@@ -31,7 +29,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

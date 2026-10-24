@@ -99,7 +99,7 @@ type APIError struct {
 `Rates` sends `GET /ka/` with `Accept: text/html`. Any status other than 200 returns an
 `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is 1 MiB: the page has
 84 KB. The default User-Agent is
-`georgia-mcp-rico/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `RICORATE-DD-001` gives the parse.
 
 **`adapter/rico`.** `Bank` returns
@@ -268,7 +268,7 @@ facts in one field.
 **Given** an `httptest` server that records the request.
 **When** `Rates` runs.
 **Then** the path is `/ka/`, `Accept` is `text/html`, the User-Agent starts with
-`georgia-mcp-rico/`, and the request carries no key header.
+`georgia-mcp/`, and the request carries no key header.
 
 ### `RICORATE-SC-002`
 

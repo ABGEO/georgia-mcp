@@ -115,7 +115,7 @@ type PostalCodeRow struct {
 
 `PostalCodes` sends two calls with `vendorhttp.Client.Do`. `POSTCODE-DD-001` gives them.
 The body limit is the default 1 MiB: the broadest answer of the probe is 50 KB. The
-default User-Agent is `georgia-mcp-gpost/<version> (+https://github.com/abgeo/georgia-mcp)`.
+default User-Agent is `georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 The client reads the cookie with `http.ParseSetCookie` on each `Set-Cookie` value of
 the first answer. `POSTCODE-DD-002` and `POSTCODE-DD-003` give the parse. The client does
 not check a postal code (`CLT-003`).
@@ -469,7 +469,7 @@ context: `POSTCODE-SC-014` with the recorded answer, `POSTCODE-SC-018`, and
 
 | ID                | Verifies | Layer | Given, when, then |
 | ----------------- | -------- | ----- | ----------------- |
-| `POSTCODE-SC-001` | `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | unit | A server records each request. `PostalCodes(ctx, "რუსთავი", "ka")` sends exactly `GET /help/postal-codes`, then `POST /Help/FindPostalCode`. Both carry a User-Agent that starts with `georgia-mcp-gpost/` and holds `https://github.com/abgeo/georgia-mcp`. |
+| `POSTCODE-SC-001` | `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | unit | A server records each request. `PostalCodes(ctx, "რუსთავი", "ka")` sends exactly `GET /help/postal-codes`, then `POST /Help/FindPostalCode`. Both carry a User-Agent that starts with `georgia-mcp/` and holds `https://github.com/abgeo/georgia-mcp`. |
 | `POSTCODE-SC-002` | `POSTCODE-FR-001` | unit | The POST carries the form token in the body, `regionTypeId=1`, the text, and the cookie `__RequestVerificationToken=test-token; lang=ka`. |
 | `POSTCODE-SC-003` | `POSTCODE-FR-001` | unit | `find-chavchavadze-ka.html` gives 63 rows. The first is `{"თბილისი", "0108", "ქალაქი თბილისი, ალექსანდრე ჭავჭავაძის I ჩიხი"}`. Rows 56 to 59 have the district `ბათუმი`. A hidden row is in the list. |
 | `POSTCODE-SC-004` | `POSTCODE-FR-001` | unit | `find-none-ka.html` gives an empty list and no error. |

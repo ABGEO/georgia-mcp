@@ -360,7 +360,7 @@ limit of 8 bytes.
 
 | Request and answer                                  | Result                                                     |
 | --------------------------------------------------- | ---------------------------------------------------------- |
-| `Fetch` of the path `rates`, the query `a=1`, 200 `{"x":1}` | The path `/rates?a=1`, `Accept`, a User-Agent that starts with `georgia-mcp-acme/`, the body. |
+| `Fetch` of the path `rates`, the query `a=1`, 200 `{"x":1}` | The path `/rates?a=1`, `Accept`, a User-Agent that starts with `georgia-mcp/`, the body. |
 | `Fetch`, 200 with a body of 20 bytes                | The first 8 bytes.                                         |
 | `Fetch`, 503 `down`                                 | A `*StatusError` with 503 and `down`. `errors.Is` finds the sentinel. |
 | `Do`, 204                                           | The answer with 204, and no error.                         |

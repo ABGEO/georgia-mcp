@@ -265,7 +265,7 @@ The 204 has no body, so it needs no file.
 **Given** an `httptest` server that records the request.
 **When** `CommercialRate` runs with `USD`.
 **Then** the path is `/api/rates/commercial/USD`, `Accept` is `application/json`, the
-User-Agent starts with `georgia-mcp-bog/`, and the request carries no key header.
+User-Agent starts with `georgia-mcp/`, and the request carries no key header.
 
 ### `BOGRATE-SC-002`
 

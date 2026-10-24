@@ -18,8 +18,6 @@ const (
 	// DefaultBaseURL is the production address of the site of Rico Credit.
 	DefaultBaseURL = "https://www.rico.ge"
 
-	vendorName = "rico"
-
 	classTableBody = "currencies-table-body"
 	classRow       = "currency-row"
 	classCurrency  = "currency-info"
@@ -46,7 +44,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 

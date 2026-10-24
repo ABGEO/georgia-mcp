@@ -145,7 +145,7 @@ type Offer struct {
 `Offers` sends `POST /get-offers?pageInfo=true&pageNumber=N&pageSize=M` with the body
 `{}`, `Content-Type: application/json`, and `Accept: application/json`. A status other
 than 200 returns an `*APIError`. The body limit is 4 MiB. The default User-Agent is
-`georgia-mcp-bogoffers/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 
 **`adapter/bog`.** `Bank` returns `{Code: "bog", Name: "Bank of Georgia"}`. `Cards`
 returns the cards of the table of `BOGOFFER-DD-002`. `Offers`

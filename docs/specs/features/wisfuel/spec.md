@@ -120,7 +120,7 @@ type APIError struct {
 `FuelPrices` sends `GET /FuelPrice` with `Accept: application/json`. Any status other
 than 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The client ignores
 `fuelPriceHistories`. The default User-Agent is
-`georgia-mcp-wissol/<version> (+https://github.com/abgeo/georgia-mcp)`. The body limit
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`. The body limit
 is 1 MiB.
 
 **`adapter/wissol`.** `Company` returns `{Code: "wissol", Name: "Wissol"}`. `Prices`

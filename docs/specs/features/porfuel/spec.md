@@ -104,7 +104,7 @@ type APIError struct {
 `FuelPrices` sends `GET /ka/fuel-prices` with `Accept: text/x-component` and `RSC: 1`.
 Any status other than 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The
 body limit is 2 MiB: the stream has 114 KB. The default User-Agent is
-`georgia-mcp-portal/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `PORFUEL-DD-001` gives the parse.
 
 **`adapter/portal`.** `Company` returns
@@ -230,7 +230,7 @@ serves the streams from `httptest` and calls the tool through the in-memory MCP 
 **Given** an `httptest` server that records the request and serves `fuel-prices.rsc`.
 **When** `FuelPrices` runs.
 **Then** the path is `/ka/fuel-prices`, `Accept` is `text/x-component`, `RSC` is `1`, the
-User-Agent starts with `georgia-mcp-portal/`, and the list holds 5 entries. The first
+User-Agent starts with `georgia-mcp/`, and the list holds 5 entries. The first
 has the slug `super`, `LatestPrice` `4.39`, and `LatestOnlinePrice` `4.19`.
 
 ### `PORFUEL-SC-002`

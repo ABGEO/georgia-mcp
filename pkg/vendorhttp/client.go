@@ -45,7 +45,7 @@ func WithHTTPClient(httpClient *http.Client) Option {
 }
 
 // WithUserAgent sets the User-Agent header. The default is
-// georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp).
+// georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp).
 func WithUserAgent(userAgent string) Option {
 	return func(c *Client) { c.userAgent = userAgent }
 }
@@ -61,12 +61,11 @@ func WithMaxBody(maxBody int64) Option {
 	return func(c *Client) { c.maxBody = maxBody }
 }
 
-// New returns a client for the vendor client of the name, for example nbg. A status error
-// wraps sentinel.
-func New(vendor string, sentinel error, opts ...Option) *Client {
+// New returns a client for a vendor client. A status error wraps sentinel.
+func New(sentinel error, opts ...Option) *Client {
 	client := &Client{
 		httpClient: &http.Client{Timeout: DefaultTimeout},
-		userAgent:  userAgent(vendor),
+		userAgent:  userAgent(),
 		header:     http.Header{},
 		maxBody:    defaultMaxBody,
 		sentinel:   sentinel,
@@ -203,9 +202,9 @@ func (e *StatusError) Unwrap() error {
 	return e.sentinel
 }
 
-// userAgent returns georgia-mcp-<vendor>/<the version of the server> (+<repository>).
-func userAgent(vendor string) string {
-	return "georgia-mcp-" + vendor + "/" + version() + " (+" + repositoryURL + ")"
+// userAgent returns georgia-mcp/<the version of the server> (+<repository>).
+func userAgent() string {
+	return "georgia-mcp/" + version() + " (+" + repositoryURL + ")"
 }
 
 func version() string {

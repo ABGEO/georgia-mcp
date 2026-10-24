@@ -84,9 +84,9 @@ func assertHeaders(t *testing.T, header http.Header) {
 	}
 
 	agent := header.Get("User-Agent")
-	if !strings.HasPrefix(agent, "georgia-mcp-terabank/") ||
+	if !strings.HasPrefix(agent, "georgia-mcp/") ||
 		!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-		t.Errorf("User-Agent = %q, want georgia-mcp-terabank/<version> (+<repository>)", agent)
+		t.Errorf("User-Agent = %q, want georgia-mcp/<version> (+<repository>)", agent)
 	}
 
 	for _, name := range []string{"Apikey", "Authorization"} {

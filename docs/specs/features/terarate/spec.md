@@ -209,7 +209,7 @@ to four decimal places: `2.9300`. The drop gives `2.93`, as `BOGRATE-DD-005` doe
 **When** `CrossRates` runs.
 **Then** the method is `POST`, the path is `/_mvcapi/CurrencyRatesApi/GetTeraCrossRates`,
 `Content-Length` is `0`, `Accept` is `application/json`, the User-Agent starts with
-`georgia-mcp-terabank/`, and the request carries no key header.
+`georgia-mcp/`, and the request carries no key header.
 
 ### `TERARATE-SC-002`
 

@@ -129,7 +129,7 @@ type Node struct {
 `Filters` sends `GET /filters?type=offer&locale=<l>&segment=<s>`. `Offers` sends
 `POST /entries/offer` with the JSON body. `Offer` sends `GET /entries/offer/<slug>/<locale>`
 with the slug escaped as a path segment. A status other than 200 returns an `*APIError`.
-The body limit is 8 MiB. The User-Agent is `georgia-mcp-tbcoffers/<version> (+…)`.
+The body limit is 8 MiB. The User-Agent is `georgia-mcp/<version> (+…)`.
 
 **`adapter/tbc`.** `Bank` returns `{Code: "tbc", Name: "TBC Bank"}`. `Cards` returns the
 cards of the tables of `TBCOFFER-DD-002`. `Offers` follows `TBCOFFER-DD-001`. The mapping

@@ -137,9 +137,9 @@ func TestPostalCodesSendsTwoCalls(t *testing.T) {
 
 	for _, request := range requests {
 		agent := request.Header.Get("User-Agent")
-		if !strings.HasPrefix(agent, "georgia-mcp-gpost/") ||
+		if !strings.HasPrefix(agent, "georgia-mcp/") ||
 			!strings.HasSuffix(agent, "(+https://github.com/abgeo/georgia-mcp)") {
-			t.Errorf("%s User-Agent = %q, want georgia-mcp-gpost/<version> (+<repository>)",
+			t.Errorf("%s User-Agent = %q, want georgia-mcp/<version> (+<repository>)",
 				request.Path, agent)
 		}
 

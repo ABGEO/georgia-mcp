@@ -36,7 +36,7 @@ answer of Wissol from `httptest`, and calls the tool through the in-memory MCP t
 **Given** an `httptest` server that records the request and serves `home.html`.
 **When** `Prices` runs.
 **Then** the path is `/`, `Accept` is `text/html`, the User-Agent starts with
-`georgia-mcp-rompetrol/`, and the list holds 10 rows. The first row is
+`georgia-mcp/`, and the list holds 10 rows. The first row is
 `{"efix სუპერი", "4.65"}`. The sixth row is
 `{"- ევრო რეგულარი (თვითმომსახურების სადგურებზე)", "3.92"}`.
 

@@ -96,7 +96,7 @@ type APIError struct {
 `PriceHistory` sends `GET /prices-history` with `Accept: text/html`. Any status other
 than 200 returns an `*APIError` that wraps `ErrUnexpectedStatus`. The body limit is
 2 MiB: the page has 99 KB, and a change adds about 1 KB. The default User-Agent is
-`georgia-mcp-lukoil/<version> (+https://github.com/abgeo/georgia-mcp)`.
+`georgia-mcp/<version> (+https://github.com/abgeo/georgia-mcp)`.
 `LUKFUEL-DD-001` gives the parse.
 
 **`adapter/lukoil`.** `Company` returns
@@ -255,7 +255,7 @@ transport.
 **Given** an `httptest` server that records the request and serves `prices-history.html`.
 **When** `PriceHistory` runs.
 **Then** the path is `/prices-history`, `Accept` is `text/html`, the User-Agent starts
-with `georgia-mcp-lukoil/`, `Header` holds 7 cells, and `Rows` holds 106 rows. The last
+with `georgia-mcp/`, `Header` holds 7 cells, and `Rows` holds 106 rows. The last
 row is `["106", "0.00", "4.60", "4.25", "3.95", "4.97", "2026-10-05 10:01:46"]`.
 
 ### `LUKFUEL-SC-002`

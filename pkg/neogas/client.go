@@ -16,8 +16,6 @@ const (
 	// DefaultBaseURL is the production address of the site of Neogas.
 	DefaultBaseURL = "https://neogas.ge"
 
-	vendorName = "neogas"
-
 	// priceClass is the class of each element that holds the gas price. The script of
 	// the calculator reads it.
 	priceClass = "gas_price"
@@ -39,7 +37,7 @@ func New(opts ...Option) *Client {
 	}
 
 	return &Client{
-		http: vendorhttp.New(vendorName, ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
+		http: vendorhttp.New(ErrUnexpectedStatus, slices.Concat(defaults, opts)...),
 	}
 }
 
