@@ -1,0 +1,91 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "georgia-public-data",
+  "description": "Read-only public data from Georgia: exchange rates, fuel prices, Tbilisi public transport, and Georgian bank card offers.",
+  "version": "1.0.0",
+  "author": {
+    "email": "takalandzet@gmail.com",
+    "name": "Temuri Takalandze",
+    "url": "https://www.abgeo.dev/"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "brandColor": "#7A1F2B",
+        "category": "Data & Analytics",
+        "composerIcon": "./assets/georgia-public-data-icon.png",
+        "defaultPrompt": [
+          "What is the official USD to GEL rate today?",
+          "Where is diesel cheapest right now?",
+          "How do I get from Freedom Square to Tbilisi State University?"
+        ],
+        "developerName": "Temuri Takalandze",
+        "displayName": "Georgia Public Data",
+        "logo": "./assets/georgia-public-data-icon.png",
+        "longDescription": "Georgia Public Data connects ChatGPT to public services and providers in Georgia. It provides read-only access to exchange rates, fuel prices, Georgian bank card offers, and Tbilisi public transport. Each result names its source and the time of the data.\n\nExchange rates: Official rates and history from the National Bank of Georgia, plus buy and sell rates from Georgian banks and exchange bureaus.\n\nFuel prices: Current prices from major fuel providers for comparison.\n\nBank offers: Search card discounts and partner offers from Georgian banks.\n\nPublic transport: Stops, routes, live arrivals, timetables, and trip planning in Tbilisi.\n\nExample questions: What is the official USD to GEL rate today? Where is diesel cheapest right now? How do I get from Freedom Square to Tbilisi State University?",
+        "privacyPolicyURL": "https://geo-mcp.abgeo.cloud/privacy/",
+        "shortDescription": "Live public data from Georgia",
+        "supportURL": "https://www.abgeo.dev/contact/",
+        "termsOfServiceURL": "https://geo-mcp.abgeo.cloud/terms/",
+        "websiteURL": "https://geo-mcp.abgeo.cloud/"
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "Initial package for Georgia Public Data. Provides read-only access to official and commercial exchange rates, fuel prices, Tbilisi public transport, and Georgian bank card offers."
+      },
+      "review": {
+        "test_cases": {
+          "negative": [
+            {
+              "description": "A request to make a currency exchange.",
+              "prompt": "Exchange 100 GEL into US dollars for me at the best rate and confirm the transaction.",
+              "expected_output": "The assistant says Georgia Public Data only reads public data and cannot exchange money or make a transaction. It does not claim an exchange was made. It may offer the current rates instead."
+            },
+            {
+              "description": "A request to book a taxi.",
+              "prompt": "Book me a taxi from Tbilisi Airport to my hotel and confirm the driver.",
+              "expected_output": "The assistant says booking a taxi is not supported. It does not claim to book a ride or confirm a driver. It may offer public transport routes instead."
+            },
+            {
+              "description": "A request for a certain future exchange rate.",
+              "prompt": "What will the USD/GEL exchange rate definitely be next month?",
+              "expected_output": "The assistant says it cannot predict a future rate. It does not invent a forecast. It may give the current official rate or its recent history."
+            }
+          ],
+          "positive": [
+            {
+              "description": "The official USD rate for today.",
+              "prompt": "What is the official USD to GEL rate today?",
+              "tools_triggered": "rates_get_official_rates",
+              "expected_output": "The official USD to GEL rate from the National Bank of Georgia, with its date. The answer names the National Bank of Georgia as the source and does not present it as a bank's buy or sell rate."
+            },
+            {
+              "description": "The best commercial buy rate for EUR.",
+              "prompt": "Which Georgian bank or exchange provider pays the most for one euro today?",
+              "tools_triggered": "rates_get_commercial_rates",
+              "expected_output": "The EUR buy rates of the Georgian banks and exchange bureaus, with the highest one named. The answer names each provider and notes any provider that did not answer, without inventing a value."
+            },
+            {
+              "description": "The cheapest diesel in Georgia.",
+              "prompt": "Where is diesel cheapest right now in Georgia?",
+              "tools_triggered": "fuel_get_prices",
+              "expected_output": "The current diesel prices of the fuel companies in GEL per litre, with the cheapest one named. The answer compares only the returned prices and names each company."
+            },
+            {
+              "description": "A trip by public transport in Tbilisi.",
+              "prompt": "How do I get from Freedom Square to Tbilisi State University?",
+              "tools_triggered": "transit_search_places; transit_plan_trip",
+              "expected_output": "A trip from Freedom Square to Tbilisi State University: the bus or metro lines, the stops to board and leave, and the total duration. The answer uses only the returned itinerary."
+            },
+            {
+              "description": "Restaurant offers for Bank of Georgia premium cards.",
+              "prompt": "What current restaurant offers are available for Bank of Georgia premium card holders?",
+              "tools_triggered": "offers_search_offers",
+              "expected_output": "A list of current Bank of Georgia dining offers for premium card holders, each with the partner, the benefit, and the period. The answer lists only the returned offers and includes a link when one is returned."
+            }
+          ]
+        }
+      }
+    }
+  }
+}
