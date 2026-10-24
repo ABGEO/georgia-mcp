@@ -67,7 +67,13 @@ export const en = {
           "To run it on your computer instead, see the “Prefer to run it yourself?” tabs.",
         ],
       },
-      claudeCode: { name: "Claude Code", steps: ["Run this command in a terminal."] },
+      claudeCode: {
+        name: "Claude Code",
+        steps: [
+          "If you added Georgia MCP on claude.ai, it is already in Claude Code under the same account. Run `/mcp` to check: it is listed as claude.ai Georgia MCP.",
+          "To add it yourself, for example when you sign in with an API key, run this command in a terminal.",
+        ],
+      },
       chatgpt: {
         name: "ChatGPT",
         steps: [
@@ -95,7 +101,7 @@ export const en = {
       tbc: "The commercial rates of TBC Bank need a TBC API key in GEOMCP_RATES_TBC_API_KEY. To start without TBC Bank, set GEOMCP_RATES_TBC_ENABLED=false.",
     },
     download: "Latest release",
-    directory: "Open in the Claude directory",
+    directory: "the Claude directory",
   },
   how: {
     heading: "How it works",

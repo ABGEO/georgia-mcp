@@ -63,7 +63,13 @@ export const ka: Dictionary = {
           "თუ შენს კომპიუტერზე გაშვება გირჩევნია, იხილე ჩანართები „გირჩევნია თავად გაუშვა?“.",
         ],
       },
-      claudeCode: { name: "Claude Code", steps: ["გაუშვი ეს ბრძანება ტერმინალში."] },
+      claudeCode: {
+        name: "Claude Code",
+        steps: [
+          "თუ Georgia MCP claude.ai-ზე დაამატე, ის უკვე Claude Code-შია იმავე ანგარიშით. შესამოწმებლად გაუშვი `/mcp`: ის ჩანს როგორც claude.ai Georgia MCP.",
+          "თავად დასამატებლად, მაგალითად API გასაღებით შესვლისას, გაუშვი ეს ბრძანება ტერმინალში.",
+        ],
+      },
       chatgpt: {
         name: "ChatGPT",
         steps: [
@@ -91,7 +97,7 @@ export const ka: Dictionary = {
       tbc: "თიბისი ბანკის კომერციულ კურსებს სჭირდება TBC-ის API გასაღები GEOMCP_RATES_TBC_API_KEY-ში. თიბისი ბანკის გარეშე გასაშვებად მიუთითე GEOMCP_RATES_TBC_ENABLED=false.",
     },
     download: "ბოლო რელიზი",
-    directory: "გახსენი Claude-ის კატალოგში",
+    directory: "Claude-ის კატალოგში",
   },
   how: {
     heading: "როგორ მუშაობს",

@@ -72,6 +72,10 @@ select **Connect**. It then works on claude.ai, Claude Desktop, and the Claude m
 
 ### Claude Code
 
+If you added Georgia MCP on claude.ai, it is already in Claude Code under the same
+account. Run `/mcp` to check: it is listed as `claude.ai Georgia MCP`. To add it yourself,
+for example when you sign in with an API key, run:
+
 ```sh
 claude mcp add --transport http georgia-mcp https://geo-mcp.abgeo.cloud/mcp
 ```

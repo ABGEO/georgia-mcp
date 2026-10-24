@@ -55,6 +55,9 @@ const guides: Guide[] = [
   },
 ]
 
+// A step marks code with backticks.
+const segments = (text: string) => text.split("`").map((part, i) => ({ part, code: i % 2 === 1 }))
+
 const groups = [
   { key: "remote", label: copy.remote },
   { key: "local", label: copy.local },
@@ -88,15 +91,21 @@ const groups = [
           {copy.guides[guide.key].name}
         </h3>
         <ol>
-          {copy.guides[guide.key].steps.map((step) => (
-            <li>{step}</li>
-          ))}
+          {copy.guides[guide.key].steps.map((step) => {
+            const [before, after] = guide.directory ? step.split(copy.directory) : [step]
+            return (
+              <li>
+                {segments(before).map((s) => (s.code ? <code>{s.part}</code> : s.part))}
+                {after !== undefined && (
+                  <>
+                    <a href={guide.directory}>{copy.directory}</a>
+                    {segments(after).map((s) => (s.code ? <code>{s.part}</code> : s.part))}
+                  </>
+                )}
+              </li>
+            )
+          })}
         </ol>
-        {guide.directory && (
-          <p>
-            <a href={guide.directory}>{copy.directory}</a>
-          </p>
-        )}
         {guide.download && (
           <p>
             <a href={guide.download}>{copy.download}</a>

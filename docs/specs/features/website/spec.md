@@ -240,9 +240,9 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 
 | Guide          | Steps                                                                                       | Realizes         |
 | -------------- | ------------------------------------------------------------------------------------------- | ---------------- |
-| claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. A link to `CLAUDE_DIRECTORY_URL`. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
+| claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. The first step links to `CLAUDE_DIRECTORY_URL`. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
-| Claude Code    | `claude mcp add --transport http georgia-mcp {url}`                                         | `WEBSITE-FR-007` |
+| Claude Code    | The connector of claude.ai appears in Claude Code under the same account, listed in `/mcp` as `claude.ai Georgia MCP`. To add it yourself: `claude mcp add --transport http georgia-mcp {url}` | `WEBSITE-FR-007` |
 | ChatGPT        | Plugins, the plus button, Add custom MCP server. Name `Georgia MCP`, URL `{url}`, authentication None, accept the warning. A paid plan. | `WEBSITE-FR-007` |
 | Cursor         | `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}`                   | `WEBSITE-FR-007` |
 | VS Code        | `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}`        | `WEBSITE-FR-007` |
