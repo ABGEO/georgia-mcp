@@ -10,6 +10,17 @@
     "docker:pinDigests"
   ],
   "draftPR": true,
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__fixtures__/**",
+    "**/testdata/**"
+  ],
   "postUpdateOptions": [
     "gomodTidy",
     "pnpmDedupe"
