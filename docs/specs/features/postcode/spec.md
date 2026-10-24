@@ -495,7 +495,7 @@ in-memory MCP transport.
 | 2   | `domain`: `PostalCode`, `Address`, errors, fuzz test.                         | `POSTCODE-INV-001`, `POSTCODE-INV-002`  | [x]  |
 | 3   | `app`: port, `SearchCodes`, errors.                                           | `POSTCODE-FR-002`, `POSTCODE-FR-005` to `POSTCODE-FR-007` | [x]  |
 | 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [x]  |
-| 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [ ]  |
+| 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [x]  |
 | 6   | `adapter/tool`.                                                               | `POSTCODE-FR-001` to `POSTCODE-FR-008`  | [ ]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `POSTCODE-FR-010`, `POSTCODE-NFR-005`   | [ ]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Postal. | `DOM-002`                       | [x]  |
