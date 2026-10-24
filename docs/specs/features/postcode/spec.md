@@ -500,7 +500,7 @@ context: `POSTCODE-SC-014` with the recorded answer, `POSTCODE-SC-018`, and
 | 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [x]  |
 | 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [x]  |
 | 6   | `adapter/tool`.                                                               | `POSTCODE-FR-001` to `POSTCODE-FR-008`  | [x]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `POSTCODE-FR-010`, `POSTCODE-NFR-005`   | [ ]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `POSTCODE-FR-010`, `POSTCODE-NFR-005`   | [x]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Postal. | `DOM-002`                       | [x]  |
 
 ## 8. Out of scope for this specification

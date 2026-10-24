@@ -620,3 +620,28 @@ func TestLoadConfigNeedsTheKeyOfTBC(t *testing.T) {
 		})
 	}
 }
+
+// POSTCODE-SC-019: With no variable of postal, Georgian Post is on, at its address, with
+// a timeout of 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfGeorgianPost(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	gpost := cfg.Postal.GPost
+	if !gpost.Enabled {
+		t.Error("GPost.Enabled = false, want true")
+	}
+
+	if got := gpost.BaseURL.String(); got != "https://www.gpost.ge" {
+		t.Errorf("GPost.BaseURL = %q, want https://www.gpost.ge", got)
+	}
+
+	if http := gpost.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("GPost.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}

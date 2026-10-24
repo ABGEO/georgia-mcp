@@ -55,6 +55,7 @@ model, so you can ask one question and get one answer.
 | Fuel prices            | SOCAR, Wissol, Gulf, Rompetrol, Lukoil, Portal, Connect, Neogas                          |
 | Card offers            | Bank of Georgia, TBC Bank, Liberty Studio                                                |
 | Tbilisi public transport | Tbilisi Transport Company                                                              |
+| Postal codes           | Georgian Post                                                                            |
 
 ## Install
 
@@ -151,6 +152,7 @@ Two sources need a key:
 | `transit_get_timetable`       | The planned departures of a route from one stop.                        |
 | `transit_search_places`       | A place in Tbilisi by name or address.                                  |
 | `transit_plan_trip`           | A trip by public transport between two points of Tbilisi.               |
+| `postal_search_codes`         | The postal code of an address, a street, a town, or a village.          |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
@@ -186,7 +188,7 @@ public issue.
 ## Disclaimer
 
 Georgia MCP is not an official service. It is not affiliated with the National Bank of
-Georgia or any bank, fuel company, or transport operator it reads. The data belongs to its
+Georgia or any bank, fuel company, transport operator, or postal operator it reads. The data belongs to its
 publishers and can be late or wrong. Check with the source before you decide.
 
 ## Author
