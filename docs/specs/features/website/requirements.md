@@ -90,6 +90,11 @@ The site must give an install guide for each of these clients: Claude on the web
 
 **Why:** These are the clients that the owner and the readers use.
 
+**Examples:**
+
+- Normal case: the guide of claude.ai links to the page of Georgia MCP in the directory of Claude, where the reader connects it in one step.
+- Limit case: the reader wants a custom connector. The guide of claude.ai still gives the address of the server.
+
 ### `WEBSITE-FR-008`
 
 Each install guide must show the address of the server, and a control that copies it.

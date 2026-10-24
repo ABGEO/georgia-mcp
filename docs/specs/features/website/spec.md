@@ -29,7 +29,7 @@ from the server.
 | `WEBSITE-FR-002`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-002`           |
 | `WEBSITE-FR-003`  | `WEBSITE-DD-001`, `WEBSITE-SC-003`                      |
 | `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-SC-005`, `WEBSITE-SC-046` |
-| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
+| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`  |
 | `WEBSITE-FR-008`  | 4.4, `WEBSITE-DD-008`, `WEBSITE-SC-008`, `WEBSITE-SC-009` |
 | `WEBSITE-FR-009`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
 | `WEBSITE-FR-010`  | 4.3 Pages, `WEBSITE-SC-010`                             |
@@ -105,7 +105,7 @@ Every path is under `website/`. Every file is new.
 | Inputs       | `src/lib/inputs.ts`                      | `inputRows`. `WEBSITE-DD-005`.                                |
 | Tabs         | `src/lib/tabs.ts`                        | `enhanceTabs`. `WEBSITE-DD-021`.                              |
 | Language     | `src/i18n/index.ts`, `src/i18n/en.ts`, `src/i18n/ka.ts` | `Lang`, `Dictionary`, `t`, `localize`, `alternate`. |
-| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`. |
+| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`, `CLAUDE_DIRECTORY_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
 | Views        | `src/views/Home.astro`, `src/views/Tool.astro`, `src/views/Legal.astro` | One view for both languages. A page passes `lang`. |
 | Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
@@ -122,6 +122,7 @@ export const SITE_URL = "https://geo-mcp.abgeo.cloud"
 export const SERVER_URL = "https://geo-mcp.abgeo.cloud/mcp"
 export const REPO_URL = "https://github.com/abgeo/georgia-mcp"
 export const AUTHOR_URL = "https://www.abgeo.dev"
+export const CLAUDE_DIRECTORY_URL = "https://claude.ai/directory/georgia-mcp"
 ```
 
 ### 4.2 Data model
@@ -239,7 +240,7 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 
 | Guide          | Steps                                                                                       | Realizes         |
 | -------------- | ------------------------------------------------------------------------------------------- | ---------------- |
-| claude.ai      | Customize, Connectors, Add custom connector. Name `Georgia MCP`, URL `{url}`, authentication No sign-in. The Free plan allows one custom connector. | `WEBSITE-FR-007` |
+| claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. A link to `CLAUDE_DIRECTORY_URL`. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | `claude mcp add --transport http georgia-mcp {url}`                                         | `WEBSITE-FR-007` |
 | ChatGPT        | Plugins, the plus button, Add custom MCP server. Name `Georgia MCP`, URL `{url}`, authentication None, accept the warning. A paid plan. | `WEBSITE-FR-007` |
@@ -942,6 +943,15 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **When** the test reads `dist/.well-known/openai-apps-challenge`.
 **Then** the file holds one line of 43 characters from the alphabet of base64url, and nothing else.
 
+### `WEBSITE-SC-051`
+
+**Verifies:** `WEBSITE-FR-007`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads the panel of claude.ai.
+**Then** it links to `CLAUDE_DIRECTORY_URL`, holds a `CopyField` with `SERVER_URL`, and does not name the limit of the Free plan.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -969,6 +979,7 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 | 21  | Derive the counts of the build tests from the data. Move the tab script of `ToolList` and `InstallGuides` to `src/lib/tabs.ts`. | `WEBSITE-DD-021`, `SC-012`, `SC-040`, `SC-045`, `SC-046` | [x] |
 | 22  | Write the tests of the legal pages and the footer. Write `legal` in both dictionaries, `Legal.astro`, the four pages, and the footer links. Add the legal pages to the check of `WEBSITE-SC-031`. | `WEBSITE-DD-022`, `DD-023`, `SC-047` to `SC-049` | [x] |
 | 23  | Write the test of the token. Add the token file and the `text/plain` type of `/.well-known/` to `nginx.conf`. | `WEBSITE-DD-024`, `SC-050` | [x] |
+| 24  | Write the test of the guide of claude.ai. Add `CLAUDE_DIRECTORY_URL`, the link of the directory, and its copy. | `WEBSITE-FR-007`, `SC-051` | [x] |
 
 ## 8. Out of scope for this specification
 
