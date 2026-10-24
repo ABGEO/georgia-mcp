@@ -50,9 +50,9 @@ export const ka: Dictionary = {
       claude: {
         name: "claude.ai",
         steps: [
-          "claude.ai-ზე გახსენი Customize, შემდეგ Connectors.",
-          "აირჩიე Add custom connector.",
-          "დაარქვი Georgia MCP, ჩასვი ქვემოთ მოცემული მისამართი და აირჩიე No sign-in. უფასო პაკეტში ერთი საკუთარი კონექტორის დამატება შეგიძლია.",
+          "გახსენი Georgia MCP Claude-ის კატალოგში.",
+          "აირჩიე Connect.",
+          "საკუთარ კონექტორად დასამატებლად გამოიყენე ქვემოთ მოცემული მისამართი.",
         ],
       },
       claudeApps: {
@@ -91,6 +91,7 @@ export const ka: Dictionary = {
       tbc: "თიბისი ბანკის კომერციულ კურსებს სჭირდება TBC-ის API გასაღები GEOMCP_RATES_TBC_API_KEY-ში. თიბისი ბანკის გარეშე გასაშვებად მიუთითე GEOMCP_RATES_TBC_ENABLED=false.",
     },
     download: "ბოლო რელიზი",
+    directory: "გახსენი Claude-ის კატალოგში",
   },
   how: {
     heading: "როგორ მუშაობს",

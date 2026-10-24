@@ -1,7 +1,7 @@
 ---
 import type { Lang } from "../lib/schemas"
 import { t } from "../i18n"
-import { REPO_URL, SERVER_URL } from "../site"
+import { CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL } from "../site"
 import CopyField from "./CopyField.astro"
 
 interface Props {
@@ -18,11 +18,12 @@ interface Guide {
   address?: string
   code?: string
   download?: string
+  directory?: string
   keys?: boolean
 }
 
 const guides: Guide[] = [
-  { key: "claude", group: "remote", address: SERVER_URL },
+  { key: "claude", group: "remote", address: SERVER_URL, directory: CLAUDE_DIRECTORY_URL },
   { key: "claudeApps", group: "remote" },
   { key: "claudeCode", group: "remote", address: SERVER_URL, code: `claude mcp add --transport http georgia-mcp ${SERVER_URL}` },
   { key: "chatgpt", group: "remote", address: SERVER_URL },
@@ -91,6 +92,11 @@ const groups = [
             <li>{step}</li>
           ))}
         </ol>
+        {guide.directory && (
+          <p>
+            <a href={guide.directory}>{copy.directory}</a>
+          </p>
+        )}
         {guide.download && (
           <p>
             <a href={guide.download}>{copy.download}</a>

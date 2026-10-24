@@ -3,7 +3,7 @@ import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
 
-import { AUTHOR_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
+import { AUTHOR_URL, CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
 import { definitions, dist, page, pagePaths, pair, text } from "./helpers"
 
 const paths = pagePaths()
@@ -94,6 +94,16 @@ describe("the home page", () => {
     )
     expect(text(panels[7])).toContain("GEOMCP_TRANSIT_TTC_ENABLED")
     expect(text(panels[7])).toContain("GEOMCP_RATES_TBC_ENABLED")
+  })
+
+  // WEBSITE-SC-051: The guide of claude.ai links to the directory, keeps the address, and names no limit of the Free plan.
+  test.each(homes)("%s links the guide of claude.ai to the directory", (path) => {
+    const lang = path === "/" ? "en" : "ka"
+    const panel = page(path).querySelector(`#guide-${lang}-claude`)
+
+    expect(panel?.querySelectorAll("a").map((a) => a.getAttribute("href"))).toContain(CLAUDE_DIRECTORY_URL)
+    expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
+    expect(text(panel)).not.toMatch(/Free plan|უფასო პაკეტ/)
   })
 })
 

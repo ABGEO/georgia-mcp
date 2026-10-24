@@ -54,9 +54,9 @@ export const en = {
       claude: {
         name: "claude.ai",
         steps: [
-          "On claude.ai, open Customize, then Connectors.",
-          "Select Add custom connector.",
-          "Name it Georgia MCP, paste the address below, and choose No sign-in. The Free plan allows one custom connector.",
+          "Open Georgia MCP in the Claude directory.",
+          "Select Connect.",
+          "To add it as a custom connector instead, use the address below.",
         ],
       },
       claudeApps: {
@@ -95,6 +95,7 @@ export const en = {
       tbc: "The commercial rates of TBC Bank need a TBC API key in GEOMCP_RATES_TBC_API_KEY. To start without TBC Bank, set GEOMCP_RATES_TBC_ENABLED=false.",
     },
     download: "Latest release",
+    directory: "Open in the Claude directory",
   },
   how: {
     heading: "How it works",
