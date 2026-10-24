@@ -4,7 +4,7 @@ title: The website
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-10-22
+updated: 2026-10-24
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -18,6 +18,8 @@ constrained_by: [BRD, MCP, LNG]
 A person who hears of Georgia MCP has no page to read. They cannot see what the
 tools answer, which vendors feed them, or how to connect a client. A Georgian
 reader has no text in Georgian. A link to the project shows no preview.
+A directory of apps, such as the one of OpenAI or of Anthropic, asks for a privacy
+policy and terms of service that name this server.
 
 ## 2. Users
 
@@ -38,7 +40,7 @@ reader has no text in Georgian. A link to the project shows no preview.
 
 - A tool runner in the browser. A visitor cannot call a tool from the site.
 - A search over the site.
-- A blog, a changelog, or documentation beyond the tools.
+- A blog, a changelog, or documentation beyond the tools, the privacy policy, and the terms of service.
 - An analytics script, a tracking cookie, or a cookie banner.
 - A language other than English and Georgian.
 - A redirect by the language of the browser.
@@ -248,6 +250,41 @@ A tool page must list each vendor that the tool reads, with its name in the lang
 - Limit case: `rates_get_official_rates` lists the National Bank of Georgia, with no code: the tool takes none.
 - Unwanted case: the server reads a new bank, and the page of the tool does not list it. The build fails (`WEBSITE-INV-004`).
 
+### `WEBSITE-FR-034`
+
+The site must have a privacy policy page at `/privacy/` and `/ka/privacy/`. It covers the server at `SERVER_URL` and the site.
+
+**Why:** A directory of apps reads the policy and checks that it names the app. The general policy of the author names no app.
+
+**Examples:**
+
+- Normal case: the page names Georgia MCP, the operator, the effective date, and the address of contact.
+- Limit case: a reader runs the server on their own computer. The page says that the policy does not cover that server.
+
+### `WEBSITE-FR-035`
+
+The privacy policy must name each record that the server and the site keep: the access log of each request, and the record of each tool call. It must say that the server keeps no input of a tool call and no content of a request or of a response.
+
+**Why:** The reviewer of a directory checks what the server collects. The logs are the only records.
+
+**Examples:**
+
+- Normal case: the page lists the time, the method, the path, the status, the duration, the IP address, and the user agent of a request.
+- Unwanted case: the page claims that the server keeps no IP address.
+
+### `WEBSITE-FR-036`
+
+The site must have a terms of service page at `/terms/` and `/ka/terms/`, for the server at `SERVER_URL` and the site.
+
+### `WEBSITE-FR-037`
+
+The footer of each page must link to the privacy policy page and the terms of service page in the language of the page.
+
+**Examples:**
+
+- Normal case: the footer of `/ka/tools/fuel_get_prices/` links to `/ka/privacy/` and `/ka/terms/`.
+- Limit case: the page of `WEBSITE-FR-021` links to `/privacy/` and `/terms/`.
+
 ## 7. Non-functional requirements
 
 ### `WEBSITE-NFR-001`
@@ -309,6 +346,7 @@ When a tool definition lists the vendors of the server, the vendors of the tool 
 | `BRD-014` | Brand     | The copy of each page.                                      |
 | `BRD-015` | Brand     | The two languages, and the real outputs.                    |
 | `MCP-005` | MCP tools | The `source` and the `as_of` of each tool example.          |
+| `LOG-008` to `LOG-010` | Logging | The records that the privacy policy names.          |
 
 ## 10. Open questions
 
@@ -319,6 +357,7 @@ When a tool definition lists the vendors of the server, the vendors of the tool 
 | 3   | Must the install guide also show a local server, with the binary or the container image?     | Owner | Yes, both. `WEBSITE-FR-009`. |
 | 4   | The refresh of `WEBSITE-FR-018` calls `rates_get_commercial_rates` for TBC Bank, which needs a key. Does the refresh use the key of the owner? | Owner | Yes, for now. |
 | 5   | The binary installs with `go install` only, and the image builds from the source only. Does a release publish a binary for each platform and an image to a registry? The guides of `WEBSITE-FR-009` depend on it. | Owner | Yes, later. The guides show the release binary and `ghcr.io/abgeo/georgia-mcp` now. |
+| 6   | How long does the host keep the logs? `WEBSITE-FR-035` needs the period. | Owner | Open. The policy says "only as long as needed to run the service" until the owner gives a period. |
 
 ## Retired identifiers
 

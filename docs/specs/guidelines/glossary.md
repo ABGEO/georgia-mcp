@@ -146,3 +146,5 @@ define it. The identifier of a term is `GLO-<term>`.
 | chat example       | A question in the words of a person and the answer of a model, written for the site from a recorded output. |
 | tool summary       | One or two sentences, written for the site, that say what a tool answers.                             |
 | install guide      | The steps that connect one client to the server.                                                      |
+| legal page         | The privacy policy page or the terms of service page of the site.                                     |
+| access log         | The record of one HTTP request that the server or the site writes.                                    |

@@ -4,11 +4,11 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-22
+updated: 2026-10-24
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
-constrained_by: [BRD, MCP, LNG, BLD, GIT]
+constrained_by: [BRD, MCP, LNG, BLD, GIT, LOG]
 requirements: features/website/requirements.md
 ---
 
@@ -17,7 +17,7 @@ requirements: features/website/requirements.md
 ## 1. Summary
 
 A static Astro site in `website/`, in English at `/` and in Georgian at `/ka/`. It
-has one home page and one tool page for each tool, in each language. The data of
+has one home page, one tool page for each tool, and two legal pages, in each language. The data of
 the tools lives in four files in the repository. One command refreshes two of them
 from the server.
 
@@ -50,6 +50,10 @@ from the server.
 | `WEBSITE-FR-032`  | `WEBSITE-DD-016`, `WEBSITE-SC-040`, `WEBSITE-SC-041`    |
 | `WEBSITE-FR-033`  | 4.2 `vendors`, `WEBSITE-DD-018`, `WEBSITE-DD-019`, `WEBSITE-SC-043`, `WEBSITE-SC-045` |
 | `WEBSITE-FR-027`  | `WEBSITE-DD-004`, `WEBSITE-SC-034`                      |
+| `WEBSITE-FR-034`  | 4.3 Pages, `WEBSITE-DD-022`, `WEBSITE-SC-047`           |
+| `WEBSITE-FR-035`  | `WEBSITE-DD-022`, `WEBSITE-DD-023`, `WEBSITE-SC-048`    |
+| `WEBSITE-FR-036`  | 4.3 Pages, `WEBSITE-DD-022`, `WEBSITE-SC-047`           |
+| `WEBSITE-FR-037`  | 4.3 Pages, `WEBSITE-SC-049`                             |
 | `WEBSITE-NFR-001` | `WEBSITE-DD-008`, `WEBSITE-SC-028`                      |
 | `WEBSITE-NFR-002` | `WEBSITE-DD-007`, `WEBSITE-SC-029`                      |
 | `WEBSITE-NFR-003` | `WEBSITE-DD-006`, `WEBSITE-SC-030`                      |
@@ -77,6 +81,7 @@ from the server.
 | `BLD-001`              | Build     | `pnpm lint`, `pnpm test`, `pnpm build`. 4.3 Commands.            |
 | `GIT-004`              | Git       | A commit of this feature has the scope `website`.                     |
 | `LNG-006`, `LNG-007`   | Language  | The test of `WEBSITE-SC-033` refuses an em dash in the copy.          |
+| `LOG-008` to `LOG-010` | Logging   | `WEBSITE-DD-023` names the records of these rules, and no other.      |
 
 `TST` does not govern `website/`. `WEBSITE-DD-012` gives the tests of this feature.
 
@@ -101,7 +106,7 @@ Every path is under `website/`. Every file is new.
 | Language     | `src/i18n/index.ts`, `src/i18n/en.ts`, `src/i18n/ka.ts` | `Lang`, `Dictionary`, `t`, `localize`, `alternate`. |
 | Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
-| Views        | `src/views/Home.astro`, `src/views/Tool.astro` | One view for both languages. A page passes `lang`.      |
+| Views        | `src/views/Home.astro`, `src/views/Tool.astro`, `src/views/Legal.astro` | One view for both languages. A page passes `lang`. |
 | Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
 | Pages        | `src/pages/`                             | 4.3 Pages.                                                    |
 | Styles       | `src/styles/tokens.css`, `src/styles/global.css` | `BRD-007`, `BRD-012`.                                 |
@@ -188,12 +193,14 @@ The `glob` loader reads `tools/*.yaml`.
 | -------------------- | ------------------------ | --------------------------------------------------- | -------------------------------- |
 | `/`                  | `/ka/`                   | `src/pages/index.astro`, `src/pages/ka/index.astro` | `WEBSITE-FR-001`, `FR-005`, `FR-007` to `FR-009`, `FR-011`, `FR-028`, `FR-030` |
 | `/tools/<name>/`     | `/ka/tools/<name>/`      | `src/pages/tools/[name].astro`, `src/pages/ka/tools/[name].astro` | `WEBSITE-FR-012` to `FR-015`, `FR-033` |
+| `/privacy/`          | `/ka/privacy/`           | `src/pages/privacy.astro`, `src/pages/ka/privacy.astro` | `WEBSITE-FR-034`, `FR-035`   |
+| `/terms/`            | `/ka/terms/`             | `src/pages/terms.astro`, `src/pages/ka/terms.astro` | `WEBSITE-FR-036`                 |
 | `/404.html`          | The same file            | `src/pages/404.astro`                               | `WEBSITE-FR-021`                 |
 
 - Each page links to its pair with `LangSwitch` and with `<link rel="alternate" hreflang>`. `WEBSITE-FR-002`.
 - No file exists under `src/pages/mcp`. `WEBSITE-FR-010`.
 - The home page holds the sections of `WEBSITE-FR-030` in order, each a `<section>` with an `id`: `intro`, `examples`, `contexts`, `install`, `tools`.
-- `Base.astro` ends each page with `Footer`: the byline of `BRD-011`, and `REPO_URL`. `WEBSITE-FR-019`.
+- `Base.astro` ends each page with `Footer`: the byline of `BRD-011`, `REPO_URL`, and the links to the two legal pages in the language of the page. `WEBSITE-FR-019`, `FR-037`.
 - `Base.astro` writes `<title>`, `<meta name="description">`, `og:title`, `og:description`, `og:image`, `og:locale`, and `twitter:card` from the dictionary of the page. `WEBSITE-FR-022`.
 
 **Data files.**
@@ -467,6 +474,29 @@ moves with left and right. `ToolList` passes `vertical`, and `InstallGuides` pas
 the keyboard pattern of a tab list in one place.
 **Alternatives:** A web component. It moves the markup into a custom element for a
 behavior of 30 lines.
+
+### `WEBSITE-DD-022`
+
+**Realizes:** `WEBSITE-FR-034`, `WEBSITE-FR-035`, `WEBSITE-FR-036`
+**Decision:** The dictionary of each language holds `legal.privacy` and `legal.terms`. Each has a `title`, a `description`, an `effective` date, and a list of `sections`, each with a `heading` and a list of `paragraphs`. `Legal.astro` renders one of them: an `<h1>`, the effective date in a `<time>`, then each section as an `<h2>` and its paragraphs, in one column of 68 characters at most. The text covers Georgia MCP alone: the operator, the hosted server, the site, the records, the public sources, a server on the computer of the reader, and the contact `me@abgeo.dev`. The effective date of both is 2026-10-24. Until the owner gives a Georgian text, `ka.legal` is `en.legal`, and the `<article>` of a Georgian legal page carries `lang="en"`.
+**Rationale:** The dictionaries already satisfy one type, so a section that one language lacks fails `astro check`. The test of `WEBSITE-SC-033` reads them. A directory of apps needs one address for each document, and the two directories share it.
+**Alternatives:** A Markdown collection. It adds a second place for the copy, and no type joins the two languages.
+
+### `WEBSITE-DD-023`
+
+**Realizes:** `WEBSITE-FR-035`, `LOG-008` to `LOG-010`
+**Decision:** The privacy policy names three records, and no other:
+
+| Record                    | Writer                 | Fields                                                                       |
+| ------------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| Access log of the server  | The server, `LOG-010`  | The time, the method, the path, the status, the duration, the IP address, the user agent. |
+| Record of a tool call     | The server, `LOG-009`  | The name of the tool, the duration, the type of an error.                    |
+| Access log of the site    | nginx, `WEBSITE-DD-017` | The time, the method, the path, the status, the size, the IP address, the user agent, the referrer. |
+
+It says that the server keeps no input of a tool call (`LOG-008`) and no body of a request or of a response, that the site sets no cookie and runs no analytics, and that the theme of `WEBSITE-DD-009` stays in the browser. It says that the server sends the public sources only the input that a call needs. It keeps the records "only as long as needed to run and protect the service", until the owner gives a period (requirements, question 6).
+**Rationale:** The policy says what the code writes. A change to a rule of `LOG` changes this table.
+**Alternatives:** A general sentence on "technical data". The reviewer of a directory asks for the fields.
+
 ## 6. Scenarios
 
 ### `WEBSITE-SC-001`
@@ -868,6 +898,33 @@ behavior of 30 lines.
 **When** the page loads and 8 seconds pass.
 **Then** one chat example shows in full, it does not change, and the player has no control.
 
+### `WEBSITE-SC-047`
+
+**Verifies:** `WEBSITE-FR-034`, `WEBSITE-FR-036`
+**Layer:** build
+
+**Given** `/privacy/`, `/ka/privacy/`, `/terms/`, and `/ka/terms/`.
+**When** the test reads each page.
+**Then** each page has an `<h1>`, a `<time datetime="2026-10-24">`, and at least one `<h2>`. Each names Georgia MCP, `SERVER_URL`, and `me@abgeo.dev`.
+
+### `WEBSITE-SC-048`
+
+**Verifies:** `WEBSITE-FR-035`
+**Layer:** build
+
+**Given** `/privacy/`.
+**When** the test reads the text of the page.
+**Then** it names the IP address, the user agent, and the name of the tool. It says that the server keeps no input of a tool call.
+
+### `WEBSITE-SC-049`
+
+**Verifies:** `WEBSITE-FR-037`
+**Layer:** build
+
+**Given** each built page and `/404.html`.
+**When** the test reads the links of the footer.
+**Then** a Georgian page links to `/ka/privacy/` and `/ka/terms/`. Any other page links to `/privacy/` and `/terms/`.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -893,6 +950,7 @@ behavior of 30 lines.
 | 19  | Write the tests of the vendors. Add the codes to `contexts.yaml` and the tool files, the checks to `buildCatalog`, and `#vendors` to `Tool.astro`. Run the refresh. Rewrite each answer from its new recording. | `WEBSITE-DD-018`, `DD-019`, `SC-043` to `SC-045` | [x] |
 | 20  | Write the test of the vendors of a card. Cap the list of `ContextCard` at three, with the count of the rest. | `WEBSITE-DD-020`, `SC-046` | [x] |
 | 21  | Derive the counts of the build tests from the data. Move the tab script of `ToolList` and `InstallGuides` to `src/lib/tabs.ts`. | `WEBSITE-DD-021`, `SC-012`, `SC-040`, `SC-045`, `SC-046` | [x] |
+| 22  | Write the tests of the legal pages and the footer. Write `legal` in both dictionaries, `Legal.astro`, the four pages, and the footer links. Add the legal pages to the check of `WEBSITE-SC-031`. | `WEBSITE-DD-022`, `DD-023`, `SC-047` to `SC-049` | [x] |
 
 ## 8. Out of scope for this specification
 
