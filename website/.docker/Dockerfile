@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN corepack enable && pnpm install --frozen-lockfile --ignore-scripts
+RUN --mount=type=cache,target=/pnpm/store \
+    corepack enable && pnpm install --frozen-lockfile --ignore-scripts --store-dir /pnpm/store
 
 COPY . .
 
