@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Glossary
@@ -132,6 +132,15 @@ define it. The identifier of a term is `GLO-<term>`.
 | itinerary          | One way to travel between two points: a sequence of legs.                                             |
 | leg                | One part of an itinerary: a walk, or a ride on one route.                                             |
 | place              | A named point in Tbilisi that a person can search: an address, a street, or a building.               |
+
+## Postal
+
+| Term               | Meaning                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| Georgian Post      | The national postal operator of Georgia. Vendor code `gpost`. |
+| postal code        | The 4-digit code of Georgian Post for an address: `0186`. |
+| address            | In `postal`, the text of Georgian Post that names a settlement and a street: `ქალაქი თბილისი, ამბერკი ტაბიძის ქუჩა`. |
+| district           | In `postal`, the city or the municipality under which Georgian Post groups an address. |
 
 ## The website
 
