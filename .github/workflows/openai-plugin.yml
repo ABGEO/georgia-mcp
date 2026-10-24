@@ -1,0 +1,67 @@
+name: openai-plugin
+
+on:
+  release:
+    types: [ published ]
+
+permissions: { }
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The release notes of the plugin keep the changes that a user can see: the
+      # entries of the breaking changes, the features, and the bug fixes.
+      - name: Release notes
+        env:
+          BODY: ${{ github.event.release.body }}
+        run: |
+          printf '%s\n' "$BODY" | tr -d '\r' | awk '
+            /^## / {
+              section = substr($0, 4)
+              keep = section == "Breaking changes" || section == "Features" || section == "Bug fixes"
+              next
+            }
+            keep && /^- / {
+              line = substr($0, 3)
+              sub(/ \(#[0-9]+\)$/, "", line)
+              gsub(/\*\*/, "", line)
+              if (section != printed) {
+                if (printed != "") print ""
+                print section
+                printed = section
+              }
+              print "- " line
+            }
+          ' > "$RUNNER_TEMP/release-notes.txt"
+          if [ ! -s "$RUNNER_TEMP/release-notes.txt" ]; then
+            echo "This version has no change that a user can see." > "$RUNNER_TEMP/release-notes.txt"
+          fi
+          cat "$RUNNER_TEMP/release-notes.txt"
+
+      - name: Package
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version="${TAG#v}"
+          package="$RUNNER_TEMP/georgia-public-data"
+          cp -R build/openai-plugin "$package"
+          jq --arg version "$version" --rawfile notes "$RUNNER_TEMP/release-notes.txt" '
+            .version = $version
+            | .extensions["com.openai"].publication.release_notes = ($notes | rtrimstr("\n"))
+          ' build/openai-plugin/plugin.json > "$package/plugin.json"
+          (cd "$package" && zip -r -X "$RUNNER_TEMP/georgia-public-data-$version.zip" .)
+          echo "ZIP=$RUNNER_TEMP/georgia-public-data-$version.zip" >> "$GITHUB_ENV"
+
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" "$ZIP" --clobber --repo "$GITHUB_REPOSITORY"
