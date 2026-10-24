@@ -368,12 +368,14 @@ after the sixth until a person clicks. The hidden rows are part of the answer.
 
 **Realizes:** `POSTCODE-FR-009`, `POSTCODE-INV-002`
 **Decision:** The client returns `ErrMalformedResult` for a row before any district, a
-row with no code or no address, and an answer with no row and no `p` element. An answer
-with no row and a `p` element is an empty list. The client returns `ErrNoToken` when the
+row with no code or no address, an answer with no row and no `p` element, and an answer
+with a `title` or a `form` element. An answer with no row and a `p` element is an empty
+list. The client returns `ErrNoToken` when the
 page has no form token or the answer has no cookie token.
 **Rationale:** An answer with no match holds the rules of the search in a `p`. An answer
 with neither rows nor that `p` means a change of the page, and an empty list then hides
-the failure.
+the failure. A `title` or a `form` marks a whole page, such as an error page or the page
+of postal codes itself. Its `p` elements are not the note.
 **Alternatives:** A match on the text of the rules. The text differs in each language.
 
 ### `POSTCODE-DD-004`
@@ -473,7 +475,7 @@ context: `POSTCODE-SC-014` with the recorded answer, `POSTCODE-SC-018`, and
 | `POSTCODE-SC-004` | `POSTCODE-FR-001` | unit | `find-none-ka.html` gives an empty list and no error. |
 | `POSTCODE-SC-005` | `POSTCODE-FR-003`, `POSTCODE-FR-004` | unit | `PostalCodes(ctx, "Rustavi", "en")` sends the cookie `lang=en` on both calls. `find-rustavi-en.html` gives the first row `{"Rustavi City", "3700", "City Rustavi"}`. |
 | `POSTCODE-SC-006` | `POSTCODE-FR-009` | unit | `postal-codes-no-form.html`, and a page with no `Set-Cookie`, each give `ErrNoToken` and send no POST. |
-| `POSTCODE-SC-007` | `POSTCODE-FR-009` | unit | `find-malformed.html` gives `ErrMalformedResult`. A row before a district, and an answer with no row and no `p`, give it too. |
+| `POSTCODE-SC-007` | `POSTCODE-FR-009` | unit | `find-malformed.html` gives `ErrMalformedResult`. A row before a district, an answer with no row and no `p`, and `postal-codes.html` as an answer give it too. |
 | `POSTCODE-SC-008` | `POSTCODE-FR-009` | unit | A 500 on the GET, and a 500 on the POST, give an `*APIError` with 500. `errors.Is(err, ErrUnexpectedStatus)` holds. |
 | `POSTCODE-SC-009` | `POSTCODE-INV-001` | unit | `ParsePostalCode`: `0186` is valid and keeps `"0186"`. `186`, `01860`, `01a6`, `٠١٨٦`, and the empty text give `ErrInvalidPostalCode`. A fuzz test holds that each valid result has 4 ASCII digits. |
 | `POSTCODE-SC-010` | `POSTCODE-FR-009` | unit | The adapter with `find-short-code.html` returns an error that wraps `kernel.ErrSourceUnavailable`. A client error wraps it too. |
@@ -485,8 +487,8 @@ context: `POSTCODE-SC-014` with the recorded answer, `POSTCODE-SC-018`, and
 | `POSTCODE-SC-016` | `POSTCODE-NFR-001` | unit | In `synctest`, a search, then the same search after 6 days 23 hours, sends one load. After 7 days, it sends a second load. |
 | `POSTCODE-SC-017` | `POSTCODE-NFR-002` | unit | In `synctest`, the source fails with `kernel.ErrSourceUnavailable` after one read. At 8 days, the cache returns the list with `Stale` true. At 30 days and 1 second, it returns the error. |
 | `POSTCODE-SC-018` | `POSTCODE-NFR-003` | integration | Two tool calls with `რუსთავი` and `ka` send 2 calls to the vendor in total. A third call with `en` sends 2 more. |
-| `POSTCODE-SC-019` | `POSTCODE-NFR-005` | unit | `postal.Defaults().GPost.HTTP` has the rate 1 and the burst 1. |
-| `POSTCODE-SC-020` | `POSTCODE-FR-010` | unit | `postal.New` with `Enabled` false registers no tool. The default configuration registers `postal_search_codes`. |
+| `POSTCODE-SC-019` | `POSTCODE-NFR-005` | unit | In `bootstrap`, `LoadConfig` with no variable of postal gives Georgian Post on, at `https://www.gpost.ge`, with a timeout of 10 seconds, the rate 1, and the burst 1. |
+| `POSTCODE-SC-020` | `POSTCODE-FR-010` | unit | `postal.New` with `Enabled` false registers no tool. A configuration with `Enabled` true registers `postal_search_codes`. |
 | `POSTCODE-SC-021` | `POSTCODE-FR-001` | live | `PostalCodes(ctx, "ამბერკი", "ka")` against `www.gpost.ge` holds the row with `0186` and `ქალაქი თბილისი, ამბერკი ტაბიძის ქუჩა`. |
 | `POSTCODE-SC-022` | `POSTCODE-FR-001`, `POSTCODE-FR-003`, `POSTCODE-INV-002` | unit | The adapter with `find-rustavi-en.html` and `en` sends the cookie `lang=en`, and returns 12 addresses. The first is `{Text: "City Rustavi", District: "Rustavi City", Code: 3700}`. `ReadAt` is the instant of `now` in `kernel.TbilisiZone()`. `find-none-ka.html` gives an empty list and no error. |
 

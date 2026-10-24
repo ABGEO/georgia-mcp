@@ -324,6 +324,7 @@ func TestPostalCodesRefusesAMalformedAnswer(t *testing.T) {
 				`<div class="com-cell-postcode"><div class="com-postcode-name">0186</div></div>`),
 		},
 		{name: "no row and no note", result: []byte(`<div class="changed">0186</div>`)},
+		{name: "a whole page", result: readFile(t, "testdata/postal-codes.html")},
 	}
 
 	for _, test := range tests {

@@ -169,11 +169,12 @@ func inputValue(form *html.Node, name string) string {
 
 // parseRows reads the rows of a search answer in the order of the document. A district
 // starts a group, and each row after it belongs to that group. An answer with no row is
-// a valid empty answer only when it holds the note of the page, a p element.
+// a valid empty answer only when it holds the note of the page, a p element. An answer
+// with a title or a form element is a whole page, not a search answer.
 func parseRows(body []byte) ([]PostalCodeRow, error) {
-	doc, err := html.Parse(bytes.NewReader(body))
+	doc, err := parseAnswer(body)
 	if err != nil {
-		return nil, fmt.Errorf("parsing the answer: %w", err)
+		return nil, err
 	}
 
 	var (
@@ -207,6 +208,30 @@ func parseRows(body []byte) ([]PostalCodeRow, error) {
 	}
 
 	return rows, nil
+}
+
+func parseAnswer(body []byte) (*html.Node, error) {
+	doc, err := html.Parse(bytes.NewReader(body))
+	if err != nil {
+		return nil, fmt.Errorf("parsing the answer: %w", err)
+	}
+
+	if isPage(doc) {
+		return nil, fmt.Errorf("%w: a whole page", ErrMalformedResult)
+	}
+
+	return doc, nil
+}
+
+func isPage(doc *html.Node) bool {
+	for node := range doc.Descendants() {
+		if node.Type == html.ElementNode &&
+			(node.DataAtom == atom.Title || node.DataAtom == atom.Form) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func readRow(node *html.Node, district string, number int) (PostalCodeRow, error) {

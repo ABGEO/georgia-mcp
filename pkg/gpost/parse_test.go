@@ -13,6 +13,7 @@ func FuzzParseRows(f *testing.F) {
 		"testdata/find-chavchavadze-ka.html",
 		"testdata/find-none-ka.html",
 		"testdata/find-malformed.html",
+		"testdata/postal-codes.html",
 	} {
 		recorded, err := os.ReadFile(path) //nolint:gosec // The path names a file of testdata.
 		if err != nil {
