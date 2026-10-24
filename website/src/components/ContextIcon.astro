@@ -1,12 +1,12 @@
 ---
-import { Bus, CreditCard, Fuel, Landmark } from "@lucide/astro"
+import { Bus, CreditCard, Fuel, Landmark, Mailbox } from "@lucide/astro"
 
 interface Props {
   name: string
   size?: number
 }
 
-const icons = { landmark: Landmark, fuel: Fuel, bus: Bus, "credit-card": CreditCard }
+const icons = { landmark: Landmark, fuel: Fuel, bus: Bus, "credit-card": CreditCard, mailbox: Mailbox }
 
 const { name, size = 28 } = Astro.props
 const Icon = icons[name as keyof typeof icons] ?? Landmark

@@ -378,6 +378,34 @@
       "meaning": "benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students."
     }
   },
+  "postal_search_codes.rustavi": {
+    "tool": "postal_search_codes",
+    "example": "rustavi",
+    "recordedAt": "2026-10-24T19:59:57.521Z",
+    "output": {
+      "addresses": [
+        {
+          "address": "City Rustavi",
+          "district": "Rustavi City",
+          "postal_code": "3700"
+        },
+        {
+          "address": "Village Rustavi",
+          "district": "Aspindzis District",
+          "postal_code": "0500"
+        },
+        {
+          "address": "City Tbilisi, Rustavi highway",
+          "district": "Tbilisi City",
+          "postal_code": "0114"
+        }
+      ],
+      "as_of": "2026-10-24T23:59:57+04:00",
+      "source": "Georgian Post",
+      "stale": false,
+      "total": 12
+    }
+  },
   "rates_get_commercial_rates.usd": {
     "tool": "rates_get_commercial_rates",
     "example": "usd",

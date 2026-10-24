@@ -4,7 +4,7 @@ title: Brand
 type: guideline
 status: active
 created: 2026-10-20
-updated: 2026-10-21
+updated: 2026-10-25
 scope: [website/, README.md, the social preview image]
 related: [LNG, GLO]
 ---
@@ -91,6 +91,7 @@ Each hue has a pastel fill and a deep tone for text. Wine is the brand hue.
 | `peach`  | `#F9CDB8`  | `#9A3D22`  | `#4E2C22` | `#F5B39A` | The fuel subject.           |
 | `sky`    | `#C9DEEE`  | `#2C5B7A`  | `#1F3546` | `#A9CBE6` | The transit subject.        |
 | `lilac`  | `#E2D2EC`  | `#6E3B6B`  | `#3A2A42` | `#D5BDE6` | The offers subject.         |
+| `sage`   | `#D3E6CF`  | `#33613A`  | `#22382A` | `#AFD6B4` | The postal subject.         |
 
 - A fill is a background. Never write text in a fill color.
 - On a fill, write in `ink` or in the text tone of the same hue.

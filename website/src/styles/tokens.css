@@ -14,6 +14,8 @@
   --sky: #2c5b7a;
   --lilac-fill: #e2d2ec;
   --lilac: #6e3b6b;
+  --sage-fill: #d3e6cf;
+  --sage: #33613a;
   color-scheme: light;
 }
 
@@ -34,6 +36,8 @@
     --sky: #a9cbe6;
     --lilac-fill: #3a2a42;
     --lilac: #d5bde6;
+    --sage-fill: #22382a;
+    --sage: #afd6b4;
     color-scheme: dark;
   }
 }
@@ -54,6 +58,8 @@
   --sky: #a9cbe6;
   --lilac-fill: #3a2a42;
   --lilac: #d5bde6;
+  --sage-fill: #22382a;
+  --sage: #afd6b4;
   color-scheme: dark;
 }
 
@@ -62,3 +68,4 @@
 [data-hue="peach"] { --hue-fill: var(--peach-fill); --hue: var(--peach); }
 [data-hue="sky"] { --hue-fill: var(--sky-fill); --hue: var(--sky); }
 [data-hue="lilac"] { --hue-fill: var(--lilac-fill); --hue: var(--lilac); }
+[data-hue="sage"] { --hue-fill: var(--sage-fill); --hue: var(--sage); }

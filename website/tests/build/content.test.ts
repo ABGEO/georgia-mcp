@@ -11,7 +11,7 @@ describe("the tool list", () => {
     const tools = page(path).querySelector("#tools")
     const names = tools?.querySelectorAll("code").map((code) => text(code)) ?? []
 
-    expect(tools?.querySelectorAll("section.group")).toHaveLength(4)
+    expect(tools?.querySelectorAll("section.group")).toHaveLength(Object.keys(contexts).length)
     expect(names.toSorted()).toEqual(Object.keys(definitions).toSorted())
     for (const name of names) expect(text(tools)).toContain(toolContent(name).summary[lang])
   })

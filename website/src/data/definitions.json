@@ -639,6 +639,101 @@
       "openWorldHint": true
     }
   },
+  "postal_search_codes": {
+    "name": "postal_search_codes",
+    "title": "Search the postal codes of Georgia",
+    "description": "Finds the postal codes of Georgian Post for an address, a street, a town, or a village of Georgia, by text in Georgian or English. Returns each matching address with its 4-digit postal code and its district. Georgian Post gives a postal code for each street in Tbilisi, Batumi, and Kutaisi only. For another town or a village, search its name. Data from the web page of Georgian Post.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "An address, a street, a town, or a village of Georgia, in Georgian or English. 3 to 100 characters."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the addresses: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of addresses, 1 to 100. The default is 20."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Georgian Post."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the postal codes, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Georgian Post did not answer and the server returns postal codes it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of addresses that Georgian Post matched. More than the count of addresses when the limit cut the list."
+        },
+        "addresses": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "postal_code": {
+                "type": "string",
+                "description": "The postal code: 4 digits as a string. It can start with 0."
+              },
+              "address": {
+                "type": "string",
+                "description": "The address as Georgian Post writes it: the settlement, then the street. A part in parentheses limits the postal code to some house numbers."
+              },
+              "district": {
+                "type": "string",
+                "description": "The city or the municipality under which Georgian Post groups the address."
+              }
+            },
+            "required": [
+              "postal_code",
+              "address",
+              "district"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The matching addresses, in the order of Georgian Post."
+        },
+        "note": {
+          "type": "string",
+          "description": "How to search again, when the list is empty."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "addresses"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "rates_get_commercial_rates": {
     "name": "rates_get_commercial_rates",
     "title": "Commercial exchange rates of Georgian banks",

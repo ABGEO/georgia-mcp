@@ -87,3 +87,14 @@ offers:
     - code: liberty
       en: Liberty Bank
       ka: ლიბერთი ბანკი
+postal:
+  order: 5
+  hue: sage
+  icon: mailbox
+  name:
+    en: Postal codes
+    ka: საფოსტო ინდექსები
+  vendors:
+    - code: gpost
+      en: Georgian Post
+      ka: საქართველოს ფოსტა

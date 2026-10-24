@@ -8,7 +8,7 @@ export const en = {
   meta: {
     title: "Georgia MCP: Georgian public data in your chat",
     description:
-      "An MCP server for Georgian public data. Ask Claude, ChatGPT, or your favorite AI assistant about exchange rates, fuel prices, Tbilisi transit, and card offers.",
+      "An MCP server for Georgian public data. Ask Claude, ChatGPT, or your favorite AI assistant about exchange rates, fuel prices, Tbilisi transit, card offers, and postal codes.",
     tool: (title: string) => `${title} · Georgia MCP`,
     locale: "en_US",
   },
@@ -25,14 +25,14 @@ export const en = {
     eyebrow: "An MCP server for Georgia",
     title: "Georgia's public data,",
     titleAccent: "inside your chat.",
-    lead: "Ask Claude, ChatGPT, or your favorite AI assistant about the lari, fuel prices, Tbilisi buses, or card offers.",
+    lead: "Ask Claude, ChatGPT, or your favorite AI assistant about the lari, fuel prices, Tbilisi buses, card offers, or postal codes.",
     install: "Install",
     tools: "See the tools",
     stamp: "Read-only",
   },
   contexts: {
     heading: "What you can ask",
-    lead: "Four subjects, each read from the organizations that publish the data.",
+    lead: "Five subjects, each read from the organizations that publish the data.",
     tools: (count: number) => (count === 1 ? "1 tool" : `${count} tools`),
     sources: "Sources",
     more: (count: number) => `+${count} more`,

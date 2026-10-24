@@ -1,0 +1,16 @@
+context: postal
+vendors: [gpost]
+summary:
+  en: The postal code of an address, a street, a town, or a village, from Georgian Post.
+  ka: მისამართის, ქუჩის, ქალაქის ან სოფლის საფოსტო ინდექსი, საქართველოს ფოსტიდან.
+examples:
+  - id: rustavi
+    question:
+      en: What is the postal code of Rustavi?
+      ka: რა არის რუსთავის საფოსტო ინდექსი?
+    answer:
+      en: "Georgian Post gives 3700 for the city of Rustavi. A village of the same name in Aspindza municipality has 0500, and Rustavi highway in Tbilisi has 0114."
+      ka: "საქართველოს ფოსტის მიხედვით ქალაქ რუსთავის ინდექსია 3700. ასპინძის მუნიციპალიტეტის სოფელ რუსთავს აქვს 0500, ხოლო თბილისში რუსთავის გზატკეცილს 0114."
+    input:
+      query: Rustavi
+      limit: 3
