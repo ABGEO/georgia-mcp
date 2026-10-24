@@ -54,6 +54,7 @@ from the server.
 | `WEBSITE-FR-035`  | `WEBSITE-DD-022`, `WEBSITE-DD-023`, `WEBSITE-SC-048`    |
 | `WEBSITE-FR-036`  | 4.3 Pages, `WEBSITE-DD-022`, `WEBSITE-SC-047`           |
 | `WEBSITE-FR-037`  | 4.3 Pages, `WEBSITE-SC-049`                             |
+| `WEBSITE-FR-038`  | 4.1 Static, `WEBSITE-DD-024`, `WEBSITE-SC-050`          |
 | `WEBSITE-NFR-001` | `WEBSITE-DD-008`, `WEBSITE-SC-028`                      |
 | `WEBSITE-NFR-002` | `WEBSITE-DD-007`, `WEBSITE-SC-029`                      |
 | `WEBSITE-NFR-003` | `WEBSITE-DD-006`, `WEBSITE-SC-030`                      |
@@ -110,7 +111,7 @@ Every path is under `website/`. Every file is new.
 | Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
 | Pages        | `src/pages/`                             | 4.3 Pages.                                                    |
 | Styles       | `src/styles/tokens.css`, `src/styles/global.css` | `BRD-007`, `BRD-012`.                                 |
-| Static       | `public/favicon.svg`, `public/apple-touch-icon.png`, `public/og/en.png`, `public/og/ka.png`, `public/robots.txt` | The icons, the preview images, and the robots file that names the sitemap. |
+| Static       | `public/favicon.svg`, `public/apple-touch-icon.png`, `public/og/en.png`, `public/og/ka.png`, `public/robots.txt`, `public/.well-known/openai-apps-challenge` | The icons, the preview images, the robots file that names the sitemap, and the token of `WEBSITE-FR-038`. |
 | Image        | `.docker/Dockerfile`, `.docker/Dockerfile.dockerignore`, `.docker/nginx.conf` | The container image of the site. `WEBSITE-DD-017`. |
 
 `src/site.ts`:
@@ -496,6 +497,13 @@ behavior of 30 lines.
 It says that the server keeps no input of a tool call (`LOG-008`) and no body of a request or of a response, that the site sets no cookie and runs no analytics, and that the theme of `WEBSITE-DD-009` stays in the browser. It says that the server sends the public sources only the input that a call needs. It keeps the records "only as long as needed to run and protect the service", until the owner gives a period (requirements, question 6).
 **Rationale:** The policy says what the code writes. A change to a rule of `LOG` changes this table.
 **Alternatives:** A general sentence on "technical data". The reviewer of a directory asks for the fields.
+
+### `WEBSITE-DD-024`
+
+**Realizes:** `WEBSITE-FR-038`
+**Decision:** `public/.well-known/openai-apps-challenge` holds the token, with no line break at the end. The build copies it to `dist/`. `.docker/nginx.conf` serves `/.well-known/` with the type `text/plain`.
+**Rationale:** The proxy sends every address but `/mcp` to the site, so a static file answers at the root of the host. The token is public: it proves control of the host and grants nothing.
+**Alternatives:** A handler in the server. It puts a fact of one directory into the server, and the proxy sends the address to the site.
 
 ## 6. Scenarios
 
@@ -925,6 +933,15 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **When** the test reads the links of the footer.
 **Then** a Georgian page links to `/ka/privacy/` and `/ka/terms/`. Any other page links to `/privacy/` and `/terms/`.
 
+### `WEBSITE-SC-050`
+
+**Verifies:** `WEBSITE-FR-038`
+**Layer:** build
+
+**Given** a build of the site.
+**When** the test reads `dist/.well-known/openai-apps-challenge`.
+**Then** the file holds one line of 43 characters from the alphabet of base64url, and nothing else.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -951,6 +968,7 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 | 20  | Write the test of the vendors of a card. Cap the list of `ContextCard` at three, with the count of the rest. | `WEBSITE-DD-020`, `SC-046` | [x] |
 | 21  | Derive the counts of the build tests from the data. Move the tab script of `ToolList` and `InstallGuides` to `src/lib/tabs.ts`. | `WEBSITE-DD-021`, `SC-012`, `SC-040`, `SC-045`, `SC-046` | [x] |
 | 22  | Write the tests of the legal pages and the footer. Write `legal` in both dictionaries, `Legal.astro`, the four pages, and the footer links. Add the legal pages to the check of `WEBSITE-SC-031`. | `WEBSITE-DD-022`, `DD-023`, `SC-047` to `SC-049` | [x] |
+| 23  | Write the test of the token. Add the token file and the `text/plain` type of `/.well-known/` to `nginx.conf`. | `WEBSITE-DD-024`, `SC-050` | [x] |
 
 ## 8. Out of scope for this specification
 

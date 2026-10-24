@@ -285,6 +285,17 @@ The footer of each page must link to the privacy policy page and the terms of se
 - Normal case: the footer of `/ka/tools/fuel_get_prices/` links to `/ka/privacy/` and `/ka/terms/`.
 - Limit case: the page of `WEBSITE-FR-021` links to `/privacy/` and `/terms/`.
 
+### `WEBSITE-FR-038`
+
+The site must answer `/.well-known/openai-apps-challenge` with the verification token that OpenAI gives the owner, as plain text.
+
+**Why:** OpenAI checks that the owner controls the host of the server before it lists the app. The site and the server share the host.
+
+**Examples:**
+
+- Normal case: a request to the address answers 200 with the token alone.
+- Limit case: OpenAI gives a new token. The owner replaces the file, and the next build serves it.
+
 ## 7. Non-functional requirements
 
 ### `WEBSITE-NFR-001`
