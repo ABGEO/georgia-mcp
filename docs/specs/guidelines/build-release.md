@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -13,46 +13,30 @@ related: [ARC, CLT, GO, TST]
 
 ## BLD-001
 
-Run the linter, the tests, and the build of each module that the change touches.
+Run the linter, the tests, and the build of each part that the change touches.
 Every command must pass before the work is complete.
 
-| Module you changed | Commands                                                                          |
-| ------------------ | --------------------------------------------------------------------------------- |
-| Server (`.`)       | `golangci-lint run ./...`, `go test -race ./...`, `go build ./...`                |
-| `pkg/<vendor>`     | `cd pkg/<vendor> && golangci-lint run ./... && go test -race ./...`               |
-| `website/`         | `cd website && pnpm lint && pnpm test && pnpm build`                         |
-
-A change in a vendor client touches the server. Run the server commands too.
+| You changed                  | Commands                                                           |
+| ---------------------------- | ------------------------------------------------------------------ |
+| Go (`internal/`, `pkg/`, `cmd/`) | `golangci-lint run ./...`, `go test -race ./...`, `go build ./...` |
+| `website/`                   | `cd website && pnpm lint && pnpm test && pnpm build`               |
 
 `Taskfile.yml` runs each row with one command: `task lint`, `task test`, and `task build`
-take `MODULE=pkg/<vendor>`, and `task website:lint`, `task website:test`, and
+run the Go commands, and `task website:lint`, `task website:test`, and
 `task website:build` run the commands of `website/`. A task of the website stops when
 the version of Node is older than `website/.nvmrc`.
 
 ## BLD-002
 
-`go.work` and the `go.mod` of the server declare the current Go release, as
-`go 1.27.2`. The `go.mod` of a vendor client declares the oldest Go release that the
-Go team still supports, as `go 1.26.0`.
+`go.mod` declares the current Go release, as `go 1.27.2`.
 
-**Why:** Since Go 1.21, the `go` line is a minimum that the toolchain enforces. A
-client that declares the newest release forces every project that imports it to
-upgrade. The server is a binary, so it takes the newest release.
+**Why:** The server is a binary, so it takes the newest release. A project that imports
+a vendor client needs the same release.
 
 ## BLD-003
 
-`go.work` gives the server the local copy of each vendor client during development.
-Before the first tag of a client, the `go.mod` of the server holds no requirement of it:
-Go checks a required pseudo-version against the repository, even in the workspace. A
-release tags the client first (`GIT-007`), then requires that tag in the `go.mod` of the
-server.
-Before a release of the server, `task release-check` passes. It runs
-`GOWORK=off go build ./...` in the server module, and `BLD-007`. `task build` keeps the
-workspace, so it passes before a tag of a client exists.
-
-**Why:** `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest` reads
-`go.mod`, not `go.work`. Only a build with the workspace off proves that `go.mod` is
-complete.
+Before a release of the server, `task release-check` passes. It runs `go build ./...`
+and `BLD-007`.
 
 ## BLD-004
 
@@ -65,8 +49,7 @@ passes no version with `-ldflags`.
 
 The container image builds with `CGO_ENABLED=0` and `-trimpath` in a multi-stage
 `build/package/Dockerfile`, from the repository root. The build stage copies the whole
-repository, `.git` and `go.work` included, so the workspace resolves every module and Go
-writes the version of `BLD-004`. The build stage runs on `$BUILDPLATFORM` and compiles with
+repository, `.git` included, so Go writes the version of `BLD-004`. The build stage runs on `$BUILDPLATFORM` and compiles with
 `GOOS=$TARGETOS GOARCH=$TARGETARCH`, so a second platform needs no emulation. Cache mounts keep the module cache and the build cache. The final stage is a distroless static image
 that runs as a user that is not root. Its command is `georgia-mcp serve`.
 
@@ -86,7 +69,7 @@ conflict with those of the project.
 
 ## BLD-007
 
-Before a release, `go tool govulncheck ./...` passes in each module.
+Before a release, `go tool govulncheck ./...` passes.
 
 ## BLD-008
 

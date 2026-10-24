@@ -4,7 +4,7 @@ title: Git conventions
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-20
+updated: 2026-10-25
 scope: [.]
 related: [PRC, LNG, CLT]
 ---
@@ -80,10 +80,9 @@ Do not add a trailer, a line, or a footer that names a tool or a model.
 
 ## GIT-007
 
-A release of a vendor client is a tag `pkg/<vendor>/v<semver>`. See `CLT-011`.
-A release of the server is a tag `v<semver>`.
+A release is a tag `v<semver>`. A vendor client has no tag of its own.
 
-**Why:** The Go module proxy finds a module in a subdirectory by the directory prefix of the tag.
+**Why:** The repository is one module. One tag versions the server and every client.
 
 ## Retired identifiers
 

@@ -4,7 +4,7 @@ title: Package layout
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 scope: [., cmd/, internal/, pkg/, build/, deployments/, configs/, test/]
 related: [ARC, DOM, CLT, GO]
 ---
@@ -33,7 +33,7 @@ internal/
     vendors/                     The registry of the vendors of a context. See PKG-003.
     mcpserver/                   The MCP server and its middleware. See MCP.
     cache/                       The cache. See RSL.
-pkg/<vendor>/                    One vendor client module. See CLT.
+pkg/<vendor>/                    One vendor client package. See CLT.
 pkg/vendorhttp/                  The request of every vendor client. See ADR-0006.
 build/package/                   The Dockerfile and its ignore file. See BLD-005.
 deployments/                     The compose file of a local run.
@@ -104,8 +104,8 @@ A package with more than one file keeps its package comment in `doc.go`.
 
 ## PKG-007
 
-Every package of the server lives under `internal`. The server module exports nothing.
-A vendor client module exports its client. See `CLT-001`.
+Every package of the server lives under `internal`. Only `pkg/` is public: each vendor
+client and `pkg/vendorhttp`. See `CLT-001`.
 
 ## Retired identifiers
 

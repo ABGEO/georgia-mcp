@@ -83,7 +83,7 @@ It holds every technical decision that the code generation needs.
 - Write the code. Run the tests until they pass.
 - Do not change a scenario or a test to make a test pass. Go to section 4.
 - A test cites the scenario that it verifies. Production code cites none. See `TRC-007`.
-- Run the linter, the tests, and the build of each module that the change touches.
+- Run the linter, the tests, and the build of each part that the change touches.
   `BLD-001` gives the commands.
 - A pass is an exit code. A visual check is not a pass.
 

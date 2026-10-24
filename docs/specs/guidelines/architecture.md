@@ -4,7 +4,7 @@ title: Architecture
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-25
 scope: [., cmd/, internal/, pkg/]
 related: [DOM, PKG, MCP, CLT, BLD]
 ---
@@ -21,7 +21,7 @@ public services. One binary holds every tool.
 
 ## ARC-002
 
-The language is Go. `go.work` holds the Go version.
+The language is Go. `go.mod` holds the Go version.
 
 ## ARC-003
 
@@ -33,17 +33,15 @@ client with no network setup.
 
 ## ARC-004
 
-The repository holds two kinds of Go module. `go.work` lists every module.
+The repository is one Go module, `github.com/abgeo/georgia-mcp`, with one `go.mod`.
 
-| Path               | Kind          | Module path                                    |
+| Path               | Kind          | Import path                                    |
 | ------------------ | ------------- | ---------------------------------------------- |
-| `.`                | Server        | `github.com/abgeo/georgia-mcp`                 |
+| `internal/`        | Server        | `github.com/abgeo/georgia-mcp/internal/...`    |
 | `pkg/<vendor>`     | Vendor client | `github.com/abgeo/georgia-mcp/pkg/<vendor>`     |
 
-`BLD-002` gives the Go version of each module.
-
-**Why:** A vendor client is useful to another project. Its own module gives it its
-own version and its own dependencies. See `CLT-001`.
+**Why:** One module has one version, one set of dependencies, and one build. A vendor
+client under `pkg/` stays importable by another project. See `CLT-001`.
 
 ## ARC-005
 

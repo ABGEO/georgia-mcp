@@ -26,7 +26,7 @@ every rule in that file.
 | `DOM` | [domain.md](./domain.md)                   | The bounded contexts and the domain model.                 |
 | `PKG` | [package-layout.md](./package-layout.md)   | The directories and the package names.                     |
 | `MCP` | [mcp-tools.md](./mcp-tools.md)             | The MCP server and the contract of a tool.                 |
-| `CLT` | [clients.md](./clients.md)                 | The vendor client modules.                                 |
+| `CLT` | [clients.md](./clients.md)                 | The vendor client packages.                                |
 | `RSL` | [resilience.md](./resilience.md)           | The timeouts, the cache, and the limits of a vendor call.  |
 | `API` | [http.md](./http.md)                       | The HTTP routes and the middleware.                        |
 | `CFG` | [configuration.md](./configuration.md)     | The configuration and the secrets.                         |
@@ -52,7 +52,7 @@ every rule in that file.
 | A bounded context, a value object, or a domain error       | `DOM`     |
 | A directory or a package name                              | `PKG`     |
 | An MCP tool, its input, its output, or its error           | `MCP`     |
-| A vendor client module                                     | `CLT`     |
+| A vendor client package                                    | `CLT`     |
 | A timeout, a cache, a rate limit, or a retry               | `RSL`     |
 | An HTTP route or the middleware                            | `API`     |
 | A configuration value or a secret                          | `CFG`     |

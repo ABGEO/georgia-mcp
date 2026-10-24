@@ -4,27 +4,27 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
 
 # Vendor clients
 
-A vendor client is a Go module that calls the API of one vendor, or reads its web
+A vendor client is a Go package that calls the API of one vendor, or reads its web
 page. Another project can import it with no part of the server.
 
 ## CLT-001
 
-A vendor client lives in `pkg/<vendor>`, with its own `go.mod`.
-The module path is `github.com/abgeo/georgia-mcp/pkg/<vendor>`.
+A vendor client lives in `pkg/<vendor>`, as a package of the server module. It has no
+`go.mod` of its own. The import path is `github.com/abgeo/georgia-mcp/pkg/<vendor>`.
 The package name is the vendor name: `nbg`, `ttc`. A second client of the same vendor
 adds its subject to the name: `bogoffers`. `ADR-0004`.
 
 ## CLT-002
 
 A client imports the standard library and `pkg/vendorhttp` only. It imports no package
-of the server module, no other client, and no MCP package. `ADR-0006`. A third-party library needs a requirement
+under `internal/`, no other client, and no MCP package. `ADR-0006`. A third-party library needs a requirement
 that the API of the vendor demands, for example a protocol that the standard library
 does not offer. A client of a web page imports `golang.org/x/net/html`. No other client
 imports it. `ADR-0003`. A client of a vendor whose filter refuses the TLS handshake of Go
@@ -68,7 +68,7 @@ does not declare that option again. An option sets one value:
 | ---------------------------- | -------------------------------------------- |
 | `vendorhttp.WithBaseURL`     | `DefaultBaseURL` of the client.              |
 | `vendorhttp.WithHTTPClient`  | An `http.Client` with a timeout of 10 seconds. |
-| `vendorhttp.WithUserAgent`   | `georgia-mcp-<vendor>/<version> (+https://github.com/abgeo/georgia-mcp)`. |
+| `vendorhttp.WithUserAgent`   | `georgia-mcp-<vendor>/<version of the server> (+https://github.com/abgeo/georgia-mcp)`. |
 | `WithAPIKey` of the client   | None. Only a client whose vendor needs a key. |
 
 A value of one vendor is an option of its client that returns a `vendorhttp.Option`.
@@ -111,11 +111,8 @@ A client has a `README.md` with one example, and an `example_test.go` with an
 `Example` function. A test of the client uses `httptest` and a recorded response
 in `testdata/`. See `TST-005`.
 
-## CLT-011
-
-A client release is a tag `pkg/<vendor>/v<semver>`. A client stays at `v0`
-while its vendor publishes no API documentation.
-
 ## Retired identifiers
 
-This file has no retired identifier.
+| ID      | Retired    | Reason                                                              |
+| ------- | ---------- | ------------------------------------------------------------------- |
+| CLT-011 | 2026-10-25 | A client is a package of the server module. A release of the server covers it. |
