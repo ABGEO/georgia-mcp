@@ -485,6 +485,7 @@ in-memory MCP transport.
 | `POSTCODE-SC-019` | `POSTCODE-NFR-005` | unit | `postal.Defaults().GPost.HTTP` has the rate 1 and the burst 1. |
 | `POSTCODE-SC-020` | `POSTCODE-FR-010` | unit | `postal.New` with `Enabled` false registers no tool. The default configuration registers `postal_search_codes`. |
 | `POSTCODE-SC-021` | `POSTCODE-FR-001` | live | `PostalCodes(ctx, "ამბერკი", "ka")` against `www.gpost.ge` holds the row with `0186` and `ქალაქი თბილისი, ამბერკი ტაბიძის ქუჩა`. |
+| `POSTCODE-SC-022` | `POSTCODE-FR-001`, `POSTCODE-FR-003`, `POSTCODE-INV-002` | unit | The adapter with `find-rustavi-en.html` and `en` sends the cookie `lang=en`, and returns 12 addresses. The first is `{Text: "City Rustavi", District: "Rustavi City", Code: 3700}`. `ReadAt` is the instant of `now` in `kernel.TbilisiZone()`. `find-none-ka.html` gives an empty list and no error. |
 
 ## 7. Build plan
 
@@ -493,7 +494,7 @@ in-memory MCP transport.
 | 1   | `pkg/gpost` module, recorded answers, README, example, live test. `go.work`, `.golangci.yaml`. | `POSTCODE-FR-001`, `POSTCODE-FR-009`, `POSTCODE-NFR-004`, `POSTCODE-NFR-006` | [x]  |
 | 2   | `domain`: `PostalCode`, `Address`, errors, fuzz test.                         | `POSTCODE-INV-001`, `POSTCODE-INV-002`  | [x]  |
 | 3   | `app`: port, `SearchCodes`, errors.                                           | `POSTCODE-FR-002`, `POSTCODE-FR-005` to `POSTCODE-FR-007` | [x]  |
-| 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [ ]  |
+| 4   | `adapter/gpost`.                                                              | `POSTCODE-FR-009`                       | [x]  |
 | 5   | `adapter/cache`.                                                              | `POSTCODE-NFR-001` to `POSTCODE-NFR-003` | [ ]  |
 | 6   | `adapter/tool`.                                                               | `POSTCODE-FR-001` to `POSTCODE-FR-008`  | [ ]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `POSTCODE-FR-010`, `POSTCODE-NFR-005`   | [ ]  |
