@@ -175,6 +175,7 @@ Each vendor client is a package under `pkg/<vendor>` that another project can im
 
 Bug reports and ideas are welcome in [issues](https://github.com/abgeo/georgia-mcp/issues).
 To add a source or a tool, open an issue first: each one starts as a requirements document.
+Read the [contributing guide](.github/CONTRIBUTING.md) before you open a pull request.
 
 ## Privacy and security
 
@@ -182,7 +183,7 @@ The hosted server keeps an access log and a record of each tool call, never the 
 call. Read the [privacy policy](https://geo-mcp.abgeo.cloud/privacy/) and the
 [terms of service](https://geo-mcp.abgeo.cloud/terms/).
 
-To report a vulnerability, use the [contact page](https://www.abgeo.dev/contact/). Please don't open a
+To report a vulnerability, follow the [security policy](.github/SECURITY.md). Please don't open a
 public issue.
 
 ## Disclaimer

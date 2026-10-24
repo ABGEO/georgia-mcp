@@ -1,0 +1,104 @@
+name: Bug report
+description: A tool gives a wrong answer, fails, or the website does not work.
+labels: [ bug ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The data belongs to its publishers. A source can be late or wrong. Before you
+        report a wrong value, check it on the site of the source.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - A tool
+        - The website
+        - A server that I run myself
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Tool
+      description: Leave it empty when the problem is not in a tool.
+      options:
+        - rates_get_official_rates
+        - rates_list_official_history
+        - rates_get_commercial_rates
+        - fuel_get_prices
+        - offers_search_offers
+        - offers_get_offer
+        - transit_search_stops
+        - transit_list_nearby_stops
+        - transit_list_arrivals
+        - transit_search_routes
+        - transit_get_route
+        - transit_get_timetable
+        - transit_search_places
+        - transit_plan_trip
+        - postal_search_codes
+        - Other
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: Client
+      options:
+        - Claude
+        - Claude Code
+        - ChatGPT
+        - Cursor
+        - VS Code
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Server version
+      description: For a server that you run, the output of `georgia-mcp version` or the image tag. Leave it empty for the hosted server.
+      placeholder: v1.2.0
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The question that you asked, and the answer or the error that you got.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: For a wrong value, give the correct value and a link to the source that shows it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: call
+    attributes:
+      label: Tool input and output
+      description: The input and the output of the tool call, if your client shows them. The output carries `source` and `as_of`.
+      render: json
+
+  - type: input
+    id: when
+    attributes:
+      label: When
+      description: The date and the time of the call, with the time zone. The data changes during the day.
+      placeholder: 2026-10-25 14:30 Asia/Tbilisi
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the open and the closed issues.
+          required: true
+        - label: The report holds no key, token, or personal data.
+          required: true

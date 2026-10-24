@@ -1,0 +1,54 @@
+name: Source or tool
+description: Propose a new source, a new tool, or a change to a tool.
+labels: [ enhancement ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Each change starts as a requirements document in `docs/specs/`. This issue
+        collects what that document needs. Georgia MCP only reads public data. A tool
+        never changes anything at a source.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - A new source for an existing subject
+        - A new subject
+        - A change to a tool
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: need
+    attributes:
+      label: Need
+      description: The questions that a person asks in a chat, and what the answer must hold.
+      placeholder: Which bank sells US dollars at the lowest rate in Batumi?
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: The publisher and the address of the data. Say if it is an API or a web page, and if it needs a key.
+      placeholder: https://example.ge/rates (a web page, no key)
+
+  - type: textarea
+    id: terms
+    attributes:
+      label: Terms of use
+      description: A link to the terms of the source, if you know them.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the open and the closed issues.
+          required: true
+        - label: The data is public and needs no account of a person.
+          required: true
