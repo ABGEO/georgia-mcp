@@ -91,7 +91,11 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
       <div class="wrap"><Band /></div>
       <div class="wrap row">
         <p lang="en">Made with <span role="img" aria-label="love">❤️</span> in Georgia by <a href={AUTHOR_URL}>ABGEO</a></p>
-        <a href={REPO_URL}>{copy.footer.repo}</a>
+        <nav class="links" aria-label={copy.footer.label}>
+          <a href={localize("/privacy/", lang)}>{copy.footer.privacy}</a>
+          <a href={localize("/terms/", lang)}>{copy.footer.terms}</a>
+          <a href={REPO_URL}>{copy.footer.repo}</a>
+        </nav>
       </div>
     </footer>
   </body>
@@ -142,7 +146,7 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
     font: 600 1.3rem / 1 var(--display);
   }
 
-  nav {
+  .bar nav {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -150,12 +154,12 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
     font-size: 0.95rem;
   }
 
-  nav > a {
+  .bar nav > a {
     color: var(--ink);
     text-decoration: none;
   }
 
-  nav > a:hover {
+  .bar nav > a:hover {
     color: var(--wine);
   }
 
@@ -175,5 +179,11 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
 
   .row p {
     font-family: var(--body);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--u) * 2) calc(var(--u) * 5);
   }
 </style>

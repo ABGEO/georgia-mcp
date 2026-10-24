@@ -1,0 +1,63 @@
+---
+import { t } from "../i18n"
+import type { Lang } from "../lib/schemas"
+import Base from "../layouts/Base.astro"
+
+interface Props {
+  lang: Lang
+  doc: "privacy" | "terms"
+}
+
+const { lang, doc } = Astro.props
+const copy = t(lang)
+const legal = copy.legal[doc]
+const textLang = copy.legal === t("en").legal ? "en" : lang
+const date = new Intl.DateTimeFormat(textLang === "ka" ? "ka-GE" : "en-GB", { dateStyle: "long", timeZone: "UTC" }).format(
+  new Date(legal.effective),
+)
+---
+
+<Base lang={lang} path={`/${doc}/`} title={`${legal.title} · Georgia MCP`} description={legal.description}>
+  <article class="wrap legal" lang={textLang}>
+    <h1>{legal.title}</h1>
+    <p class="effective">{copy.legal.effective}: <time datetime={legal.effective}>{date}</time></p>
+    {
+      legal.sections.map((section) => (
+        <section>
+          <h2>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </section>
+      ))
+    }
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: calc(68ch + 32px);
+    padding-block: calc(var(--u) * 12);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+  }
+
+  .effective {
+    margin-top: calc(var(--u) * 2);
+    color: var(--muted);
+  }
+
+  section {
+    margin-top: calc(var(--u) * 8);
+  }
+
+  h2 {
+    font-size: var(--step-1);
+  }
+
+  section p {
+    margin-top: calc(var(--u) * 3);
+  }
+</style>

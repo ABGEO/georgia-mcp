@@ -3,7 +3,7 @@ import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
 
-import { AUTHOR_URL, REPO_URL, SITE_URL } from "../../src/site"
+import { AUTHOR_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
 import { definitions, dist, page, pagePaths, pair, text } from "./helpers"
 
 const paths = pagePaths()
@@ -94,5 +94,41 @@ describe("the home page", () => {
     )
     expect(text(panels[7])).toContain("GEOMCP_TRANSIT_TTC_ENABLED")
     expect(text(panels[7])).toContain("GEOMCP_RATES_TBC_ENABLED")
+  })
+})
+
+describe("the legal pages", () => {
+  const legal = ["/privacy/", "/ka/privacy/", "/terms/", "/ka/terms/"]
+
+  // WEBSITE-SC-047: Each legal page has a title, the effective date, sections, the name, the server, and the contact.
+  test.each(legal)("%s holds the document", (path) => {
+    const html = page(path)
+    const body = text(html.querySelector("main"))
+
+    expect(text(html.querySelector("main h1"))).not.toBe("")
+    expect(html.querySelector("main time")?.getAttribute("datetime")).toBe("2026-10-24")
+    expect(html.querySelectorAll("main h2").length).toBeGreaterThan(0)
+    expect(body).toContain("Georgia MCP")
+    expect(body).toContain(SERVER_URL)
+    expect(body).toContain("me@abgeo.dev")
+  })
+
+  // WEBSITE-SC-048: The privacy policy names the records and says that the server keeps no input of a tool call.
+  test("the privacy policy names the records", () => {
+    const body = text(page("/privacy/").querySelector("main"))
+
+    expect(body).toContain("IP address")
+    expect(body).toContain("user agent")
+    expect(body).toContain("name of the tool")
+    expect(body).toContain("does not keep the input of a tool call")
+  })
+
+  // WEBSITE-SC-049: The footer links to the legal pages in the language of the page.
+  test.each([...paths, "/404.html"])("%s links to the legal pages", (path) => {
+    const links = page(path).querySelectorAll("footer a").map((a) => a.getAttribute("href"))
+    const prefix = path.startsWith("/ka/") ? "/ka" : ""
+
+    expect(links).toContain(`${prefix}/privacy/`)
+    expect(links).toContain(`${prefix}/terms/`)
   })
 })

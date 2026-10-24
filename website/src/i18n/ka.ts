@@ -1,4 +1,4 @@
-import type { Dictionary } from "./en"
+import { en, type Dictionary } from "./en"
 
 export const ka: Dictionary = {
   meta: {
@@ -137,7 +137,11 @@ export const ka: Dictionary = {
     text: "მისამართი შეიძლება ძველი იყოს ან შეცდომით აკრეფილი.",
     home: "მთავარ გვერდზე გადასვლა",
   },
+  legal: en.legal,
   footer: {
     repo: "კოდი GitHub-ზე",
+    label: "იურიდიული ინფორმაცია და კოდი",
+    privacy: "კონფიდენციალურობა",
+    terms: "პირობები",
   },
 }

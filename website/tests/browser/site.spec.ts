@@ -118,7 +118,7 @@ test.describe("weight", () => {
 })
 
 test.describe("accessibility", () => {
-  const pages = ["/", "/ka/", "/tools/fuel_get_prices/", "/ka/tools/transit_plan_trip/", "/no-such-page/"]
+  const pages = ["/", "/ka/", "/tools/fuel_get_prices/", "/ka/tools/transit_plan_trip/", "/privacy/", "/ka/terms/", "/no-such-page/"]
 
   // WEBSITE-SC-031: axe finds no violation of WCAG 2.2 AA, in each theme.
   for (const scheme of ["light", "dark"] as const) {
