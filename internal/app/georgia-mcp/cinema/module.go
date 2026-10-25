@@ -67,8 +67,8 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 
 	module.uses = &tool.UseCases{
 		ListCinemas:  app.NewListCinemas(module.cinemas),
-		ListMovies:   app.NewListMovies(module.movies),
-		SearchMovies: app.NewSearchMovies(module.movies),
+		ListMovies:   app.NewListMovies(module.movies, now),
+		SearchMovies: app.NewSearchMovies(module.movies, now),
 		ListSessions: app.NewListSessions(
 			module.cinemas,
 			module.movies,

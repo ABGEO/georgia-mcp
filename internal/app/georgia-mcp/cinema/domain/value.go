@@ -16,7 +16,7 @@ type Text struct {
 }
 
 // In returns the text in a language, or the text in the other language when Cavea gives
-// none.
+// none. A name uses it, since a movie needs a name.
 func (t Text) In(language kernel.Language) string {
 	first, second := t.English, t.Georgian
 	if language == kernel.LanguageGeorgian {
@@ -28,6 +28,31 @@ func (t Text) In(language kernel.Language) string {
 	}
 
 	return second
+}
+
+// OnlyIn returns the text in a language, or the empty text when Cavea gives none.
+func (t Text) OnlyIn(language kernel.Language) string {
+	if language == kernel.LanguageGeorgian {
+		return t.Georgian
+	}
+
+	return t.English
+}
+
+// TextList is a list of Cavea in Georgian and in English. The two lists can hold a
+// different count of items.
+type TextList struct {
+	Georgian []string
+	English  []string
+}
+
+// In returns the items in a language, or none when Cavea gives none.
+func (l TextList) In(language kernel.Language) []string {
+	if language == kernel.LanguageGeorgian {
+		return l.Georgian
+	}
+
+	return l.English
 }
 
 // Price is the price in lari of one ticket. It is greater than zero.

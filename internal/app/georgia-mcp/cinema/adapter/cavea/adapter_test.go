@@ -13,6 +13,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema/adapter/cavea"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
@@ -161,9 +163,9 @@ func TestCinemasGivesTheOpenCinemas(t *testing.T) {
 	}
 }
 
-// CAVCINE-SC-012: The genres pair the Georgian and the English item by position, and the
-// premiere is a date or a year.
-func TestMoviesPairsTheTexts(t *testing.T) {
+// CAVCINE-SC-012: The premiere is a date or a year, and the genres of clayface-01 keep
+// their order in each language.
+func TestMoviesGivesThePremiere(t *testing.T) {
 	t.Parallel()
 
 	adapter := adapterOf(t, newVendor(t))
@@ -176,13 +178,14 @@ func TestMoviesPairsTheTexts(t *testing.T) {
 	clayface := showing.Movies[0]
 
 	want := []any{
-		"clayface-01", "Clayface", domain.NowShowing, 108 * time.Minute, "2026-10-22", 4,
-		domain.Text{Georgian: "საშინელებათა", English: "Horror"},
+		"clayface-01", "Clayface", domain.NowShowing, 108 * time.Minute, "2026-10-22",
+		4, "საშინელებათა", 4, "Horror",
 	}
 
 	got := []any{
 		clayface.Code.String(), clayface.Name.English, clayface.Status, clayface.Duration,
-		clayface.Premiere, len(clayface.Genres), clayface.Genres[1],
+		clayface.Premiere, len(clayface.Genres.Georgian), clayface.Genres.Georgian[1],
+		len(clayface.Genres.English), clayface.Genres.English[1],
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Movies(now_showing)[0] = %v, want %v", got, want)
@@ -205,6 +208,80 @@ func TestMoviesPairsTheTexts(t *testing.T) {
 		wantSoon,
 	) {
 		t.Errorf("Movies(coming_soon)[0] = %v, want %v", gotSoon, wantSoon)
+	}
+}
+
+func moviesBySlug(t *testing.T) map[string]domain.Movie {
+	t.Helper()
+
+	showing, err := adapterOf(t, newVendor(t)).Movies(t.Context(), domain.NowShowing)
+	if err != nil {
+		t.Fatalf("Movies(now_showing) error = %v", err)
+	}
+
+	bySlug := map[string]domain.Movie{}
+	for _, movie := range showing.Movies {
+		bySlug[movie.Code.String()] = movie
+	}
+
+	return bySlug
+}
+
+// CAVCINE-SC-012: Each language splits its list on its own, at each comma, with no space
+// at the ends of an item. An English field in Georgian letters is empty.
+func TestMoviesSplitsEachLanguage(t *testing.T) {
+	t.Parallel()
+
+	bySlug := moviesBySlug(t)
+
+	tests := []struct {
+		name string
+		got  any
+		want any
+	}{
+		{
+			"street-fighter actors",
+			bySlug["street-fighter"].Actors,
+			domain.TextList{
+				Georgian: []string{"ჯეისონ მომოა", "დევიდ დასტმალჩიანი", "ნოა სენტინეო"},
+				English: []string{
+					"Jason Momoa",
+					"David Dastmalchian",
+					"Noah Centineo",
+					"Olivier Richters",
+				},
+			},
+		},
+		{
+			"digger-01 English actors", bySlug["digger-01"].Actors.English,
+			[]string{
+				"Tom Cruise", "Riz Ahmed", "John Goodman", "Sandra Hüller",
+				"Michael Stuhlbarg", "Jesse Plemons",
+			},
+		},
+		{
+			"minions-monsters English genres", bySlug["minions-monsters"].Genres.English,
+			[]string{"Adventure", "Animation", "Comedy", "Crime Family", "Sci-Fi"},
+		},
+		{
+			"beri-gabrieli genres", bySlug["beri-gabrieli"].Genres,
+			domain.TextList{Georgian: []string{"დრამა"}},
+		},
+		{
+			"beri-gabrieli name", bySlug["beri-gabrieli"].Name,
+			domain.Text{Georgian: "ბრძოლა - ბერი გაბრიელი"},
+		},
+		{"moana-01 English description", bySlug["moana-01"].Description.English, ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if diff := cmp.Diff(tt.want, tt.got); diff != "" {
+				t.Errorf("%s mismatch (-want +got):\n%s", tt.name, diff)
+			}
+		})
 	}
 }
 

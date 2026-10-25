@@ -567,7 +567,7 @@ func TestSearchAndListMovies(t *testing.T) {
 	t.Parallel()
 
 	movies := &fakeMovies{t: t, count: 25}
-	search := app.NewSearchMovies(movies)
+	search := app.NewSearchMovies(movies, beforeDocumentaries)
 
 	for _, text := range []string{"a", "  a  ", strings.Repeat("ა", 101)} {
 		if _, err := search.Search(
@@ -590,7 +590,7 @@ func TestSearchAndListMovies(t *testing.T) {
 		t.Errorf("Search(\" du \") = %v with texts %v, want the text du", err, movies.texts)
 	}
 
-	got, err := app.NewListMovies(movies).
+	got, err := app.NewListMovies(movies, beforeDocumentaries).
 		List(t.Context(), app.MovieQuery{Status: domain.NowShowing, Limit: 5})
 	if err != nil || len(got.Movies) != 5 || got.Total != 25 ||
 		got.Movies[0].Code.String() != "movie-0" {
@@ -600,5 +600,124 @@ func TestSearchAndListMovies(t *testing.T) {
 			got.Total,
 			err,
 		)
+	}
+}
+
+// beforeDocumentaries is 2026-10-25 14:00 in Tbilisi, the day before the premiere of
+// new-year.
+func beforeDocumentaries() time.Time {
+	return time.Date(2026, 10, 25, 14, 0, 0, 0, kernel.TbilisiZone())
+}
+
+// listedMovies answers fixed lists of movies.
+type listedMovies struct {
+	showing, soon, found []domain.Movie
+}
+
+func (l listedMovies) Movies(_ context.Context, status domain.MovieStatus) (app.MovieList, error) {
+	if status == domain.ComingSoon {
+		return app.MovieList{Movies: l.soon}, nil
+	}
+
+	return app.MovieList{Movies: l.showing}, nil
+}
+
+func (l listedMovies) Search(context.Context, string) (app.MovieList, error) {
+	return app.MovieList{Movies: l.found}, nil
+}
+
+func premiered(t *testing.T, code, premiere string, status domain.MovieStatus) domain.Movie {
+	t.Helper()
+
+	return domain.Movie{
+		ID:       code + "-id",
+		Code:     mustMovieCode(t, code),
+		Status:   status,
+		Premiere: premiere,
+	}
+}
+
+func codesOf(movies []domain.Movie) []string {
+	codes := make([]string, 0, len(movies))
+	for _, movie := range movies {
+		codes = append(codes, movie.Code.String()+" "+string(movie.Status))
+	}
+
+	return codes
+}
+
+// premiereSource lists a movie with the premiere of today, one with the premiere of
+// tomorrow, and one with a year only. The search finds the one of tomorrow.
+func premiereSource(t *testing.T) listedMovies {
+	t.Helper()
+
+	return listedMovies{
+		showing: []domain.Movie{
+			premiered(t, "today", "2026-10-25", domain.NowShowing),
+			premiered(t, "new-year", "2026-10-26", domain.NowShowing),
+			premiered(t, "a-year", "2026", domain.NowShowing),
+		},
+		soon:  []domain.Movie{premiered(t, "dune-part-three", "2026", domain.ComingSoon)},
+		found: []domain.Movie{premiered(t, "new-year", "", domain.NowShowing)},
+	}
+}
+
+// CAVCINE-SC-028: A movie now showing with a premiere after today is coming soon, after
+// the movies of Cavea coming soon. A premiere of today or a year keeps the status.
+func TestAMovieBeforeItsPremiereIsComingSoon(t *testing.T) {
+	t.Parallel()
+
+	source := premiereSource(t)
+	list := app.NewListMovies(source, beforeDocumentaries)
+
+	tests := []struct {
+		name string
+		call func() (app.Movies, error)
+		want []string
+	}{
+		{
+			"now showing",
+			func() (app.Movies, error) {
+				return list.List(t.Context(), app.MovieQuery{Status: domain.NowShowing})
+			},
+			[]string{"today now_showing", "a-year now_showing"},
+		},
+		{
+			"coming soon",
+			func() (app.Movies, error) {
+				return list.List(t.Context(), app.MovieQuery{Status: domain.ComingSoon})
+			},
+			[]string{"dune-part-three coming_soon", "new-year coming_soon"},
+		},
+		{
+			"search",
+			func() (app.Movies, error) {
+				return app.NewSearchMovies(source, beforeDocumentaries).
+					Search(t.Context(), app.SearchQuery{Text: "new"})
+			},
+			[]string{"new-year coming_soon"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := tt.call()
+			if err != nil {
+				t.Fatalf("error = %v", err)
+			}
+
+			if codes := codesOf(
+				got.Movies,
+			); !reflect.DeepEqual(codes, tt.want) ||
+				got.Total != len(tt.want) {
+				t.Errorf("movies = %v of %d, want %v", codes, got.Total, tt.want)
+			}
+		})
+	}
+
+	if source.showing[1].Status != domain.NowShowing {
+		t.Error("ListMovies changed the list of its source")
 	}
 }

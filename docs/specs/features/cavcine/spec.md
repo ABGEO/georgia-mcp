@@ -25,8 +25,8 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | Requirement        | Where this specification realizes it                           |
 | ------------------ | -------------------------------------------------------------- |
 | `CAVCINE-FR-001`   | 4.2 `ListCinemas`. `CAVCINE-DD-003`. Tools 1.1                 |
-| `CAVCINE-FR-002`   | 4.2 `ListMovies`. `CAVCINE-DD-002`, `CAVCINE-DD-006`. Tools 1.2. `CAVCINE-SC-026` |
-| `CAVCINE-FR-003`   | 4.2 `SearchMovies`. Tools 1.3. `CAVCINE-SC-026`                |
+| `CAVCINE-FR-002`   | 4.2 `ListMovies`. `CAVCINE-DD-002`, `CAVCINE-DD-006`. Tools 1.2. `CAVCINE-SC-026`. `CAVCINE-SC-028`, `CAVCINE-SC-029` |
+| `CAVCINE-FR-003`   | 4.2 `SearchMovies`. Tools 1.3. `CAVCINE-SC-026`. `CAVCINE-SC-028` |
 | `CAVCINE-FR-004`   | 4.2 `ListSessions`. `CAVCINE-DD-007`. Tools 1.4                |
 | `CAVCINE-FR-005`   | 4.2 `Session`. `CAVCINE-DD-004`, `CAVCINE-DD-008`              |
 | `CAVCINE-FR-006`   | `CAVCINE-DD-007`, `CAVCINE-DD-009`                             |
@@ -34,7 +34,7 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | `CAVCINE-FR-008`   | 4.2 `ListSessions`. Tools 1.4                                  |
 | `CAVCINE-FR-009`   | 4.2 `GetSeatMap`. `CAVCINE-DD-005`, `CAVCINE-DD-011`. Tools 1.5 |
 | `CAVCINE-FR-010`   | 4.2 errors. Tools 2. `CAVCINE-SC-027` |
-| `CAVCINE-FR-011`   | 4.2 `Text`. `CAVCINE-DD-003`                                   |
+| `CAVCINE-FR-011`   | 4.2 `Text`. `CAVCINE-DD-003`. `CAVCINE-SC-029` |
 | `CAVCINE-FR-012`   | 4.1 `adapter/cavea`. `CAVCINE-DD-012`. `CAVCINE-SC-027` |
 | `CAVCINE-FR-013`   | 4.3 configuration                                              |
 | `CAVCINE-FR-014`   | `CAVCINE-DD-012`. `CAVCINE-SC-014`                             |
@@ -207,7 +207,11 @@ logs at info level `Cavea is off` with `variable=GEOMCP_CINEMA_CAVEA_ENABLED`, a
 ```go
 // domain
 type Text struct{ Georgian, English string }
-func (t Text) In(language kernel.Language) string // English when Georgian is empty
+func (t Text) In(language kernel.Language) string     // the other language when empty: a name
+func (t Text) OnlyIn(language kernel.Language) string // empty when Cavea gives none
+
+type TextList struct{ Georgian, English []string } // each language split on its own
+func (l TextList) In(language kernel.Language) []string // empty when Cavea gives none
 
 type CinemaCode struct{ code string }   // ParseCinemaCode: 1 to 40 of [a-z0-9_]
 type MovieCode struct{ code string }    // ParseMovieCode: 1 to 100 of [a-z0-9-]
@@ -244,12 +248,12 @@ type Movie struct {
     Code        MovieCode
     Status      MovieStatus
     Name        Text
-    Genres      []Text
+    Genres      TextList
     Duration    time.Duration
     AgeRating   string
     Premiere    string // "2026-10-22", "2026", or ""
-    Directors   []Text
-    Actors      []Text
+    Directors   TextList
+    Actors      TextList
     Description Text
 }
 
@@ -311,9 +315,13 @@ to the limit, then asks `Occupancy` for the kept sessions (`CAVCINE-DD-010`). A 
 whose cinema is not an open cinema, or whose movie is in neither list, stays out. `ReadAt`
 is the read of the sessions. `Stale` is true when one of the three lists is stale.
 
-`ListMovies` cuts the list to the limit. `SearchMovies` removes the spaces at the ends of
-the text, refuses fewer than 2 or more than 100 runes with `ErrInvalidQuery` before a
-call, and cuts the list to the limit. `Total` is the length of the full list.
+`ListMovies` reads the movies now showing, and for `coming_soon` also the movies coming
+soon. It gives each movie its status of `CAVCINE-DD-014`, keeps the movies of the asked status, and cuts the list to the limit.
+`SearchMovies` removes the spaces at the ends of the text, refuses fewer than 2 or more
+than 100 runes with `ErrInvalidQuery` before a call, gives each found movie its status of
+`CAVCINE-DD-014` from the list of movies now showing, and cuts the list to the limit.
+`Total` is the length of the full list. `ReadAt` is the older read of the lists, and
+`Stale` is true when one of them is stale.
 
 `GetSeatMap` refuses a session whose start is not after `now`. It finds the session in
 `Sessions`, then reads the prices with `MovieSessions` of its movie, then calls `SeatMap`.
@@ -460,15 +468,18 @@ two, and needs state and a retry on a 403.
 ### `CAVCINE-DD-006`
 
 **Realizes:** `CAVCINE-FR-002`, `CAVCINE-FR-011`
-**Decision:** The adapter splits `genre`, `directors`, and `actors` at `, `. It pairs the
-Georgian and the English part by position. When the counts differ, the field is one item
-with the full Georgian text and the full English text. When one language is empty, each
-item has the other language only. The
+**Decision:** The adapter splits `genre`, `directors`, and `actors` at each comma, in each
+language on its own. It trims the spaces of each item, drops an empty item, and keeps the
+order. It changes no other character: `Crime Family` stays one item. An English field that
+holds a letter of the Unicode script Georgian (`unicode.Georgian`) counts as empty. The
 premiere is `premiereEng`, else `premiere`: `DD.MM.YYYY` gives `YYYY-MM-DD`, `YYYY` stays,
 another text gives none.
-**Rationale:** `DC, საშინელებათა` pairs with `DC, Horror`. A movie coming soon has the
-premiere `2026` only.
-**Alternatives:** One text for each field. A model then cannot filter by genre.
+**Rationale:** On 2026-10-25 the two languages held a different count of items for 5 of
+25 movies: `street-fighter` has 3 actors in Georgian and 4 in English. A pair of items by
+position then names the wrong person. `beri-gabrieli` has `დრამა` as its English genre.
+A movie coming soon has the premiere `2026` only.
+**Alternatives:** Pairs by position, with one joined item when the counts differ. A
+model then reads `Jason Momoa, David Dastmalchian, ...` as one actor.
 
 ### `CAVCINE-DD-007`
 
@@ -543,6 +554,19 @@ second. A seat map then takes about 1 second.
 **Alternatives:** 1 call each second. A cold list of sessions with a movie then takes 5
 seconds.
 
+### `CAVCINE-DD-014`
+
+**Realizes:** `CAVCINE-FR-002`, `CAVCINE-FR-003`
+**Decision:** A movie of the list now showing whose premiere is a full date after today
+in Tbilisi has the status `coming_soon`. The list of `coming_soon` holds the movies of
+Cavea coming soon, then these movies, in the order of the page. `SearchMovies` takes the
+premiere of a found movie from the list now showing, which the cache holds.
+**Rationale:** On 2026-10-25 Cavea listed five documentaries as now showing, with a
+premiere from 2026-10-26 to 2026-11-30 and no session. The search of Cavea gives no
+premiere.
+**Alternatives:** The status of Cavea as it is. A model then looks for sessions of a
+movie that Cavea does not show yet.
+
 ## 6. Scenarios
 
 `pkg/cavea/testdata/` holds the answers of 2026-10-25: `theaters.json`, `hall-map.json`,
@@ -565,7 +589,7 @@ files from `httptest`.
 | `CAVCINE-SC-009` | `CAVCINE-FR-012` | unit | A 403 on each method gives an `*APIError` with 403. `errors.Is(err, ErrUnexpectedStatus)` holds. |
 | `CAVCINE-SC-010` | `CAVCINE-INV-002`, `CAVCINE-DD-004` | unit | `ParseSessionCode("cag_5/27-10-2026/22:15")` gives the start `2026-10-27T22:15:00+04:00` and the hall key `cag_5`. `cag_5/32-10-2026/22:15`, `cag_5/27-10-2026`, `xyz`, and the empty text give `ErrInvalidSessionCode`. A fuzz test holds that each valid start is in Tbilisi. A second fuzz test holds that `ParseCinemaCode` and `ParseMovieCode` accept only the characters of their form. |
 | `CAVCINE-SC-011` | `CAVCINE-DD-003` | unit | The adapter with `theaters.json` gives 5 cinemas: `tbilisi_mall`, `east_point`, `galleria`, `city_mall_saburtalo`, `grand_mall`. |
-| `CAVCINE-SC-012` | `CAVCINE-DD-006` | unit | `clayface-01` gives 4 genres. The second is `{საშინელებათა, Horror}`. The premiere is `2026-10-22`. A movie with the premiere `2026` keeps `2026`. |
+| `CAVCINE-SC-012` | `CAVCINE-DD-006` | unit | `clayface-01` gives 4 genres. The second is `საშინელებათა` and `Horror`. The premiere is `2026-10-22`. A movie with the premiere `2026` keeps `2026`. `street-fighter` gives 3 Georgian actors and 4 English actors. `digger-01` gives 6 English actors with no space at the start of an item. `minions-monsters` keeps `Crime Family`. `beri-gabrieli` gives no English genre and no English name. |
 | `CAVCINE-SC-013` | `CAVCINE-DD-008`, `CAVCINE-DD-009` | unit | The adapter gives `cep_1/...` the hall `IMAX` and `ccm_x/...` the hall `10`. With a hall map that lacks `ccm_x`, the hall is `X`. A page session has one price, of the class `standard`. |
 | `CAVCINE-SC-014` | `CAVCINE-FR-012`, `CAVCINE-FR-014`, `CAVCINE-DD-012` | unit | `MovieSessions` with one of 31 sessions changed to the audio language `rus` gives 30 sessions and no error. A subtitle language `rus` gives the same. A seat with the class `gold`, and a price `0`, each give an error that wraps `kernel.ErrSourceUnavailable`. |
 | `CAVCINE-SC-015` | `CAVCINE-FR-004`, `CAVCINE-FR-008` | unit | `ListSessions` at 2026-10-27 20:00 with `street-fighter` and `en` gives the sessions after 20:00 only, in the order of the start, then the cinema code. A date of 2026-10-26 gives `ErrPastDate`. |
@@ -580,6 +604,8 @@ files from `httptest`.
 | `CAVCINE-SC-024` | `CAVCINE-NFR-005`, `CAVCINE-FR-013` | unit | In `bootstrap`, `LoadConfig` with no variable of cinema gives Cavea on, at `https://cavea.ge`, with a timeout of 10 seconds, the rate 2, and the burst 2. `cinema.New` with `Enabled` false registers no tool. |
 | `CAVCINE-SC-026` | `CAVCINE-FR-002`, `CAVCINE-FR-003` | unit | `SearchMovies` with `a`, `  a  `, and 101 runes returns `ErrInvalidQuery` and calls no source. `" du "` calls the source with `du`. `ListMovies` with the limit 5 of 25 movies gives the first 5 and `Total` 25. |
 | `CAVCINE-SC-027` | `CAVCINE-FR-010`, `CAVCINE-FR-012` | integration | Each condition of tools 2 gives its message, as a tool result with `IsError`. A failure of Cavea with no stale list gives `Cavea did not answer. Try again in a few minutes.` and no text of Cavea. |
+| `CAVCINE-SC-028` | `CAVCINE-FR-002`, `CAVCINE-FR-003`, `CAVCINE-DD-014` | unit | At 2026-10-25 14:00, a movie now showing with the premiere `2026-10-26` is in the list of `coming_soon` after the movies of Cavea coming soon, and not in the list of `now_showing`. The premiere `2026-10-25` and the premiere `2026` keep `now_showing`. `SearchMovies` gives the found movie with the premiere `2026-10-26` the status `coming_soon`. |
+| `CAVCINE-SC-029` | `CAVCINE-FR-002`, `CAVCINE-FR-011` | integration | With the recorded answers at 2026-10-25 14:00, `cinema_list_movies` in `en` gives 20 movies, `street-fighter` with 4 actors, `moana-01` with no description, and `beri-gabrieli` with no genre. `coming_soon` gives 15 movies, the last 5 the documentaries. |
 | `CAVCINE-SC-025` | `CAVCINE-FR-001`, `CAVCINE-FR-009` | live | Against `cavea.ge`: `Theaters` holds East Point. `Sessions` holds a session. `SeatMap` of the first session of tomorrow gives one seat or more. |
 
 ## 7. Build plan

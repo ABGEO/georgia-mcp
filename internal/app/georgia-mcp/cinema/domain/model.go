@@ -20,12 +20,12 @@ type Movie struct {
 	Code        MovieCode
 	Status      MovieStatus
 	Name        Text
-	Genres      []Text
+	Genres      TextList
 	Duration    time.Duration
 	AgeRating   string
 	Premiere    string // "2026-10-22", a year as "2026", or empty
-	Directors   []Text
-	Actors      []Text
+	Directors   TextList
+	Actors      TextList
 	Description Text
 }
 

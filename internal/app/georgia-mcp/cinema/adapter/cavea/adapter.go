@@ -18,7 +18,7 @@ const (
 	brandPrefix    = "Cavea"
 	premiereLayout = "02.01.2006"
 	yearLength     = 4
-	listSeparator  = ", "
+	listSeparator  = ","
 )
 
 // errNoOpenCinema tells that Cavea marks every cinema closed, which means a change of its
@@ -113,17 +113,20 @@ func (a *Adapter) Movies(ctx context.Context, status domain.MovieStatus) (app.Mo
 		}
 
 		movies = append(movies, domain.Movie{
-			ID:          movie.ID,
-			Code:        code,
-			Status:      status,
-			Name:        domain.Text{Georgian: movie.Name, English: movie.NameEnglish},
-			Genres:      pairItems(movie.Genre, movie.GenreEng),
-			Duration:    time.Duration(movie.Duration) * time.Minute,
-			AgeRating:   movie.MPAARating,
-			Premiere:    premiere(movie.PremiereEng, movie.Premiere),
-			Directors:   pairItems(movie.Directors, movie.DirectorsEng),
-			Actors:      pairItems(movie.Actors, movie.ActorsEng),
-			Description: domain.Text{Georgian: movie.Description, English: movie.DescriptionEng},
+			ID:        movie.ID,
+			Code:      code,
+			Status:    status,
+			Name:      domain.Text{Georgian: movie.Name, English: english(movie.NameEnglish)},
+			Genres:    listOf(movie.Genre, movie.GenreEng),
+			Duration:  time.Duration(movie.Duration) * time.Minute,
+			AgeRating: movie.MPAARating,
+			Premiere:  premiere(movie.PremiereEng, movie.Premiere),
+			Directors: listOf(movie.Directors, movie.DirectorsEng),
+			Actors:    listOf(movie.Actors, movie.ActorsEng),
+			Description: domain.Text{
+				Georgian: movie.Description,
+				English:  english(movie.DescriptionEng),
+			},
 		})
 	}
 
@@ -154,7 +157,7 @@ func (a *Adapter) Search(ctx context.Context, text string) (app.MovieList, error
 			ID:        movie.ID,
 			Code:      code,
 			Status:    status,
-			Name:      domain.Text{Georgian: movie.Name, English: movie.NameEnglish},
+			Name:      domain.Text{Georgian: movie.Name, English: english(movie.NameEnglish)},
 			Duration:  time.Duration(movie.Duration) * time.Minute,
 			AgeRating: movie.MPAARating,
 		})
@@ -167,36 +170,18 @@ func (a *Adapter) readAt() time.Time {
 	return a.now().In(kernel.TbilisiZone())
 }
 
-// pairItems splits two lists of one text and pairs their items by position.
-func pairItems(georgian, english string) []domain.Text {
-	kaItems, enItems := splitItems(georgian), splitItems(english)
-
-	switch {
-	case len(kaItems) == 0 && len(enItems) == 0:
-		return nil
-	case len(enItems) == 0:
-		return textsOf(
-			kaItems,
-			func(item string) domain.Text { return domain.Text{Georgian: item} },
-		)
-	case len(kaItems) == 0:
-		return textsOf(enItems, func(item string) domain.Text { return domain.Text{English: item} })
-	case len(kaItems) != len(enItems):
-		return []domain.Text{
-			{Georgian: strings.TrimSpace(georgian), English: strings.TrimSpace(english)},
-		}
+// listOf splits the Georgian list and the English list of one field, each on its own.
+func listOf(georgian, englishText string) domain.TextList {
+	return domain.TextList{
+		Georgian: splitItems(georgian),
+		English:  splitItems(english(englishText)),
 	}
-
-	texts := make([]domain.Text, len(kaItems))
-	for index := range kaItems {
-		texts[index] = domain.Text{Georgian: kaItems[index], English: enItems[index]}
-	}
-
-	return texts
 }
 
+// splitItems splits a list at each comma, trims each item, and drops an empty item. It
+// returns nil for a list with no item.
 func splitItems(text string) []string {
-	items := []string{}
+	var items []string
 
 	for item := range strings.SplitSeq(text, listSeparator) {
 		if item = strings.TrimSpace(item); item != "" {
@@ -207,13 +192,14 @@ func splitItems(text string) []string {
 	return items
 }
 
-func textsOf(items []string, text func(string) domain.Text) []domain.Text {
-	texts := make([]domain.Text, len(items))
-	for index, item := range items {
-		texts[index] = text(item)
+// english returns the empty text for an English field of Cavea that holds a Georgian
+// letter, since Cavea then gives no English text.
+func english(text string) string {
+	if strings.ContainsFunc(text, func(r rune) bool { return unicode.Is(unicode.Georgian, r) }) {
+		return ""
 	}
 
-	return texts
+	return text
 }
 
 // premiere returns the first premiere that is a date or a year, as YYYY-MM-DD or YYYY.

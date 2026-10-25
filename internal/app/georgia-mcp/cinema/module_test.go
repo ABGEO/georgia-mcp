@@ -3,6 +3,7 @@ package cinema_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
@@ -291,5 +293,83 @@ func TestASeatMapSendsTwoCalls(t *testing.T) {
 	if sent := fake.total() - before; sent != 2 || fake.count(seatTicket) != 1 ||
 		fake.count(seats) != 1 {
 		t.Errorf("seat map sent %d calls, want the POST and the GET of the seats", sent)
+	}
+}
+
+type movie struct {
+	Code        string   `json:"code"`
+	Name        string   `json:"name"`
+	Status      string   `json:"status"`
+	Genres      []string `json:"genres"`
+	Actors      []string `json:"actors"`
+	Description string   `json:"description"`
+}
+
+func movies(t *testing.T, session *mcp.ClientSession, status string) []movie {
+	t.Helper()
+
+	result, err := session.CallTool(t.Context(), &mcp.CallToolParams{
+		Name: "cinema_list_movies", Arguments: map[string]any{"status": status},
+	})
+	if err != nil || result.IsError {
+		t.Fatalf("CallTool(cinema_list_movies) = %+v, %v, want a result", result, err)
+	}
+
+	raw, err := json.Marshal(result.StructuredContent)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var out struct {
+		Movies []movie `json:"movies"`
+	}
+	if err := json.Unmarshal(raw, &out); err != nil {
+		t.Fatal(err)
+	}
+
+	return out.Movies
+}
+
+func byCode(listed []movie) map[string]movie {
+	found := make(map[string]movie, len(listed))
+	for _, item := range listed {
+		found[item.Code] = item
+	}
+
+	return found
+}
+
+// CAVCINE-SC-029: The recorded movies in English give each actor as one item, no Georgian
+// genre or description, and the documentaries before their premiere as coming soon.
+func TestListMoviesCleansTheTextsOfCavea(t *testing.T) {
+	t.Parallel()
+
+	session := serve(t, newFakeCavea(t).config(t), slog.New(slog.DiscardHandler))
+
+	showing := movies(t, session, "now_showing")
+	soon := movies(t, session, "coming_soon")
+	shown := byCode(showing)
+
+	got := []any{
+		len(showing), len(shown["street-fighter"].Actors), shown["moana-01"].Description,
+		len(shown["beri-gabrieli"].Genres), shown["beri-gabrieli"].Name, len(soon),
+	}
+	want := []any{20, 4, "", 0, "ბრძოლა - ბერი გაბრიელი", 15}
+
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("movies mismatch (-want +got):\n%s", diff)
+	}
+
+	last := make([]string, 0, len(soon)-10)
+	for _, item := range soon[10:] {
+		last = append(last, item.Code+" "+item.Status)
+	}
+
+	wantLast := []string{
+		"new-year coming_soon", "our-land coming_soon", "do-you-love-me coming_soon",
+		"mariinka-01 coming_soon", "erik-romeri coming_soon",
+	}
+	if diff := cmp.Diff(wantLast, last); diff != "" {
+		t.Errorf("the last movies coming soon mismatch (-want +got):\n%s", diff)
 	}
 }

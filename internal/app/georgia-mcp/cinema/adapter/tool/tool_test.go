@@ -148,15 +148,18 @@ func (f fakeCavea) SeatMap(
 
 func (f fakeCavea) movie() domain.Movie {
 	return domain.Movie{
-		ID:          "street-fighter-id",
-		Code:        mustParse(f.t, domain.ParseMovieCode, "street-fighter"),
-		Status:      domain.NowShowing,
-		Name:        domain.Text{Georgian: fighterKA, English: fighterEN},
-		Genres:      []domain.Text{{Georgian: "მძაფრსიუჟეტიანი", English: "Action"}},
+		ID:     "street-fighter-id",
+		Code:   mustParse(f.t, domain.ParseMovieCode, "street-fighter"),
+		Status: domain.NowShowing,
+		Name:   domain.Text{Georgian: fighterKA, English: fighterEN},
+		Genres: domain.TextList{
+			Georgian: []string{"მძაფრსიუჟეტიანი"},
+			English:  []string{"Action"},
+		},
 		Duration:    127 * time.Minute,
 		AgeRating:   "PG-13",
 		Premiere:    "2026-10-15",
-		Directors:   []domain.Text{{English: "Kitao Sakurai"}},
+		Directors:   domain.TextList{English: []string{"Kitao Sakurai"}},
 		Description: domain.Text{English: "A fight."},
 	}
 }
@@ -181,8 +184,8 @@ func connect(t *testing.T, source fakeCavea) *mcp.ClientSession {
 	registry := mcpserver.New(buildinfo.Info{Version: "v0"}, slog.New(slog.DiscardHandler))
 	if err := tool.Register(registry, tool.UseCases{
 		ListCinemas:  app.NewListCinemas(source),
-		ListMovies:   app.NewListMovies(source),
-		SearchMovies: app.NewSearchMovies(source),
+		ListMovies:   app.NewListMovies(source, now),
+		SearchMovies: app.NewSearchMovies(source, now),
 		ListSessions: app.NewListSessions(
 			source,
 			source,

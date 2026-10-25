@@ -41,6 +41,14 @@ Observed behavior of the source on 2026-10-25:
 - `/movies` holds 25 movies now showing, and `/movies?filter=coming-soon` holds 10. Each
   movie has a name in Georgian and in English, genres, a duration in minutes, an age
   rating (`R`, `PG-13`, `PG`), a premiere date, directors, actors, and a description.
+- Each list of genres, directors, and actors is one text with a comma between the items.
+  The Georgian list and the English list can hold a different count of items:
+  `street-fighter` has 3 actors in Georgian and 4 in English.
+- Some English fields hold Georgian text, or nothing. `beri-gabrieli` has the English
+  name and the English genre in Georgian. `moana-01` has no English description. Five
+  documentaries have only a Georgian name.
+- `/movies` lists five documentaries as now showing with a premiere from 2026-10-26 to
+  2026-11-30, and with no session.
 - The search `/api/movies/search` matches the English name only, from 2 letters. A text in
   Georgian matches nothing.
 - `/sessions` holds every session of the next 3 days: 327 sessions. A session has one
@@ -89,18 +97,27 @@ The server must return each open cinema of Cavea with its code, name, city, and 
 ### `CAVCINE-FR-002`
 
 The server must return the movies of one movie status. The default is `now_showing`.
-Each movie has its code, name, genres, duration, age rating, and premiere date.
+Each movie has its code, name, genres, duration, age rating, and premiere date. A movie
+that Cavea lists as now showing, with a premiere date after today in Tbilisi, has the
+status `coming_soon`. Each genre, director, and actor is one item.
+
+**Why:** A movie before its premiere has no session. A model that reads `now_showing`
+looks for a session that does not exist.
 
 **Examples:**
 
 - Normal case: no status gives 25 movies, with `clayface-01` and its English name "Clayface".
 - Limit case: `coming_soon` gives 10 movies, with `dune-part-three`.
+- Limit case: on 2026-10-25, `new-year` with the premiere 2026-10-26 has the status
+  `coming_soon`, and the list of `coming_soon` holds it.
+- Limit case: `street-fighter` in `en` gives 4 actors, and in `ka` gives 3.
 - Unwanted case: `archived`. The server refuses it and names the two values.
 
 ### `CAVCINE-FR-003`
 
 The server must return each movie that Cavea matches to a text of 2 to 100 characters,
-with its movie status. It must send no call for a text out of that range.
+with its movie status of `CAVCINE-FR-002`. It must send no call for a text out of that
+range.
 
 **Why:** Cavea matches the English name only. The tool description tells the model to
 search in English.
@@ -175,13 +192,21 @@ publish. The message names the tool that lists the codes.
 
 ### `CAVCINE-FR-011`
 
-The server must give each name, genre, and description in the language of the request:
-`ka` or `en`. The default is `en`.
+The server must give each name, genre, director, actor, and description in the language
+of the request: `ka` or `en`. The default is `en`. When Cavea gives no name in that
+language, the name is in the other language. When Cavea gives no genre, director, actor,
+or description in that language, the server leaves it out. An English text of Cavea in
+Georgian letters counts as no English text.
+
+**Why:** A movie needs a name. A model that reads a Georgian genre in an English answer
+cannot tell the language of the field.
 
 **Examples:**
 
 - Normal case: `en` gives "Cavea East Point" and the genre "Horror".
 - Limit case: `ka` gives "კავეა ისთ ფოინთი" and "საშინელებათა".
+- Limit case: `en` gives `moana-01` with no description, and `beri-gabrieli` with no
+  genre and its Georgian name.
 
 ### `CAVCINE-FR-012`
 

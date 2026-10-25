@@ -88,7 +88,7 @@ type moviesOutput struct {
 type movieOutput struct {
     Code            string   `json:"code"                  jsonschema:"The code of the movie, for example street-fighter."`
     Name            string   `json:"name"                  jsonschema:"The name of the movie."`
-    Status          string   `json:"status"                jsonschema:"now_showing or coming_soon."`
+    Status          string   `json:"status"                jsonschema:"now_showing or coming_soon. A movie before its premiere date is coming_soon."`
     DurationMinutes int      `json:"duration_minutes"      jsonschema:"The duration of the movie, in minutes."`
     AgeRating       string   `json:"age_rating,omitempty"  jsonschema:"The age rating of the MPAA, for example PG-13."`
     Genres          []string `json:"genres,omitempty"      jsonschema:"The genres of the movie."`

@@ -48,11 +48,11 @@ func toMoviesOutput(list app.Movies, language kernel.Language) moviesOutput {
 			Status:          string(movie.Status),
 			DurationMinutes: int(movie.Duration / time.Minute),
 			AgeRating:       movie.AgeRating,
-			Genres:          textsIn(movie.Genres, language),
+			Genres:          movie.Genres.In(language),
 			Premiere:        movie.Premiere,
-			Directors:       textsIn(movie.Directors, language),
-			Actors:          textsIn(movie.Actors, language),
-			Description:     movie.Description.In(language),
+			Directors:       movie.Directors.In(language),
+			Actors:          movie.Actors.In(language),
+			Description:     movie.Description.OnlyIn(language),
 			URL:             movieAddress + movie.Code.String(),
 		})
 	}
@@ -64,19 +64,6 @@ func toMoviesOutput(list app.Movies, language kernel.Language) moviesOutput {
 		Total:  list.Total,
 		Movies: movies,
 	}
-}
-
-func textsIn(texts []domain.Text, language kernel.Language) []string {
-	if len(texts) == 0 {
-		return nil
-	}
-
-	items := make([]string, 0, len(texts))
-	for _, text := range texts {
-		items = append(items, text.In(language))
-	}
-
-	return items
 }
 
 func toSessionsOutput(list app.Sessions, language kernel.Language) sessionsOutput {
