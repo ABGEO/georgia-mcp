@@ -95,6 +95,8 @@ linters:
             - "!**/pkg/gulf/**"
             - "!**/pkg/scapp/**"
             - "!**/pkg/halyk/**"
+            - "!**/pkg/mjc/**"
+            - "!**/pkg/inteli/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg
@@ -115,6 +117,8 @@ linters:
             - "**/pkg/lukoil/**"
             - "**/pkg/scapp/**"
             - "**/pkg/halyk/**"
+            - "**/pkg/mjc/**"
+            - "**/pkg/inteli/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg/rompetrol
@@ -126,6 +130,8 @@ linters:
             - github.com/abgeo/georgia-mcp/pkg/lukoil
             - github.com/abgeo/georgia-mcp/pkg/scapp
             - github.com/abgeo/georgia-mcp/pkg/halyk
+            - github.com/abgeo/georgia-mcp/pkg/mjc
+            - github.com/abgeo/georgia-mcp/pkg/inteli
             - github.com/abgeo/georgia-mcp/pkg/vendorhttp
             - golang.org/x/net/html
           deny:

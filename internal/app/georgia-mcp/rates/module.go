@@ -13,9 +13,13 @@ import (
 	bogadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/bog"
 	ratecache "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/cache"
 	credoadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/credo"
+	crystaladapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/crystal"
 	halykadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/halyk"
+	inteliadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/inteli"
 	kursiadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/kursi"
 	libertyadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/liberty"
+	mbcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/mbc"
+	mjcadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/mjc"
 	nbgadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/nbg"
 	ricoadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/rico"
 	scappadapter "github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates/adapter/scapp"
@@ -29,9 +33,13 @@ import (
 	basisclient "github.com/abgeo/georgia-mcp/pkg/basisbank"
 	bogclient "github.com/abgeo/georgia-mcp/pkg/bog"
 	credoclient "github.com/abgeo/georgia-mcp/pkg/credo"
+	crystalclient "github.com/abgeo/georgia-mcp/pkg/crystal"
 	halykclient "github.com/abgeo/georgia-mcp/pkg/halyk"
+	inteliclient "github.com/abgeo/georgia-mcp/pkg/inteli"
 	kursiclient "github.com/abgeo/georgia-mcp/pkg/kursi"
 	libertyclient "github.com/abgeo/georgia-mcp/pkg/libertyrates"
+	mbcclient "github.com/abgeo/georgia-mcp/pkg/mbc"
+	mjcclient "github.com/abgeo/georgia-mcp/pkg/mjc"
 	nbgclient "github.com/abgeo/georgia-mcp/pkg/nbg"
 	ricoclient "github.com/abgeo/georgia-mcp/pkg/rico"
 	scappclient "github.com/abgeo/georgia-mcp/pkg/scapp"
@@ -51,6 +59,10 @@ const (
 	halykSwitchVariable     = "GEOMCP_RATES_HALYK_ENABLED"
 	basisbankSwitchVariable = "GEOMCP_RATES_BASISBANK_ENABLED"
 	credoSwitchVariable     = "GEOMCP_RATES_CREDO_ENABLED" //nolint:gosec // A name, not a key.
+	mjcSwitchVariable       = "GEOMCP_RATES_MJC_ENABLED"
+	inteliSwitchVariable    = "GEOMCP_RATES_INTELI_ENABLED"
+	mbcSwitchVariable       = "GEOMCP_RATES_MBC_ENABLED"
+	crystalSwitchVariable   = "GEOMCP_RATES_CRYSTAL_ENABLED"
 )
 
 // Module holds the use cases of the context and their caches.
@@ -199,6 +211,30 @@ func otherEntries(
 			Name: "Scapp", Variable: scappSwitchVariable, Config: cfg.Scapp,
 			Build: cached(func(opts ...vendorhttp.Option) app.CommercialRateSource {
 				return scappadapter.NewAdapter(scappclient.New(opts...), now)
+			}),
+		},
+		{
+			Name: "MJC", Variable: mjcSwitchVariable, Config: cfg.MJC,
+			Build: cached(func(opts ...vendorhttp.Option) app.CommercialRateSource {
+				return mjcadapter.NewAdapter(mjcclient.New(opts...), now)
+			}),
+		},
+		{
+			Name: "Inteli Express", Variable: inteliSwitchVariable, Config: cfg.Inteli,
+			Build: cached(func(opts ...vendorhttp.Option) app.CommercialRateSource {
+				return inteliadapter.NewAdapter(inteliclient.New(opts...), now)
+			}),
+		},
+		{
+			Name: "MBC", Variable: mbcSwitchVariable, Config: cfg.MBC,
+			Build: cached(func(opts ...vendorhttp.Option) app.CommercialRateSource {
+				return mbcadapter.NewAdapter(mbcclient.New(opts...), now)
+			}),
+		},
+		{
+			Name: "Crystal", Variable: crystalSwitchVariable, Config: cfg.Crystal,
+			Build: cached(func(opts ...vendorhttp.Option) app.CommercialRateSource {
+				return crystaladapter.NewAdapter(crystalclient.New(opts...), now)
 			}),
 		},
 		{

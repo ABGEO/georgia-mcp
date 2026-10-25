@@ -583,6 +583,122 @@ func TestLoadConfigGivesTheDefaultsOfScapp(t *testing.T) {
 	}
 }
 
+// MJCRATE-SC-009: With no variable of MJC, it is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfMJC(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	mjc := cfg.Rates.MJC
+	if !mjc.Enabled {
+		t.Error("MJC.Enabled = false, want true")
+	}
+
+	if got := mjc.BaseURL.String(); got != "https://mjc.ge" {
+		t.Errorf("MJC.BaseURL = %q, want %q", got, "https://mjc.ge")
+	}
+
+	if mjc.HTTP.Rate != 1 || mjc.HTTP.Burst != 1 {
+		t.Errorf(
+			"MJC.HTTP = rate %v burst %d, want rate 1 burst 1",
+			mjc.HTTP.Rate,
+			mjc.HTTP.Burst,
+		)
+	}
+}
+
+// INTLRATE-SC-009: With no variable of Inteli Express, it is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfInteli(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	inteli := cfg.Rates.Inteli
+	if !inteli.Enabled {
+		t.Error("Inteli.Enabled = false, want true")
+	}
+
+	if got := inteli.BaseURL.String(); got != "https://inteliexpress.com" {
+		t.Errorf("Inteli.BaseURL = %q, want %q", got, "https://inteliexpress.com")
+	}
+
+	if inteli.HTTP.Rate != 1 || inteli.HTTP.Burst != 1 {
+		t.Errorf(
+			"Inteli.HTTP = rate %v burst %d, want rate 1 burst 1",
+			inteli.HTTP.Rate,
+			inteli.HTTP.Burst,
+		)
+	}
+}
+
+// MBCRATE-SC-010: With no variable of MBC, it is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfMBC(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	mbc := cfg.Rates.MBC
+	if !mbc.Enabled {
+		t.Error("MBC.Enabled = false, want true")
+	}
+
+	if got := mbc.BaseURL.String(); got != "https://fxrates.mbc.com.ge:8022" {
+		t.Errorf("MBC.BaseURL = %q, want %q", got, "https://fxrates.mbc.com.ge:8022")
+	}
+
+	if mbc.HTTP.Rate != 1 || mbc.HTTP.Burst != 1 {
+		t.Errorf(
+			"MBC.HTTP = rate %v burst %d, want rate 1 burst 1",
+			mbc.HTTP.Rate,
+			mbc.HTTP.Burst,
+		)
+	}
+}
+
+// CRYSRATE-SC-009: With no variable of Crystal, it is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfCrystal(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	crystal := cfg.Rates.Crystal
+	if !crystal.Enabled {
+		t.Error("Crystal.Enabled = false, want true")
+	}
+
+	if got := crystal.BaseURL.String(); got != "https://currency.crystal.ge" {
+		t.Errorf("Crystal.BaseURL = %q, want %q", got, "https://currency.crystal.ge")
+	}
+
+	if crystal.HTTP.Rate != 1 || crystal.HTTP.Burst != 1 {
+		t.Errorf(
+			"Crystal.HTTP = rate %v burst %d, want rate 1 burst 1",
+			crystal.HTTP.Rate,
+			crystal.HTTP.Burst,
+		)
+	}
+}
+
 // HALRATE-SC-008: With no variable of Halyk, the bank is on, at its production address,
 // with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfHalyk(t *testing.T) {

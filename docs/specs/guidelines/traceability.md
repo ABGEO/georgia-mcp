@@ -183,6 +183,10 @@ Add a row before you create the file or the directory.
 | `CREDRATE` | `features/credrate/` | `rates`    | The commercial exchange rates of Credo Bank, with a key of the operator. | Approved |
 | `BASRATE`  | `features/basrate/`  | `rates`    | The commercial exchange rates of Basisbank.                      | Approved |
 | `HALRATE`  | `features/halrate/`  | `rates`    | The commercial exchange rates of Halyk Bank.                     | Approved |
+| `MJCRATE`  | `features/mjcrate/`  | `rates`    | The commercial exchange rates of MJC, a microfinance organization. | Approved |
+| `INTLRATE` | `features/intlrate/` | `rates`    | The commercial exchange rates of Inteli Express.                 | Approved |
+| `MBCRATE`  | `features/mbcrate/`  | `rates`    | The commercial exchange rates of MBC, read from an unofficial method. | Approved |
+| `CRYSRATE` | `features/crysrate/` | `rates`    | The commercial exchange rates of Crystal, read from its rate app. | Approved |
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |

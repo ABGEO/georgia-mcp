@@ -74,6 +74,10 @@ define it. The identifier of a term is `GLO-<term>`.
 | Halyk Bank                | Halyk Bank Georgia, a commercial bank. Bank code `halyk`.                                      |
 | Basisbank                 | Basisbank, a commercial bank. Bank code `basisbank`.                                           |
 | Credo Bank                | Credo Bank, a commercial bank. Bank code `credo`.                                              |
+| MJC                       | MJC Credit, a microfinance organization. Bank code `mjc`.                                      |
+| Inteli Express            | Inteli Express (ინტელიექსპრესი), a microfinance organization. Bank code `inteli`.            |
+| MBC                       | MBC (ემბისი), a microfinance organization. Bank code `mbc`.                                    |
+| Crystal                   | Crystal (კრისტალი), a microfinance organization. Bank code `crystal`.                          |
 
 ## Fuel
 

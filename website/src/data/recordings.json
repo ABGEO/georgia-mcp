@@ -2,11 +2,11 @@
   "fuel_get_prices.premium": {
     "tool": "fuel_get_prices",
     "example": "premium",
-    "recordedAt": "2026-10-25T12:03:17.451Z",
+    "recordedAt": "2026-10-25T13:10:48.866Z",
     "output": {
       "companies": [
         {
-          "as_of": "2026-10-25T16:03:17.443616+04:00",
+          "as_of": "2026-10-25T17:10:48.858668+04:00",
           "company": "connect",
           "prices": [
             {
@@ -21,7 +21,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:14.905165+04:00",
+          "as_of": "2026-10-25T17:10:46.163385+04:00",
           "company": "gulf",
           "prices": [
             {
@@ -36,7 +36,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:15.033649+04:00",
+          "as_of": "2026-10-25T17:10:46.25931+04:00",
           "company": "lukoil",
           "prices": [
             {
@@ -51,7 +51,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:14.81265+04:00",
+          "as_of": "2026-10-25T17:10:46.086971+04:00",
           "company": "neogas",
           "missing": [
             "premium"
@@ -61,7 +61,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:16.867367+04:00",
+          "as_of": "2026-10-25T17:10:47.819541+04:00",
           "company": "portal",
           "prices": [
             {
@@ -75,7 +75,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:15.048+04:00",
+          "as_of": "2026-10-25T17:10:46.325507+04:00",
           "company": "rompetrol",
           "prices": [
             {
@@ -90,7 +90,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:14.871046+04:00",
+          "as_of": "2026-10-25T17:10:46.083906+04:00",
           "company": "socar",
           "prices": [
             {
@@ -104,7 +104,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:14.787967+04:00",
+          "as_of": "2026-10-25T17:10:46.061009+04:00",
           "company": "wissol",
           "prices": [
             {
@@ -126,9 +126,9 @@
   "offers_get_offer.chicago-style": {
     "tool": "offers_get_offer",
     "example": "chicago-style",
-    "recordedAt": "2026-10-25T12:03:20.111Z",
+    "recordedAt": "2026-10-25T13:10:51.497Z",
     "output": {
-      "as_of": "2026-10-25T16:03:20.090356+04:00",
+      "as_of": "2026-10-25T17:10:51.47504+04:00",
       "offer": {
         "bank": "bog",
         "bank_categories": [
@@ -166,11 +166,11 @@
   "offers_search_offers.dining-cashback": {
     "tool": "offers_search_offers",
     "example": "dining-cashback",
-    "recordedAt": "2026-10-25T12:03:33.153Z",
+    "recordedAt": "2026-10-25T13:11:04.528Z",
     "output": {
       "banks": [
         {
-          "as_of": "2026-10-25T16:03:20.090356+04:00",
+          "as_of": "2026-10-25T17:10:51.47504+04:00",
           "bank": "bog",
           "next_offset": 2,
           "offers": [
@@ -237,7 +237,7 @@
           "total": 25
         },
         {
-          "as_of": "2026-10-25T16:03:20.112407+04:00",
+          "as_of": "2026-10-25T17:10:51.4977+04:00",
           "bank": "liberty",
           "next_offset": 2,
           "offers": [
@@ -307,7 +307,7 @@
           "total": 5
         },
         {
-          "as_of": "2026-10-25T16:03:27.244475+04:00",
+          "as_of": "2026-10-25T17:10:58.866148+04:00",
           "bank": "tbc",
           "next_offset": 2,
           "offers": [
@@ -381,7 +381,7 @@
   "postal_search_codes.rustavi": {
     "tool": "postal_search_codes",
     "example": "rustavi",
-    "recordedAt": "2026-10-25T12:03:34.386Z",
+    "recordedAt": "2026-10-25T13:11:05.748Z",
     "output": {
       "addresses": [
         {
@@ -400,7 +400,7 @@
           "postal_code": "0114"
         }
       ],
-      "as_of": "2026-10-25T16:03:34+04:00",
+      "as_of": "2026-10-25T17:11:05+04:00",
       "source": "Georgian Post",
       "stale": false,
       "total": 12
@@ -409,11 +409,11 @@
   "rates_get_commercial_rates.usd": {
     "tool": "rates_get_commercial_rates",
     "example": "usd",
-    "recordedAt": "2026-10-25T12:03:37.626Z",
+    "recordedAt": "2026-10-25T13:11:09.163Z",
     "output": {
       "banks": [
         {
-          "as_of": "2026-10-25T16:03:34.519803+04:00",
+          "as_of": "2026-10-25T17:11:05.893361+04:00",
           "bank": "basisbank",
           "rates": [
             {
@@ -426,7 +426,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:34.611106+04:00",
+          "as_of": "2026-10-25T17:11:06.088112+04:00",
           "bank": "bog",
           "rates": [
             {
@@ -439,7 +439,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:34.506005+04:00",
+          "as_of": "2026-10-25T17:11:05.98497+04:00",
           "bank": "credo",
           "rates": [
             {
@@ -452,7 +452,20 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:37.623074+04:00",
+          "as_of": "2026-10-25T17:11:05.960252+04:00",
+          "bank": "crystal",
+          "rates": [
+            {
+              "buy": "2.595",
+              "currency": "USD",
+              "sell": "2.599"
+            }
+          ],
+          "source": "Crystal",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-25T17:11:09.160083+04:00",
           "bank": "halyk",
           "rates": [
             {
@@ -465,7 +478,20 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:34.546643+04:00",
+          "as_of": "2026-10-25T17:11:08.631238+04:00",
+          "bank": "inteli",
+          "rates": [
+            {
+              "buy": "2.595",
+              "currency": "USD",
+              "sell": "2.598"
+            }
+          ],
+          "source": "Inteli Express",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-25T17:11:05.965465+04:00",
           "bank": "kursi",
           "rates": [
             {
@@ -478,7 +504,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:36.194912+04:00",
+          "as_of": "2026-10-25T17:11:05.933658+04:00",
           "bank": "liberty",
           "rates": [
             {
@@ -491,7 +517,33 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:34.551624+04:00",
+          "as_of": "2026-10-25T17:11:05.892147+04:00",
+          "bank": "mbc",
+          "rates": [
+            {
+              "buy": "2.595",
+              "currency": "USD",
+              "sell": "2.599"
+            }
+          ],
+          "source": "MBC",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-25T17:11:06.517171+04:00",
+          "bank": "mjc",
+          "rates": [
+            {
+              "buy": "2.595",
+              "currency": "USD",
+              "sell": "2.598"
+            }
+          ],
+          "source": "MJC",
+          "stale": false
+        },
+        {
+          "as_of": "2026-10-25T17:11:06.131626+04:00",
           "bank": "rico",
           "rates": [
             {
@@ -504,7 +556,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:34.499573+04:00",
+          "as_of": "2026-10-25T17:11:05.914073+04:00",
           "bank": "scapp",
           "rates": [
             {
@@ -517,7 +569,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T16:03:35.170082+04:00",
+          "as_of": "2026-10-25T17:11:06.340531+04:00",
           "bank": "tbc",
           "rates": [
             {
@@ -528,28 +580,21 @@
           ],
           "source": "TBC Bank",
           "stale": false
-        },
-        {
-          "as_of": "2026-10-25T16:03:34.488894+04:00",
-          "bank": "terabank",
-          "rates": [
-            {
-              "buy": "2.595",
-              "currency": "USD",
-              "sell": "2.601"
-            }
-          ],
-          "source": "Terabank",
-          "stale": false
         }
       ],
-      "meaning": "buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it."
+      "meaning": "buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it.",
+      "unavailable": [
+        {
+          "bank": "terabank",
+          "source": "Terabank"
+        }
+      ]
     }
   },
   "rates_get_official_rates.today": {
     "tool": "rates_get_official_rates",
     "example": "today",
-    "recordedAt": "2026-10-25T12:03:37.706Z",
+    "recordedAt": "2026-10-25T13:11:09.270Z",
     "output": {
       "as_of": "2026-10-23T17:01:01.965+04:00",
       "rates": [
@@ -572,7 +617,7 @@
           "valid_from": "2026-10-24"
         }
       ],
-      "read_at": "2026-10-25T16:03:37.703958+04:00",
+      "read_at": "2026-10-25T17:11:09.268147+04:00",
       "source": "National Bank of Georgia",
       "stale": false,
       "valid_from": "2026-10-24"
@@ -581,7 +626,7 @@
   "rates_list_official_history.october": {
     "tool": "rates_list_official_history",
     "example": "october",
-    "recordedAt": "2026-10-25T12:03:40.054Z",
+    "recordedAt": "2026-10-25T13:11:11.598Z",
     "output": {
       "as_of": "2026-10-15T17:01:15.076+04:00",
       "currency": "USD",
@@ -687,7 +732,7 @@
           "valid_from": "2026-10-16"
         }
       ],
-      "read_at": "2026-10-25T16:03:37.730643+04:00",
+      "read_at": "2026-10-25T17:11:09.285319+04:00",
       "source": "National Bank of Georgia",
       "stale": false
     }
@@ -695,9 +740,9 @@
   "transit_get_route.bus-393": {
     "tool": "transit_get_route",
     "example": "bus-393",
-    "recordedAt": "2026-10-25T12:03:41.830Z",
+    "recordedAt": "2026-10-25T13:11:13.393Z",
     "output": {
-      "as_of": "2026-10-25T16:03:41+04:00",
+      "as_of": "2026-10-25T17:11:13+04:00",
       "directions": [
         {
           "direction": 1,
@@ -1077,9 +1122,9 @@
   "transit_get_timetable.kvareli-square": {
     "tool": "transit_get_timetable",
     "example": "kvareli-square",
-    "recordedAt": "2026-10-25T12:03:42.537Z",
+    "recordedAt": "2026-10-25T13:11:14.083Z",
     "output": {
-      "as_of": "2026-10-25T16:03:42+04:00",
+      "as_of": "2026-10-25T17:11:14+04:00",
       "date": "2026-10-25",
       "direction": 1,
       "headsign": "Baratashvili St",
@@ -1151,10 +1196,10 @@
   "transit_list_arrivals.rustaveli-metro": {
     "tool": "transit_list_arrivals",
     "example": "rustaveli-metro",
-    "recordedAt": "2026-10-25T12:03:42.579Z",
+    "recordedAt": "2026-10-25T13:11:14.122Z",
     "output": {
       "arrivals": [],
-      "as_of": "2026-10-25T16:03:42+04:00",
+      "as_of": "2026-10-25T17:11:14+04:00",
       "note": "No vehicle is expected at this stop now.",
       "source": "TTC",
       "stop": {
@@ -1170,9 +1215,9 @@
   "transit_list_nearby_stops.freedom-square": {
     "tool": "transit_list_nearby_stops",
     "example": "freedom-square",
-    "recordedAt": "2026-10-25T12:03:42.582Z",
+    "recordedAt": "2026-10-25T13:11:14.124Z",
     "output": {
-      "as_of": "2026-10-25T16:03:40+04:00",
+      "as_of": "2026-10-25T17:11:12+04:00",
       "source": "TTC",
       "stale": false,
       "stops": [
@@ -1236,24 +1281,24 @@
   "transit_plan_trip.freedom-to-rustaveli": {
     "tool": "transit_plan_trip",
     "example": "freedom-to-rustaveli",
-    "recordedAt": "2026-10-25T12:03:42.986Z",
+    "recordedAt": "2026-10-25T13:11:14.518Z",
     "output": {
-      "as_of": "2026-10-25T16:03:42+04:00",
+      "as_of": "2026-10-25T17:11:14+04:00",
       "itineraries": [
         {
           "duration_minutes": 13,
-          "end": "2026-10-25T16:18:37+04:00",
+          "end": "2026-10-25T17:26:37+04:00",
           "legs": [
             {
               "distance_m": 224,
-              "end": "2026-10-25T16:11:17+04:00",
+              "end": "2026-10-25T17:19:17+04:00",
               "from": {
                 "lat": 41.6939,
                 "lon": 44.8013,
                 "name": "Origin"
               },
               "kind": "walk",
-              "start": "2026-10-25T16:06:07+04:00",
+              "start": "2026-10-25T17:14:07+04:00",
               "to": {
                 "lat": 41.695003,
                 "lon": 44.799919,
@@ -1263,7 +1308,7 @@
             },
             {
               "distance_m": 1328,
-              "end": "2026-10-25T16:13:43+04:00",
+              "end": "2026-10-25T17:21:43+04:00",
               "from": {
                 "lat": 41.695003,
                 "lon": 44.799919,
@@ -1273,7 +1318,7 @@
               "kind": "metro",
               "route_name": "M/S Akhmeteli - M/S Varketili",
               "route_number": "1",
-              "start": "2026-10-25T16:11:17+04:00",
+              "start": "2026-10-25T17:19:17+04:00",
               "stops": 1,
               "to": {
                 "lat": 41.704138,
@@ -1284,7 +1329,7 @@
             },
             {
               "distance_m": 210,
-              "end": "2026-10-25T16:18:37+04:00",
+              "end": "2026-10-25T17:26:37+04:00",
               "from": {
                 "lat": 41.704138,
                 "lon": 44.789613,
@@ -1292,7 +1337,7 @@
                 "stop_id": "1:metro_1_10"
               },
               "kind": "walk",
-              "start": "2026-10-25T16:13:43+04:00",
+              "start": "2026-10-25T17:21:43+04:00",
               "to": {
                 "lat": 41.7032,
                 "lon": 44.7912,
@@ -1300,88 +1345,24 @@
               }
             }
           ],
-          "start": "2026-10-25T16:06:07+04:00",
+          "start": "2026-10-25T17:14:07+04:00",
           "transfers": 0,
           "walk_m": 434
         },
         {
-          "duration_minutes": 15,
-          "end": "2026-10-25T16:21:46+04:00",
-          "legs": [
-            {
-              "distance_m": 467,
-              "end": "2026-10-25T16:13:46+04:00",
-              "from": {
-                "lat": 41.6939,
-                "lon": 44.8013,
-                "name": "Origin"
-              },
-              "kind": "walk",
-              "start": "2026-10-25T16:06:52+04:00",
-              "to": {
-                "lat": 41.696601,
-                "lon": 44.803955,
-                "name": "Nikoloz Baratashvili Street",
-                "stop_id": "1:3932"
-              }
-            },
-            {
-              "distance_m": 1433,
-              "end": "2026-10-25T16:17:39+04:00",
-              "from": {
-                "lat": 41.696601,
-                "lon": 44.803955,
-                "name": "Nikoloz Baratashvili Street",
-                "stop_id": "1:3932"
-              },
-              "kind": "minibus",
-              "route_name": "ნაკადულის ქ. -  სადგურის მოედანი",
-              "route_number": "528",
-              "start": "2026-10-25T16:13:46+04:00",
-              "stops": 1,
-              "to": {
-                "lat": 41.70497,
-                "lon": 44.791844,
-                "name": "Mikheil Javakhishvili Street",
-                "stop_id": "1:2372"
-              }
-            },
-            {
-              "distance_m": 302,
-              "end": "2026-10-25T16:21:46+04:00",
-              "from": {
-                "lat": 41.70497,
-                "lon": 44.791844,
-                "name": "Mikheil Javakhishvili Street",
-                "stop_id": "1:2372"
-              },
-              "kind": "walk",
-              "start": "2026-10-25T16:17:39+04:00",
-              "to": {
-                "lat": 41.7032,
-                "lon": 44.7912,
-                "name": "Destination"
-              }
-            }
-          ],
-          "start": "2026-10-25T16:06:52+04:00",
-          "transfers": 0,
-          "walk_m": 769
-        },
-        {
           "duration_minutes": 17,
-          "end": "2026-10-25T16:25:34+04:00",
+          "end": "2026-10-25T17:38:10+04:00",
           "legs": [
             {
               "distance_m": 58,
-              "end": "2026-10-25T16:09:59+04:00",
+              "end": "2026-10-25T17:22:35+04:00",
               "from": {
                 "lat": 41.6939,
                 "lon": 44.8013,
                 "name": "Origin"
               },
               "kind": "walk",
-              "start": "2026-10-25T16:09:06+04:00",
+              "start": "2026-10-25T17:21:42+04:00",
               "to": {
                 "lat": 41.694033,
                 "lon": 44.801559,
@@ -1391,7 +1372,7 @@
             },
             {
               "distance_m": 3947,
-              "end": "2026-10-25T16:20:51+04:00",
+              "end": "2026-10-25T17:33:27+04:00",
               "from": {
                 "lat": 41.694033,
                 "lon": 44.801559,
@@ -1401,7 +1382,7 @@
               "kind": "bus",
               "route_name": "Kvemo Ponichala Settlement - Vake-Bagebi",
               "route_number": "345",
-              "start": "2026-10-25T16:09:59+04:00",
+              "start": "2026-10-25T17:22:35+04:00",
               "stops": 2,
               "to": {
                 "lat": 41.705278,
@@ -1412,7 +1393,7 @@
             },
             {
               "distance_m": 335,
-              "end": "2026-10-25T16:25:34+04:00",
+              "end": "2026-10-25T17:38:10+04:00",
               "from": {
                 "lat": 41.705278,
                 "lon": 44.791636,
@@ -1420,7 +1401,7 @@
                 "stop_id": "1:4688"
               },
               "kind": "walk",
-              "start": "2026-10-25T16:20:51+04:00",
+              "start": "2026-10-25T17:33:27+04:00",
               "to": {
                 "lat": 41.7032,
                 "lon": 44.7912,
@@ -1428,7 +1409,71 @@
               }
             }
           ],
-          "start": "2026-10-25T16:09:06+04:00",
+          "start": "2026-10-25T17:21:42+04:00",
+          "transfers": 0,
+          "walk_m": 393
+        },
+        {
+          "duration_minutes": 17,
+          "end": "2026-10-25T17:47:43+04:00",
+          "legs": [
+            {
+              "distance_m": 58,
+              "end": "2026-10-25T17:31:59+04:00",
+              "from": {
+                "lat": 41.6939,
+                "lon": 44.8013,
+                "name": "Origin"
+              },
+              "kind": "walk",
+              "start": "2026-10-25T17:31:06+04:00",
+              "to": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              }
+            },
+            {
+              "distance_m": 3947,
+              "end": "2026-10-25T17:43:00+04:00",
+              "from": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              },
+              "kind": "bus",
+              "route_name": "Station Square - Airport",
+              "route_number": "337",
+              "start": "2026-10-25T17:31:59+04:00",
+              "stops": 2,
+              "to": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              }
+            },
+            {
+              "distance_m": 335,
+              "end": "2026-10-25T17:47:43+04:00",
+              "from": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              },
+              "kind": "walk",
+              "start": "2026-10-25T17:43:00+04:00",
+              "to": {
+                "lat": 41.7032,
+                "lon": 44.7912,
+                "name": "Destination"
+              }
+            }
+          ],
+          "start": "2026-10-25T17:31:06+04:00",
           "transfers": 0,
           "walk_m": 393
         }
@@ -1439,9 +1484,9 @@
   "transit_search_places.freedom-square": {
     "tool": "transit_search_places",
     "example": "freedom-square",
-    "recordedAt": "2026-10-25T12:03:43.077Z",
+    "recordedAt": "2026-10-25T13:11:14.619Z",
     "output": {
-      "as_of": "2026-10-25T16:03:43+04:00",
+      "as_of": "2026-10-25T17:11:14+04:00",
       "places": [
         {
           "district": "Sololaki",
@@ -1463,9 +1508,9 @@
   "transit_search_routes.baratashvili": {
     "tool": "transit_search_routes",
     "example": "baratashvili",
-    "recordedAt": "2026-10-25T12:03:43.082Z",
+    "recordedAt": "2026-10-25T13:11:14.621Z",
     "output": {
-      "as_of": "2026-10-25T16:03:40+04:00",
+      "as_of": "2026-10-25T17:11:11+04:00",
       "routes": [
         {
           "id": "1:R98445",
@@ -1493,9 +1538,9 @@
   "transit_search_stops.rustaveli": {
     "tool": "transit_search_stops",
     "example": "rustaveli",
-    "recordedAt": "2026-10-25T12:03:43.091Z",
+    "recordedAt": "2026-10-25T13:11:14.631Z",
     "output": {
-      "as_of": "2026-10-25T16:03:40+04:00",
+      "as_of": "2026-10-25T17:11:12+04:00",
       "source": "TTC",
       "stale": false,
       "stops": [

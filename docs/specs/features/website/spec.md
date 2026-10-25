@@ -444,7 +444,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 
 | Context   | Codes                                                         |
 | --------- | ------------------------------------------------------------- |
-| `rates`   | `nbg`, `tbc`, `bog`, `liberty`, `terabank`, `halyk`, `basisbank`, `credo`, `rico`, `scapp`, `kursi` |
+| `rates`   | `nbg`, `tbc`, `bog`, `liberty`, `terabank`, `halyk`, `basisbank`, `credo`, `rico`, `scapp`, `mjc`, `inteli`, `mbc`, `crystal`, `kursi` |
 | `fuel`    | `wissol`, `rompetrol`, `socar`, `connect`, `lukoil`, `neogas`, `portal` |
 | `transit` | `ttc`                                                         |
 | `offers`  | `tbc`, `bog`, `liberty`                                       |
