@@ -15,14 +15,16 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/bootstrap"
 )
 
-// testKey is a key of the TTC and of TBC. Every configuration of the server needs both
-// while the TTC and TBC are on.
+// testKey is a key of the TTC, of TBC, and of Credo Bank. Every configuration of the
+// server needs each while its vendor is on.
 const testKey = "test-key"
 
 const (
 	ttcKeyVariable = "GEOMCP_TRANSIT_TTC_API_KEY"
 	tbcKeyVariable = "GEOMCP_RATES_TBC_API_KEY"
 	tbcSwitch      = "GEOMCP_RATES_TBC_ENABLED"
+	credoKey       = "GEOMCP_RATES_CREDO_API_KEY" //nolint:gosec // A name, not a key.
+	credoSwitch    = "GEOMCP_RATES_CREDO_ENABLED" //nolint:gosec // A name, not a key.
 )
 
 // setKeys sets the key of each vendor that is on by default and needs one.
@@ -31,6 +33,7 @@ func setKeys(t *testing.T) {
 
 	t.Setenv(ttcKeyVariable, testKey)
 	t.Setenv(tbcKeyVariable, testKey)
+	t.Setenv(credoKey, testKey)
 }
 
 // PLATFORM-SC-012: A variable of the environment sets a value. A missing one keeps its default.
@@ -380,6 +383,7 @@ func TestLoadConfigGivesTheDefaultsOfPortal(t *testing.T) {
 func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 	t.Chdir(t.TempDir())
 	t.Setenv(tbcKeyVariable, testKey)
+	t.Setenv(credoKey, testKey)
 
 	_, err := bootstrap.LoadConfig()
 	if err == nil || !strings.Contains(err.Error(), "GEOMCP_TRANSIT_TTC_API_KEY") {
@@ -392,6 +396,7 @@ func TestLoadConfigTurnsTheTTCOff(t *testing.T) {
 	t.Chdir(t.TempDir())
 	t.Setenv("GEOMCP_TRANSIT_TTC_ENABLED", "false")
 	t.Setenv(tbcKeyVariable, testKey)
+	t.Setenv(credoKey, testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -549,6 +554,160 @@ func TestLoadConfigGivesTheDefaultsOfKursi(t *testing.T) {
 	}
 }
 
+// SCAPRATE-SC-009: With no variable of Scapp, it is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfScapp(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	scapp := cfg.Rates.Scapp
+	if !scapp.Enabled {
+		t.Error("Scapp.Enabled = false, want true")
+	}
+
+	if got := scapp.BaseURL.String(); got != "https://scapp.ge" {
+		t.Errorf("Scapp.BaseURL = %q, want %q", got, "https://scapp.ge")
+	}
+
+	if scapp.HTTP.Rate != 1 || scapp.HTTP.Burst != 1 {
+		t.Errorf(
+			"Scapp.HTTP = rate %v burst %d, want rate 1 burst 1",
+			scapp.HTTP.Rate,
+			scapp.HTTP.Burst,
+		)
+	}
+}
+
+// HALRATE-SC-008: With no variable of Halyk, the bank is on, at its production address,
+// with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfHalyk(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	halyk := cfg.Rates.Halyk
+	if !halyk.Enabled {
+		t.Error("Halyk.Enabled = false, want true")
+	}
+
+	if got := halyk.BaseURL.String(); got != "https://halykbank.ge" {
+		t.Errorf("Halyk.BaseURL = %q, want %q", got, "https://halykbank.ge")
+	}
+
+	if halyk.HTTP.Rate != 1 || halyk.HTTP.Burst != 1 {
+		t.Errorf(
+			"Halyk.HTTP = rate %v burst %d, want rate 1 burst 1",
+			halyk.HTTP.Rate,
+			halyk.HTTP.Burst,
+		)
+	}
+}
+
+// BASRATE-SC-009: With no variable of Basisbank, the bank is on, at its production
+// address, with 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfBasisbank(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	basisbank := cfg.Rates.Basisbank
+	if !basisbank.Enabled {
+		t.Error("Basisbank.Enabled = false, want true")
+	}
+
+	if got := basisbank.BaseURL.String(); got != "https://static.bb.ge/api/view" {
+		t.Errorf("Basisbank.BaseURL = %q, want %q", got, "https://static.bb.ge/api/view")
+	}
+
+	if basisbank.HTTP.Rate != 1 || basisbank.HTTP.Burst != 1 {
+		t.Errorf(
+			"Basisbank.HTTP = rate %v burst %d, want rate 1 burst 1",
+			basisbank.HTTP.Rate,
+			basisbank.HTTP.Burst,
+		)
+	}
+}
+
+// CREDRATE-SC-010: With its key only, Credo Bank is on, at its production address, with
+// 1 call each second and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfCredo(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	credo := cfg.Rates.Credo
+	if !credo.Enabled || credo.APIKey != testKey {
+		t.Errorf(
+			"Credo = enabled %v with the key %q, want on with %q",
+			credo.Enabled,
+			credo.APIKey,
+			testKey,
+		)
+	}
+
+	if got := credo.BaseURL.String(); got != "https://n1.noxtton.com" {
+		t.Errorf("Credo.BaseURL = %q, want %q", got, "https://n1.noxtton.com")
+	}
+
+	if credo.HTTP.Rate != 1 || credo.HTTP.Burst != 1 {
+		t.Errorf(
+			"Credo.HTTP = rate %v burst %d, want rate 1 burst 1",
+			credo.HTTP.Rate,
+			credo.HTTP.Burst,
+		)
+	}
+}
+
+// CREDRATE-SC-010: While Credo Bank is on, the configuration needs its key, and the error
+// names the key and the switch. With Credo Bank off, no key is needed.
+func TestLoadConfigNeedsTheKeyOfCredo(t *testing.T) {
+	t.Run("no key, no switch", func(t *testing.T) {
+		t.Chdir(t.TempDir())
+		setKeys(t)
+		t.Setenv(credoKey, "")
+
+		_, err := bootstrap.LoadConfig()
+		if err == nil || !strings.Contains(err.Error(), credoKey) ||
+			!strings.Contains(err.Error(), credoSwitch) {
+			t.Errorf("LoadConfig() error = %v, want one that names %s and %s",
+				err, credoKey, credoSwitch)
+		}
+	})
+
+	t.Run("no key, off", func(t *testing.T) {
+		t.Chdir(t.TempDir())
+		setKeys(t)
+		t.Setenv(credoKey, "")
+		t.Setenv(credoSwitch, "false")
+
+		cfg, err := bootstrap.LoadConfig()
+		if err != nil {
+			t.Fatalf("LoadConfig() error = %v", err)
+		}
+
+		if cfg.Rates.Credo.Enabled {
+			t.Error("Credo.Enabled = true, want false")
+		}
+	})
+}
+
 // GULFUEL-SC-010: With no variable of fuel, Gulf is on, at its address, with a timeout of
 // 10 seconds, 1 call each second, and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfGulf(t *testing.T) {
@@ -594,6 +753,7 @@ func TestLoadConfigNeedsTheKeyOfTBC(t *testing.T) {
 			t.Chdir(t.TempDir())
 			t.Setenv(ttcKeyVariable, testKey)
 			t.Setenv(tbcKeyVariable, tt.key)
+			t.Setenv(credoKey, testKey)
 
 			if tt.off {
 				t.Setenv(tbcSwitch, "false")

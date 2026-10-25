@@ -51,7 +51,7 @@ model, so you can ask one question and get one answer.
 
 | Subject                | Sources                                                                                  |
 | ---------------------- | ---------------------------------------------------------------------------------------- |
-| Exchange rates         | National Bank of Georgia, Bank of Georgia, TBC Bank, Liberty Bank, Terabank, Rico Credit, Kursi.ge |
+| Exchange rates         | National Bank of Georgia, Bank of Georgia, TBC Bank, Liberty Bank, Terabank, Halyk Bank, Basisbank, Credo Bank, Rico Credit, Scapp, Kursi.ge |
 | Fuel prices            | SOCAR, Wissol, Gulf, Rompetrol, Lukoil, Portal, Connect, Neogas                          |
 | Card offers            | Bank of Georgia, TBC Bank, Liberty Studio                                                |
 | Tbilisi public transport | Tbilisi Transport Company                                                              |
@@ -117,6 +117,7 @@ With Docker:
 docker run -p 8080:8080 \
   -e GEOMCP_TRANSIT_TTC_API_KEY=... \
   -e GEOMCP_RATES_TBC_API_KEY=... \
+  -e GEOMCP_RATES_CREDO_API_KEY=... \
   ghcr.io/abgeo/georgia-mcp
 ```
 
@@ -129,12 +130,13 @@ go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest
 claude mcp add georgia-mcp -- georgia-mcp stdio
 ```
 
-Two sources need a key:
+Three sources need a key:
 
 | Setting                      | Source                    | Without the key                          |
 | ---------------------------- | ------------------------- | ---------------------------------------- |
 | `GEOMCP_TRANSIT_TTC_API_KEY` | Tbilisi Transport Company | Set `GEOMCP_TRANSIT_TTC_ENABLED=false`.  |
 | `GEOMCP_RATES_TBC_API_KEY`   | TBC Bank developer API    | Set `GEOMCP_RATES_TBC_ENABLED=false`.    |
+| `GEOMCP_RATES_CREDO_API_KEY` | Credo Bank rates API      | Set `GEOMCP_RATES_CREDO_ENABLED=false`.  |
 
 [`configs/.env.example`](configs/.env.example) lists every setting.
 

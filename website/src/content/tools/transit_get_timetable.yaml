@@ -9,8 +9,8 @@ examples:
       en: When does bus 393 leave Kvareli Square?
       ka: როდის გადის 393-ე ავტობუსი ყვარლის მოედნიდან?
     answer:
-      en: "Towards Baratashvili Street, bus 393 leaves Kvareli Square 59 times today, from 07:16 to 23:01, about every 15 minutes."
-      ka: "ბარათაშვილის ქუჩისკენ 393-ე ავტობუსი დღეს ყვარლის მოედნიდან 59-ჯერ გადის, 07:16-დან 23:01-მდე, დაახლოებით ყოველ 15 წუთში."
+      en: "Towards Baratashvili Street, bus 393 leaves Kvareli Square 45 times today, from 07:16 to 22:46, about every 20 minutes."
+      ka: "ბარათაშვილის ქუჩისკენ 393-ე ავტობუსი დღეს ყვარლის მოედნიდან 45-ჯერ გადის, 07:16-დან 22:46-მდე, დაახლოებით ყოველ 20 წუთში."
     input:
       route: "393"
       stop: "1882"
