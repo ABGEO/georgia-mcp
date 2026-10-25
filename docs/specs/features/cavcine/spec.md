@@ -25,17 +25,17 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | Requirement        | Where this specification realizes it                           |
 | ------------------ | -------------------------------------------------------------- |
 | `CAVCINE-FR-001`   | 4.2 `ListCinemas`. `CAVCINE-DD-003`. Tools 1.1                 |
-| `CAVCINE-FR-002`   | 4.2 `ListMovies`. `CAVCINE-DD-002`, `CAVCINE-DD-006`. Tools 1.2 |
-| `CAVCINE-FR-003`   | 4.2 `SearchMovies`. Tools 1.3                                  |
+| `CAVCINE-FR-002`   | 4.2 `ListMovies`. `CAVCINE-DD-002`, `CAVCINE-DD-006`. Tools 1.2. `CAVCINE-SC-026` |
+| `CAVCINE-FR-003`   | 4.2 `SearchMovies`. Tools 1.3. `CAVCINE-SC-026`                |
 | `CAVCINE-FR-004`   | 4.2 `ListSessions`. `CAVCINE-DD-007`. Tools 1.4                |
 | `CAVCINE-FR-005`   | 4.2 `Session`. `CAVCINE-DD-004`, `CAVCINE-DD-008`              |
 | `CAVCINE-FR-006`   | `CAVCINE-DD-007`, `CAVCINE-DD-009`                             |
 | `CAVCINE-FR-007`   | `CAVCINE-DD-010`                                               |
 | `CAVCINE-FR-008`   | 4.2 `ListSessions`. Tools 1.4                                  |
 | `CAVCINE-FR-009`   | 4.2 `GetSeatMap`. `CAVCINE-DD-005`, `CAVCINE-DD-011`. Tools 1.5 |
-| `CAVCINE-FR-010`   | 4.2 errors. Tools 2                                            |
+| `CAVCINE-FR-010`   | 4.2 errors. Tools 2. `CAVCINE-SC-027` |
 | `CAVCINE-FR-011`   | 4.2 `Text`. `CAVCINE-DD-003`                                   |
-| `CAVCINE-FR-012`   | 4.1 `adapter/cavea`. `CAVCINE-DD-012`                          |
+| `CAVCINE-FR-012`   | 4.1 `adapter/cavea`. `CAVCINE-DD-012`. `CAVCINE-SC-027` |
 | `CAVCINE-FR-013`   | 4.3 configuration                                              |
 | `CAVCINE-FR-014`   | `CAVCINE-DD-012`. `CAVCINE-SC-014`                             |
 | `CAVCINE-NFR-001`  | 4.3 cache. `CAVCINE-SC-020`                                    |
@@ -187,7 +187,10 @@ type Seat struct {
 `X-Requested-With: cavea-web` (`CAVCINE-DD-001`). The two page methods set
 `Accept: text/x-component` and `RSC: 1` on their request (`CAVCINE-DD-002`). The body
 limit is 2 MiB: the largest answer of the probe, `/sessions`, is 168 KB. The client
-returns `ErrNotSuccess` when the field `status` of an API answer is not `success`.
+returns `ErrNotSuccess` when the field `status` of an API answer is `error`. Cavea writes
+`success` on most methods and `OK!` on `/api/booking/sessions/all`. The `data` of that
+method is a JSON text that holds the array, and its `prices` is a JSON text that holds
+the object. The client decodes both texts.
 
 **`adapter/cavea`.** `NewAdapter(client *caveaclient.Client, now func() time.Time)`.
 It implements the four ports of 4.2. `ReadAt` is `now()` in `kernel.TbilisiZone()` after
@@ -223,7 +226,9 @@ type AudioLanguage string   // ka, en
 type Format string          // 3d, imax, dolby_atmos, screenx, infinity_vision
 type SeatClass string       // economy, standard, vip, status
 type OccupancyLevel string  // many_seats, filling_up, almost_sold_out
-// Each has Parse<Type>(text) and returns ErrUnknown<Type> for another text.
+// Each has Parse<Type>(text), which returns ErrUnknown<Type> for another text, and a
+// function that lists the values in their order: MovieStatuses, AudioLanguages, Formats,
+// SeatClasses.
 
 type Cinema struct {
     ID      string // the identifier of Cavea, for the join of a session
@@ -242,8 +247,8 @@ type Movie struct {
     Duration    time.Duration
     AgeRating   string
     Premiere    string // "2026-10-22", "2026", or ""
-    Directors   Text
-    Actors      Text
+    Directors   []Text
+    Actors      []Text
     Description Text
 }
 
@@ -301,7 +306,13 @@ type SeatSource interface { // no cache
 `ListSessions` reads the cinemas, the movies of both statuses, and the sessions through
 the cached ports. It refuses an unknown movie or cinema, keeps the sessions of the date
 that start after `now`, applies the filters, sorts them (`CAVCINE-FR-008`), cuts the list
-to the limit, then asks `Occupancy` for the kept sessions (`CAVCINE-DD-010`).
+to the limit, then asks `Occupancy` for the kept sessions (`CAVCINE-DD-010`). A session
+whose cinema is not an open cinema, or whose movie is in neither list, stays out. `ReadAt`
+is the read of the sessions. `Stale` is true when one of the three lists is stale.
+
+`ListMovies` cuts the list to the limit. `SearchMovies` removes the spaces at the ends of
+the text, refuses fewer than 2 or more than 100 runes with `ErrInvalidQuery` before a
+call, and cuts the list to the limit. `Total` is the length of the full list.
 
 `GetSeatMap` refuses a session whose start is not after `now`. It finds the session in
 `Sessions`, then reads the prices with `MovieSessions` of its movie, then calls `SeatMap`.
@@ -449,8 +460,9 @@ two, and needs state and a retry on a 403.
 
 **Realizes:** `CAVCINE-FR-002`, `CAVCINE-FR-011`
 **Decision:** The adapter splits `genre`, `directors`, and `actors` at `, `. It pairs the
-Georgian and the English part by position. When the counts differ, each item keeps the
-Georgian text, and the English text of the whole field goes to every language. The
+Georgian and the English part by position. When the counts differ, the field is one item
+with the full Georgian text and the full English text. When one language is empty, each
+item has the other language only. The
 premiere is `premiereEng`, else `premiere`: `DD.MM.YYYY` gives `YYYY-MM-DD`, `YYYY` stays,
 another text gives none.
 **Rationale:** `DC, საშინელებათა` pairs with `DC, Horror`. A movie coming soon has the
@@ -552,7 +564,7 @@ files from `httptest`.
 | `CAVCINE-SC-010` | `CAVCINE-INV-002`, `CAVCINE-DD-004` | unit | `ParseSessionCode("cag_5/27-10-2026/22:15")` gives the start `2026-10-27T22:15:00+04:00` and the hall key `cag_5`. `cag_5/32-10-2026/22:15`, `cag_5/27-10-2026`, `xyz`, and the empty text give `ErrInvalidSessionCode`. A fuzz test holds that each valid start is in Tbilisi. |
 | `CAVCINE-SC-011` | `CAVCINE-DD-003` | unit | The adapter with `theaters.json` gives 5 cinemas: `tbilisi_mall`, `east_point`, `galleria`, `city_mall_saburtalo`, `grand_mall`. |
 | `CAVCINE-SC-012` | `CAVCINE-DD-006` | unit | `clayface-01` gives 4 genres. The second is `{საშინელებათა, Horror}`. The premiere is `2026-10-22`. A movie with the premiere `2026` keeps `2026`. |
-| `CAVCINE-SC-013` | `CAVCINE-DD-008`, `CAVCINE-DD-009` | unit | The adapter gives `cep_1/...` the hall `IMAX`, and a key with no value `ccm_x` the hall `X`. A page session has one price, of the class `standard`. |
+| `CAVCINE-SC-013` | `CAVCINE-DD-008`, `CAVCINE-DD-009` | unit | The adapter gives `cep_1/...` the hall `IMAX` and `ccm_x/...` the hall `10`. With a hall map that lacks `ccm_x`, the hall is `X`. A page session has one price, of the class `standard`. |
 | `CAVCINE-SC-014` | `CAVCINE-FR-012`, `CAVCINE-FR-014`, `CAVCINE-DD-012` | unit | `MovieSessions` with one of 31 sessions changed to the audio language `rus` gives 30 sessions and no error. A subtitle language `rus` gives the same. A seat with the class `gold`, and a price `0`, each give an error that wraps `kernel.ErrSourceUnavailable`. |
 | `CAVCINE-SC-015` | `CAVCINE-FR-004`, `CAVCINE-FR-008` | unit | `ListSessions` at 2026-10-27 20:00 with `street-fighter` and `en` gives the sessions after 20:00 only, in the order of the start, then the cinema code. A date of 2026-10-26 gives `ErrPastDate`. |
 | `CAVCINE-SC-016` | `CAVCINE-FR-010` | unit | `ListSessions` with `no-such-movie` gives `ErrUnknownMovie`, and with `no_such` gives `ErrUnknownCinema`. Neither reads the sessions. |
@@ -562,21 +574,23 @@ files from `httptest`.
 | `CAVCINE-SC-020` | `CAVCINE-NFR-001` | unit | In `synctest`, two reads of each cached method within 14 minutes 59 seconds send one load. A read at 15 minutes sends a second. |
 | `CAVCINE-SC-021` | `CAVCINE-NFR-002` | unit | In `synctest`, the source fails after one read. At 1 hour, the cache returns the list with `Stale` true. At 6 hours and 1 second, it returns the error. |
 | `CAVCINE-SC-022` | `CAVCINE-NFR-003` | integration | Two calls of `cinema_get_seat_map` for one session send 2 seat calls each to the vendor. |
-| `CAVCINE-SC-023` | `CAVCINE-NFR-004` | integration | After one `cinema_list_sessions` with `street-fighter`, one `cinema_get_seat_map` sends exactly 2 calls to the vendor. |
+| `CAVCINE-SC-023` | `CAVCINE-NFR-004`, `CAVCINE-DD-011` | integration | After one `cinema_list_sessions` with no movie and one with `street-fighter`, one `cinema_get_seat_map` of a session of Street Fighter sends exactly 2 calls to the vendor: the POST and the GET of `CAVCINE-DD-005`. |
 | `CAVCINE-SC-024` | `CAVCINE-NFR-005`, `CAVCINE-FR-013` | unit | In `bootstrap`, `LoadConfig` with no variable of cinema gives Cavea on, at `https://cavea.ge`, with a timeout of 10 seconds, the rate 2, and the burst 2. `cinema.New` with `Enabled` false registers no tool. |
+| `CAVCINE-SC-026` | `CAVCINE-FR-002`, `CAVCINE-FR-003` | unit | `SearchMovies` with `a`, `  a  `, and 101 runes returns `ErrInvalidQuery` and calls no source. `" du "` calls the source with `du`. `ListMovies` with the limit 5 of 25 movies gives the first 5 and `Total` 25. |
+| `CAVCINE-SC-027` | `CAVCINE-FR-010`, `CAVCINE-FR-012` | integration | Each condition of tools 2 gives its message, as a tool result with `IsError`. A failure of Cavea with no stale list gives `Cavea did not answer. Try again in a few minutes.` and no text of Cavea. |
 | `CAVCINE-SC-025` | `CAVCINE-FR-001`, `CAVCINE-FR-009` | live | Against `cavea.ge`: `Theaters` holds East Point. `Sessions` holds a session. `SeatMap` of the first session of tomorrow gives one seat or more. |
 
 ## 7. Build plan
 
 | #   | Step                                                                     | Realizes                                   | Done |
 | --- | ------------------------------------------------------------------------ | ------------------------------------------ | ---- |
-| 1   | `pkg/cavea`, recorded answers, README, example, live test.               | `CAVCINE-FR-012`, `CAVCINE-NFR-006`        | [ ]  |
-| 2   | `domain`: the types of 4.2, errors, fuzz test.                           | `CAVCINE-INV-001` to `CAVCINE-INV-003`     | [ ]  |
-| 3   | `app`: ports, the five use cases, errors.                                | `CAVCINE-FR-001` to `CAVCINE-FR-010`       | [ ]  |
-| 4   | `adapter/cavea`.                                                         | `CAVCINE-FR-005`, `CAVCINE-FR-011`, `CAVCINE-FR-012`, `CAVCINE-FR-014` | [ ]  |
-| 5   | `adapter/cache`.                                                         | `CAVCINE-NFR-001` to `CAVCINE-NFR-003`     | [ ]  |
-| 6   | `adapter/tool`.                                                          | `CAVCINE-FR-001` to `CAVCINE-FR-011`       | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`. | `CAVCINE-FR-013`, `CAVCINE-NFR-005`     | [ ]  |
+| 1   | `pkg/cavea`, recorded answers, README, example, live test.               | `CAVCINE-FR-012`, `CAVCINE-NFR-006`        | [x]  |
+| 2   | `domain`: the types of 4.2, errors, fuzz test.                           | `CAVCINE-INV-001` to `CAVCINE-INV-003`     | [x]  |
+| 3   | `app`: ports, the five use cases, errors.                                | `CAVCINE-FR-001` to `CAVCINE-FR-010`       | [x]  |
+| 4   | `adapter/cavea`.                                                         | `CAVCINE-FR-005`, `CAVCINE-FR-011`, `CAVCINE-FR-012`, `CAVCINE-FR-014` | [x]  |
+| 5   | `adapter/cache`.                                                         | `CAVCINE-NFR-001` to `CAVCINE-NFR-003`     | [x]  |
+| 6   | `adapter/tool`.                                                          | `CAVCINE-FR-001` to `CAVCINE-FR-011`       | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`. | `CAVCINE-FR-013`, `CAVCINE-NFR-005`     | [x]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Cinema. | `DOM-002`                     | [x]  |
 
 ## 8. Out of scope for this specification

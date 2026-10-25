@@ -100,6 +100,8 @@ type movieOutput struct {
 }
 ```
 
+`url` is `https://cavea.ge/movie/<code>`, the page that the site of Cavea links.
+
 `cinema_search_movies` fills `code`, `name`, `status`, `duration_minutes`, `age_rating`,
 and `url` only. Cavea gives no other field in a search.
 

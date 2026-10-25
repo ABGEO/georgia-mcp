@@ -921,3 +921,28 @@ func TestLoadConfigGivesTheDefaultsOfGeorgianPost(t *testing.T) {
 		t.Errorf("GPost.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
 	}
 }
+
+// CAVCINE-SC-024: With no variable of cinema, Cavea is on, at its address, with a timeout
+// of 10 seconds, 2 calls each second, and a burst of 2.
+func TestLoadConfigGivesTheDefaultsOfCavea(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	cavea := cfg.Cinema.Cavea
+	if !cavea.Enabled {
+		t.Error("Cavea.Enabled = false, want true")
+	}
+
+	if got := cavea.BaseURL.String(); got != "https://cavea.ge" {
+		t.Errorf("Cavea.BaseURL = %q, want https://cavea.ge", got)
+	}
+
+	if http := cavea.HTTP; http.Timeout != 10*time.Second || http.Rate != 2 || http.Burst != 2 {
+		t.Errorf("Cavea.HTTP = %+v, want a timeout of 10s, rate 2, burst 2", http)
+	}
+}

@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
@@ -20,6 +21,7 @@ type Config struct {
 	Transit transit.Config    `envPrefix:"TRANSIT_"`
 	Offers  offers.Config     `envPrefix:"OFFERS_"`
 	Postal  postal.Config     `envPrefix:"POSTAL_"`
+	Cinema  cinema.Config     `envPrefix:"CINEMA_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -35,5 +37,6 @@ func Defaults() Config {
 		Transit: transit.Defaults(),
 		Offers:  offers.Defaults(),
 		Postal:  postal.Defaults(),
+		Cinema:  cinema.Defaults(),
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
@@ -53,11 +54,23 @@ func modules(cfg Config, logger *slog.Logger) ([]mcpserver.Module, error) {
 		return nil, fmt.Errorf("building the postal context: %w", err)
 	}
 
+	cinemaModule, err := cinema.New(cfg.Cinema, logger)
+	if err != nil {
+		_ = ratesModule.Close()
+		_ = fuelModule.Close()
+		_ = transitModule.Close()
+		_ = offersModule.Close()
+		_ = postalModule.Close()
+
+		return nil, fmt.Errorf("building the cinema context: %w", err)
+	}
+
 	return []mcpserver.Module{
 		ratesModule,
 		fuelModule,
 		transitModule,
 		offersModule,
 		postalModule,
+		cinemaModule,
 	}, nil
 }

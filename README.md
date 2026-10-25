@@ -56,6 +56,7 @@ model, so you can ask one question and get one answer.
 | Card offers            | Bank of Georgia, TBC Bank, Liberty Studio                                                |
 | Tbilisi public transport | Tbilisi Transport Company                                                              |
 | Postal codes           | Georgian Post                                                                            |
+| Cinemas                | Cavea                                                                                    |
 
 ## Install
 
@@ -159,6 +160,11 @@ Three sources need a key:
 | `transit_search_places`       | A place in Tbilisi by name or address.                                  |
 | `transit_plan_trip`           | A trip by public transport between two points of Tbilisi.               |
 | `postal_search_codes`         | The postal code of an address, a street, a town, or a village.          |
+| `cinema_list_cinemas`         | The open cinemas of Cavea.                                              |
+| `cinema_list_movies`          | The movies of Cavea, now showing or coming soon.                        |
+| `cinema_search_movies`        | The movies of Cavea by a part of the English name.                      |
+| `cinema_list_sessions`        | The sessions of one date, with the prices and the occupancy.            |
+| `cinema_get_seat_map`         | The seats of one session, with the free seats of each class.            |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
@@ -195,7 +201,7 @@ public issue.
 ## Disclaimer
 
 Georgia MCP is not an official service. It is not affiliated with the National Bank of
-Georgia or any bank, fuel company, transport operator, or postal operator it reads. The data belongs to its
+Georgia or any bank, fuel company, transport operator, postal operator, or cinema chain it reads. The data belongs to its
 publishers and can be late or wrong. Check with the source before you decide.
 
 ## Author
