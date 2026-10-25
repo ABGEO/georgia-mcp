@@ -4,7 +4,7 @@ title: Logging
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-10-25
 scope: [internal/pkg/logger/, internal/]
 related: [MCP, API, LIF, LNG]
 ---
@@ -76,6 +76,19 @@ the OpenTelemetry semantic conventions for MCP:
 The process writes one record for each HTTP request, except a probe of `/livez` or
 `/readyz` that answers 200. `go-chi/httplog/v3` writes it, with the schema of the
 OpenTelemetry semantic conventions. It logs no request body and no response body.
+
+## LOG-011
+
+The logger adds two attributes to every record. The attribute names come from the
+OpenTelemetry semantic conventions for a resource:
+
+| Attribute         | Value                          |
+| ----------------- | ------------------------------ |
+| `service.name`    | `georgia-mcp`                  |
+| `service.version` | The version of the build.      |
+
+**Why:** A collector holds the records of many services and many versions. The two
+attributes tell them apart.
 
 ## Retired identifiers
 

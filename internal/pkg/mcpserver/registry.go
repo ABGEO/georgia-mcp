@@ -13,10 +13,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/pkg/buildinfo"
 )
 
-const (
-	serverName          = "georgia-mcp"
-	maxRequestBodyBytes = 1 << 20
-)
+const maxRequestBodyBytes = 1 << 20
 
 // ErrDuplicateTool tells that two tools share one name.
 var ErrDuplicateTool = errors.New("mcp server: duplicate tool name")
@@ -37,7 +34,7 @@ type Registry struct {
 // even with no tool, so a client gets an empty list and not an error.
 func New(info buildinfo.Info, logger *slog.Logger) *Registry {
 	server := mcp.NewServer(
-		&mcp.Implementation{Name: serverName, Version: info.Version},
+		&mcp.Implementation{Name: buildinfo.Name, Version: info.Version},
 		&mcp.ServerOptions{Capabilities: &mcp.ServerCapabilities{Tools: &mcp.ToolCapabilities{}}},
 	)
 

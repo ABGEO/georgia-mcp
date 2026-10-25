@@ -6,6 +6,9 @@ import (
 	"runtime/debug"
 )
 
+// Name is the name of the server.
+const Name = "georgia-mcp"
+
 const unknown = "unknown"
 
 // Info is the version of the binary.

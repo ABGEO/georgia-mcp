@@ -25,7 +25,8 @@ type App struct {
 
 // New builds the logger, each context, and the MCP server with every tool.
 func New(cfg Config, logOutput io.Writer) (*App, error) {
-	log := logger.New(cfg.Log, logOutput)
+	info := buildinfo.Get()
+	log := logger.New(cfg.Log, logOutput, info)
 
 	contexts, err := modules(cfg, log)
 	if err != nil {
@@ -35,7 +36,7 @@ func New(cfg Config, logOutput io.Writer) (*App, error) {
 	app := &App{
 		cfg:      cfg,
 		logger:   log,
-		registry: mcpserver.New(buildinfo.Get(), log),
+		registry: mcpserver.New(info, log),
 		modules:  contexts,
 	}
 

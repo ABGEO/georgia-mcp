@@ -4,7 +4,7 @@ title: The platform of the server
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -52,6 +52,7 @@ It adds the container image, the local compose file, and the task file.
 | `PLATFORM-FR-024`  | 4.1 `Taskfile.yml`. `PLATFORM-DD-009`                   |
 | `PLATFORM-FR-025`  | 4.1 `vendors`. `PLATFORM-DD-011`                        |
 | `PLATFORM-FR-026`  | 4.1 `pkg/vendorhttp`. `PLATFORM-DD-013`                 |
+| `PLATFORM-FR-027`  | 4.1 `logger`, `buildinfo`. `PLATFORM-SC-038`            |
 | `PLATFORM-NFR-001` | 4.4. `PLATFORM-SC-029`                                  |
 | `PLATFORM-NFR-002` | 4.4. `PLATFORM-SC-016`                                  |
 | `PLATFORM-NFR-003` | 4.1 `build/package/Dockerfile`. `PLATFORM-SC-030`       |
@@ -75,7 +76,7 @@ It adds the container image, the local compose file, and the task file.
 | `CFG-001` to `CFG-007` | 4.1 `config`, 4.3, `configs/.env.example`.                                                  |
 | `CLI-001` to `CLI-005` | 4.1 `cli`, 4.3.                                                                     |
 | `LIF-001` to `LIF-006` | 4.4.                                                                                |
-| `LOG-001` to `LOG-010` | 4.1 `logger`, `httpserver`, `mcpserver`. `stdio` gives `os.Stderr` to the logger.   |
+| `LOG-001` to `LOG-011` | 4.1 `logger`, `httpserver`, `mcpserver`. `stdio` gives `os.Stderr` to the logger.   |
 | `RSL-001`, `RSL-008`   | `httpclient.New` sets the timeout and the vendor limit.                             |
 | `RSL-003` to `RSL-007` | 4.1 `cache`.                                                                        |
 | `GO-012`               | `cache.Cache[V]` has two instantiations in its tests. `config.Load[T]` has two.     |
@@ -128,9 +129,9 @@ Every path is new. Each package with more than one file has `doc.go` (`PKG-006`)
 
 | Path                                  | Types and functions                                                   |
 | ------------------------------------- | --------------------------------------------------------------------- |
-| `internal/pkg/buildinfo/`        | `type Info struct { Version, Commit, GoVersion string }`. `func Get() Info` reads `debug.ReadBuildInfo`: the main module version, `vcs.revision`, and `runtime.Version()`. An absent value is `unknown`. |
+| `internal/pkg/buildinfo/`        | `const Name = "georgia-mcp"`. `type Info struct { Version, Commit, GoVersion string }`. `func Get() Info` reads `debug.ReadBuildInfo`: the main module version, `vcs.revision`, and `runtime.Version()`. An absent value is `unknown`. |
 | `internal/pkg/config/`           | `func Load[T any](defaults T) (T, error)`. Loads `.env` with `godotenv.Load`, ignores `fs.ErrNotExist`. Parses into a copy of `defaults` with `env.ParseWithOptions(&cfg, env.Options{Prefix: "GEOMCP_"})`: a variable that is set replaces its field. `func URL(text string) url.URL` reads a default address. `PLATFORM-DD-014`. Validates `T` with `go-playground/validator/v10` and its `validate` tags. Each failure becomes a `*FieldError{Variable, Problem}`. `PLATFORM-DD-012`. |
-| `internal/pkg/logger/`           | `type Config struct { Level slog.Level; Format string }`. `Format` has `validate:"oneof=json text"`. `func New(cfg Config, output io.Writer) *slog.Logger`. `AddSource` when the level is debug (`LOG-003`). |
+| `internal/pkg/logger/`           | `type Config struct { Level slog.Level; Format string }`. `Format` has `validate:"oneof=json text"`. `func New(cfg Config, output io.Writer, info buildinfo.Info) *slog.Logger`. `AddSource` when the level is debug (`LOG-003`). Every record holds `service.name` = `buildinfo.Name` and `service.version` = `info.Version` (`LOG-011`). |
 | `internal/pkg/mcpserver/`        | See below.                                                            |
 | `internal/pkg/httpserver/`       | See below.                                                            |
 | `internal/pkg/cache/`            | See below.                                                            |
@@ -158,7 +159,7 @@ func (e *ToolError) Error() string { return e.Message }
 func (e *ToolError) Unwrap() error { return e.Cause }
 ```
 
-- `New` builds `mcp.NewServer(&mcp.Implementation{Name: "georgia-mcp", Version: info.Version}, opts)`
+- `New` builds `mcp.NewServer(&mcp.Implementation{Name: buildinfo.Name, Version: info.Version}, opts)`
   with `opts.Capabilities = &mcp.ServerCapabilities{Tools: &mcp.ToolCapabilities{}}`.
   It adds the log middleware with `AddReceivingMiddleware`.
 - `AddTool` returns `ErrDuplicateTool`, wrapped with the name, when the name exists.

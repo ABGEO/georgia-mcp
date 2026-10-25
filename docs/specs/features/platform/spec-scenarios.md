@@ -4,7 +4,7 @@ title: The platform of the server, the scenarios
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -256,6 +256,19 @@ Two invalid values give two errors, and each one is a `*FieldError`.
 **When** each one logs a call of `test_get_echo` with the input `secret-value`.
 **Then** no record of the info logger holds `secret-value`. The debug record holds
 `mcp.tool.arguments`.
+
+### `PLATFORM-SC-038`
+
+**Verifies:** `PLATFORM-FR-027`
+**Layer:** unit
+
+| Format | Record                    | `service.name` | `service.version` |
+| ------ | ------------------------- | -------------- | ----------------- |
+| `json` | An info record            | `georgia-mcp`  | `v0.1.0`          |
+| `text` | An info record            | `georgia-mcp`  | `v0.1.0`          |
+| `json` | A record of a `With` child | `georgia-mcp`  | `v0.1.0`          |
+
+The logger gets `buildinfo.Info{Version: "v0.1.0"}`.
 
 ## The cache
 

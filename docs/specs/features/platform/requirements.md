@@ -4,7 +4,7 @@ title: The platform of the server
 type: requirements
 status: approved
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-10-25
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -240,6 +240,12 @@ the status and the first 1 KiB of the body.
 
 **Why:** `CLT-005` and `CLT-007` hold the rules. One module realizes them for 19 clients (`ADR-0006`).
 
+### `PLATFORM-FR-027`
+
+Each log record must name the server and its version.
+
+**Why:** The operator reads the records of several servers and several versions in one place.
+
 ## 6. Non-functional requirements
 
 ### `PLATFORM-NFR-001`
@@ -288,7 +294,7 @@ arguments of a tool call.
 | `CFG-001` to `CFG-007` | Configuration  | The environment, the local file, the prefix, the validation. |
 | `CLI-001` to `CLI-005` | Command line   | `serve`, `stdio`, `version`.                                 |
 | `LIF-001` to `LIF-006` | Lifecycle      | The start order and the shutdown.                            |
-| `LOG-002`, `LOG-009`, `LOG-010` | Logging | The output of each mode. The records.                      |
+| `LOG-002`, `LOG-009` to `LOG-011` | Logging | The output of each mode. The records. The service.       |
 | `RSL-003` to `RSL-008` | Resilience     | The cache, its stale values, its size, the vendor limit.     |
 | `BLD-004`, `BLD-005`   | Build          | The version from the build. The image.                       |
 | `GO-012`               | Go style       | The generic cache needs two instantiations. The tests give them. |
