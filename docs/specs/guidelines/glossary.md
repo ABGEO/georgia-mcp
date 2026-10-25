@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Glossary
@@ -149,6 +149,25 @@ define it. The identifier of a term is `GLO-<term>`.
 | postal code        | The 4-digit code of Georgian Post for an address: `0186`. |
 | address            | In `postal`, the text of Georgian Post that names a settlement and a street: `ქალაქი თბილისი, ამბერკი ტაბიძის ქუჩა`. |
 | district           | In `postal`, the city or the municipality under which Georgian Post groups an address. |
+
+## Cinema
+
+| Term               | Meaning |
+| ------------------ | ------- |
+| Cavea           | The largest chain of cinemas of Georgia. Vendor code `cavea`.                   |
+| cinema          | One building of Cavea with its halls: "Cavea East Point".                       |
+| cinema code     | The short lowercase name of a cinema in a request: `east_point`.                |
+| hall            | One screen room of a cinema, with a number or a name: `5`, `IMAX`.              |
+| movie           | One film that Cavea shows now or soon.                                          |
+| movie code      | The name of a movie in the address of its page on Cavea: `street-fighter`.      |
+| movie status    | `now_showing` or `coming_soon`.                                                 |
+| session         | One showing of a movie in one hall at one start time.                           |
+| session code    | The code of Cavea for a session: `cag_5/27-10-2026/22:15`.                      |
+| audio language  | The language of the sound of a session: `ka` or `en`.                           |
+| format          | A screen or sound technology of a session: `3d`, `imax`, `dolby_atmos`, `screenx`, `infinity_vision`. |
+| seat class      | The class of a seat with its own price: `economy`, `standard`, `vip`, `status`. |
+| occupancy level | The share of sold seats of a session, as Cavea shows it: `many_seats`, `filling_up`, `almost_sold_out`. |
+| seat map        | The seats of the hall of one session, each with its row, number, class, and state. |
 
 ## The website
 
