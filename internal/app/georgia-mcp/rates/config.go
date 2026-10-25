@@ -19,13 +19,17 @@ const (
 
 // Config is the configuration of the rates context.
 type Config struct {
-	NBG      NBGConfig      `envPrefix:"NBG_"`
-	TBC      TBCConfig      `envPrefix:"TBC_"`
-	BOG      vendors.Config `envPrefix:"BOG_"`
-	Liberty  vendors.Config `envPrefix:"LIBERTY_"`
-	Terabank vendors.Config `envPrefix:"TERABANK_"`
-	Rico     vendors.Config `envPrefix:"RICO_"`
-	Kursi    vendors.Config `envPrefix:"KURSI_"`
+	NBG       NBGConfig      `envPrefix:"NBG_"`
+	TBC       TBCConfig      `envPrefix:"TBC_"`
+	BOG       vendors.Config `envPrefix:"BOG_"`
+	Liberty   vendors.Config `envPrefix:"LIBERTY_"`
+	Terabank  vendors.Config `envPrefix:"TERABANK_"`
+	Rico      vendors.Config `envPrefix:"RICO_"`
+	Kursi     vendors.Config `envPrefix:"KURSI_"`
+	Scapp     vendors.Config `envPrefix:"SCAPP_"`
+	Halyk     vendors.Config `envPrefix:"HALYK_"`
+	Basisbank vendors.Config `envPrefix:"BASISBANK_"`
+	Credo     CredoConfig    `envPrefix:"CREDO_"`
 }
 
 // NBGConfig is the configuration of the calls to the NBG. The context needs the NBG, so it
@@ -45,15 +49,27 @@ type TBCConfig struct {
 	APIKey string `env:"API_KEY" validate:"required_if=Enabled true"`
 }
 
+// CredoConfig is the configuration of the calls to Credo Bank. Enabled turns Credo off.
+// The key does not: while Credo is on, the key is required.
+type CredoConfig struct {
+	vendors.Config
+
+	APIKey string `env:"API_KEY" validate:"required_if=Enabled true"`
+}
+
 // Defaults returns the configuration of the context with no variable set.
 func Defaults() Config {
 	return Config{
-		NBG:      NBGConfig{HTTP: httpclient.Defaults().WithLimit(nbgRate, nbgBurst)},
-		TBC:      TBCConfig{Config: vendors.Defaults("https://api.tbcbank.ge")},
-		BOG:      vendors.Defaults("https://api.businessonline.ge").WithLimit(bogRate, bogBurst),
-		Liberty:  vendors.Defaults("https://www.libertybank.ge"),
-		Terabank: vendors.Defaults("https://terabank.ge"),
-		Rico:     vendors.Defaults("https://www.rico.ge"),
-		Kursi:    vendors.Defaults("https://api-core.kursi.ge"),
+		NBG:       NBGConfig{HTTP: httpclient.Defaults().WithLimit(nbgRate, nbgBurst)},
+		TBC:       TBCConfig{Config: vendors.Defaults("https://api.tbcbank.ge")},
+		BOG:       vendors.Defaults("https://api.businessonline.ge").WithLimit(bogRate, bogBurst),
+		Liberty:   vendors.Defaults("https://www.libertybank.ge"),
+		Terabank:  vendors.Defaults("https://terabank.ge"),
+		Rico:      vendors.Defaults("https://www.rico.ge"),
+		Kursi:     vendors.Defaults("https://api-core.kursi.ge"),
+		Scapp:     vendors.Defaults("https://scapp.ge"),
+		Halyk:     vendors.Defaults("https://halykbank.ge"),
+		Basisbank: vendors.Defaults("https://static.bb.ge/api/view"),
+		Credo:     CredoConfig{Config: vendors.Defaults("https://n1.noxtton.com")},
 	}
 }

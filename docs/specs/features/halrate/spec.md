@@ -297,10 +297,10 @@ The log holds one info record that names `GEOMCP_RATES_HALYK_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                  | Done |
 | --- | -------------------------------------------------------------------------- | ----------------------------------------- | ---- |
-| 1   | `pkg/halyk`, `testdata/currency-ka.html`, README, example, live test. `.golangci.yaml`. | `HALRATE-FR-001`             | [ ]  |
-| 2   | `adapter/halyk`.                                                           | `HALRATE-FR-001`, `HALRATE-FR-002`, `HALRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.Halyk`, `Defaults`. `configs/.env.example`.           | `HALRATE-FR-003`, `HALRATE-NFR-001`       | [ ]  |
-| 4   | `module.go`: the source of Halyk, and the info record. The glossary.       | `HALRATE-FR-001`, `HALRATE-FR-003`        | [ ]  |
+| 1   | `pkg/halyk`, `testdata/currency-ka.html`, README, example, live test. `.golangci.yaml`. | `HALRATE-FR-001`             | [x]  |
+| 2   | `adapter/halyk`.                                                           | `HALRATE-FR-001`, `HALRATE-FR-002`, `HALRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.Halyk`, `Defaults`. `configs/.env.example`.           | `HALRATE-FR-003`, `HALRATE-NFR-001`       | [x]  |
+| 4   | `module.go`: the source of Halyk, and the info record. The glossary.       | `HALRATE-FR-001`, `HALRATE-FR-003`        | [x]  |
 
 ## 8. Out of scope for this specification
 

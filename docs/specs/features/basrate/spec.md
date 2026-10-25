@@ -321,10 +321,10 @@ The log holds one info record that names `GEOMCP_RATES_BASISBANK_ENABLED`.
 
 | #   | Step                                                                   | Realizes                                   | Done |
 | --- | ---------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/basisbank`, `testdata/website-xrates.json`, README, example, live test. | `BASRATE-FR-001`                         | [ ]  |
-| 2   | `adapter/basisbank`.                                                       | `BASRATE-FR-001` to `BASRATE-FR-003`, `BASRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.Basisbank`, `Defaults`. `configs/.env.example`.       | `BASRATE-FR-004`, `BASRATE-NFR-001`        | [ ]  |
-| 4   | `module.go`: the source of Basisbank, and the info record. The glossary. | `BASRATE-FR-001`, `BASRATE-FR-004`       | [ ]  |
+| 1   | `pkg/basisbank`, `testdata/website-xrates.json`, README, example, live test. | `BASRATE-FR-001`                         | [x]  |
+| 2   | `adapter/basisbank`.                                                       | `BASRATE-FR-001` to `BASRATE-FR-003`, `BASRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.Basisbank`, `Defaults`. `configs/.env.example`.       | `BASRATE-FR-004`, `BASRATE-NFR-001`        | [x]  |
+| 4   | `module.go`: the source of Basisbank, and the info record. The glossary. | `BASRATE-FR-001`, `BASRATE-FR-004`       | [x]  |
 
 ## 8. Out of scope for this specification
 

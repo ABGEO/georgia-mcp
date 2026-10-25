@@ -354,10 +354,10 @@ The log holds one info record that names `GEOMCP_RATES_CREDO_ENABLED`.
 
 | #   | Step                                                                     | Realizes                                     | Done |
 | --- | ------------------------------------------------------------------------ | -------------------------------------------- | ---- |
-| 1   | `pkg/credo`, `testdata/`, README, example, live test.                    | `CREDRATE-FR-001`, `CREDRATE-FR-004`         | [ ]  |
-| 2   | `adapter/credo`.                                                         | `CREDRATE-FR-001` to `CREDRATE-FR-004`, `CREDRATE-FR-006`, `CREDRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `CredoConfig`, `Defaults`. `configs/.env.example`.          | `CREDRATE-FR-005`, `CREDRATE-NFR-001`        | [ ]  |
-| 4   | `module.go`: the source of Credo with its key, and the info record. The glossary. | `CREDRATE-FR-001`, `CREDRATE-FR-005` | [ ]  |
+| 1   | `pkg/credo`, `testdata/`, README, example, live test.                    | `CREDRATE-FR-001`, `CREDRATE-FR-004`         | [x]  |
+| 2   | `adapter/credo`.                                                         | `CREDRATE-FR-001` to `CREDRATE-FR-004`, `CREDRATE-FR-006`, `CREDRATE-INV-001` | [x]  |
+| 3   | `config.go`: `CredoConfig`, `Defaults`. `configs/.env.example`.          | `CREDRATE-FR-005`, `CREDRATE-NFR-001`        | [x]  |
+| 4   | `module.go`: the source of Credo with its key, and the info record. The glossary. | `CREDRATE-FR-001`, `CREDRATE-FR-005` | [x]  |
 
 ## 8. Out of scope for this specification
 

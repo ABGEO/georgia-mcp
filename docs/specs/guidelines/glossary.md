@@ -70,6 +70,10 @@ define it. The identifier of a term is `GLO-<term>`.
 | Terabank                  | Terabank, a commercial bank. Bank code `terabank`.                                             |
 | Rico Credit               | Rico Credit, a microfinance organization. Bank code `rico`.                                    |
 | Kursi.ge                  | Kursi.ge, an online exchange bureau. Bank code `kursi`.                                        |
+| Scapp                     | Scapp, a microfinance organization, formerly Swiss Capital. Bank code `scapp`.                 |
+| Halyk Bank                | Halyk Bank Georgia, a commercial bank. Bank code `halyk`.                                      |
+| Basisbank                 | Basisbank, a commercial bank. Bank code `basisbank`.                                           |
+| Credo Bank                | Credo Bank, a commercial bank. Bank code `credo`.                                              |
 
 ## Fuel
 

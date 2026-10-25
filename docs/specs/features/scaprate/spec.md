@@ -328,10 +328,10 @@ The log holds one info record that names `GEOMCP_RATES_SCAPP_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                   | Done |
 | --- | -------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/scapp`, `testdata/currency-ka.html`, README, example, live test. `.golangci.yaml`. | `SCAPRATE-FR-001`             | [ ]  |
-| 2   | `adapter/scapp`.                                                           | `SCAPRATE-FR-001` to `SCAPRATE-FR-004`, `SCAPRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.Scapp`, `Defaults`. `configs/.env.example`.           | `SCAPRATE-FR-005`, `SCAPRATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the source of Scapp, and the info record. The glossary.       | `SCAPRATE-FR-001`, `SCAPRATE-FR-005`       | [ ]  |
+| 1   | `pkg/scapp`, `testdata/currency-ka.html`, README, example, live test. `.golangci.yaml`. | `SCAPRATE-FR-001`             | [x]  |
+| 2   | `adapter/scapp`.                                                           | `SCAPRATE-FR-001` to `SCAPRATE-FR-004`, `SCAPRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.Scapp`, `Defaults`. `configs/.env.example`.           | `SCAPRATE-FR-005`, `SCAPRATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the source of Scapp, and the info record. The glossary.       | `SCAPRATE-FR-001`, `SCAPRATE-FR-005`       | [x]  |
 
 ## 8. Out of scope for this specification
 
