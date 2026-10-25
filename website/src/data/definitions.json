@@ -1,4 +1,781 @@
 {
+  "cinema_get_seat_map": {
+    "name": "cinema_get_seat_map",
+    "title": "Get the seat map of a session of Cavea",
+    "description": "Returns the seats of the hall of one session of Cavea that has not started: each row, each seat with its class, a mark for a taken seat, and a mark for special needs. Gives the count of free seats and the price in lari of each seat class. The server reads the map at each call. It reserves no seat. A person buys the ticket on cavea.ge. Data from the web site of Cavea, cavea.ge.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "The language of the names and the texts: ka or en. The default is en."
+        },
+        "session": {
+          "type": "string",
+          "description": "The session code from cinema_list_sessions, for example cag_5/27-10-2026/22:15."
+        }
+      },
+      "required": [
+        "session"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Cavea."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the seats, RFC 3339."
+        },
+        "session": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The session code, for cinema_get_seat_map."
+            },
+            "movie_code": {
+              "type": "string",
+              "description": "The code of the movie."
+            },
+            "movie_name": {
+              "type": "string",
+              "description": "The name of the movie."
+            },
+            "cinema_code": {
+              "type": "string",
+              "description": "The code of the cinema."
+            },
+            "cinema_name": {
+              "type": "string",
+              "description": "The name of the cinema."
+            },
+            "hall": {
+              "type": "string",
+              "description": "The hall: a number or a name, for example 5 or IMAX."
+            },
+            "start": {
+              "type": "string",
+              "description": "The start of the session, RFC 3339 with the offset of Tbilisi."
+            },
+            "audio_language": {
+              "type": "string",
+              "description": "The language of the sound: ka or en."
+            },
+            "subtitle_language": {
+              "type": "string",
+              "description": "The language of the subtitles: ka or en. Absent when the session has none."
+            },
+            "formats": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "The formats of the session. Empty for a 2D session."
+            },
+            "prices": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "class": {
+                    "type": "string",
+                    "description": "The seat class: economy, standard, vip, or status."
+                  },
+                  "price": {
+                    "type": "string",
+                    "description": "The price of one ticket in lari, as a decimal string."
+                  }
+                },
+                "required": [
+                  "class",
+                  "price"
+                ],
+                "additionalProperties": false
+              },
+              "description": "The price of each seat class. Standard only when the request has no movie."
+            },
+            "occupancy": {
+              "type": "string",
+              "description": "many_seats, filling_up, or almost_sold_out."
+            }
+          },
+          "description": "The session. It has no occupancy level.",
+          "required": [
+            "code",
+            "movie_code",
+            "movie_name",
+            "cinema_code",
+            "cinema_name",
+            "hall",
+            "start",
+            "audio_language",
+            "formats",
+            "prices"
+          ],
+          "additionalProperties": false
+        },
+        "classes": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "class": {
+                "type": "string",
+                "description": "The seat class: economy, standard, vip, or status."
+              },
+              "price": {
+                "type": "string",
+                "description": "The price of one ticket in lari, as a decimal string."
+              },
+              "seats": {
+                "type": "integer",
+                "description": "The count of seats of the class."
+              },
+              "free": {
+                "type": "integer",
+                "description": "The count of seats of the class that are not taken."
+              }
+            },
+            "required": [
+              "class",
+              "seats",
+              "free"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Each seat class of the hall, with its price and its free seats."
+        },
+        "rows": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "row": {
+                "type": "string",
+                "description": "The row label."
+              },
+              "seats": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "description": "The seat number."
+                    },
+                    "class": {
+                      "type": "string",
+                      "description": "The seat class."
+                    },
+                    "taken": {
+                      "type": "boolean",
+                      "description": "True when Cavea marks the seat as taken. A person cannot buy it."
+                    },
+                    "special_needs": {
+                      "type": "boolean",
+                      "description": "True for a seat for a person with special needs."
+                    }
+                  },
+                  "required": [
+                    "number",
+                    "class",
+                    "taken"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The seats of the row, by number."
+              }
+            },
+            "required": [
+              "row",
+              "seats"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The rows, in the order of Cavea."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "session",
+        "classes",
+        "rows"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "cinema_list_cinemas": {
+    "name": "cinema_list_cinemas",
+    "title": "List the cinemas of Cavea",
+    "description": "Lists the open cinemas of Cavea, the largest cinema chain of Georgia, in Tbilisi and Batumi. Returns the code, the name, the city, and the address of each cinema. Use the code in cinema_list_sessions. Data from the web site of Cavea, cavea.ge.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "The language of the names and the texts: ka or en. The default is en."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Cavea."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the cinemas, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Cavea did not answer and the server returns data it read before."
+        },
+        "cinemas": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The code of the cinema, for example east_point."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the cinema."
+              },
+              "city": {
+                "type": "string",
+                "description": "The city of the cinema, in English."
+              },
+              "address": {
+                "type": "string",
+                "description": "The street address of the cinema, in English."
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "city",
+              "address"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The open cinemas, in the order of Cavea."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "cinemas"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "cinema_list_movies": {
+    "name": "cinema_list_movies",
+    "title": "List the movies of Cavea",
+    "description": "Lists the movies that Cavea shows now, or the movies coming soon. Returns the code, the name, the genres, the duration in minutes, the age rating, the premiere, the directors, the actors, and a description of each movie. Use the code in cinema_list_sessions. Data from the web site of Cavea, cavea.ge.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "The language of the names and the texts: ka or en. The default is en."
+        },
+        "status": {
+          "type": "string",
+          "description": "now_showing or coming_soon. The default is now_showing."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of movies, 1 to 100. The default is 50."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Cavea."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the movies, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Cavea did not answer and the server returns data it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of movies that matched. More than the count of movies when the limit cut the list."
+        },
+        "movies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The code of the movie, for example street-fighter."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the movie."
+              },
+              "status": {
+                "type": "string",
+                "description": "now_showing or coming_soon. A movie before its premiere date is coming_soon."
+              },
+              "duration_minutes": {
+                "type": "integer",
+                "description": "The duration of the movie, in minutes."
+              },
+              "age_rating": {
+                "type": "string",
+                "description": "The age rating of the MPAA, for example PG-13."
+              },
+              "genres": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The genres of the movie."
+              },
+              "premiere": {
+                "type": "string",
+                "description": "The premiere in Georgia: YYYY-MM-DD, or the year only."
+              },
+              "directors": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The directors."
+              },
+              "actors": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The main actors."
+              },
+              "description": {
+                "type": "string",
+                "description": "A short description of the story."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the movie on cavea.ge, where a person buys a ticket."
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "status",
+              "duration_minutes",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The movies, in the order of Cavea."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "movies"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "cinema_list_sessions": {
+    "name": "cinema_list_sessions",
+    "title": "List the sessions of Cavea",
+    "description": "Lists the sessions of the movies of Cavea on one date that have not started, in the order of the start time. Narrow the list by a movie, a cinema, an audio language, or a format. Returns the cinema, the hall, the start time, the languages, the formats, the price in lari, and the occupancy level of each session. With a movie, each session has the price of each seat class. With no movie, it has the price of the class Standard. Use the session code in cinema_get_seat_map. Data from the web site of Cavea, cavea.ge.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "The language of the names and the texts: ka or en. The default is en."
+        },
+        "movie": {
+          "type": "string",
+          "description": "The code of a movie from cinema_list_movies or cinema_search_movies."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date in Tbilisi, YYYY-MM-DD. The default is today. Cavea publishes about 3 days."
+        },
+        "cinema": {
+          "type": "string",
+          "description": "The code of a cinema from cinema_list_cinemas."
+        },
+        "audio_language": {
+          "type": "string",
+          "description": "The language of the sound: ka or en."
+        },
+        "format": {
+          "type": "string",
+          "description": "One format: 3d, imax, dolby_atmos, screenx, or infinity_vision."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of sessions, 1 to 100. The default is 30."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Cavea."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the sessions, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Cavea did not answer and the server returns sessions it read before."
+        },
+        "occupancy_as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the occupancy levels, RFC 3339."
+        },
+        "occupancy_note": {
+          "type": "string",
+          "description": "Why the sessions have no occupancy level."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of sessions that matched. More than the count of sessions when the limit cut the list."
+        },
+        "sessions": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The session code, for cinema_get_seat_map."
+              },
+              "movie_code": {
+                "type": "string",
+                "description": "The code of the movie."
+              },
+              "movie_name": {
+                "type": "string",
+                "description": "The name of the movie."
+              },
+              "cinema_code": {
+                "type": "string",
+                "description": "The code of the cinema."
+              },
+              "cinema_name": {
+                "type": "string",
+                "description": "The name of the cinema."
+              },
+              "hall": {
+                "type": "string",
+                "description": "The hall: a number or a name, for example 5 or IMAX."
+              },
+              "start": {
+                "type": "string",
+                "description": "The start of the session, RFC 3339 with the offset of Tbilisi."
+              },
+              "audio_language": {
+                "type": "string",
+                "description": "The language of the sound: ka or en."
+              },
+              "subtitle_language": {
+                "type": "string",
+                "description": "The language of the subtitles: ka or en. Absent when the session has none."
+              },
+              "formats": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The formats of the session. Empty for a 2D session."
+              },
+              "prices": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "class": {
+                      "type": "string",
+                      "description": "The seat class: economy, standard, vip, or status."
+                    },
+                    "price": {
+                      "type": "string",
+                      "description": "The price of one ticket in lari, as a decimal string."
+                    }
+                  },
+                  "required": [
+                    "class",
+                    "price"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The price of each seat class. Standard only when the request has no movie."
+              },
+              "occupancy": {
+                "type": "string",
+                "description": "many_seats, filling_up, or almost_sold_out."
+              }
+            },
+            "required": [
+              "code",
+              "movie_code",
+              "movie_name",
+              "cinema_code",
+              "cinema_name",
+              "hall",
+              "start",
+              "audio_language",
+              "formats",
+              "prices"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The sessions, in the order of the start time, then the cinema code."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "sessions"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "cinema_search_movies": {
+    "name": "cinema_search_movies",
+    "title": "Search the movies of Cavea",
+    "description": "Finds the movies of Cavea, now showing or coming soon, by a part of the English name. Give the text in English: Cavea does not match a Georgian name. Returns the code, the name, the status, the duration in minutes, and the age rating of each movie. Data from the web site of Cavea, cavea.ge.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "The language of the names and the texts: ka or en. The default is en."
+        },
+        "query": {
+          "type": "string",
+          "description": "A part of the English name of the movie, 2 to 100 characters."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of movies, 1 to 100. The default is 20."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Cavea."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the movies, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Cavea did not answer and the server returns data it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of movies that matched. More than the count of movies when the limit cut the list."
+        },
+        "movies": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The code of the movie, for example street-fighter."
+              },
+              "name": {
+                "type": "string",
+                "description": "The name of the movie."
+              },
+              "status": {
+                "type": "string",
+                "description": "now_showing or coming_soon. A movie before its premiere date is coming_soon."
+              },
+              "duration_minutes": {
+                "type": "integer",
+                "description": "The duration of the movie, in minutes."
+              },
+              "age_rating": {
+                "type": "string",
+                "description": "The age rating of the MPAA, for example PG-13."
+              },
+              "genres": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The genres of the movie."
+              },
+              "premiere": {
+                "type": "string",
+                "description": "The premiere in Georgia: YYYY-MM-DD, or the year only."
+              },
+              "directors": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The directors."
+              },
+              "actors": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The main actors."
+              },
+              "description": {
+                "type": "string",
+                "description": "A short description of the story."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the movie on cavea.ge, where a person buys a ticket."
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "status",
+              "duration_minutes",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The movies, in the order of Cavea."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "movies"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "fuel_get_prices": {
     "name": "fuel_get_prices",
     "title": "Fuel prices of Georgian fuel companies",

@@ -1,0 +1,15 @@
+context: cinema
+vendors: [cavea]
+summary:
+  en: The seats of one Cavea session, row by row, with the class and the price, and which seats are taken.
+  ka: კავეას ერთი სეანსის ადგილები რიგების მიხედვით, კლასითა და ფასით, და რომელი ადგილია დაკავებული.
+examples:
+  - id: galleria-1400
+    question:
+      en: Are there free seats for Street Fighter at 14:00 at Galleria?
+      ka: არის თავისუფალი ადგილები Street Fighter-ზე 14:00-ზე გალერეაში?
+    answer:
+      en: "Yes. 63 of the 91 seats are free: 38 of 41 standard seats at 13 lari and 25 of 34 status seats at 15 lari. All 16 VIP seats at 21 lari are taken."
+      ka: "დიახ. 91 ადგილიდან 63 თავისუფალია: 41 სტანდარტულიდან 38, 13 ლარად, და 34 სტატუსიდან 25, 15 ლარად. 21-ლარიანი 16 VIP ადგილი სულ დაკავებულია."
+    input:
+      session: cag_5/26-10-2026/14:00

@@ -1,4 +1,798 @@
 {
+  "cinema_get_seat_map.galleria-1400": {
+    "tool": "cinema_get_seat_map",
+    "example": "galleria-1400",
+    "recordedAt": "2026-10-25T20:02:34.639Z",
+    "output": {
+      "as_of": "2026-10-26T00:02:34+04:00",
+      "classes": [
+        {
+          "class": "standard",
+          "free": 38,
+          "price": "13",
+          "seats": 41
+        },
+        {
+          "class": "vip",
+          "free": 0,
+          "price": "21",
+          "seats": 16
+        },
+        {
+          "class": "status",
+          "free": 25,
+          "price": "15",
+          "seats": 34
+        }
+      ],
+      "rows": [
+        {
+          "row": "6",
+          "seats": [
+            {
+              "class": "vip",
+              "number": 1,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 2,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 3,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 4,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 5,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 6,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 7,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 8,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 9,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 10,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 11,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 12,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 13,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 14,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 15,
+              "taken": true
+            },
+            {
+              "class": "vip",
+              "number": 16,
+              "taken": true
+            }
+          ]
+        },
+        {
+          "row": "5",
+          "seats": [
+            {
+              "class": "standard",
+              "number": 1,
+              "taken": true
+            },
+            {
+              "class": "standard",
+              "number": 2,
+              "taken": true
+            },
+            {
+              "class": "standard",
+              "number": 3,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 4,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 5,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 6,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 7,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 8,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 9,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 10,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 11,
+              "taken": true
+            },
+            {
+              "class": "status",
+              "number": 12,
+              "taken": true
+            },
+            {
+              "class": "standard",
+              "number": 13,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 14,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 15,
+              "taken": false
+            }
+          ]
+        },
+        {
+          "row": "4",
+          "seats": [
+            {
+              "class": "standard",
+              "number": 1,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 2,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 3,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 4,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 5,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 6,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 7,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 8,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 9,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 10,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 11,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 12,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 13,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 14,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 15,
+              "taken": false
+            }
+          ]
+        },
+        {
+          "row": "3",
+          "seats": [
+            {
+              "class": "standard",
+              "number": 1,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 2,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 3,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 4,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 5,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 6,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 7,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 8,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 9,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 10,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 11,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 12,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 13,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 14,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 15,
+              "taken": false
+            }
+          ]
+        },
+        {
+          "row": "2",
+          "seats": [
+            {
+              "class": "standard",
+              "number": 1,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 2,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 3,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 4,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 5,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 6,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 7,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 8,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 9,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 10,
+              "taken": false
+            },
+            {
+              "class": "status",
+              "number": 11,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 12,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 13,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 14,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 15,
+              "taken": false
+            }
+          ]
+        },
+        {
+          "row": "1",
+          "seats": [
+            {
+              "class": "standard",
+              "number": 1,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 2,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 3,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 4,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 5,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 6,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 7,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 8,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 9,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 10,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 11,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 12,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 13,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 14,
+              "taken": false
+            },
+            {
+              "class": "standard",
+              "number": 15,
+              "taken": false
+            }
+          ]
+        }
+      ],
+      "session": {
+        "audio_language": "ka",
+        "cinema_code": "galleria",
+        "cinema_name": "Cavea Galleria",
+        "code": "cag_5/26-10-2026/14:00",
+        "formats": [],
+        "hall": "5",
+        "movie_code": "street-fighter",
+        "movie_name": "Street Fighter",
+        "prices": [
+          {
+            "class": "economy",
+            "price": "13"
+          },
+          {
+            "class": "standard",
+            "price": "13"
+          },
+          {
+            "class": "vip",
+            "price": "21"
+          },
+          {
+            "class": "status",
+            "price": "15"
+          }
+        ],
+        "start": "2026-10-26T14:00:00+04:00"
+      },
+      "source": "Cavea"
+    }
+  },
+  "cinema_list_cinemas.all": {
+    "tool": "cinema_list_cinemas",
+    "example": "all",
+    "recordedAt": "2026-10-25T20:02:34.641Z",
+    "output": {
+      "as_of": "2026-10-26T00:02:30+04:00",
+      "cinemas": [
+        {
+          "address": "16th km Davit Aghmashenebeli Ave",
+          "city": "Tbilisi",
+          "code": "tbilisi_mall",
+          "name": "Cavea Tbilisi Mall"
+        },
+        {
+          "address": "2 Aleksandre Tvalchrelidze St",
+          "city": "Tbilisi",
+          "code": "east_point",
+          "name": "Cavea East Point"
+        },
+        {
+          "address": "2/4 Rustaveli Avenue",
+          "city": "Tbilisi",
+          "code": "galleria",
+          "name": "Cavea Galleria"
+        },
+        {
+          "address": "70 Vazha Pshavela Avenue",
+          "city": "Tbilisi",
+          "code": "city_mall_saburtalo",
+          "name": "Cavea City Mall Saburtalo"
+        },
+        {
+          "address": "29 Sherif Khimshiashvili St, Batumi",
+          "city": "Batumi",
+          "code": "grand_mall",
+          "name": "Cavea Grand Mall"
+        }
+      ],
+      "source": "Cavea",
+      "stale": false
+    }
+  },
+  "cinema_list_movies.now-showing": {
+    "tool": "cinema_list_movies",
+    "example": "now-showing",
+    "recordedAt": "2026-10-25T20:02:34.641Z",
+    "output": {
+      "as_of": "2026-10-26T00:02:31+04:00",
+      "movies": [
+        {
+          "actors": [
+            "Tom Rhys Harries",
+            "Ruby Sear",
+            "Naomi Ackie",
+            "Max Minghella"
+          ],
+          "age_rating": "R",
+          "code": "clayface-01",
+          "description": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+          "directors": [
+            "James Watkins"
+          ],
+          "duration_minutes": 108,
+          "genres": [
+            "DC",
+            "Horror",
+            "Sci-Fi",
+            "Thriller"
+          ],
+          "name": "Clayface",
+          "premiere": "2026-10-22",
+          "status": "now_showing",
+          "url": "https://cavea.ge/movie/clayface-01"
+        },
+        {
+          "actors": [
+            "Jessica Chastain",
+            "Jay Duplass",
+            "Arabella Olivia Clark",
+            "Alejandro Nieves"
+          ],
+          "age_rating": "R",
+          "code": "other-mommy",
+          "description": "Bela, an 8-year-old girl living in a home with marital problems, confronts a sinister entity that comes out of her closet. The presence, who she calls \"Other Mommy,\" becomes increasingly threatening to her and her family.",
+          "directors": [
+            "Rob Savage"
+          ],
+          "duration_minutes": 93,
+          "genres": [
+            "Horror"
+          ],
+          "name": "Other Mommy",
+          "premiere": "2026-10-15",
+          "status": "now_showing",
+          "url": "https://cavea.ge/movie/other-mommy"
+        },
+        {
+          "actors": [
+            "Jason Momoa",
+            "David Dastmalchian",
+            "Noah Centineo",
+            "Olivier Richters"
+          ],
+          "age_rating": "PG-13",
+          "code": "street-fighter",
+          "description": "Street Fighters Ryu and Ken reunite when Chun-Li recruits them for the World Warrior Tournament. As they face a hidden conspiracy, they must confront each other and their past-or face destruction.",
+          "directors": [
+            "Kitao Sakurai"
+          ],
+          "duration_minutes": 119,
+          "genres": [
+            "Action"
+          ],
+          "name": "Street Fighter",
+          "premiere": "2026-10-15",
+          "status": "now_showing",
+          "url": "https://cavea.ge/movie/street-fighter"
+        }
+      ],
+      "source": "Cavea",
+      "stale": false,
+      "total": 21
+    }
+  },
+  "cinema_list_sessions.street-fighter-galleria": {
+    "tool": "cinema_list_sessions",
+    "example": "street-fighter-galleria",
+    "recordedAt": "2026-10-25T20:02:34.926Z",
+    "output": {
+      "as_of": "2026-10-26T00:02:33+04:00",
+      "occupancy_as_of": "2026-10-26T00:02:34+04:00",
+      "sessions": [
+        {
+          "audio_language": "ka",
+          "cinema_code": "galleria",
+          "cinema_name": "Cavea Galleria",
+          "code": "cag_5/26-10-2026/14:00",
+          "formats": [],
+          "hall": "5",
+          "movie_code": "street-fighter",
+          "movie_name": "Street Fighter",
+          "occupancy": "many_seats",
+          "prices": [
+            {
+              "class": "economy",
+              "price": "13"
+            },
+            {
+              "class": "standard",
+              "price": "13"
+            },
+            {
+              "class": "vip",
+              "price": "21"
+            },
+            {
+              "class": "status",
+              "price": "15"
+            }
+          ],
+          "start": "2026-10-26T14:00:00+04:00"
+        },
+        {
+          "audio_language": "en",
+          "cinema_code": "galleria",
+          "cinema_name": "Cavea Galleria",
+          "code": "cag_5/26-10-2026/16:45",
+          "formats": [],
+          "hall": "5",
+          "movie_code": "street-fighter",
+          "movie_name": "Street Fighter",
+          "occupancy": "many_seats",
+          "prices": [
+            {
+              "class": "economy",
+              "price": "15"
+            },
+            {
+              "class": "standard",
+              "price": "15"
+            },
+            {
+              "class": "vip",
+              "price": "22"
+            },
+            {
+              "class": "status",
+              "price": "17"
+            }
+          ],
+          "start": "2026-10-26T16:45:00+04:00"
+        },
+        {
+          "audio_language": "ka",
+          "cinema_code": "galleria",
+          "cinema_name": "Cavea Galleria",
+          "code": "cag_5/26-10-2026/22:15",
+          "formats": [],
+          "hall": "5",
+          "movie_code": "street-fighter",
+          "movie_name": "Street Fighter",
+          "occupancy": "many_seats",
+          "prices": [
+            {
+              "class": "economy",
+              "price": "20"
+            },
+            {
+              "class": "standard",
+              "price": "20"
+            },
+            {
+              "class": "vip",
+              "price": "29"
+            },
+            {
+              "class": "status",
+              "price": "22"
+            }
+          ],
+          "start": "2026-10-26T22:15:00+04:00"
+        }
+      ],
+      "source": "Cavea",
+      "stale": false,
+      "total": 3
+    }
+  },
+  "cinema_search_movies.dune": {
+    "tool": "cinema_search_movies",
+    "example": "dune",
+    "recordedAt": "2026-10-25T20:02:35.421Z",
+    "output": {
+      "as_of": "2026-10-26T00:02:31+04:00",
+      "movies": [
+        {
+          "age_rating": "PG-13",
+          "code": "dune-part-three",
+          "duration_minutes": 140,
+          "name": "Dune: Part Three",
+          "status": "coming_soon",
+          "url": "https://cavea.ge/movie/dune-part-three"
+        }
+      ],
+      "source": "Cavea",
+      "stale": false,
+      "total": 1
+    }
+  },
   "fuel_get_prices.premium": {
     "tool": "fuel_get_prices",
     "example": "premium",

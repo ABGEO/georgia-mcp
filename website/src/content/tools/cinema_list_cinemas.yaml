@@ -1,0 +1,14 @@
+context: cinema
+vendors: [cavea]
+summary:
+  en: The open cinemas of Cavea, with the city and the address.
+  ka: კავეას ღია კინოთეატრები, ქალაქითა და მისამართით.
+examples:
+  - id: all
+    question:
+      en: Which Cavea cinemas are open?
+      ka: კავეას რომელი კინოთეატრებია ღია?
+    answer:
+      en: "Cavea has five open cinemas: Tbilisi Mall, East Point, Galleria, and City Mall Saburtalo in Tbilisi, and Grand Mall in Batumi."
+      ka: "კავეას ხუთი ღია კინოთეატრი აქვს: თბილისში თბილისი მოლი, ისთ ფოინთი, გალერეა და სითი მოლი საბურთალო, ბათუმში კი გრანდ მოლი."
+    input: {}

@@ -1,0 +1,17 @@
+context: cinema
+vendors: [cavea]
+summary:
+  en: The sessions of Cavea for a day, with the hall, the language, the format, the ticket prices, and how full each one is.
+  ka: კავეას სეანსები ერთი დღისთვის, დარბაზით, ენით, ფორმატით, ბილეთის ფასებით და დატვირთვით.
+examples:
+  - id: street-fighter-galleria
+    question:
+      en: When does Street Fighter play at Galleria today?
+      ka: როდის გადის Street Fighter გალერეაში დღეს?
+    answer:
+      en: "Today Cavea Galleria shows Street Fighter three times in hall 5: at 14:00 in Georgian from 13 lari, at 16:45 in English from 15 lari, and at 22:15 in Georgian from 20 lari. Each session has many free seats."
+      ka: "დღეს კავეა გალერეა Street Fighter-ს სამჯერ აჩვენებს მე-5 დარბაზში: 14:00-ზე ქართულად 13 ლარიდან, 16:45-ზე ინგლისურად 15 ლარიდან და 22:15-ზე ქართულად 20 ლარიდან. ყველა სეანსზე ბევრი თავისუფალი ადგილია."
+    input:
+      movie: street-fighter
+      cinema: galleria
+      date: "2026-10-26"
