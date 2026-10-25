@@ -36,6 +36,18 @@ rates:
     - code: scapp
       en: Scapp
       ka: სკაპი
+    - code: mjc
+      en: MJC
+      ka: ემჯეის კრედიტი
+    - code: inteli
+      en: Inteli Express
+      ka: ინტელიექსპრესი
+    - code: mbc
+      en: MBC
+      ka: ემბისი
+    - code: crystal
+      en: Crystal
+      ka: კრისტალი
     - code: kursi
       en: Kursi.ge
       ka: Kursi.ge
