@@ -175,7 +175,8 @@ type priceOutput struct {
 ```
 
 The prices follow the order of `SeatClass`: `economy`, `standard`, `vip`, `status`. When
-`Occupancy` is false, `occupancy_note` is `Cavea did not give the occupancy levels.`
+`Occupancy` is false and the list holds a session, `occupancy_note` is `Cavea did not give
+the occupancy levels.` An empty list has neither `occupancy_as_of` nor `occupancy_note`.
 
 ### 1.5 `cinema_get_seat_map`
 

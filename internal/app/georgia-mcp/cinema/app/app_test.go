@@ -146,9 +146,12 @@ func numberedMovies(t *testing.T, count int) []domain.Movie {
 	return movies
 }
 
-// fakeSessions answers the same sessions to both methods, and counts each call.
+// fakeSessions answers the sessions to both methods, or priced to MovieSessions when it
+// is set, and counts each call.
 type fakeSessions struct {
 	sessions []domain.Session
+	// priced is the answer of MovieSessions when it is set.
+	priced   []domain.Session
 	stale    bool
 	calls    int
 	movieIDs []string
@@ -163,6 +166,10 @@ func (f *fakeSessions) Sessions(context.Context) (app.SessionList, error) {
 func (f *fakeSessions) MovieSessions(_ context.Context, movieID string) (app.SessionList, error) {
 	f.calls++
 	f.movieIDs = append(f.movieIDs, movieID)
+
+	if f.priced != nil {
+		return app.SessionList{Sessions: f.priced, Stale: f.stale}, nil
+	}
 
 	return app.SessionList{Sessions: f.sessions, Stale: f.stale}, nil
 }
@@ -426,7 +433,7 @@ func TestGetSeatMapCountsTheFreeSeats(t *testing.T) {
 		domain.VIP: mustPrice(t, "29"), domain.Status: mustPrice(t, "22"),
 	}
 
-	sessions := &fakeSessions{sessions: []domain.Session{priced}}
+	sessions := &fakeSessions{sessions: []domain.Session{page}, priced: []domain.Session{priced}}
 	seats := &fakeSeats{seats: hall()}
 	get := app.NewGetSeatMap(fakeCinemas{t}, &fakeMovies{t: t}, sessions, seats,
 		func() time.Time { return at(t, 20) })

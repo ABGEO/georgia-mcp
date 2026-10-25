@@ -153,18 +153,26 @@ func (c *MovieCache) Close() error {
 type SessionCache struct {
 	source   app.SessionSource
 	sessions *cache.Cache[app.SessionList]
+	byMovie  *cache.Cache[app.SessionList]
 }
 
 var _ app.SessionSource = (*SessionCache)(nil)
 
 // NewSessionCache returns a cache in front of the source.
 func NewSessionCache(source app.SessionSource) (*SessionCache, error) {
-	sessions, err := newStore[app.SessionList](oneEntry + movieEntries)
+	sessions, err := newStore[app.SessionList](oneEntry)
 	if err != nil {
 		return nil, err
 	}
 
-	return &SessionCache{source: source, sessions: sessions}, nil
+	byMovie, err := newStore[app.SessionList](movieEntries)
+	if err != nil {
+		sessions.Close()
+
+		return nil, err
+	}
+
+	return &SessionCache{source: source, sessions: sessions, byMovie: byMovie}, nil
 }
 
 // Sessions returns the cached sessions of every movie, or reads them.
@@ -179,9 +187,9 @@ func (c *SessionCache) Sessions(ctx context.Context) (app.SessionList, error) {
 
 // MovieSessions returns the cached sessions of a movie, or reads them.
 func (c *SessionCache) MovieSessions(ctx context.Context, movieID string) (app.SessionList, error) {
-	result, err := c.sessions.Get(
+	result, err := c.byMovie.Get(
 		ctx,
-		"movie|"+movieID,
+		movieID,
 		func(ctx context.Context) (app.SessionList, error) {
 			return c.source.MovieSessions(ctx, movieID)
 		},
@@ -200,9 +208,10 @@ func staleSessions(result cache.Result[app.SessionList]) app.SessionList {
 	return list
 }
 
-// Close stops the goroutines of the store.
+// Close stops the goroutines of the stores.
 func (c *SessionCache) Close() error {
 	c.sessions.Close()
+	c.byMovie.Close()
 
 	return nil
 }

@@ -2,6 +2,7 @@ package domain_test
 
 import (
 	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -72,6 +73,30 @@ func FuzzParseSessionCode(f *testing.F) {
 
 		if code.String() != input {
 			t.Errorf("ParseSessionCode(%q).String() = %q", input, code)
+		}
+	})
+}
+
+// CAVCINE-SC-010: No input panics, and every accepted cinema code or movie code holds only
+// the characters of its form and writes back to its text.
+func FuzzParseCodes(f *testing.F) {
+	for _, seed := range []string{"east_point", "street-fighter", "Not A Code", "", "ქ"} {
+		f.Add(seed)
+	}
+
+	f.Fuzz(func(t *testing.T, input string) {
+		if code, err := domain.ParseCinemaCode(input); err == nil {
+			if code.String() != input ||
+				strings.Trim(input, "abcdefghijklmnopqrstuvwxyz0123456789_") != "" {
+				t.Errorf("ParseCinemaCode(%q) = %q, want a refusal", input, code)
+			}
+		}
+
+		if code, err := domain.ParseMovieCode(input); err == nil {
+			if code.String() != input ||
+				strings.Trim(input, "abcdefghijklmnopqrstuvwxyz0123456789-") != "" {
+				t.Errorf("ParseMovieCode(%q) = %q, want a refusal", input, code)
+			}
 		}
 	})
 }

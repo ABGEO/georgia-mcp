@@ -12,8 +12,8 @@ import (
 // ClassCount is the seats of one class in a hall, with the price of the class.
 type ClassCount struct {
 	Class domain.SeatClass
-	// Price is the zero price when the session has none for the class.
-	Price domain.Price
+	// Price is nil when the session has none for the class.
+	Price *domain.Price
 	Seats int
 	Free  int
 }
@@ -120,7 +120,10 @@ func countClasses(seats []domain.Seat, prices map[domain.SeatClass]domain.Price)
 	counts := []ClassCount{}
 
 	for _, class := range domain.SeatClasses() {
-		count := ClassCount{Class: class, Price: prices[class]}
+		count := ClassCount{Class: class}
+		if price, ok := prices[class]; ok {
+			count.Price = &price
+		}
 
 		for _, seat := range seats {
 			if seat.Class != class {

@@ -338,29 +338,34 @@ func TestEachToolGivesTheNamesInTheLanguage(t *testing.T) {
 	session := connect(t, fakeCavea{t: t})
 
 	for _, tt := range nameCases() {
-		english := output(t, session, tt.tool, tt.args)
+		t.Run(tt.tool, func(t *testing.T) {
+			t.Parallel()
 
-		georgian := maps.Clone(tt.args)
-		georgian[keyLanguage] = "ka"
+			english := output(t, session, tt.tool, tt.args)
 
-		if got := at(output(t, session, tt.tool, georgian), tt.path...); got != tt.ka {
-			t.Errorf("%s with ka = %v, want %s", tt.tool, got, tt.ka)
-		}
+			georgian := maps.Clone(tt.args)
+			georgian[keyLanguage] = "ka"
 
-		if got := at(english, tt.path...); got != tt.english {
-			t.Errorf("%s with no language = %v, want %s", tt.tool, got, tt.english)
-		}
+			if got := at(output(t, session, tt.tool, georgian), tt.path...); got != tt.ka {
+				t.Errorf("%s with ka = %v, want %s", tt.tool, got, tt.ka)
+			}
 
-		georgian[keyLanguage] = "ru"
+			if got := at(english, tt.path...); got != tt.english {
+				t.Errorf("%s with no language = %v, want %s", tt.tool, got, tt.english)
+			}
 
-		want := `language: "ru" is not a language of this tool. Use ka or en.`
-		if got := errorText(t, session, tt.tool, georgian); got != want {
-			t.Errorf("%s with ru = %q, want %q", tt.tool, got, want)
-		}
+			georgian[keyLanguage] = "ru"
+
+			want := `language: "ru" is not a language of this tool. Use ka or en.`
+			if got := errorText(t, session, tt.tool, georgian); got != want {
+				t.Errorf("%s with ru = %q, want %q", tt.tool, got, want)
+			}
+		})
 	}
 }
 
 // CAVCINE-SC-019: The sessions and the seat map in English hold each field of the tools.
+// An empty list of sessions holds no note of the occupancy.
 func TestSessionsAndSeatMapInEnglish(t *testing.T) {
 	t.Parallel()
 
@@ -398,6 +403,14 @@ func TestSessionsAndSeatMapInEnglish(t *testing.T) {
 	got = output(t, session, getSeatMap, map[string]any{keySession: sessionCode})
 	if diff := cmp.Diff(wantMap, got); diff != "" {
 		t.Errorf("cinema_get_seat_map mismatch (-want +got):\n%s", diff)
+	}
+
+	empty := output(t, session, listSessions, map[string]any{keyDate: "2026-10-26"})
+
+	wantEmpty := decode(t, `{"source":"Cavea","as_of":"2026-10-25T14:00:00+04:00",
+		"stale":false,"total":0,"sessions":[]}`)
+	if diff := cmp.Diff(wantEmpty, empty); diff != "" {
+		t.Errorf("cinema_list_sessions of a date with no session mismatch (-want +got):\n%s", diff)
 	}
 
 	movie := output(t, session, listMovies, map[string]any{})
@@ -493,9 +506,13 @@ func TestEachConditionGivesItsMessage(t *testing.T) {
 	session := connect(t, fakeCavea{t: t})
 
 	for _, tt := range messageCases() {
-		if got := errorText(t, session, tt.tool, tt.args); got != tt.want {
-			t.Errorf("%s %v = %q, want %q", tt.tool, tt.args, got, tt.want)
-		}
+		t.Run(fmt.Sprintf("%s %v", tt.tool, tt.args), func(t *testing.T) {
+			t.Parallel()
+
+			if got := errorText(t, session, tt.tool, tt.args); got != tt.want {
+				t.Errorf("%s %v = %q, want %q", tt.tool, tt.args, got, tt.want)
+			}
+		})
 	}
 }
 
@@ -527,13 +544,21 @@ func TestFailuresHideTheTextOfCavea(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		session := connect(t, fakeCavea{t: t, err: tt.err})
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
 
-		for _, call := range calls {
-			got := errorText(t, session, call.tool, call.args)
-			if got != tt.want || strings.Contains(got, vendorBody) {
-				t.Errorf("%s with %v = %q, want %q", call.tool, tt.err, got, tt.want)
+			session := connect(t, fakeCavea{t: t, err: tt.err})
+
+			for _, call := range calls {
+				t.Run(call.tool, func(t *testing.T) {
+					t.Parallel()
+
+					got := errorText(t, session, call.tool, call.args)
+					if got != tt.want || strings.Contains(got, vendorBody) {
+						t.Errorf("%s with %v = %q, want %q", call.tool, tt.err, got, tt.want)
+					}
+				})
 			}
-		}
+		})
 	}
 }

@@ -213,7 +213,7 @@ type MovieCode struct{ code string }    // ParseMovieCode: 1 to 100 of [a-z0-9-]
 type SessionCode struct {               // ParseSessionCode: "<hall key>/DD-MM-YYYY/HH:MM"
     code    string
     hallKey string                      // "cag_5"
-    start   time.Time                   // in kernel.TbilisiZone()
+    start   int64                       // Unix seconds, so that == ignores the zone
 }
 func (c SessionCode) Start() time.Time
 func (c SessionCode) Date() kernel.Date
@@ -446,7 +446,7 @@ variables only:
 2. `GET /api/booking/seats/<code>` with `X-Seat-Ticket: <ticket>` and
    `Cookie: <name>=<value>; ...` of step 1.
 
-The code is one path segment, escaped: `cag_5%2F27-10-2026%2F22%3A15`. No ticket returns
+The code is one path segment, escaped with `url.PathEscape`: `cag_5%2F27-10-2026%2F22:15`. No ticket returns
 `ErrNoTicket`.
 **Rationale:** The page does the same two calls. On 2026-10-25, with the User-Agent of
 the server, the GET with the ticket and `cavea_vid` answered 200. The GET with no cookie,
@@ -502,7 +502,7 @@ of Street Fighter in both sources.
 **Realizes:** `CAVCINE-FR-007`, `CAVCINE-NFR-003`
 **Decision:** `Occupancy` sends one call for each 30 codes. `green` gives `many_seats`,
 `yellow` gives `filling_up`, another value gives `almost_sold_out`. A code that Cavea
-leaves out has no level. When `Occupancy` fails, `ListSessions` returns the sessions with
+leaves out, or gives an empty value, has no level. When `Occupancy` fails, `ListSessions` returns the sessions with
 no level and `Occupancy` false.
 **Rationale:** The page shows the same three levels for the same values. A limit of 100
 needs 4 calls at most.
@@ -561,7 +561,7 @@ files from `httptest`.
 | `CAVCINE-SC-007` | `CAVCINE-DD-010` | unit | `Availability` with 31 codes gives `ErrTooManySessions` and sends no call. With 1 code, it gives `{"cag_5/27-10-2026/22:15": "green"}`. |
 | `CAVCINE-SC-008` | `CAVCINE-DD-005` | unit | `SeatMap` sends the POST, then the GET with `X-Seat-Ticket: test-ticket` and the cookies `cavea_vid` and `__Host-cavea_vproof`. It gives 91 seats. An answer of the POST with no ticket gives `ErrNoTicket` and sends no GET. |
 | `CAVCINE-SC-009` | `CAVCINE-FR-012` | unit | A 403 on each method gives an `*APIError` with 403. `errors.Is(err, ErrUnexpectedStatus)` holds. |
-| `CAVCINE-SC-010` | `CAVCINE-INV-002`, `CAVCINE-DD-004` | unit | `ParseSessionCode("cag_5/27-10-2026/22:15")` gives the start `2026-10-27T22:15:00+04:00` and the hall key `cag_5`. `cag_5/32-10-2026/22:15`, `cag_5/27-10-2026`, `xyz`, and the empty text give `ErrInvalidSessionCode`. A fuzz test holds that each valid start is in Tbilisi. |
+| `CAVCINE-SC-010` | `CAVCINE-INV-002`, `CAVCINE-DD-004` | unit | `ParseSessionCode("cag_5/27-10-2026/22:15")` gives the start `2026-10-27T22:15:00+04:00` and the hall key `cag_5`. `cag_5/32-10-2026/22:15`, `cag_5/27-10-2026`, `xyz`, and the empty text give `ErrInvalidSessionCode`. A fuzz test holds that each valid start is in Tbilisi. A second fuzz test holds that `ParseCinemaCode` and `ParseMovieCode` accept only the characters of their form. |
 | `CAVCINE-SC-011` | `CAVCINE-DD-003` | unit | The adapter with `theaters.json` gives 5 cinemas: `tbilisi_mall`, `east_point`, `galleria`, `city_mall_saburtalo`, `grand_mall`. |
 | `CAVCINE-SC-012` | `CAVCINE-DD-006` | unit | `clayface-01` gives 4 genres. The second is `{საშინელებათა, Horror}`. The premiere is `2026-10-22`. A movie with the premiere `2026` keeps `2026`. |
 | `CAVCINE-SC-013` | `CAVCINE-DD-008`, `CAVCINE-DD-009` | unit | The adapter gives `cep_1/...` the hall `IMAX` and `ccm_x/...` the hall `10`. With a hall map that lacks `ccm_x`, the hall is `X`. A page session has one price, of the class `standard`. |

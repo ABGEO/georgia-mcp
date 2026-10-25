@@ -93,9 +93,10 @@ func toSessionsOutput(list app.Sessions, language kernel.Language) sessionsOutpu
 		Sessions: sessions,
 	}
 
-	if list.Occupancy {
+	switch {
+	case list.Occupancy:
 		out.OccupancyAsOf = instant(list.OccupancyAt)
-	} else {
+	case len(sessions) > 0:
 		out.OccupancyNote = occupancyNote
 	}
 
@@ -146,7 +147,7 @@ func toSeatMapOutput(seatMap app.SeatMap, language kernel.Language) seatMapOutpu
 	classes := make([]classOutput, 0, len(seatMap.Classes))
 	for _, count := range seatMap.Classes {
 		class := classOutput{Class: string(count.Class), Seats: count.Seats, Free: count.Free}
-		if !count.Price.Amount().IsZero() {
+		if count.Price != nil {
 			class.Price = count.Price.String()
 		}
 
