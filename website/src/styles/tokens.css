@@ -16,6 +16,8 @@
   --lilac: #6e3b6b;
   --sage-fill: #d3e6cf;
   --sage: #33613a;
+  --teal-fill: #c4e5e1;
+  --teal: #1f5e5a;
   color-scheme: light;
 }
 
@@ -38,6 +40,8 @@
     --lilac: #d5bde6;
     --sage-fill: #22382a;
     --sage: #afd6b4;
+  --teal-fill: #1b3836;
+  --teal: #9fd6cf;
     color-scheme: dark;
   }
 }
@@ -60,6 +64,8 @@
   --lilac: #d5bde6;
   --sage-fill: #22382a;
   --sage: #afd6b4;
+  --teal-fill: #1b3836;
+  --teal: #9fd6cf;
   color-scheme: dark;
 }
 
@@ -69,3 +75,4 @@
 [data-hue="sky"] { --hue-fill: var(--sky-fill); --hue: var(--sky); }
 [data-hue="lilac"] { --hue-fill: var(--lilac-fill); --hue: var(--lilac); }
 [data-hue="sage"] { --hue-fill: var(--sage-fill); --hue: var(--sage); }
+[data-hue="teal"] { --hue-fill: var(--teal-fill); --hue: var(--teal); }

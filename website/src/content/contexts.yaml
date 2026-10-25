@@ -122,3 +122,14 @@ postal:
     - code: gpost
       en: Georgian Post
       ka: საქართველოს ფოსტა
+cinema:
+  order: 6
+  hue: teal
+  icon: clapperboard
+  name:
+    en: Cinemas
+    ka: კინოთეატრები
+  vendors:
+    - code: cavea
+      en: Cavea
+      ka: კავეა

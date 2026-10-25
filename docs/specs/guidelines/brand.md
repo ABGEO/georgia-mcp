@@ -92,6 +92,7 @@ Each hue has a pastel fill and a deep tone for text. Wine is the brand hue.
 | `sky`    | `#C9DEEE`  | `#2C5B7A`  | `#1F3546` | `#A9CBE6` | The transit subject.        |
 | `lilac`  | `#E2D2EC`  | `#6E3B6B`  | `#3A2A42` | `#D5BDE6` | The offers subject.         |
 | `sage`   | `#D3E6CF`  | `#33613A`  | `#22382A` | `#AFD6B4` | The postal subject.         |
+| `teal`   | `#C4E5E1`  | `#1F5E5A`  | `#1B3836` | `#9FD6CF` | The cinema subject.         |
 
 - A fill is a background. Never write text in a fill color.
 - On a fill, write in `ink` or in the text tone of the same hue.

@@ -1,0 +1,15 @@
+context: cinema
+vendors: [cavea]
+summary:
+  en: The movies of Cavea now showing or coming soon, with the genres, the cast, and the premiere.
+  ka: კავეას ფილმები, რომლებიც ახლა გადის ან მალე გამოვა, ჟანრებით, მსახიობებითა და პრემიერით.
+examples:
+  - id: now-showing
+    question:
+      en: What is on at Cavea now?
+      ka: რა გადის ახლა კავეაში?
+    answer:
+      en: "Cavea shows 21 movies. Among the newest: Clayface, a DC horror of 108 minutes from 22 October, Other Mommy, a horror of 93 minutes with Jessica Chastain, and Street Fighter, an action movie of 119 minutes with Jason Momoa."
+      ka: "კავეაში 21 ფილმი გადის. უახლესებს შორისაა Clayface, DC-ის 108-წუთიანი საშინელებათა ფილმი 22 ოქტომბრიდან, Other Mommy, 93-წუთიანი საშინელებათა ფილმი ჯესიკა ჩასტეინით, და Street Fighter, 119-წუთიანი მძაფრსიუჟეტიანი ფილმი ჯეისონ მომოათი."
+    input:
+      limit: 3

@@ -1,0 +1,15 @@
+context: cinema
+vendors: [cavea]
+summary:
+  en: The movies of Cavea that match a part of the English name.
+  ka: კავეას ფილმები, რომლებიც ინგლისური სახელის ნაწილს ემთხვევა.
+examples:
+  - id: dune
+    question:
+      en: Is Dune coming to Cavea?
+      ka: გამოვა დიუნა კავეაში?
+    answer:
+      en: "Yes. Dune: Part Three is coming soon to Cavea. It runs 140 minutes and is rated PG-13."
+      ka: "დიახ. Dune: Part Three მალე გამოვა კავეაში. ის 140 წუთი გრძელდება და აქვს რეიტინგი PG-13."
+    input:
+      query: dune

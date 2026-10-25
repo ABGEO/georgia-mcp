@@ -201,6 +201,7 @@ Add a row before you create the file or the directory.
 | `LIBOFFER` | `features/liboffer/` | `offers`   | The card offers of Liberty Bank for its Studio customers.       | Approved |
 | `WEBSITE`  | `features/website/`  | `website`  | The website of Georgia MCP, in English and in Georgian.         | Approved |
 | `POSTCODE` | `features/postcode/` | `postal`   | The postal codes of Georgian Post, searched by address.         | Approved |
+| `CAVCINE`  | `features/cavcine/`  | `cinema`   | The cinemas, movies, sessions, and seats of Cavea.              | Approved |
 
 ## Retired identifiers
 
