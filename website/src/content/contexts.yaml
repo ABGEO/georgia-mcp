@@ -21,9 +21,21 @@ rates:
     - code: terabank
       en: Terabank
       ka: ტერაბანკი
+    - code: halyk
+      en: Halyk Bank
+      ka: ხალიკ ბანკი
+    - code: basisbank
+      en: Basisbank
+      ka: ბაზისბანკი
+    - code: credo
+      en: Credo Bank
+      ka: კრედო ბანკი
     - code: rico
       en: Rico Credit
       ka: რიკო კრედიტი
+    - code: scapp
+      en: Scapp
+      ka: სკაპი
     - code: kursi
       en: Kursi.ge
       ka: Kursi.ge

@@ -99,6 +99,7 @@ export const en = {
     keys: {
       ttc: "The transit tools need a TTC API key in GEOMCP_TRANSIT_TTC_API_KEY. To start without them, set GEOMCP_TRANSIT_TTC_ENABLED=false.",
       tbc: "The commercial rates of TBC Bank need a TBC API key in GEOMCP_RATES_TBC_API_KEY. To start without TBC Bank, set GEOMCP_RATES_TBC_ENABLED=false.",
+      credo: "The commercial rates of Credo Bank need a Credo API key in GEOMCP_RATES_CREDO_API_KEY. To start without Credo Bank, set GEOMCP_RATES_CREDO_ENABLED=false.",
     },
     download: "Latest release",
     directory: "the Claude directory",

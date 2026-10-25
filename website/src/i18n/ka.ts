@@ -95,6 +95,7 @@ export const ka: Dictionary = {
     keys: {
       ttc: "ტრანსპორტის ინსტრუმენტებს სჭირდება TTC-ის API გასაღები GEOMCP_TRANSIT_TTC_API_KEY-ში. მათ გარეშე გასაშვებად მიუთითე GEOMCP_TRANSIT_TTC_ENABLED=false.",
       tbc: "თიბისი ბანკის კომერციულ კურსებს სჭირდება TBC-ის API გასაღები GEOMCP_RATES_TBC_API_KEY-ში. თიბისი ბანკის გარეშე გასაშვებად მიუთითე GEOMCP_RATES_TBC_ENABLED=false.",
+      credo: "კრედო ბანკის კომერციულ კურსებს სჭირდება Credo-ს API გასაღები GEOMCP_RATES_CREDO_API_KEY-ში. კრედო ბანკის გარეშე გასაშვებად მიუთითე GEOMCP_RATES_CREDO_ENABLED=false.",
     },
     download: "ბოლო რელიზი",
     directory: "Claude-ის კატალოგში",

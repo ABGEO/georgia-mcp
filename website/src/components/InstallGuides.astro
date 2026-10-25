@@ -50,7 +50,7 @@ const guides: Guide[] = [
     key: "docker",
     group: "local",
     address: local,
-    code: "docker run -p 8080:8080 \\\n  -e GEOMCP_TRANSIT_TTC_API_KEY=... \\\n  -e GEOMCP_RATES_TBC_API_KEY=... \\\n  ghcr.io/abgeo/georgia-mcp",
+    code: "docker run -p 8080:8080 \\\n  -e GEOMCP_TRANSIT_TTC_API_KEY=... \\\n  -e GEOMCP_RATES_TBC_API_KEY=... \\\n  -e GEOMCP_RATES_CREDO_API_KEY=... \\\n  ghcr.io/abgeo/georgia-mcp",
     keys: true,
   },
 ]
@@ -119,6 +119,7 @@ const groups = [
           <ul class="keys">
             <li>{copy.keys.ttc}</li>
             <li>{copy.keys.tbc}</li>
+            <li>{copy.keys.credo}</li>
           </ul>
         )}
       </section>
