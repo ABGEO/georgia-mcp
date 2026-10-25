@@ -179,6 +179,10 @@ Add a row before you create the file or the directory.
 | `TERARATE` | `features/terarate/` | `rates`    | The commercial exchange rates of Terabank.                       | Approved |
 | `RICORATE` | `features/ricorate/` | `rates`    | The commercial exchange rates of Rico Credit, and the kind of a bank. | Approved |
 | `KURSRATE` | `features/kursrate/` | `rates`    | The commercial exchange rates of Kursi.ge, an online exchange bureau. | Approved |
+| `SCAPRATE` | `features/scaprate/` | `rates`    | The commercial exchange rates of Scapp, formerly Swiss Capital.  | Approved |
+| `CREDRATE` | `features/credrate/` | `rates`    | The commercial exchange rates of Credo Bank, with a key of the operator. | Approved |
+| `BASRATE`  | `features/basrate/`  | `rates`    | The commercial exchange rates of Basisbank.                      | Approved |
+| `HALRATE`  | `features/halrate/`  | `rates`    | The commercial exchange rates of Halyk Bank.                     | Approved |
 | `WISFUEL`  | `features/wisfuel/`  | `fuel`     | The fuel prices of Wissol, and the tool of every fuel company.  | Approved |
 | `ROMFUEL`  | `features/romfuel/`  | `fuel`     | The fuel prices of Rompetrol, read from its web page.           | Approved |
 | `SOCFUEL`  | `features/socfuel/`  | `fuel`     | The fuel prices of SOCAR, and the grade of liquefied petroleum gas. | Approved |
