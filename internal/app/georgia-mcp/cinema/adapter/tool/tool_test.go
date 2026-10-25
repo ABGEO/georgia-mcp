@@ -183,8 +183,15 @@ func connect(t *testing.T, source fakeCavea) *mcp.ClientSession {
 		ListCinemas:  app.NewListCinemas(source),
 		ListMovies:   app.NewListMovies(source),
 		SearchMovies: app.NewSearchMovies(source),
-		ListSessions: app.NewListSessions(source, source, source, source, now),
-		GetSeatMap:   app.NewGetSeatMap(source, source, source, source, now),
+		ListSessions: app.NewListSessions(
+			source,
+			source,
+			source,
+			source,
+			now,
+			slog.New(slog.DiscardHandler),
+		),
+		GetSeatMap: app.NewGetSeatMap(source, source, source, source, now),
 	}); err != nil {
 		t.Fatal(err)
 	}

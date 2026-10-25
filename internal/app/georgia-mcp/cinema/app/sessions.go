@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"context"
 	"fmt"
+	"log/slog"
 	"slices"
 	"time"
 
@@ -116,15 +117,18 @@ type ListSessions struct {
 	sessions SessionSource
 	seats    SeatSource
 	now      func() time.Time
+	logger   *slog.Logger
 }
 
-// NewListSessions returns the use case.
+// NewListSessions returns the use case. It logs a failure of the occupancy levels, since
+// the list answers without them.
 func NewListSessions(
 	cinemas CinemaSource,
 	movies MovieSource,
 	sessions SessionSource,
 	seats SeatSource,
 	now func() time.Time,
+	logger *slog.Logger,
 ) *ListSessions {
 	return &ListSessions{
 		cinemas:  cinemas,
@@ -132,6 +136,7 @@ func NewListSessions(
 		sessions: sessions,
 		seats:    seats,
 		now:      now,
+		logger:   logger,
 	}
 }
 
@@ -217,6 +222,9 @@ func (l *ListSessions) addOccupancy(ctx context.Context, result *Sessions) {
 
 	levels, readAt, err := l.seats.Occupancy(ctx, codes)
 	if err != nil {
+		l.logger.WarnContext(ctx, "Cavea did not give the occupancy levels",
+			slog.Int("sessions", len(codes)), slog.Any("error", err))
+
 		return
 	}
 

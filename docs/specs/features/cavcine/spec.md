@@ -69,8 +69,9 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | `RSL-003` to `RSL-006` | `adapter/cache`. 4.3 cache. `SeatSource` has no cache.                          |
 | `CFG-003`, `CFG-008`   | Each variable has the prefix `GEOMCP_CINEMA_CAVEA_`. The switch is on by default. |
 | `LOG-004`              | The logger of the module carries `context=cinema`.                              |
+| `LOG-005`, `GO-013`    | `ListSessions` ends the error path of `Occupancy`. It logs the error at warn level and returns the sessions. |
 | `TST-006`              | `pkg/cavea/testdata/` holds the answers of 2026-10-25. The ticket is `test-ticket`. |
-| `TST-009`              | `ParseSessionCode` has a fuzz test.                                             |
+| `TST-009`              | `ParseSessionCode`, `ParseCinemaCode`, and `ParseMovieCode` have fuzz tests.    |
 
 ## 4. Design
 
@@ -503,7 +504,8 @@ of Street Fighter in both sources.
 **Decision:** `Occupancy` sends one call for each 30 codes. `green` gives `many_seats`,
 `yellow` gives `filling_up`, another value gives `almost_sold_out`. A code that Cavea
 leaves out, or gives an empty value, has no level. When `Occupancy` fails, `ListSessions` returns the sessions with
-no level and `Occupancy` false.
+no level and `Occupancy` false. It writes one record at warn level, `Cavea did not give the
+occupancy levels`, with the error and the count of sessions.
 **Rationale:** The page shows the same three levels for the same values. A limit of 100
 needs 4 calls at most.
 **Alternatives:** The level of the first 30 sessions only. A model then reads no level for
@@ -568,7 +570,7 @@ files from `httptest`.
 | `CAVCINE-SC-014` | `CAVCINE-FR-012`, `CAVCINE-FR-014`, `CAVCINE-DD-012` | unit | `MovieSessions` with one of 31 sessions changed to the audio language `rus` gives 30 sessions and no error. A subtitle language `rus` gives the same. A seat with the class `gold`, and a price `0`, each give an error that wraps `kernel.ErrSourceUnavailable`. |
 | `CAVCINE-SC-015` | `CAVCINE-FR-004`, `CAVCINE-FR-008` | unit | `ListSessions` at 2026-10-27 20:00 with `street-fighter` and `en` gives the sessions after 20:00 only, in the order of the start, then the cinema code. A date of 2026-10-26 gives `ErrPastDate`. |
 | `CAVCINE-SC-016` | `CAVCINE-FR-010` | unit | `ListSessions` with `no-such-movie` gives `ErrUnknownMovie`, and with `no_such` gives `ErrUnknownCinema`. Neither reads the sessions. |
-| `CAVCINE-SC-017` | `CAVCINE-FR-007`, `CAVCINE-DD-010` | unit | 70 kept sessions give 3 calls of `Occupancy`. A failure of `Occupancy` gives the sessions with no level and `Occupancy` false. |
+| `CAVCINE-SC-017` | `CAVCINE-FR-007`, `CAVCINE-DD-010` | unit | 70 kept sessions give 3 calls of `Occupancy`. A failure of `Occupancy` gives the sessions with no level, `Occupancy` false, and one record at warn level that holds the error. |
 | `CAVCINE-SC-018` | `CAVCINE-FR-009`, `CAVCINE-INV-003` | unit | `GetSeatMap` with `seats-cag5.json` gives the free counts Standard 38 of 41, Status 25 of 34, VIP 0 of 16, and the prices of `DD-011`. A started session gives `ErrSessionStarted` and calls no `SeatSource`. |
 | `CAVCINE-SC-019` | `CAVCINE-FR-011` | integration | Each tool with `ka` gives the Georgian names, and with no language the English names. `ru` gives the message of tools 2. |
 | `CAVCINE-SC-020` | `CAVCINE-NFR-001` | unit | In `synctest`, two reads of each cached method within 14 minutes 59 seconds send one load. A read at 15 minutes sends a second. |

@@ -1,9 +1,12 @@
 package app_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 	"strings"
 	"testing"
@@ -257,7 +260,7 @@ func TestListSessionsKeepsTheLaterSessionsInOrder(t *testing.T) {
 	audio := domain.AudioEnglish
 
 	list := app.NewListSessions(fakeCinemas{t}, &fakeMovies{t: t}, sessions, seats,
-		func() time.Time { return at(t, 20) })
+		func() time.Time { return at(t, 20) }, slog.New(slog.DiscardHandler))
 
 	date, _ := kernel.ParseDate("2026-10-27")
 
@@ -303,7 +306,7 @@ func TestListSessionsWithNoMovieReadsEveryMovie(t *testing.T) {
 
 	sessions := &fakeSessions{sessions: streetFighterSessions(t), stale: true}
 	list := app.NewListSessions(fakeCinemas{t}, &fakeMovies{t: t}, sessions, &fakeSeats{},
-		func() time.Time { return at(t, 12) })
+		func() time.Time { return at(t, 12) }, slog.New(slog.DiscardHandler))
 
 	got, err := list.List(t.Context(), app.SessionQuery{Limit: 2})
 	if err != nil {
@@ -343,7 +346,7 @@ func TestListSessionsRefusesAnUnknownCode(t *testing.T) {
 
 			sessions := &fakeSessions{}
 			list := app.NewListSessions(fakeCinemas{t}, &fakeMovies{t: t}, sessions, &fakeSeats{},
-				func() time.Time { return at(t, 12) })
+				func() time.Time { return at(t, 12) }, slog.New(slog.DiscardHandler))
 
 			if _, err := list.List(
 				t.Context(),
@@ -361,19 +364,65 @@ func TestListSessionsRefusesAnUnknownCode(t *testing.T) {
 	}
 }
 
+// warning is a record at warn level of a JSON log.
+type warning struct {
+	Message  string
+	Sessions float64
+	HasError bool
+}
+
+func warnings(t *testing.T, sink *bytes.Buffer) []warning {
+	t.Helper()
+
+	found := []warning{}
+
+	for line := range bytes.Lines(sink.Bytes()) {
+		var record struct {
+			Level    string  `json:"level"`
+			Message  string  `json:"msg"`
+			Sessions float64 `json:"sessions"`
+			Error    any     `json:"error"`
+		}
+		if err := json.Unmarshal(line, &record); err != nil {
+			t.Fatal(err)
+		}
+
+		if record.Level == slog.LevelWarn.String() {
+			found = append(found, warning{record.Message, record.Sessions, record.Error != nil})
+		}
+	}
+
+	return found
+}
+
 // CAVCINE-SC-017: Each kept session carries its level. When the levels fail, the
-// sessions stay with no level.
+// sessions stay with no level, and the log holds one warning with the error.
 func TestListSessionsAddsTheOccupancy(t *testing.T) {
 	t.Parallel()
 
-	for _, failing := range []bool{false, true} {
-		t.Run(fmt.Sprintf("failing %t", failing), func(t *testing.T) {
+	tests := []struct {
+		name      string
+		failing   bool
+		occupancy bool
+		level     domain.OccupancyLevel
+		warnings  []warning
+	}{
+		{name: "answer", occupancy: true, level: domain.FillingUp, warnings: []warning{}},
+		{
+			name: "failure", failing: true,
+			warnings: []warning{{"Cavea did not give the occupancy levels", 5, true}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			seats := &fakeSeats{failing: failing}
+			seats := &fakeSeats{failing: tt.failing}
+			sink := &bytes.Buffer{}
 			list := app.NewListSessions(fakeCinemas{t}, &fakeMovies{t: t},
 				&fakeSessions{sessions: streetFighterSessions(t)}, seats,
-				func() time.Time { return at(t, 12) })
+				func() time.Time { return at(t, 12) }, slog.New(slog.NewJSONHandler(sink, nil)))
 
 			got, err := list.List(t.Context(), app.SessionQuery{Limit: 30})
 			if err != nil {
@@ -387,14 +436,13 @@ func TestListSessionsAddsTheOccupancy(t *testing.T) {
 				)
 			}
 
-			want := domain.FillingUp
-			if failing {
-				want = ""
+			if got.Occupancy != tt.occupancy || got.Sessions[0].Occupancy != tt.level {
+				t.Errorf("Occupancy = %t, the first level %q, want %t and %q",
+					got.Occupancy, got.Sessions[0].Occupancy, tt.occupancy, tt.level)
 			}
 
-			if got.Occupancy == failing || got.Sessions[0].Occupancy != want {
-				t.Errorf("Occupancy = %t, the first level %q, want %t and %q",
-					got.Occupancy, got.Sessions[0].Occupancy, !failing, want)
+			if records := warnings(t, sink); !reflect.DeepEqual(records, tt.warnings) {
+				t.Errorf("warnings = %+v, want %+v", records, tt.warnings)
 			}
 		})
 	}

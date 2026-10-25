@@ -75,6 +75,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 			module.sessions,
 			adapter,
 			now,
+			logger,
 		),
 		GetSeatMap: app.NewGetSeatMap(
 			module.cinemas,

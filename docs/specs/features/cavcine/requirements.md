@@ -236,8 +236,9 @@ after the receipt of the request. The server never returns a stale seat map.
 
 ### `CAVCINE-NFR-004`
 
-A seat map must send exactly 2 calls to Cavea, when the server holds the list of sessions
-of that movie. Measure the calls at the source.
+A seat map must send exactly 2 calls to Cavea, when the server holds the list of every
+session and the list of sessions of the movie of the session. Measure the calls at the
+source.
 
 ### `CAVCINE-NFR-005`
 
