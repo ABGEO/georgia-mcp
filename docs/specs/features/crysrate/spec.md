@@ -340,10 +340,10 @@ The log holds one info record that names `GEOMCP_RATES_CRYSTAL_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                   | Done |
 | --- | -------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/crystal`, `testdata/`, README, example, live test.                    | `CRYSRATE-FR-001`, `CRYSRATE-FR-004`       | [ ]  |
-| 2   | `adapter/crystal`.                                                         | `CRYSRATE-FR-001` to `CRYSRATE-FR-005`, `CRYSRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.Crystal`, `Defaults`. `configs/.env.example`.         | `CRYSRATE-FR-006`, `CRYSRATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the entry of Crystal. The glossary.                           | `CRYSRATE-FR-001`, `CRYSRATE-FR-006`       | [ ]  |
+| 1   | `pkg/crystal`, `testdata/`, README, example, live test.                    | `CRYSRATE-FR-001`, `CRYSRATE-FR-004`       | [x]  |
+| 2   | `adapter/crystal`.                                                         | `CRYSRATE-FR-001` to `CRYSRATE-FR-005`, `CRYSRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.Crystal`, `Defaults`. `configs/.env.example`.         | `CRYSRATE-FR-006`, `CRYSRATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the entry of Crystal. The glossary.                           | `CRYSRATE-FR-001`, `CRYSRATE-FR-006`       | [x]  |
 
 ## 8. Out of scope for this specification
 

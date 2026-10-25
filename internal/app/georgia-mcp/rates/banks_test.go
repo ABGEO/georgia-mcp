@@ -23,11 +23,24 @@ const (
 	halykCode     = "halyk"
 	basisbankCode = "basisbank"
 	credoCode     = "credo"
+	mjcCode       = "mjc"
+	inteliCode    = "inteli"
+	mbcCode       = "mbc"
+	crystalCode   = "crystal"
 
 	scappSwitch     = "GEOMCP_RATES_SCAPP_ENABLED"
 	halykSwitch     = "GEOMCP_RATES_HALYK_ENABLED"
 	basisbankSwitch = "GEOMCP_RATES_BASISBANK_ENABLED"
 	credoSwitch     = "GEOMCP_RATES_CREDO_ENABLED" //nolint:gosec // A name, not a key.
+	mjcSwitch       = "GEOMCP_RATES_MJC_ENABLED"
+	inteliSwitch    = "GEOMCP_RATES_INTELI_ENABLED"
+	mbcSwitch       = "GEOMCP_RATES_MBC_ENABLED"
+	crystalSwitch   = "GEOMCP_RATES_CRYSTAL_ENABLED"
+
+	// dollarBuy is the price of USD at which Scapp, MJC, Inteli Express, MBC, and Crystal
+	// buy in their recorded answers. Scapp, MBC, and Crystal sell at dollarSell.
+	dollarBuy  = "2.595"
+	dollarSell = "2.599"
 
 	// credoDate is clockInstant in UTC, as Credo Bank reads it.
 	credoDate = "2026-10-18T10:00:00.000Z"
@@ -121,7 +134,7 @@ func TestGetCommercialRatesOfScapp(t *testing.T) {
 		Bank:    scappCode,
 		Source:  "Scapp",
 		AsOf:    clockInstant,
-		Rates:   []commercialRateOutput{{Currency: dollar, Buy: "2.595", Sell: "2.599"}},
+		Rates:   []commercialRateOutput{{Currency: dollar, Buy: dollarBuy, Sell: dollarSell}},
 		Missing: []string{franc},
 	})
 }
@@ -224,4 +237,119 @@ func TestTheSwitchOfCredo(t *testing.T) {
 	t.Parallel()
 
 	assertSwitchedOff(t, credoCode, credoSwitch)
+}
+
+// assertMicrofinance checks that the description names the bank as a microfinance
+// organization, and that the answer to USD and the missing code is the bank alone.
+func assertMicrofinance(t *testing.T, cfg rates.Config, missing string, want bogBankOutput) {
+	t.Helper()
+
+	session := serve(t, cfg, debugLogger(&syncBuffer{}))
+
+	assertDescriptionLists(t, session, want.Bank+" ("+want.Source+", a microfinance organization)")
+
+	out := decode[bogOutput](t, call(t, session, getCommercial, map[string]any{
+		argCurrencies: []string{dollar, missing},
+	}))
+
+	want.Missing = []string{missing}
+	if diff := cmp.Diff(bogOutput{Banks: []bogBankOutput{want}}, out); diff != "" {
+		t.Errorf("output mismatch (-want +got):\n%s", diff)
+	}
+}
+
+// MJCRATE-SC-010: The description names MJC as a microfinance organization, and the
+// answer gives its read instant, its rate of USD, and JPY as missing.
+func TestGetCommercialRatesOfMJC(t *testing.T) {
+	t.Parallel()
+
+	cfg := commercialConfig(t, http.NotFoundHandler(), "")
+	cfg.MJC = vendorAt(t, bankVendor(t, "mjc", "rates.html"))
+
+	assertMicrofinance(t, cfg, "JPY", bogBankOutput{
+		Bank:   mjcCode,
+		Source: "MJC",
+		AsOf:   clockInstant,
+		Rates:  []commercialRateOutput{{Currency: dollar, Buy: dollarBuy, Sell: "2.598"}},
+	})
+}
+
+// MJCRATE-SC-011: Off, MJC is not a bank of the server, and the server logs one info
+// record that names the variable.
+func TestTheSwitchOfMJC(t *testing.T) {
+	t.Parallel()
+
+	assertSwitchedOff(t, mjcCode, mjcSwitch)
+}
+
+// INTLRATE-SC-010: The description names Inteli Express as a microfinance organization,
+// and the answer gives its read instant, its rate of USD, and CHF as missing.
+func TestGetCommercialRatesOfInteliExpress(t *testing.T) {
+	t.Parallel()
+
+	cfg := commercialConfig(t, http.NotFoundHandler(), "")
+	cfg.Inteli = vendorAt(t, bankVendor(t, "inteli", "main-page-geo.html"))
+
+	assertMicrofinance(t, cfg, franc, bogBankOutput{
+		Bank:   inteliCode,
+		Source: "Inteli Express",
+		AsOf:   clockInstant,
+		Rates:  []commercialRateOutput{{Currency: dollar, Buy: dollarBuy, Sell: "2.598"}},
+	})
+}
+
+// INTLRATE-SC-011: Off, Inteli Express is not a bank of the server, and the server logs
+// one info record that names the variable.
+func TestTheSwitchOfInteliExpress(t *testing.T) {
+	t.Parallel()
+
+	assertSwitchedOff(t, inteliCode, inteliSwitch)
+}
+
+// MBCRATE-SC-011: The description names MBC as a microfinance organization, and the
+// answer gives its read instant, its rate of USD, and GBP as missing.
+func TestGetCommercialRatesOfMBC(t *testing.T) {
+	t.Parallel()
+
+	cfg := commercialConfig(t, http.NotFoundHandler(), "")
+	cfg.MBC = vendorAt(t, bankVendor(t, "mbc", "commercial.json"))
+
+	assertMicrofinance(t, cfg, "GBP", bogBankOutput{
+		Bank:   mbcCode,
+		Source: "MBC",
+		AsOf:   clockInstant,
+		Rates:  []commercialRateOutput{{Currency: dollar, Buy: dollarBuy, Sell: dollarSell}},
+	})
+}
+
+// MBCRATE-SC-012: Off, MBC is not a bank of the server, and the server logs one info
+// record that names the variable.
+func TestTheSwitchOfMBC(t *testing.T) {
+	t.Parallel()
+
+	assertSwitchedOff(t, mbcCode, mbcSwitch)
+}
+
+// CRYSRATE-SC-010: The description names Crystal as a microfinance organization, and
+// the answer gives its read instant, its rate of USD, and JPY as missing.
+func TestGetCommercialRatesOfCrystal(t *testing.T) {
+	t.Parallel()
+
+	cfg := commercialConfig(t, http.NotFoundHandler(), "")
+	cfg.Crystal = vendorAt(t, bankVendor(t, "crystal", "web-rate-cash.json"))
+
+	assertMicrofinance(t, cfg, "JPY", bogBankOutput{
+		Bank:   crystalCode,
+		Source: "Crystal",
+		AsOf:   clockInstant,
+		Rates:  []commercialRateOutput{{Currency: dollar, Buy: dollarBuy, Sell: dollarSell}},
+	})
+}
+
+// CRYSRATE-SC-011: Off, Crystal is not a bank of the server, and the server logs one
+// info record that names the variable.
+func TestTheSwitchOfCrystal(t *testing.T) {
+	t.Parallel()
+
+	assertSwitchedOff(t, crystalCode, crystalSwitch)
 }

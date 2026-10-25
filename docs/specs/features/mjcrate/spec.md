@@ -333,10 +333,10 @@ The log holds one info record that names `GEOMCP_RATES_MJC_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                 | Done |
 | --- | -------------------------------------------------------------------------- | ---------------------------------------- | ---- |
-| 1   | `pkg/mjc`, `testdata/rates.html`, README, example, live test. `.golangci.yaml`. | `MJCRATE-FR-001`                    | [ ]  |
-| 2   | `adapter/mjc`.                                                             | `MJCRATE-FR-001` to `MJCRATE-FR-004`, `MJCRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.MJC`, `Defaults`. `configs/.env.example`.             | `MJCRATE-FR-005`, `MJCRATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the entry of MJC. The glossary.                               | `MJCRATE-FR-001`, `MJCRATE-FR-005`       | [ ]  |
+| 1   | `pkg/mjc`, `testdata/rates.html`, README, example, live test. `.golangci.yaml`. | `MJCRATE-FR-001`                    | [x]  |
+| 2   | `adapter/mjc`.                                                             | `MJCRATE-FR-001` to `MJCRATE-FR-004`, `MJCRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.MJC`, `Defaults`. `configs/.env.example`.             | `MJCRATE-FR-005`, `MJCRATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the entry of MJC. The glossary.                               | `MJCRATE-FR-001`, `MJCRATE-FR-005`       | [x]  |
 
 ## 8. Out of scope for this specification
 

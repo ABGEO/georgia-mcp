@@ -30,6 +30,10 @@ type Config struct {
 	Halyk     vendors.Config `envPrefix:"HALYK_"`
 	Basisbank vendors.Config `envPrefix:"BASISBANK_"`
 	Credo     CredoConfig    `envPrefix:"CREDO_"`
+	MJC       vendors.Config `envPrefix:"MJC_"`
+	Inteli    vendors.Config `envPrefix:"INTELI_"`
+	MBC       vendors.Config `envPrefix:"MBC_"`
+	Crystal   vendors.Config `envPrefix:"CRYSTAL_"`
 }
 
 // NBGConfig is the configuration of the calls to the NBG. The context needs the NBG, so it
@@ -71,5 +75,9 @@ func Defaults() Config {
 		Halyk:     vendors.Defaults("https://halykbank.ge"),
 		Basisbank: vendors.Defaults("https://static.bb.ge/api/view"),
 		Credo:     CredoConfig{Config: vendors.Defaults("https://n1.noxtton.com")},
+		MJC:       vendors.Defaults("https://mjc.ge"),
+		Inteli:    vendors.Defaults("https://inteliexpress.com"),
+		MBC:       vendors.Defaults("https://fxrates.mbc.com.ge:8022"),
+		Crystal:   vendors.Defaults("https://currency.crystal.ge"),
 	}
 }

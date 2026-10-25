@@ -51,7 +51,7 @@ model, so you can ask one question and get one answer.
 
 | Subject                | Sources                                                                                  |
 | ---------------------- | ---------------------------------------------------------------------------------------- |
-| Exchange rates         | National Bank of Georgia, Bank of Georgia, TBC Bank, Liberty Bank, Terabank, Halyk Bank, Basisbank, Credo Bank, Rico Credit, Scapp, Kursi.ge |
+| Exchange rates         | National Bank of Georgia, Bank of Georgia, TBC Bank, Liberty Bank, Terabank, Halyk Bank, Basisbank, Credo Bank, Rico Credit, Scapp, MJC, Inteli Express, MBC, Crystal, Kursi.ge |
 | Fuel prices            | SOCAR, Wissol, Gulf, Rompetrol, Lukoil, Portal, Connect, Neogas                          |
 | Card offers            | Bank of Georgia, TBC Bank, Liberty Studio                                                |
 | Tbilisi public transport | Tbilisi Transport Company                                                              |

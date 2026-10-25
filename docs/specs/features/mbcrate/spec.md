@@ -334,10 +334,10 @@ The log holds one info record that names `GEOMCP_RATES_MBC_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                 | Done |
 | --- | -------------------------------------------------------------------------- | ---------------------------------------- | ---- |
-| 1   | `pkg/mbc`, `testdata/`, README, example, live test.                        | `MBCRATE-FR-001`                         | [ ]  |
-| 2   | `adapter/mbc`.                                                             | `MBCRATE-FR-001` to `MBCRATE-FR-005`, `MBCRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.MBC`, `Defaults`. `configs/.env.example`.             | `MBCRATE-FR-006`, `MBCRATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the entry of MBC. The glossary.                               | `MBCRATE-FR-001`, `MBCRATE-FR-006`       | [ ]  |
+| 1   | `pkg/mbc`, `testdata/`, README, example, live test.                        | `MBCRATE-FR-001`                         | [x]  |
+| 2   | `adapter/mbc`.                                                             | `MBCRATE-FR-001` to `MBCRATE-FR-005`, `MBCRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.MBC`, `Defaults`. `configs/.env.example`.             | `MBCRATE-FR-006`, `MBCRATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the entry of MBC. The glossary.                               | `MBCRATE-FR-001`, `MBCRATE-FR-006`       | [x]  |
 
 ## 8. Out of scope for this specification
 

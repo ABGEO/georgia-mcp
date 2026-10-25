@@ -338,10 +338,10 @@ The log holds one info record that names `GEOMCP_RATES_INTELI_ENABLED`.
 
 | #   | Step                                                                       | Realizes                                   | Done |
 | --- | -------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/inteli`, `testdata/main-page-geo.html`, README, example, live test. `.golangci.yaml`. | `INTLRATE-FR-001`          | [ ]  |
-| 2   | `adapter/inteli`.                                                          | `INTLRATE-FR-001` to `INTLRATE-FR-004`, `INTLRATE-INV-001` | [ ]  |
-| 3   | `config.go`: `Config.Inteli`, `Defaults`. `configs/.env.example`.          | `INTLRATE-FR-005`, `INTLRATE-NFR-001`      | [ ]  |
-| 4   | `module.go`: the entry of Inteli Express. The glossary.                    | `INTLRATE-FR-001`, `INTLRATE-FR-005`       | [ ]  |
+| 1   | `pkg/inteli`, `testdata/main-page-geo.html`, README, example, live test. `.golangci.yaml`. | `INTLRATE-FR-001`          | [x]  |
+| 2   | `adapter/inteli`.                                                          | `INTLRATE-FR-001` to `INTLRATE-FR-004`, `INTLRATE-INV-001` | [x]  |
+| 3   | `config.go`: `Config.Inteli`, `Defaults`. `configs/.env.example`.          | `INTLRATE-FR-005`, `INTLRATE-NFR-001`      | [x]  |
+| 4   | `module.go`: the entry of Inteli Express. The glossary.                    | `INTLRATE-FR-001`, `INTLRATE-FR-005`       | [x]  |
 
 ## 8. Out of scope for this specification
 
