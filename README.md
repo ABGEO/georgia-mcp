@@ -9,7 +9,7 @@
 <p><strong>Georgia's public data, inside your chat.</strong></p>
 
 <p>
-An MCP server for exchange rates, fuel prices, card offers, and Tbilisi public transport.<br>
+An MCP server for Georgian public data, read from the organizations that publish it.<br>
 Ask Claude, ChatGPT, or any MCP client in your own words.
 </p>
 
