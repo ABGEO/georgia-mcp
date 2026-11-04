@@ -3,7 +3,7 @@ module github.com/abgeo/georgia-mcp
 go 1.27.2
 
 require (
-	github.com/caarlos0/env/v11 v11.4.1
+	github.com/caarlos0/env/v11 v11.4.2
 	github.com/go-chi/chi/v5 v5.5.0
 	github.com/go-chi/httplog/v3 v3.5.0
 	github.com/go-chi/httprate v0.16.1
