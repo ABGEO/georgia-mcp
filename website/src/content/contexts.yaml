@@ -133,3 +133,14 @@ cinema:
     - code: cavea
       en: Cavea
       ka: კავეა
+stats:
+  order: 7
+  hue: slate
+  icon: chart-column
+  name:
+    en: Statistics
+    ka: სტატისტიკა
+  vendors:
+    - code: geostat
+      en: Geostat
+      ka: საქსტატი

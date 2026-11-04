@@ -1,0 +1,15 @@
+context: stats
+vendors: [geostat]
+summary:
+  en: One table of Geostat with its dimensions and the code and the text of each value.
+  ka: საქსტატის ერთი ცხრილი მისი განზომილებებით და თითოეული მნიშვნელობის კოდითა და ტექსტით.
+examples:
+  - id: wages-region
+    question:
+      en: How does Geostat break down the average salary by region?
+      ka: როგორ ანაწილებს საქსტატი საშუალო ხელფასს რეგიონების მიხედვით?
+    answer:
+      en: "By 12 regions, from the total of Georgia and Tbilisi to Shida Kartli. Each region has a figure for each year from 2010 to 2026, for each of the four quarters and for the whole year."
+      ka: "12 რეგიონის მიხედვით, საქართველოს ჯამიდან და თბილისიდან შიდა ქართლამდე. თითოეულ რეგიონს აქვს მონაცემი 2010-დან 2026 წლამდე ყოველი წლისთვის, ოთხივე კვარტლისა და მთელი წლისთვის."
+    input:
+      code: Social Statistics/Labour/Wages_Region.px

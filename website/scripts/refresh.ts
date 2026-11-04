@@ -13,6 +13,12 @@ const recordingsFile = join(website, "src/data/recordings.json")
 
 type Example = { id: string; input: Record<string, unknown> }
 
+// The server reads the catalog of Geostat in the background after its start. A search
+// before the first read ends gets this message. GEOSTAT-NFR-007 bounds the read at 15 minutes.
+const catalogLoading = "The server is still reading the catalog"
+const loadingRetry = 10_000
+const loadingLimit = 15 * 60_000
+
 async function readExamples(): Promise<Array<{ tool: string; example: Example }>> {
   const files = (await readdir(toolsDir)).filter((file) => file.endsWith(".yaml")).toSorted()
   const examples: Array<{ tool: string; example: Example }> = []
@@ -39,6 +45,22 @@ function errorText(content: unknown): string {
     .filter((part): part is { type: "text"; text: string } => part?.type === "text")
     .map((part) => part.text)
     .join(" ")
+}
+
+type CallResult = Awaited<ReturnType<Client["callTool"]>>
+
+// callWhenReady sends a call again while the server still reads a catalog.
+async function callWhenReady(client: Client, name: string, input: Record<string, unknown>): Promise<CallResult> {
+  const deadline = Date.now() + loadingLimit
+  for (;;) {
+    const result = await client.callTool({ name, arguments: input })
+    if (!result.isError || !errorText(result.content).startsWith(catalogLoading) || Date.now() >= deadline) {
+      return result
+    }
+
+    console.log(`waiting for the catalog: ${name}`)
+    await new Promise((done) => setTimeout(done, loadingRetry))
+  }
 }
 
 async function main(): Promise<void> {
@@ -76,7 +98,7 @@ async function main(): Promise<void> {
     const failures: string[] = []
     for (const { tool, example } of examples) {
       const key = `${tool}.${example.id}`
-      const result = await client.callTool({ name: tool, arguments: example.input })
+      const result = await callWhenReady(client, tool, example.input)
       if (result.isError) {
         failures.push(`${key}: ${errorText(result.content)}`)
         continue

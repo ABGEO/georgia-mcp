@@ -6,12 +6,12 @@ summary:
 examples:
   - id: street-fighter-galleria
     question:
-      en: When does Street Fighter play at Galleria today?
-      ka: როდის გადის Street Fighter გალერეაში დღეს?
+      en: When does Street Fighter play at Galleria tomorrow?
+      ka: როდის გადის Street Fighter გალერეაში ხვალ?
     answer:
-      en: "Today Cavea Galleria shows Street Fighter three times in hall 5: at 14:00 in Georgian from 13 lari, at 16:45 in English from 15 lari, and at 22:15 in Georgian from 20 lari. Each session has many free seats."
-      ka: "დღეს კავეა გალერეა Street Fighter-ს სამჯერ აჩვენებს მე-5 დარბაზში: 14:00-ზე ქართულად 13 ლარიდან, 16:45-ზე ინგლისურად 15 ლარიდან და 22:15-ზე ქართულად 20 ლარიდან. ყველა სეანსზე ბევრი თავისუფალი ადგილია."
+      en: "Tomorrow Cavea Galleria shows Street Fighter once, at 16:30 in hall 3, in Georgian. A ticket costs 15 lari for an economy or a standard seat, 17 lari for status, and 22 lari for VIP. Many seats are free."
+      ka: "ხვალ კავეა გალერეა Street Fighter-ს ერთხელ აჩვენებს, 16:30-ზე მე-3 დარბაზში, ქართულად. ბილეთი ეკონომ და სტანდარტულ ადგილზე 15 ლარი ღირს, სტატუსზე 17 ლარი, VIP-ზე კი 22 ლარი. ბევრი ადგილი თავისუფალია."
     input:
       movie: street-fighter
       cinema: galleria
-      date: "2026-10-26"
+      date: "2026-11-05"

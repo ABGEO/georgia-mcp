@@ -1,0 +1,14 @@
+context: stats
+vendors: [geostat]
+summary:
+  en: The inflation of Georgia for a month, a city, and a price group, from the consumer price index of Geostat.
+  ka: საქართველოს ინფლაცია თვის, ქალაქისა და ფასების ჯგუფის მიხედვით, საქსტატის სამომხმარებლო ფასების ინდექსიდან.
+examples:
+  - id: newest
+    question:
+      en: What is the inflation in Georgia now?
+      ka: რამდენია ახლა ინფლაცია საქართველოში?
+    answer:
+      en: "Annual inflation in Georgia was 5.9% in October 2026. Prices rose 0.9% from September. Core inflation was 4.0%, and the 12 month average was 5.2%."
+      ka: "2026 წლის ოქტომბერში წლიური ინფლაცია საქართველოში 5,9% იყო. სექტემბერთან შედარებით ფასები 0,9%-ით გაიზარდა. საბაზო ინფლაცია 4,0% იყო, 12 თვის საშუალო კი 5,2%."
+    input: {}
