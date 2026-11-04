@@ -20,6 +20,8 @@
   --teal: #1f5e5a;
   --slate-fill: #d8dee8;
   --slate: #3b4a60;
+  --iris-fill: #dcddf4;
+  --iris: #40418a;
   color-scheme: light;
 }
 
@@ -46,6 +48,8 @@
   --teal: #9fd6cf;
   --slate-fill: #252b35;
   --slate: #b9c5d8;
+  --iris-fill: #2b2c48;
+  --iris: #c2c4f0;
     color-scheme: dark;
   }
 }
@@ -72,6 +76,8 @@
   --teal: #9fd6cf;
   --slate-fill: #252b35;
   --slate: #b9c5d8;
+  --iris-fill: #2b2c48;
+  --iris: #c2c4f0;
   color-scheme: dark;
 }
 
@@ -83,3 +89,4 @@
 [data-hue="sage"] { --hue-fill: var(--sage-fill); --hue: var(--sage); }
 [data-hue="teal"] { --hue-fill: var(--teal-fill); --hue: var(--teal); }
 [data-hue="slate"] { --hue-fill: var(--slate-fill); --hue: var(--slate); }
+[data-hue="iris"] { --hue-fill: var(--iris-fill); --hue: var(--iris); }

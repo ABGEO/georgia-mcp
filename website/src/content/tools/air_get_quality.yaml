@@ -1,0 +1,16 @@
+context: air
+vendors: [nea]
+summary:
+  en: The newest readings of the air quality stations of the NEA, for a city or a station, with the level of each pollutant.
+  ka: გარემოს ეროვნული სააგენტოს ჰაერის ხარისხის სადგურების უახლესი მონაცემები, ქალაქისთვის ან სადგურისთვის, თითოეული დამაბინძურებლის დონით.
+examples:
+  - id: tbilisi
+    question:
+      en: How is the air in Tbilisi right now?
+      ka: როგორია ახლა ჰაერი თბილისში?
+    answer:
+      en: "The air in Tbilisi is poor at two of the five stations of the National Environmental Agency. On Agmashenebeli Avenue PM10 is 52.5 µg/m³ and PM2.5 is 28.0 µg/m³, both poor. On Tsereteli Avenue PM10 is 52.1 µg/m³, also poor. On Kazbegi Avenue and Gelovani Avenue the air is moderate, and in Varketili it is fair."
+      ka: "თბილისში ჰაერი ცუდია გარემოს ეროვნული სააგენტოს ხუთიდან ორ სადგურზე. აღმაშენებლის გამზირზე PM10 52,5 µg/m³-ია, PM2.5 კი 28,0 µg/m³, ორივე ცუდი. წერეთლის გამზირზე PM10 52,1 µg/m³-ია, ასევე ცუდი. ყაზბეგისა და გელოვანის გამზირებზე ჰაერი საშუალოა, ვარკეთილში კი დამაკმაყოფილებელი."
+    input:
+      city: Tbilisi
+      limit: 5

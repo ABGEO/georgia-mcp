@@ -144,3 +144,14 @@ stats:
     - code: geostat
       en: Geostat
       ka: საქსტატი
+air:
+  order: 8
+  hue: iris
+  icon: wind
+  name:
+    en: Air quality
+    ka: ჰაერის ხარისხი
+  vendors:
+    - code: nea
+      en: National Environmental Agency
+      ka: გარემოს ეროვნული სააგენტო

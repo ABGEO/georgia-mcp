@@ -107,6 +107,18 @@
               "prompt": "What was the average monthly salary in Tbilisi this year, according to Geostat?",
               "tools_triggered": "stats_search_tables; stats_get_table; stats_get_cells",
               "expected_output": "The average monthly nominal salary of employees in Tbilisi for the quarters of the current year, in GEL, from the Geostat table of salaries by region. The answer uses only the returned figures and says when a quarter is not yet published."
+            },
+            {
+              "description": "The air quality of a city now.",
+              "prompt": "How is the air in Tbilisi right now?",
+              "tools_triggered": "air_get_quality",
+              "expected_output": "The newest readings of the air quality stations in Tbilisi from the National Environmental Agency, each station with its level and its pollutants, such as PM10 and PM2.5, with the value, the unit, and the hour. The answer names the agency as the source and uses only the returned readings."
+            },
+            {
+              "description": "The recent history of one pollutant at a station.",
+              "prompt": "How has PM2.5 changed on Tsereteli Avenue in Tbilisi over the last day?",
+              "tools_triggered": "air_get_quality; air_list_history",
+              "expected_output": "The hourly PM2.5 readings of the station TSRT on Tsereteli Avenue from the National Environmental Agency, newest first, in µg/m³ with their levels. The answer names the agency as the source and uses only the returned readings."
             }
           ]
         }

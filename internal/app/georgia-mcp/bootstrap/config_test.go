@@ -971,3 +971,28 @@ func TestLoadConfigGivesTheDefaultsOfGeostat(t *testing.T) {
 		t.Errorf("Geostat.HTTP = %+v, want a timeout of 10s, rate 9, burst 1", http)
 	}
 }
+
+// NEAAIR-SC-023: With no variable of air, the NEA is on, at its address, with a timeout of
+// 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfTheNEA(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	nea := cfg.Air.NEA
+	if !nea.Enabled {
+		t.Error("NEA.Enabled = false, want true")
+	}
+
+	if got := nea.BaseURL.String(); got != "https://air.gov.ge" {
+		t.Errorf("NEA.BaseURL = %q, want https://air.gov.ge", got)
+	}
+
+	if http := nea.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("NEA.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}
