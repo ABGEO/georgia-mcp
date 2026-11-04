@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 	"unicode"
@@ -29,6 +30,7 @@ var errNoOpenCinema = errors.New("cinemas: none open")
 type Adapter struct {
 	client *caveaclient.Client
 	now    func() time.Time
+	logger *slog.Logger
 }
 
 var (
@@ -39,8 +41,9 @@ var (
 )
 
 // NewAdapter returns an adapter that reads with the client. now gives the read instant.
-func NewAdapter(client *caveaclient.Client, now func() time.Time) *Adapter {
-	return &Adapter{client: client, now: now}
+// The logger receives one warning for each movie that the adapter leaves out.
+func NewAdapter(client *caveaclient.Client, now func() time.Time, logger *slog.Logger) *Adapter {
+	return &Adapter{client: client, now: now, logger: logger}
 }
 
 func unavailable(action string, err error) error {
@@ -107,9 +110,9 @@ func (a *Adapter) Movies(ctx context.Context, status domain.MovieStatus) (app.Mo
 	movies := make([]domain.Movie, 0, len(found))
 
 	for _, movie := range found {
-		code, err := domain.ParseMovieCode(movie.Slug)
-		if err != nil {
-			return app.MovieList{}, unavailable("reading the movies of Cavea", err)
+		code, ok := a.movieCode(ctx, movie.Slug)
+		if !ok {
+			continue
 		}
 
 		movies = append(movies, domain.Movie{
@@ -143,9 +146,9 @@ func (a *Adapter) Search(ctx context.Context, text string) (app.MovieList, error
 	movies := make([]domain.Movie, 0, len(found))
 
 	for _, movie := range found {
-		code, err := domain.ParseMovieCode(movie.Slug)
-		if err != nil {
-			return app.MovieList{}, unavailable("searching the movies of Cavea", err)
+		code, ok := a.movieCode(ctx, movie.Slug)
+		if !ok {
+			continue
 		}
 
 		status := domain.NowShowing
@@ -164,6 +167,20 @@ func (a *Adapter) Search(ctx context.Context, text string) (app.MovieList, error
 	}
 
 	return app.MovieList{Movies: movies, ReadAt: a.readAt()}, nil
+}
+
+// movieCode reads the slug of a movie. It logs a slug that the domain refuses, and the
+// caller leaves that movie out.
+func (a *Adapter) movieCode(ctx context.Context, slug string) (domain.MovieCode, bool) {
+	code, err := domain.ParseMovieCode(slug)
+	if err != nil {
+		a.logger.WarnContext(ctx, "Cavea lists a movie that the server leaves out",
+			slog.String("code", slug), slog.String("cause", err.Error()))
+
+		return domain.MovieCode{}, false
+	}
+
+	return code, true
 }
 
 func (a *Adapter) readAt() time.Time {

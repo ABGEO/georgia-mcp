@@ -1,8 +1,10 @@
 package cavea_test
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -16,6 +18,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema/adapter/cavea"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	caveaclient "github.com/abgeo/georgia-mcp/pkg/cavea"
@@ -108,10 +111,18 @@ func newVendor(t *testing.T) *vendor {
 func adapterOf(t *testing.T, fake *vendor) *cavea.Adapter {
 	t.Helper()
 
+	return loggedAdapterOf(t, fake, &bytes.Buffer{})
+}
+
+func loggedAdapterOf(t *testing.T, fake *vendor, sink *bytes.Buffer) *cavea.Adapter {
+	t.Helper()
+
 	server := httptest.NewServer(fake)
 	t.Cleanup(server.Close)
 
-	return cavea.NewAdapter(caveaclient.New(vendorhttp.WithBaseURL(server.URL)), readAt)
+	client := caveaclient.New(vendorhttp.WithBaseURL(server.URL))
+
+	return cavea.NewAdapter(client, readAt, slog.New(slog.NewTextHandler(sink, nil)))
 }
 
 func mustSessionCode(t *testing.T, text string) domain.SessionCode {
@@ -413,6 +424,71 @@ func TestValuesOfCavea(t *testing.T) {
 			if !errors.Is(err, tt.wantErr) || (tt.wantErr == nil && len(list.Sessions) != tt.want) {
 				t.Errorf("MovieSessions() = %d sessions, %v, want %d and %v",
 					len(list.Sessions), err, tt.want, tt.wantErr)
+			}
+		})
+	}
+}
+
+// CAVCINE-SC-030: A movie with a code that the domain refuses stays out, with one warning.
+// The other movies stay.
+func TestMoviesLeavesOutABadCode(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		search  bool
+		replace [2]string
+		want    int
+		wantLog string
+	}{
+		{
+			name:    "capital letter",
+			replace: [2]string{`"slug":"guria-01"`, `"slug":"ramayana-rise-of-a-Legend"`},
+			want:    9,
+			wantLog: "code=ramayana-rise-of-a-Legend",
+		},
+		{
+			name:    "empty slug",
+			search:  true,
+			replace: [2]string{`"website_slug":"the-end-of-oak-street"`, `"website_slug":""`},
+			want:    1,
+			wantLog: `code=""`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			fake := newVendor(t)
+			sink := &bytes.Buffer{}
+			adapter := loggedAdapterOf(t, fake, sink)
+
+			var (
+				list app.MovieList
+				err  error
+			)
+
+			if tt.search {
+				replaceBody(t, fake, "/api/movies/search", tt.replace)
+				list, err = adapter.Search(t.Context(), "street")
+			} else {
+				replaceBody(t, fake, "/movies?coming-soon", tt.replace)
+				list, err = adapter.Movies(t.Context(), domain.ComingSoon)
+			}
+
+			if err != nil || len(list.Movies) != tt.want {
+				t.Errorf(
+					"read = %d movies, %v, want %d and no error",
+					len(list.Movies),
+					err,
+					tt.want,
+				)
+			}
+
+			log := sink.String()
+			if strings.Count(log, "level=WARN") != 1 || !strings.Contains(log, tt.wantLog) {
+				t.Errorf("the log = %s, want 1 warning with %s", log, tt.wantLog)
 			}
 		})
 	}
