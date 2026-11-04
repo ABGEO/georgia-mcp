@@ -946,3 +946,28 @@ func TestLoadConfigGivesTheDefaultsOfCavea(t *testing.T) {
 		t.Errorf("Cavea.HTTP = %+v, want a timeout of 10s, rate 2, burst 2", http)
 	}
 }
+
+// GEOSTAT-SC-024: With no variable of stats, Geostat is on, at its address, with a timeout
+// of 10 seconds, 9 calls each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfGeostat(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	geostat := cfg.Stats.Geostat
+	if !geostat.Enabled {
+		t.Error("Geostat.Enabled = false, want true")
+	}
+
+	if got := geostat.BaseURL.String(); got != "https://pc-axis.geostat.ge/PXWeb/api/v1" {
+		t.Errorf("Geostat.BaseURL = %q, want https://pc-axis.geostat.ge/PXWeb/api/v1", got)
+	}
+
+	if http := geostat.HTTP; http.Timeout != 10*time.Second || http.Rate != 9 || http.Burst != 1 {
+		t.Errorf("Geostat.HTTP = %+v, want a timeout of 10s, rate 9, burst 1", http)
+	}
+}

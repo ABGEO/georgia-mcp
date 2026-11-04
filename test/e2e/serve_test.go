@@ -36,6 +36,8 @@ const (
 	ttcKey   = "GEOMCP_TRANSIT_TTC_API_KEY=test-key"
 	tbcKey   = "GEOMCP_RATES_TBC_API_KEY=test-key"
 	credoKey = "GEOMCP_RATES_CREDO_API_KEY=test-key" //nolint:gosec // A key of the test.
+	// The catalog job reads at start, so the test points it at a port that answers nothing.
+	geostat = "GEOMCP_STATS_GEOSTAT_BASE_URL=http://127.0.0.1:1"
 )
 
 func TestMain(m *testing.M) {
@@ -90,7 +92,14 @@ func startServe(t *testing.T, dir, address string) *exec.Cmd {
 	cmd := exec.CommandContext(t.Context(), binary, "serve")
 	cmd.Dir = dir
 
-	cmd.Env = append(os.Environ(), "GEOMCP_HTTP_ADDRESS="+address, ttcKey, tbcKey, credoKey)
+	cmd.Env = append(
+		os.Environ(),
+		"GEOMCP_HTTP_ADDRESS="+address,
+		ttcKey,
+		tbcKey,
+		credoKey,
+		geostat,
+	)
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("starting serve: %v", err)
@@ -207,7 +216,7 @@ func TestStdioWritesOnlyTheProtocolToStdout(t *testing.T) {
 	cmd := exec.CommandContext(ctx, binary, "stdio")
 	cmd.Dir = t.TempDir()
 
-	cmd.Env = append(os.Environ(), "GEOMCP_LOG_LEVEL=debug", ttcKey, tbcKey, credoKey)
+	cmd.Env = append(os.Environ(), "GEOMCP_LOG_LEVEL=debug", ttcKey, tbcKey, credoKey, geostat)
 
 	var stderr bytes.Buffer
 
@@ -267,7 +276,13 @@ func pipes(t *testing.T, cmd *exec.Cmd) (io.WriteCloser, io.Reader) {
 func readUntilID(t *testing.T, stdout io.Reader, id string) int {
 	t.Helper()
 
+	// One answer of tools/list holds every tool on one line, longer than the default
+	// limit of a scanner.
+	const maxLine = 1 << 20
+
 	scanner := bufio.NewScanner(stdout)
+	scanner.Buffer(make([]byte, 0, bufio.MaxScanTokenSize), maxLine)
+
 	count := 0
 
 	for scanner.Scan() {
@@ -291,7 +306,7 @@ func readUntilID(t *testing.T, stdout io.Reader, id string) int {
 		}
 	}
 
-	t.Fatalf("stdout ended before the answer %s", id)
+	t.Fatalf("stdout ended before the answer %s: %v", id, scanner.Err())
 
 	return count
 }
