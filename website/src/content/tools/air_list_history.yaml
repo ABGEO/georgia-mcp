@@ -1,0 +1,17 @@
+context: air
+vendors: [nea]
+summary:
+  en: The hourly readings of one station of the NEA over the last 24 hours or a period of up to 7 days.
+  ka: გარემოს ეროვნული სააგენტოს ერთი სადგურის საათობრივი მონაცემები ბოლო 24 საათის ან მაქსიმუმ 7 დღის პერიოდისთვის.
+examples:
+  - id: tsrt-pm25
+    question:
+      en: How has PM2.5 changed on Tsereteli Avenue in the last hours?
+      ka: როგორ შეიცვალა PM2.5 წერეთლის გამზირზე ბოლო საათებში?
+    answer:
+      en: "PM2.5 on Tsereteli Avenue rose slowly over its six newest hours, from 20.7 to 21.7 µg/m³. Each of these readings is moderate. The National Environmental Agency published 30 hourly readings of PM2.5 at this station for the last day."
+      ka: "წერეთლის გამზირზე PM2.5 ბოლო ექვს საათში ნელა გაიზარდა, 20,7-დან 21,7 µg/m³-მდე. ყველა ეს მონაცემი საშუალო დონისაა. გარემოს ეროვნულმა სააგენტომ ამ სადგურზე ბოლო დღისთვის PM2.5-ის 30 საათობრივი მონაცემი გამოაქვეყნა."
+    input:
+      station: TSRT
+      pollutant: PM2.5
+      limit: 6

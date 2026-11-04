@@ -1,4 +1,303 @@
 {
+  "air_get_quality": {
+    "name": "air_get_quality",
+    "title": "Get the air quality in Georgia",
+    "description": "Returns the newest air quality readings of the automatic stations of the National Environmental Agency of Georgia (NEA), for a city, one station, or every station. Each reading gives PM10, PM2.5, NO2, O3, SO2, or CO, its concentration (µg/m³, CO in mg/m³), its hour, and its level: good, fair, moderate, poor, or very_poor. A station level is its worst reading. Stations come worst first. A reading older than 24 hours is left out. The NEA stamps some readings a few hours ahead of the clock: the time is as published. Data from the NEA.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "A city of Georgia in English or Georgian, for example Tbilisi or რუსთავი. Leave city and station empty for every station."
+        },
+        "station": {
+          "type": "string",
+          "description": "A station code of the NEA, for example TSRT. Give a city or a station, not both."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the addresses and the cities: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of stations, 1 to 100. The default is 25."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: National Environmental Agency."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the readings, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the NEA did not answer and the server returns readings it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of matching stations. More than the count of stations when the limit cut the list."
+        },
+        "stations": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The station code of the NEA."
+              },
+              "address": {
+                "type": "string",
+                "description": "The address of the station."
+              },
+              "city": {
+                "type": "string",
+                "description": "The city or the municipality of the station."
+              },
+              "lat": {
+                "type": "number",
+                "description": "The latitude, in degrees."
+              },
+              "lon": {
+                "type": "number",
+                "description": "The longitude, in degrees."
+              },
+              "level": {
+                "type": "string",
+                "description": "The worst level of the readings: good, fair, moderate, poor, or very_poor. Empty when no reading has a level."
+              },
+              "readings": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "pollutant": {
+                      "type": "string",
+                      "description": "PM10, PM2.5, NO2, O3, SO2, or CO."
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "The concentration as a decimal string, as the NEA publishes it. It can be negative."
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "µg/m³, or mg/m³ for CO."
+                    },
+                    "time": {
+                      "type": "string",
+                      "description": "The hour of the reading as the NEA publishes it, RFC 3339 with +04:00."
+                    },
+                    "level": {
+                      "type": "string",
+                      "description": "good, fair, moderate, poor, or very_poor. Empty for a negative value."
+                    }
+                  },
+                  "required": [
+                    "pollutant",
+                    "value",
+                    "unit",
+                    "time"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The newest reading of each pollutant, less than 24 hours old. Empty when the station sent none."
+              }
+            },
+            "required": [
+              "code",
+              "address",
+              "city",
+              "lat",
+              "lon",
+              "readings"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The stations, the worst level first. A station with no level comes last."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "stations"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "air_list_history": {
+    "name": "air_list_history",
+    "title": "List the air quality history of a station",
+    "description": "Returns the hourly readings of one station of the National Environmental Agency of Georgia (NEA) over at most 7 days of the last 7, newest first, with the level of each reading. The default is the last 24 hours. Call air_get_quality first to find the station code. The NEA stamps some readings a few hours ahead of the clock: the time is as published. Data from the NEA.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "station": {
+          "type": "string",
+          "description": "A station code of the NEA, for example TSRT."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of the period, YYYY-MM-DD, at most 7 days ago. Give from and to, or neither for the last 24 hours."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of the period, YYYY-MM-DD. At most 7 days with from, counted with both ends."
+        },
+        "pollutant": {
+          "type": "string",
+          "description": "One pollutant: PM10, PM2.5, NO2, O3, SO2, or CO. The default is every pollutant of the station."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the address and the city: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of readings of each pollutant, newest first, 1 to 100. The default is 24."
+        }
+      },
+      "required": [
+        "station"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: National Environmental Agency."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the readings, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the NEA did not answer and the server returns readings it read before."
+        },
+        "code": {
+          "type": "string",
+          "description": "The station code of the NEA."
+        },
+        "address": {
+          "type": "string",
+          "description": "The address of the station."
+        },
+        "city": {
+          "type": "string",
+          "description": "The city or the municipality of the station."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first hour of the period, RFC 3339."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last hour of the period, RFC 3339. With no dates, the hour of the newest reading when it is ahead of the clock."
+        },
+        "series": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "pollutant": {
+                "type": "string",
+                "description": "PM10, PM2.5, NO2, O3, SO2, or CO."
+              },
+              "unit": {
+                "type": "string",
+                "description": "µg/m³, or mg/m³ for CO."
+              },
+              "total": {
+                "type": "integer",
+                "description": "The count of readings in the period. More than the count of readings when the limit cut the list."
+              },
+              "readings": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "description": "The concentration as a decimal string, as the NEA publishes it."
+                    },
+                    "time": {
+                      "type": "string",
+                      "description": "The hour of the reading, RFC 3339 with +04:00."
+                    },
+                    "level": {
+                      "type": "string",
+                      "description": "good, fair, moderate, poor, or very_poor. Empty for a negative value."
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "time"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The readings, newest first."
+              }
+            },
+            "required": [
+              "pollutant",
+              "unit",
+              "total",
+              "readings"
+            ],
+            "additionalProperties": false
+          },
+          "description": "One series for each pollutant."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "code",
+        "address",
+        "city",
+        "from",
+        "to",
+        "series"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "cinema_get_seat_map": {
     "name": "cinema_get_seat_map",
     "title": "Get the seat map of a session of Cavea",
