@@ -79,8 +79,10 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
         <nav aria-label={SITE_NAME}>
           <a href={`${localize("/", lang)}#tools`}>{copy.nav.tools}</a>
           <a href={`${localize("/", lang)}#install`}>{copy.nav.install}</a>
-          <LangSwitch lang={lang} path={path} />
-          <ThemeToggle lang={lang} />
+          <div class="controls">
+            <LangSwitch lang={lang} path={path} />
+            <ThemeToggle lang={lang} />
+          </div>
         </nav>
       </div>
     </header>
@@ -161,6 +163,23 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
 
   .bar nav > a:hover {
     color: var(--wine);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 2);
+  }
+
+  @media (max-width: 480px) {
+    .controls :global(.theme-toggle .label) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
 
   .foot {
