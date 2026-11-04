@@ -170,6 +170,8 @@ Three sources need a key:
 | `stats_get_table`             | One table of Geostat with its dimensions and their values.              |
 | `stats_get_cells`             | The figures of one table of Geostat for a selection.                    |
 | `stats_get_inflation`         | The inflation of Georgia for a month, a city, and a price group.        |
+| `air_get_quality`             | The newest air quality readings of a city, a station, or every station. |
+| `air_list_history`            | The hourly air quality readings of one station over at most 7 days.     |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 

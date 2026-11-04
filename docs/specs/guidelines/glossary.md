@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-11-04
+updated: 2026-11-05
 ---
 
 # Glossary
@@ -186,6 +186,19 @@ define it. The identifier of a term is `GLO-<term>`.
 | average inflation | The change of the average prices of the last 12 months over the 12 months before, in percent. |
 | core inflation | The annual inflation without the prices that Geostat excludes as volatile, as Geostat publishes it. |
 | price group | One of the 13 groups of the consumer price index of Geostat: `Total`, `Food and non-alcoholic beverages`. |
+
+## Air
+
+| Term | Meaning |
+| ---- | ------- |
+| NEA | The National Environmental Agency of Georgia. Vendor code `nea`. |
+| station | One automatic monitoring station of the NEA, with a code and an address. |
+| station code | The code of a station at the NEA: `TSRT`, `ORN01`. |
+| pollutant | One substance that a station measures: PM10, PM2.5, NO2, O3, SO2, CO. |
+| reading | The concentration of one pollutant at one station in one hour. |
+| air quality level | One of five bands: `good`, `fair`, `moderate`, `poor`, `very_poor`. |
+| band limits | The concentrations that the NEA gives as the bounds of each level of a pollutant. |
+| station level | The worst air quality level of the newest readings of a station. |
 
 ## The website
 
