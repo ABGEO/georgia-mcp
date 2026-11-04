@@ -21,6 +21,13 @@
     "**/__fixtures__/**",
     "**/testdata/**"
   ],
+  "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days",
+      "internalChecksFilter": "strict"
+    }
+  ],
   "postUpdateOptions": [
     "gomodTidy",
     "pnpmDedupe"
