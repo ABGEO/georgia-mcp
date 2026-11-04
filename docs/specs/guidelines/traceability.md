@@ -4,7 +4,7 @@ title: Traceability
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-24
+updated: 2026-11-04
 scope: [docs/specs/, tests]
 related: [LNG, PRC, GIT, SPC]
 ---
@@ -202,6 +202,7 @@ Add a row before you create the file or the directory.
 | `WEBSITE`  | `features/website/`  | `website`  | The website of Georgia MCP, in English and in Georgian.         | Approved |
 | `POSTCODE` | `features/postcode/` | `postal`   | The postal codes of Georgian Post, searched by address.         | Approved |
 | `CAVCINE`  | `features/cavcine/`  | `cinema`   | The cinemas, movies, sessions, and seats of Cavea.              | Approved |
+| `GEOSTAT`  | `features/geostat/`  | `stats`    | The statistical tables and the inflation of Geostat.            | Approved |
 
 ## Retired identifiers
 

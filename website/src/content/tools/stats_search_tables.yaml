@@ -1,0 +1,16 @@
+context: stats
+vendors: [geostat]
+summary:
+  en: The statistical tables of Geostat whose title or folder holds every word of a text, the newest first.
+  ka: საქსტატის სტატისტიკური ცხრილები, რომელთა სათაური ან საქაღალდე შეიცავს ტექსტის ყველა სიტყვას, უახლესი პირველი.
+examples:
+  - id: salary
+    question:
+      en: Which Geostat tables show salaries by region?
+      ka: საქსტატის რომელი ცხრილები აჩვენებს ხელფასებს რეგიონების მიხედვით?
+    answer:
+      en: "Geostat has one such table: the average monthly nominal salary of employees by region, year, and quarter, in Social Statistics / Labour. Geostat updated it on 8 October 2026."
+      ka: "საქსტატს ერთი ასეთი ცხრილი აქვს: დაქირავებულთა საშუალო თვიური ნომინალური ხელფასი რეგიონების, წლებისა და კვარტლების მიხედვით, განყოფილებაში „სოციალური სტატისტიკა / შრომა“. საქსტატმა ის 2026 წლის 8 ოქტომბერს განაახლა."
+    input:
+      query: salary region
+      limit: 3

@@ -1,28 +1,28 @@
 {
-  "cinema_get_seat_map.galleria-1400": {
+  "cinema_get_seat_map.galleria-1630": {
     "tool": "cinema_get_seat_map",
-    "example": "galleria-1400",
-    "recordedAt": "2026-10-25T20:02:34.639Z",
+    "example": "galleria-1630",
+    "recordedAt": "2026-11-04T19:27:25.699Z",
     "output": {
-      "as_of": "2026-10-26T00:02:34+04:00",
+      "as_of": "2026-11-04T23:27:25+04:00",
       "classes": [
         {
           "class": "standard",
-          "free": 38,
-          "price": "13",
-          "seats": 41
+          "free": 23,
+          "price": "15",
+          "seats": 30
         },
         {
           "class": "vip",
-          "free": 0,
-          "price": "21",
-          "seats": 16
+          "free": 17,
+          "price": "22",
+          "seats": 17
         },
         {
           "class": "status",
-          "free": 25,
-          "price": "15",
-          "seats": 34
+          "free": 15,
+          "price": "17",
+          "seats": 15
         }
       ],
       "rows": [
@@ -30,84 +30,64 @@
           "row": "6",
           "seats": [
             {
-              "class": "vip",
+              "class": "standard",
               "number": 1,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 2,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 3,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 4,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 5,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 6,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 7,
               "taken": true
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 8,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 9,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 10,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 11,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "vip",
+              "class": "standard",
               "number": 12,
-              "taken": true
-            },
-            {
-              "class": "vip",
-              "number": 13,
-              "taken": true
-            },
-            {
-              "class": "vip",
-              "number": 14,
-              "taken": true
-            },
-            {
-              "class": "vip",
-              "number": 15,
-              "taken": true
-            },
-            {
-              "class": "vip",
-              "number": 16,
-              "taken": true
+              "taken": false
             }
           ]
         },
@@ -115,78 +95,63 @@
           "row": "5",
           "seats": [
             {
-              "class": "standard",
+              "class": "vip",
               "number": 1,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 2,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 3,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 4,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 5,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 6,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 7,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 8,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 9,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 10,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 11,
-              "taken": true
+              "taken": false
             },
             {
-              "class": "status",
+              "class": "vip",
               "number": 12,
-              "taken": true
-            },
-            {
-              "class": "standard",
-              "number": 13,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 14,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 15,
               "taken": false
             }
           ]
@@ -235,38 +200,23 @@
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 9,
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 10,
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 11,
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 12,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 13,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 14,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 15,
               "taken": false
             }
           ]
@@ -315,38 +265,8 @@
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 9,
-              "taken": false
-            },
-            {
-              "class": "status",
-              "number": 10,
-              "taken": false
-            },
-            {
-              "class": "status",
-              "number": 11,
-              "taken": false
-            },
-            {
-              "class": "status",
-              "number": 12,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 13,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 14,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 15,
               "taken": false
             }
           ]
@@ -370,7 +290,7 @@
               "taken": false
             },
             {
-              "class": "standard",
+              "class": "status",
               "number": 4,
               "taken": false
             },
@@ -395,38 +315,8 @@
               "taken": false
             },
             {
-              "class": "status",
+              "class": "standard",
               "number": 9,
-              "taken": false
-            },
-            {
-              "class": "status",
-              "number": 10,
-              "taken": false
-            },
-            {
-              "class": "status",
-              "number": 11,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 12,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 13,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 14,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 15,
               "taken": false
             }
           ]
@@ -435,78 +325,46 @@
           "row": "1",
           "seats": [
             {
-              "class": "standard",
+              "class": "vip",
               "number": 1,
               "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 2,
               "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 3,
               "taken": false
             },
             {
               "class": "standard",
               "number": 4,
+              "special_needs": true,
               "taken": false
             },
             {
               "class": "standard",
               "number": 5,
+              "special_needs": true,
               "taken": false
             },
             {
               "class": "standard",
               "number": 6,
+              "special_needs": true,
               "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 7,
               "taken": false
             },
             {
-              "class": "standard",
+              "class": "vip",
               "number": 8,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 9,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 10,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 11,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 12,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 13,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 14,
-              "taken": false
-            },
-            {
-              "class": "standard",
-              "number": 15,
               "taken": false
             }
           ]
@@ -516,30 +374,30 @@
         "audio_language": "ka",
         "cinema_code": "galleria",
         "cinema_name": "Cavea Galleria",
-        "code": "cag_5/26-10-2026/14:00",
+        "code": "cag_3/05-11-2026/16:30",
         "formats": [],
-        "hall": "5",
+        "hall": "3",
         "movie_code": "street-fighter",
         "movie_name": "Street Fighter",
         "prices": [
           {
             "class": "economy",
-            "price": "13"
+            "price": "15"
           },
           {
             "class": "standard",
-            "price": "13"
+            "price": "15"
           },
           {
             "class": "vip",
-            "price": "21"
+            "price": "22"
           },
           {
             "class": "status",
-            "price": "15"
+            "price": "17"
           }
         ],
-        "start": "2026-10-26T14:00:00+04:00"
+        "start": "2026-11-05T16:30:00+04:00"
       },
       "source": "Cavea"
     }
@@ -547,9 +405,9 @@
   "cinema_list_cinemas.all": {
     "tool": "cinema_list_cinemas",
     "example": "all",
-    "recordedAt": "2026-10-25T20:02:34.641Z",
+    "recordedAt": "2026-11-04T19:27:25.712Z",
     "output": {
-      "as_of": "2026-10-26T00:02:30+04:00",
+      "as_of": "2026-11-04T23:27:21+04:00",
       "cinemas": [
         {
           "address": "16th km Davit Aghmashenebeli Ave",
@@ -589,10 +447,62 @@
   "cinema_list_movies.now-showing": {
     "tool": "cinema_list_movies",
     "example": "now-showing",
-    "recordedAt": "2026-10-25T20:02:34.641Z",
+    "recordedAt": "2026-11-04T19:27:25.714Z",
     "output": {
-      "as_of": "2026-10-26T00:02:31+04:00",
+      "as_of": "2026-11-04T23:27:22+04:00",
       "movies": [
+        {
+          "actors": [
+            "Bill Hader",
+            "Xochitl Gomez",
+            "Tiago Martinez",
+            "Quinta Brunson",
+            "America Ferrera",
+            "Matt Berry"
+          ],
+          "age_rating": "PG",
+          "code": "the-cat-in-the-hat",
+          "description": "Two bored children have their lives turned upside down when a talking cat comes to visit them.",
+          "directors": [
+            "Alessandro Carloni",
+            "Erica Rivinoja"
+          ],
+          "duration_minutes": 91,
+          "genres": [
+            "Adventure",
+            "Animation",
+            "Comedy",
+            "Family",
+            "Fantasy"
+          ],
+          "name": "The Cat in the Hat",
+          "status": "now_showing",
+          "url": "https://cavea.ge/movie/the-cat-in-the-hat"
+        },
+        {
+          "actors": [
+            "Sebastian Stan",
+            "Renate Reinsve",
+            "Lisa Carlehed",
+            "Ellen Dorrit Petersen"
+          ],
+          "age_rating": "PG-13",
+          "code": "fjord-01",
+          "description": "An immigrant Romanian family living in Norway is subject to an investigation and faces the scrutiny of the local judicial system.",
+          "directors": [
+            "Cristian Mungiu"
+          ],
+          "duration_minutes": 146,
+          "genres": [
+            "Docudrama",
+            "Drama",
+            "Thriller"
+          ],
+          "name": "Fjord",
+          "premiere": "2026-10-29",
+          "status": "now_showing",
+          "url": "https://cavea.ge/movie/fjord-01"
+        },
         {
           "actors": [
             "Tom Rhys Harries",
@@ -617,102 +527,28 @@
           "premiere": "2026-10-22",
           "status": "now_showing",
           "url": "https://cavea.ge/movie/clayface-01"
-        },
-        {
-          "actors": [
-            "Jessica Chastain",
-            "Jay Duplass",
-            "Arabella Olivia Clark",
-            "Alejandro Nieves"
-          ],
-          "age_rating": "R",
-          "code": "other-mommy",
-          "description": "Bela, an 8-year-old girl living in a home with marital problems, confronts a sinister entity that comes out of her closet. The presence, who she calls \"Other Mommy,\" becomes increasingly threatening to her and her family.",
-          "directors": [
-            "Rob Savage"
-          ],
-          "duration_minutes": 93,
-          "genres": [
-            "Horror"
-          ],
-          "name": "Other Mommy",
-          "premiere": "2026-10-15",
-          "status": "now_showing",
-          "url": "https://cavea.ge/movie/other-mommy"
-        },
-        {
-          "actors": [
-            "Jason Momoa",
-            "David Dastmalchian",
-            "Noah Centineo",
-            "Olivier Richters"
-          ],
-          "age_rating": "PG-13",
-          "code": "street-fighter",
-          "description": "Street Fighters Ryu and Ken reunite when Chun-Li recruits them for the World Warrior Tournament. As they face a hidden conspiracy, they must confront each other and their past-or face destruction.",
-          "directors": [
-            "Kitao Sakurai"
-          ],
-          "duration_minutes": 119,
-          "genres": [
-            "Action"
-          ],
-          "name": "Street Fighter",
-          "premiere": "2026-10-15",
-          "status": "now_showing",
-          "url": "https://cavea.ge/movie/street-fighter"
         }
       ],
       "source": "Cavea",
       "stale": false,
-      "total": 21
+      "total": 23
     }
   },
   "cinema_list_sessions.street-fighter-galleria": {
     "tool": "cinema_list_sessions",
     "example": "street-fighter-galleria",
-    "recordedAt": "2026-10-25T20:02:34.926Z",
+    "recordedAt": "2026-11-04T19:27:25.976Z",
     "output": {
-      "as_of": "2026-10-26T00:02:33+04:00",
-      "occupancy_as_of": "2026-10-26T00:02:34+04:00",
+      "as_of": "2026-11-04T23:27:24+04:00",
+      "occupancy_as_of": "2026-11-04T23:27:25+04:00",
       "sessions": [
         {
           "audio_language": "ka",
           "cinema_code": "galleria",
           "cinema_name": "Cavea Galleria",
-          "code": "cag_5/26-10-2026/14:00",
+          "code": "cag_3/05-11-2026/16:30",
           "formats": [],
-          "hall": "5",
-          "movie_code": "street-fighter",
-          "movie_name": "Street Fighter",
-          "occupancy": "many_seats",
-          "prices": [
-            {
-              "class": "economy",
-              "price": "13"
-            },
-            {
-              "class": "standard",
-              "price": "13"
-            },
-            {
-              "class": "vip",
-              "price": "21"
-            },
-            {
-              "class": "status",
-              "price": "15"
-            }
-          ],
-          "start": "2026-10-26T14:00:00+04:00"
-        },
-        {
-          "audio_language": "en",
-          "cinema_code": "galleria",
-          "cinema_name": "Cavea Galleria",
-          "code": "cag_5/26-10-2026/16:45",
-          "formats": [],
-          "hall": "5",
+          "hall": "3",
           "movie_code": "street-fighter",
           "movie_name": "Street Fighter",
           "occupancy": "many_seats",
@@ -734,50 +570,20 @@
               "price": "17"
             }
           ],
-          "start": "2026-10-26T16:45:00+04:00"
-        },
-        {
-          "audio_language": "ka",
-          "cinema_code": "galleria",
-          "cinema_name": "Cavea Galleria",
-          "code": "cag_5/26-10-2026/22:15",
-          "formats": [],
-          "hall": "5",
-          "movie_code": "street-fighter",
-          "movie_name": "Street Fighter",
-          "occupancy": "many_seats",
-          "prices": [
-            {
-              "class": "economy",
-              "price": "20"
-            },
-            {
-              "class": "standard",
-              "price": "20"
-            },
-            {
-              "class": "vip",
-              "price": "29"
-            },
-            {
-              "class": "status",
-              "price": "22"
-            }
-          ],
-          "start": "2026-10-26T22:15:00+04:00"
+          "start": "2026-11-05T16:30:00+04:00"
         }
       ],
       "source": "Cavea",
       "stale": false,
-      "total": 3
+      "total": 1
     }
   },
   "cinema_search_movies.dune": {
     "tool": "cinema_search_movies",
     "example": "dune",
-    "recordedAt": "2026-10-25T20:02:35.421Z",
+    "recordedAt": "2026-11-04T19:27:26.473Z",
     "output": {
-      "as_of": "2026-10-26T00:02:31+04:00",
+      "as_of": "2026-11-04T23:27:22+04:00",
       "movies": [
         {
           "age_rating": "PG-13",
@@ -796,11 +602,11 @@
   "fuel_get_prices.premium": {
     "tool": "fuel_get_prices",
     "example": "premium",
-    "recordedAt": "2026-10-25T13:10:48.866Z",
+    "recordedAt": "2026-11-04T19:27:28.169Z",
     "output": {
       "companies": [
         {
-          "as_of": "2026-10-25T17:10:48.858668+04:00",
+          "as_of": "2026-11-04T23:27:28.168252+04:00",
           "company": "connect",
           "prices": [
             {
@@ -815,7 +621,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.163385+04:00",
+          "as_of": "2026-11-04T23:27:26.724566+04:00",
           "company": "gulf",
           "prices": [
             {
@@ -830,13 +636,13 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.25931+04:00",
+          "as_of": "2026-11-04T23:27:26.979757+04:00",
           "company": "lukoil",
           "prices": [
             {
-              "effective_date": "2026-10-05",
+              "effective_date": "2026-10-26",
               "grade": "premium",
-              "price": "4.25",
+              "price": "4.32",
               "product": "Premium Avangard",
               "unit": "litre"
             }
@@ -845,7 +651,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.086971+04:00",
+          "as_of": "2026-11-04T23:27:26.593672+04:00",
           "company": "neogas",
           "missing": [
             "premium"
@@ -855,7 +661,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:47.819541+04:00",
+          "as_of": "2026-11-04T23:27:26.777449+04:00",
           "company": "portal",
           "prices": [
             {
@@ -869,7 +675,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.325507+04:00",
+          "as_of": "2026-11-04T23:27:26.82332+04:00",
           "company": "rompetrol",
           "prices": [
             {
@@ -884,7 +690,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.083906+04:00",
+          "as_of": "2026-11-04T23:27:26.605778+04:00",
           "company": "socar",
           "prices": [
             {
@@ -898,7 +704,7 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:10:46.061009+04:00",
+          "as_of": "2026-11-04T23:27:26.579741+04:00",
           "company": "wissol",
           "prices": [
             {
@@ -920,9 +726,9 @@
   "offers_get_offer.chicago-style": {
     "tool": "offers_get_offer",
     "example": "chicago-style",
-    "recordedAt": "2026-10-25T13:10:51.497Z",
+    "recordedAt": "2026-11-04T19:27:31.514Z",
     "output": {
-      "as_of": "2026-10-25T17:10:51.47504+04:00",
+      "as_of": "2026-11-04T23:27:31.493659+04:00",
       "offer": {
         "bank": "bog",
         "bank_categories": [
@@ -960,11 +766,11 @@
   "offers_search_offers.dining-cashback": {
     "tool": "offers_search_offers",
     "example": "dining-cashback",
-    "recordedAt": "2026-10-25T13:11:04.528Z",
+    "recordedAt": "2026-11-04T19:27:44.437Z",
     "output": {
       "banks": [
         {
-          "as_of": "2026-10-25T17:10:51.47504+04:00",
+          "as_of": "2026-11-04T23:27:31.493659+04:00",
           "bank": "bog",
           "next_offset": 2,
           "offers": [
@@ -973,36 +779,12 @@
               "bank_categories": [
                 "Restaurants"
               ],
-              "benefit": "20% Cashback, Unlimited",
+              "benefit": "30% cashback, max. 50 GEL",
               "cards": [
                 {
-                  "code": "solo",
-                  "name": "SOLO"
-                }
-              ],
-              "categories": [
-                "dining"
-              ],
-              "end_date": "2026-10-26",
-              "id": "19046",
-              "kinds": [
-                "cashback"
-              ],
-              "start_date": "2026-09-26",
-              "tiers": [
-                "premium",
-                "private"
-              ],
-              "title": "Coffee Academy",
-              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19046"
-            },
-            {
-              "bank": "bog",
-              "bank_categories": [
-                "Restaurants"
-              ],
-              "benefit": "20% Cashback, max. 100 GEL",
-              "cards": [
+                  "code": "scool_card",
+                  "name": "sCool Card"
+                },
                 {
                   "code": "student_card",
                   "name": "Student Card"
@@ -1011,19 +793,51 @@
               "categories": [
                 "dining"
               ],
-              "end_date": "2026-10-28",
-              "id": "19099",
+              "end_date": "2026-11-09",
+              "id": "19280",
               "kinds": [
                 "cashback"
               ],
-              "start_date": "2026-09-28",
+              "start_date": "2026-10-09",
               "tiers": [
                 "standard",
                 "premium",
                 "private"
               ],
-              "title": "Fike",
-              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19099"
+              "title": "Extrameat's Pavilion",
+              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19280"
+            },
+            {
+              "bank": "bog",
+              "bank_categories": [
+                "Restaurants"
+              ],
+              "benefit": "25% cashback, max. 300 GEL",
+              "cards": [
+                {
+                  "code": "solo",
+                  "name": "SOLO"
+                },
+                {
+                  "code": "visa",
+                  "name": "Visa"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-11-10",
+              "id": "19618",
+              "kinds": [
+                "cashback"
+              ],
+              "start_date": "2026-10-26",
+              "tiers": [
+                "premium",
+                "private"
+              ],
+              "title": "Food Lab by Loomba",
+              "url": "https://bankofgeorgia.ge/en/offers-hub/details/19618"
             }
           ],
           "source": "Bank of Georgia",
@@ -1031,7 +845,7 @@
           "total": 25
         },
         {
-          "as_of": "2026-10-25T17:10:51.4977+04:00",
+          "as_of": "2026-11-04T23:27:31.515081+04:00",
           "bank": "liberty",
           "next_offset": 2,
           "offers": [
@@ -1101,7 +915,7 @@
           "total": 5
         },
         {
-          "as_of": "2026-10-25T17:10:58.866148+04:00",
+          "as_of": "2026-11-04T23:27:38.979028+04:00",
           "bank": "tbc",
           "next_offset": 2,
           "offers": [
@@ -1110,7 +924,43 @@
               "bank_categories": [
                 "Cafe and Restaurant"
               ],
-              "benefit": "From September 15th to October 31th, pay in KFC and get 20% cashback instantly, with the maximum amount of 30 GEL.",
+              "benefit": "Enjoy offer at Mimino restaurant, The Quiet Women Pub beer bar, La Brioche café and Bellamia ice cream shop and get 15% cashback",
+              "cards": [
+                {
+                  "code": "concept_card",
+                  "name": "TBC Concept Card"
+                },
+                {
+                  "code": "credit_card",
+                  "name": "Credit Card"
+                },
+                {
+                  "code": "tbc_card",
+                  "name": "TBC Card"
+                }
+              ],
+              "categories": [
+                "dining"
+              ],
+              "end_date": "2026-12-20",
+              "id": "44bBRDU0fVKzfbDbYVy7fk",
+              "kinds": [
+                "cashback"
+              ],
+              "partner": "La Brioche",
+              "start_date": "2026-11-01",
+              "tiers": [
+                "standard"
+              ],
+              "title": "Mimino, La Brioche, The Quiet Women Pub and Bellamia",
+              "url": "https://tbcbank.ge/en/offers/all-offers/batumi-piazza-shetavazeba"
+            },
+            {
+              "bank": "tbc",
+              "bank_categories": [
+                "Cafe and Restaurant"
+              ],
+              "benefit": "Every Friday, Saturday & Sunday pay in Luca Polare and get 15% cashback instantly, with the maximum amount of 20 GEL per month.",
               "cards": [
                 {
                   "code": "pupil_card",
@@ -1124,49 +974,23 @@
               "categories": [
                 "dining"
               ],
-              "end_date": "2026-10-31",
-              "id": "4sbwhMQBPXIfaawK05yb15",
+              "end_date": "2026-12-27",
+              "id": "4cArMriPNzR59mzDQmx6s3",
               "kinds": [
                 "cashback"
               ],
-              "partner": "KFC",
+              "partner": "Luca Polare",
+              "start_date": "2026-02-13",
               "tiers": [
                 "youth"
               ],
-              "title": "KFC",
-              "url": "https://tbcbank.ge/en/offers/all-offers/kfc-qeshbeqi"
-            },
-            {
-              "bank": "tbc",
-              "bank_categories": [
-                "Cafe and Restaurant"
-              ],
-              "benefit": "As part of the TBC Concept offer, visit the Marjanishvili branch of Coffeeshop Company and receive an instant 10% cashback when paying with any TBC Concept debit card, up to a maximum of GEL 100 per day.",
-              "cards": [
-                {
-                  "code": "concept_card",
-                  "name": "TBC Concept Card"
-                }
-              ],
-              "categories": [
-                "dining"
-              ],
-              "end_date": "2026-12-31",
-              "id": "1sBsejrul7B0jirmpUPkiC",
-              "kinds": [
-                "cashback"
-              ],
-              "partner": "Coffeeshop Company",
-              "tiers": [
-                "premium"
-              ],
-              "title": "Coffeeshop Company",
-              "url": "https://tbcconcept.ge/en/offers/coffeeshop-company-qeshbeqi"
+              "title": "15%, max. 20 GEL",
+              "url": "https://tbcbank.ge/en/offers/all-offers/luca-polare-cashback-15"
             }
           ],
           "source": "TBC Bank",
           "stale": false,
-          "total": 29
+          "total": 30
         }
       ],
       "meaning": "benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students."
@@ -1175,7 +999,7 @@
   "postal_search_codes.rustavi": {
     "tool": "postal_search_codes",
     "example": "rustavi",
-    "recordedAt": "2026-10-25T13:11:05.748Z",
+    "recordedAt": "2026-11-04T19:27:45.652Z",
     "output": {
       "addresses": [
         {
@@ -1194,7 +1018,7 @@
           "postal_code": "0114"
         }
       ],
-      "as_of": "2026-10-25T17:11:05+04:00",
+      "as_of": "2026-11-04T23:27:45+04:00",
       "source": "Georgian Post",
       "stale": false,
       "total": 12
@@ -1203,80 +1027,80 @@
   "rates_get_commercial_rates.usd": {
     "tool": "rates_get_commercial_rates",
     "example": "usd",
-    "recordedAt": "2026-10-25T13:11:09.163Z",
+    "recordedAt": "2026-11-04T19:27:48.886Z",
     "output": {
       "banks": [
         {
-          "as_of": "2026-10-25T17:11:05.893361+04:00",
+          "as_of": "2026-11-04T23:27:45.795191+04:00",
           "bank": "basisbank",
           "rates": [
             {
-              "buy": "2.56",
+              "buy": "2.558",
               "currency": "USD",
-              "sell": "2.63"
+              "sell": "2.628"
             }
           ],
           "source": "Basisbank",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:06.088112+04:00",
+          "as_of": "2026-11-04T23:27:45.893003+04:00",
           "bank": "bog",
           "rates": [
             {
-              "buy": "2.565",
+              "buy": "2.563",
               "currency": "USD",
-              "sell": "2.629"
+              "sell": "2.627"
             }
           ],
           "source": "Bank of Georgia",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.98497+04:00",
+          "as_of": "2026-11-04T23:27:45.871792+04:00",
           "bank": "credo",
           "rates": [
             {
-              "buy": "2.593",
+              "buy": "2.591",
               "currency": "USD",
-              "sell": "2.607"
+              "sell": "2.605"
             }
           ],
           "source": "Credo Bank",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.960252+04:00",
+          "as_of": "2026-11-04T23:27:45.877675+04:00",
           "bank": "crystal",
           "rates": [
             {
-              "buy": "2.595",
+              "buy": "2.593",
               "currency": "USD",
-              "sell": "2.599"
+              "sell": "2.597"
             }
           ],
           "source": "Crystal",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:09.160083+04:00",
+          "as_of": "2026-11-04T23:27:48.883562+04:00",
           "bank": "halyk",
           "rates": [
             {
-              "buy": "2.587",
+              "buy": "2.585",
               "currency": "USD",
-              "sell": "2.612"
+              "sell": "2.61"
             }
           ],
           "source": "Halyk Bank",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:08.631238+04:00",
+          "as_of": "2026-11-04T23:27:47.936057+04:00",
           "bank": "inteli",
           "rates": [
             {
-              "buy": "2.595",
+              "buy": "2.593",
               "currency": "USD",
               "sell": "2.598"
             }
@@ -1285,142 +1109,149 @@
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.965465+04:00",
+          "as_of": "2026-11-04T23:27:45.829949+04:00",
           "bank": "kursi",
           "rates": [
             {
-              "buy": "2.593",
+              "buy": "2.5935",
               "currency": "USD",
-              "sell": "2.601"
+              "sell": "2.6025"
             }
           ],
           "source": "Kursi.ge",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.933658+04:00",
+          "as_of": "2026-11-04T23:27:45.811214+04:00",
           "bank": "liberty",
           "rates": [
             {
-              "buy": "2.548",
+              "buy": "2.546",
               "currency": "USD",
-              "sell": "2.648"
+              "sell": "2.646"
             }
           ],
           "source": "Liberty Bank",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.892147+04:00",
+          "as_of": "2026-11-04T23:27:45.725227+04:00",
           "bank": "mbc",
           "rates": [
             {
-              "buy": "2.595",
+              "buy": "2.593",
               "currency": "USD",
-              "sell": "2.599"
+              "sell": "2.598"
             }
           ],
           "source": "MBC",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:06.517171+04:00",
+          "as_of": "2026-11-04T23:27:46.312322+04:00",
           "bank": "mjc",
           "rates": [
             {
-              "buy": "2.595",
+              "buy": "2.593",
               "currency": "USD",
-              "sell": "2.598"
+              "sell": "2.596"
             }
           ],
           "source": "MJC",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:06.131626+04:00",
+          "as_of": "2026-11-04T23:27:45.822578+04:00",
           "bank": "rico",
           "rates": [
             {
-              "buy": "2.596",
+              "buy": "2.593",
               "currency": "USD",
-              "sell": "2.6"
+              "sell": "2.598"
             }
           ],
           "source": "Rico Credit",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:05.914073+04:00",
+          "as_of": "2026-11-04T23:27:45.823415+04:00",
           "bank": "scapp",
           "rates": [
             {
-              "buy": "2.595",
+              "buy": "2.593",
               "currency": "USD",
-              "sell": "2.599"
+              "sell": "2.597"
             }
           ],
           "source": "Scapp",
           "stale": false
         },
         {
-          "as_of": "2026-10-25T17:11:06.340531+04:00",
+          "as_of": "2026-11-04T23:27:46.186965+04:00",
           "bank": "tbc",
           "rates": [
             {
-              "buy": "2.551",
+              "buy": "2.549",
               "currency": "USD",
-              "sell": "2.641"
+              "sell": "2.639"
             }
           ],
           "source": "TBC Bank",
           "stale": false
+        },
+        {
+          "as_of": "2026-11-04T23:27:45.725227+04:00",
+          "bank": "terabank",
+          "rates": [
+            {
+              "buy": "2.592",
+              "currency": "USD",
+              "sell": "2.6"
+            }
+          ],
+          "source": "Terabank",
+          "stale": false
         }
       ],
-      "meaning": "buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it.",
-      "unavailable": [
-        {
-          "bank": "terabank",
-          "source": "Terabank"
-        }
-      ]
+      "meaning": "buy: the price in GEL that the bank pays when you sell it one unit. sell: the price in GEL that the bank asks when you buy one unit from it."
     }
   },
   "rates_get_official_rates.today": {
     "tool": "rates_get_official_rates",
     "example": "today",
-    "recordedAt": "2026-10-25T13:11:09.270Z",
+    "recordedAt": "2026-11-04T19:27:49.201Z",
     "output": {
-      "as_of": "2026-10-23T17:01:01.965+04:00",
+      "as_of": "2026-11-03T17:01:10.6+04:00",
       "rates": [
         {
-          "change": "-0.0047",
+          "change": "-0.0061",
           "currency": "EUR",
           "name": "Euro",
           "quantity": 1,
-          "rate": "2.9090",
-          "rate_per_unit": "2.9090",
-          "valid_from": "2026-10-24"
+          "rate": "2.9047",
+          "rate_per_unit": "2.9047",
+          "valid_from": "2026-11-04"
         },
         {
-          "change": "-0.0002",
+          "change": "-0.0003",
           "currency": "USD",
           "name": "US Dollar",
           "quantity": 1,
-          "rate": "2.5971",
-          "rate_per_unit": "2.5971",
-          "valid_from": "2026-10-24"
+          "rate": "2.5970",
+          "rate_per_unit": "2.5970",
+          "valid_from": "2026-11-04"
         }
       ],
-      "read_at": "2026-10-25T17:11:09.268147+04:00",
+      "read_at": "2026-11-04T23:27:49.197782+04:00",
       "source": "National Bank of Georgia",
       "stale": false,
-      "valid_from": "2026-10-24"
+      "valid_from": "2026-11-04"
     }
   },
   "rates_list_official_history.october": {
     "tool": "rates_list_official_history",
     "example": "october",
-    "recordedAt": "2026-10-25T13:11:11.598Z",
+    "recordedAt": "2026-11-04T19:27:51.443Z",
     "output": {
       "as_of": "2026-10-15T17:01:15.076+04:00",
       "currency": "USD",
@@ -1526,17 +1357,364 @@
           "valid_from": "2026-10-16"
         }
       ],
-      "read_at": "2026-10-25T17:11:09.285319+04:00",
+      "read_at": "2026-11-04T23:27:49.277992+04:00",
       "source": "National Bank of Georgia",
       "stale": false
+    }
+  },
+  "stats_get_cells.wages-tbilisi": {
+    "tool": "stats_get_cells",
+    "example": "wages-tbilisi",
+    "recordedAt": "2026-11-04T19:27:52.097Z",
+    "output": {
+      "as_of": "2026-11-04T23:27:52+04:00",
+      "cells": [
+        {
+          "figure": "2363.8",
+          "values": [
+            "Total",
+            "2026",
+            "I"
+          ]
+        },
+        {
+          "figure": "2389.3",
+          "values": [
+            "Total",
+            "2026",
+            "II"
+          ]
+        },
+        {
+          "figure": null,
+          "values": [
+            "Total",
+            "2026",
+            "III"
+          ]
+        },
+        {
+          "figure": "2779.6",
+          "values": [
+            "Tbilisi",
+            "2026",
+            "I"
+          ]
+        },
+        {
+          "figure": "2758.5",
+          "values": [
+            "Tbilisi",
+            "2026",
+            "II"
+          ]
+        },
+        {
+          "figure": null,
+          "values": [
+            "Tbilisi",
+            "2026",
+            "III"
+          ]
+        }
+      ],
+      "dimensions": [
+        {
+          "code": "Region",
+          "text": "Region",
+          "values": [
+            {
+              "code": "0",
+              "text": "Total"
+            },
+            {
+              "code": "1",
+              "text": "Tbilisi"
+            }
+          ]
+        },
+        {
+          "code": "Year",
+          "text": "Year",
+          "values": [
+            {
+              "code": "16",
+              "text": "2026"
+            }
+          ]
+        },
+        {
+          "code": "Quarter",
+          "text": "Quarter",
+          "values": [
+            {
+              "code": "0",
+              "text": "I"
+            },
+            {
+              "code": "1",
+              "text": "II"
+            },
+            {
+              "code": "2",
+              "text": "III"
+            }
+          ]
+        }
+      ],
+      "source": "Geostat",
+      "stale": false,
+      "table": {
+        "code": "Social Statistics/Labour/Wages_Region.px",
+        "folder": "Social Statistics / Labour",
+        "title": "Average Monthly Nominal Salary of Employees by Region,Years and Quarters",
+        "updated": "2026-10-08"
+      }
+    }
+  },
+  "stats_get_inflation.newest": {
+    "tool": "stats_get_inflation",
+    "example": "newest",
+    "recordedAt": "2026-11-04T19:27:54.065Z",
+    "output": {
+      "annual": "5.9",
+      "as_of": "2026-11-04T23:27:52+04:00",
+      "average": "5.2",
+      "core": "4.0",
+      "group": {
+        "code": "total",
+        "name": "Total"
+      },
+      "month": "2026-10",
+      "monthly": "0.9",
+      "region": {
+        "code": "georgia",
+        "name": "Georgia"
+      },
+      "source": "Geostat",
+      "stale": false,
+      "tables": [
+        {
+          "code": "Price Statistics/CPI/National Consumer Price Index/CPI_in_Georgia(same_month_of_the_previous_year=100_orenovani2.px",
+          "folder": "Price Statistics / CPI / National Consumer Price Index",
+          "title": "Consumer Price Indices (Same month of the previous year=100) by Region, Groups, Year and month",
+          "updated": "2026-10-01"
+        },
+        {
+          "code": "Price Statistics/CPI/National Consumer Price Index/CPI_in_Georgia_(previous_month=100)_orenovani2.px",
+          "folder": "Price Statistics / CPI / National Consumer Price Index",
+          "title": "Consumer Price Index (Previous month=100) by Region, Groups, Year and month",
+          "updated": "2026-10-01"
+        },
+        {
+          "code": "Price Statistics/CPI/National Consumer Price Index/CPI_in_Georgia_the_previous_12_month_average=100_orenovani2.px",
+          "folder": "Price Statistics / CPI / National Consumer Price Index",
+          "title": "Consumer Price Index (12 month average over the previous 12 month average) by Region, Year and Month",
+          "updated": "2026-10-01"
+        },
+        {
+          "code": "Price Statistics/CPI/National Consumer Price Index/Core_Inflation-(to_the-same-month-of-the-previous-year).px",
+          "folder": "Price Statistics / CPI / National Consumer Price Index",
+          "title": "Core Inflation in Georgia (Percentage change compared to the same month of the previous year) by Indicator, Year and Month",
+          "updated": "2026-10-01"
+        }
+      ]
+    }
+  },
+  "stats_get_table.wages-region": {
+    "tool": "stats_get_table",
+    "example": "wages-region",
+    "recordedAt": "2026-11-04T19:27:54.068Z",
+    "output": {
+      "as_of": "2026-11-04T23:27:51+04:00",
+      "code": "Social Statistics/Labour/Wages_Region.px",
+      "dimensions": [
+        {
+          "code": "Region",
+          "text": "Region",
+          "values": [
+            {
+              "code": "0",
+              "text": "Total"
+            },
+            {
+              "code": "1",
+              "text": "Tbilisi"
+            },
+            {
+              "code": "2",
+              "text": "Adjara A.R."
+            },
+            {
+              "code": "3",
+              "text": "Guria"
+            },
+            {
+              "code": "4",
+              "text": "Imereti"
+            },
+            {
+              "code": "5",
+              "text": "Kakheti"
+            },
+            {
+              "code": "6",
+              "text": "Mtskheta-Mtianeti"
+            },
+            {
+              "code": "7",
+              "text": "Racha-Lechkhumi and Kvemo Svaneti"
+            },
+            {
+              "code": "8",
+              "text": "Samegrelo-Zemo Svaneti"
+            },
+            {
+              "code": "9",
+              "text": "Samtskhe-Javakheti"
+            },
+            {
+              "code": "10",
+              "text": "Kvemo Kartli"
+            },
+            {
+              "code": "11",
+              "text": "Shida Kartli"
+            }
+          ]
+        },
+        {
+          "code": "Year",
+          "text": "Year",
+          "values": [
+            {
+              "code": "0",
+              "text": "2010"
+            },
+            {
+              "code": "1",
+              "text": "2011"
+            },
+            {
+              "code": "2",
+              "text": "2012"
+            },
+            {
+              "code": "3",
+              "text": "2013"
+            },
+            {
+              "code": "4",
+              "text": "2014"
+            },
+            {
+              "code": "5",
+              "text": "2015"
+            },
+            {
+              "code": "6",
+              "text": "2016"
+            },
+            {
+              "code": "7",
+              "text": "2017"
+            },
+            {
+              "code": "8",
+              "text": "2018"
+            },
+            {
+              "code": "9",
+              "text": "2019"
+            },
+            {
+              "code": "10",
+              "text": "2020"
+            },
+            {
+              "code": "11",
+              "text": "2021"
+            },
+            {
+              "code": "12",
+              "text": "2022"
+            },
+            {
+              "code": "13",
+              "text": "2023"
+            },
+            {
+              "code": "14",
+              "text": "2024"
+            },
+            {
+              "code": "15",
+              "text": "2025"
+            },
+            {
+              "code": "16",
+              "text": "2026"
+            }
+          ]
+        },
+        {
+          "code": "Quarter",
+          "text": "Quarter",
+          "values": [
+            {
+              "code": "0",
+              "text": "I"
+            },
+            {
+              "code": "1",
+              "text": "II"
+            },
+            {
+              "code": "2",
+              "text": "III"
+            },
+            {
+              "code": "3",
+              "text": "IV"
+            },
+            {
+              "code": "4",
+              "text": "Annual"
+            }
+          ]
+        }
+      ],
+      "folder": "Social Statistics / Labour",
+      "source": "Geostat",
+      "title": "Average Monthly Nominal Salary of Employees by Region,Years and Quarters",
+      "updated": "2026-10-08"
+    }
+  },
+  "stats_search_tables.salary": {
+    "tool": "stats_search_tables",
+    "example": "salary",
+    "recordedAt": "2026-11-04T19:27:54.073Z",
+    "output": {
+      "as_of": "2026-11-04T23:27:46+04:00",
+      "source": "Geostat",
+      "stale": false,
+      "tables": [
+        {
+          "code": "Social Statistics/Labour/Wages_Region.px",
+          "folder": "Social Statistics / Labour",
+          "title": "Average Monthly Nominal Salary of Employees by Region,Years and Quarters",
+          "updated": "2026-10-08"
+        }
+      ],
+      "total": 1
     }
   },
   "transit_get_route.bus-393": {
     "tool": "transit_get_route",
     "example": "bus-393",
-    "recordedAt": "2026-10-25T13:11:13.393Z",
+    "recordedAt": "2026-11-04T19:27:55.850Z",
     "output": {
-      "as_of": "2026-10-25T17:11:13+04:00",
+      "as_of": "2026-11-04T23:27:55+04:00",
       "directions": [
         {
           "direction": 1,
@@ -1916,10 +2094,10 @@
   "transit_get_timetable.kvareli-square": {
     "tool": "transit_get_timetable",
     "example": "kvareli-square",
-    "recordedAt": "2026-10-25T13:11:14.083Z",
+    "recordedAt": "2026-11-04T19:27:56.527Z",
     "output": {
-      "as_of": "2026-10-25T17:11:14+04:00",
-      "date": "2026-10-25",
+      "as_of": "2026-11-04T23:27:56+04:00",
+      "date": "2026-11-04",
       "direction": 1,
       "headsign": "Baratashvili St",
       "route": {
@@ -1940,60 +2118,74 @@
       },
       "times": [
         "07:16",
-        "07:36",
-        "07:56",
+        "07:31",
+        "07:46",
+        "08:01",
         "08:16",
-        "08:36",
-        "08:56",
+        "08:31",
+        "08:46",
+        "09:01",
         "09:16",
-        "09:36",
-        "09:56",
+        "09:31",
+        "09:46",
+        "10:01",
         "10:16",
-        "10:36",
-        "10:56",
+        "10:31",
+        "10:46",
+        "11:01",
         "11:16",
-        "11:36",
-        "11:56",
-        "12:36",
-        "12:56",
-        "13:36",
-        "13:56",
+        "11:31",
+        "11:46",
+        "12:01",
+        "12:31",
+        "12:46",
+        "13:01",
+        "13:16",
+        "13:46",
+        "14:01",
         "14:16",
-        "14:36",
-        "14:56",
+        "14:31",
+        "14:46",
+        "15:01",
         "15:16",
-        "15:36",
-        "15:56",
+        "15:31",
+        "15:46",
+        "16:01",
         "16:16",
-        "16:36",
-        "16:56",
+        "16:31",
+        "16:46",
+        "17:01",
         "17:16",
-        "17:36",
-        "17:56",
+        "17:31",
+        "17:46",
+        "18:01",
         "18:16",
-        "18:36",
-        "18:56",
+        "18:31",
+        "18:46",
+        "19:01",
         "19:16",
-        "19:36",
-        "19:56",
+        "19:31",
+        "19:46",
+        "20:01",
         "20:16",
-        "20:36",
-        "20:56",
+        "20:31",
+        "20:46",
+        "21:01",
         "21:16",
-        "21:36",
-        "21:56",
-        "22:16",
-        "22:46"
+        "21:31",
+        "22:01",
+        "22:31",
+        "23:01"
       ]
     }
   },
   "transit_list_arrivals.rustaveli-metro": {
     "tool": "transit_list_arrivals",
     "example": "rustaveli-metro",
-    "recordedAt": "2026-10-25T13:11:14.122Z",
+    "recordedAt": "2026-11-04T19:27:56.600Z",
     "output": {
       "arrivals": [],
-      "as_of": "2026-10-25T17:11:14+04:00",
+      "as_of": "2026-11-04T23:27:56+04:00",
       "note": "No vehicle is expected at this stop now.",
       "source": "TTC",
       "stop": {
@@ -2009,9 +2201,9 @@
   "transit_list_nearby_stops.freedom-square": {
     "tool": "transit_list_nearby_stops",
     "example": "freedom-square",
-    "recordedAt": "2026-10-25T13:11:14.124Z",
+    "recordedAt": "2026-11-04T19:27:56.604Z",
     "output": {
-      "as_of": "2026-10-25T17:11:12+04:00",
+      "as_of": "2026-11-04T23:27:54+04:00",
       "source": "TTC",
       "stale": false,
       "stops": [
@@ -2075,24 +2267,24 @@
   "transit_plan_trip.freedom-to-rustaveli": {
     "tool": "transit_plan_trip",
     "example": "freedom-to-rustaveli",
-    "recordedAt": "2026-10-25T13:11:14.518Z",
+    "recordedAt": "2026-11-04T19:27:56.963Z",
     "output": {
-      "as_of": "2026-10-25T17:11:14+04:00",
+      "as_of": "2026-11-04T23:27:56+04:00",
       "itineraries": [
         {
           "duration_minutes": 13,
-          "end": "2026-10-25T17:26:37+04:00",
+          "end": "2026-11-04T23:40:37+04:00",
           "legs": [
             {
               "distance_m": 224,
-              "end": "2026-10-25T17:19:17+04:00",
+              "end": "2026-11-04T23:33:17+04:00",
               "from": {
                 "lat": 41.6939,
                 "lon": 44.8013,
                 "name": "Origin"
               },
               "kind": "walk",
-              "start": "2026-10-25T17:14:07+04:00",
+              "start": "2026-11-04T23:28:07+04:00",
               "to": {
                 "lat": 41.695003,
                 "lon": 44.799919,
@@ -2102,7 +2294,7 @@
             },
             {
               "distance_m": 1328,
-              "end": "2026-10-25T17:21:43+04:00",
+              "end": "2026-11-04T23:35:43+04:00",
               "from": {
                 "lat": 41.695003,
                 "lon": 44.799919,
@@ -2112,7 +2304,7 @@
               "kind": "metro",
               "route_name": "M/S Akhmeteli - M/S Varketili",
               "route_number": "1",
-              "start": "2026-10-25T17:19:17+04:00",
+              "start": "2026-11-04T23:33:17+04:00",
               "stops": 1,
               "to": {
                 "lat": 41.704138,
@@ -2123,7 +2315,7 @@
             },
             {
               "distance_m": 210,
-              "end": "2026-10-25T17:26:37+04:00",
+              "end": "2026-11-04T23:40:37+04:00",
               "from": {
                 "lat": 41.704138,
                 "lon": 44.789613,
@@ -2131,7 +2323,7 @@
                 "stop_id": "1:metro_1_10"
               },
               "kind": "walk",
-              "start": "2026-10-25T17:21:43+04:00",
+              "start": "2026-11-04T23:35:43+04:00",
               "to": {
                 "lat": 41.7032,
                 "lon": 44.7912,
@@ -2139,24 +2331,24 @@
               }
             }
           ],
-          "start": "2026-10-25T17:14:07+04:00",
+          "start": "2026-11-04T23:28:07+04:00",
           "transfers": 0,
           "walk_m": 434
         },
         {
           "duration_minutes": 17,
-          "end": "2026-10-25T17:38:10+04:00",
+          "end": "2026-11-04T23:44:51+04:00",
           "legs": [
             {
               "distance_m": 58,
-              "end": "2026-10-25T17:22:35+04:00",
+              "end": "2026-11-04T23:29:07+04:00",
               "from": {
                 "lat": 41.6939,
                 "lon": 44.8013,
                 "name": "Origin"
               },
               "kind": "walk",
-              "start": "2026-10-25T17:21:42+04:00",
+              "start": "2026-11-04T23:28:14+04:00",
               "to": {
                 "lat": 41.694033,
                 "lon": 44.801559,
@@ -2166,71 +2358,7 @@
             },
             {
               "distance_m": 3947,
-              "end": "2026-10-25T17:33:27+04:00",
-              "from": {
-                "lat": 41.694033,
-                "lon": 44.801559,
-                "name": "Freedom Square",
-                "stop_id": "1:822"
-              },
-              "kind": "bus",
-              "route_name": "Kvemo Ponichala Settlement - Vake-Bagebi",
-              "route_number": "345",
-              "start": "2026-10-25T17:22:35+04:00",
-              "stops": 2,
-              "to": {
-                "lat": 41.705278,
-                "lon": 44.791636,
-                "name": "Mikheil Javakhishvili Street",
-                "stop_id": "1:4688"
-              }
-            },
-            {
-              "distance_m": 335,
-              "end": "2026-10-25T17:38:10+04:00",
-              "from": {
-                "lat": 41.705278,
-                "lon": 44.791636,
-                "name": "Mikheil Javakhishvili Street",
-                "stop_id": "1:4688"
-              },
-              "kind": "walk",
-              "start": "2026-10-25T17:33:27+04:00",
-              "to": {
-                "lat": 41.7032,
-                "lon": 44.7912,
-                "name": "Destination"
-              }
-            }
-          ],
-          "start": "2026-10-25T17:21:42+04:00",
-          "transfers": 0,
-          "walk_m": 393
-        },
-        {
-          "duration_minutes": 17,
-          "end": "2026-10-25T17:47:43+04:00",
-          "legs": [
-            {
-              "distance_m": 58,
-              "end": "2026-10-25T17:31:59+04:00",
-              "from": {
-                "lat": 41.6939,
-                "lon": 44.8013,
-                "name": "Origin"
-              },
-              "kind": "walk",
-              "start": "2026-10-25T17:31:06+04:00",
-              "to": {
-                "lat": 41.694033,
-                "lon": 44.801559,
-                "name": "Freedom Square",
-                "stop_id": "1:822"
-              }
-            },
-            {
-              "distance_m": 3947,
-              "end": "2026-10-25T17:43:00+04:00",
+              "end": "2026-11-04T23:40:08+04:00",
               "from": {
                 "lat": 41.694033,
                 "lon": 44.801559,
@@ -2240,7 +2368,7 @@
               "kind": "bus",
               "route_name": "Station Square - Airport",
               "route_number": "337",
-              "start": "2026-10-25T17:31:59+04:00",
+              "start": "2026-11-04T23:29:07+04:00",
               "stops": 2,
               "to": {
                 "lat": 41.705278,
@@ -2251,7 +2379,7 @@
             },
             {
               "distance_m": 335,
-              "end": "2026-10-25T17:47:43+04:00",
+              "end": "2026-11-04T23:44:51+04:00",
               "from": {
                 "lat": 41.705278,
                 "lon": 44.791636,
@@ -2259,7 +2387,7 @@
                 "stop_id": "1:4688"
               },
               "kind": "walk",
-              "start": "2026-10-25T17:43:00+04:00",
+              "start": "2026-11-04T23:40:08+04:00",
               "to": {
                 "lat": 41.7032,
                 "lon": 44.7912,
@@ -2267,7 +2395,71 @@
               }
             }
           ],
-          "start": "2026-10-25T17:31:06+04:00",
+          "start": "2026-11-04T23:28:14+04:00",
+          "transfers": 0,
+          "walk_m": 393
+        },
+        {
+          "duration_minutes": 17,
+          "end": "2026-11-04T23:47:30+04:00",
+          "legs": [
+            {
+              "distance_m": 58,
+              "end": "2026-11-04T23:31:55+04:00",
+              "from": {
+                "lat": 41.6939,
+                "lon": 44.8013,
+                "name": "Origin"
+              },
+              "kind": "walk",
+              "start": "2026-11-04T23:31:02+04:00",
+              "to": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              }
+            },
+            {
+              "distance_m": 3947,
+              "end": "2026-11-04T23:42:47+04:00",
+              "from": {
+                "lat": 41.694033,
+                "lon": 44.801559,
+                "name": "Freedom Square",
+                "stop_id": "1:822"
+              },
+              "kind": "bus",
+              "route_name": "Kvemo Ponichala Settlement - Vake-Bagebi",
+              "route_number": "345",
+              "start": "2026-11-04T23:31:55+04:00",
+              "stops": 2,
+              "to": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              }
+            },
+            {
+              "distance_m": 335,
+              "end": "2026-11-04T23:47:30+04:00",
+              "from": {
+                "lat": 41.705278,
+                "lon": 44.791636,
+                "name": "Mikheil Javakhishvili Street",
+                "stop_id": "1:4688"
+              },
+              "kind": "walk",
+              "start": "2026-11-04T23:42:47+04:00",
+              "to": {
+                "lat": 41.7032,
+                "lon": 44.7912,
+                "name": "Destination"
+              }
+            }
+          ],
+          "start": "2026-11-04T23:31:02+04:00",
           "transfers": 0,
           "walk_m": 393
         }
@@ -2278,9 +2470,9 @@
   "transit_search_places.freedom-square": {
     "tool": "transit_search_places",
     "example": "freedom-square",
-    "recordedAt": "2026-10-25T13:11:14.619Z",
+    "recordedAt": "2026-11-04T19:27:57.101Z",
     "output": {
-      "as_of": "2026-10-25T17:11:14+04:00",
+      "as_of": "2026-11-04T23:27:57+04:00",
       "places": [
         {
           "district": "Sololaki",
@@ -2302,9 +2494,9 @@
   "transit_search_routes.baratashvili": {
     "tool": "transit_search_routes",
     "example": "baratashvili",
-    "recordedAt": "2026-10-25T13:11:14.621Z",
+    "recordedAt": "2026-11-04T19:27:57.106Z",
     "output": {
-      "as_of": "2026-10-25T17:11:11+04:00",
+      "as_of": "2026-11-04T23:27:54+04:00",
       "routes": [
         {
           "id": "1:R98445",
@@ -2332,9 +2524,9 @@
   "transit_search_stops.rustaveli": {
     "tool": "transit_search_stops",
     "example": "rustaveli",
-    "recordedAt": "2026-10-25T13:11:14.631Z",
+    "recordedAt": "2026-11-04T19:27:57.116Z",
     "output": {
-      "as_of": "2026-10-25T17:11:12+04:00",
+      "as_of": "2026-11-04T23:27:54+04:00",
       "source": "TTC",
       "stale": false,
       "stops": [

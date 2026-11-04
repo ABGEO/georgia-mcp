@@ -1,0 +1,22 @@
+context: stats
+vendors: [geostat]
+summary:
+  en: The figures of one table of Geostat for a selection of values, at most 1000 cells.
+  ka: საქსტატის ერთი ცხრილის მონაცემები მნიშვნელობების შერჩევისთვის, მაქსიმუმ 1000 უჯრა.
+examples:
+  - id: wages-tbilisi
+    question:
+      en: What was the average monthly salary in Georgia and in Tbilisi this year?
+      ka: რამდენი იყო საშუალო თვიური ხელფასი საქართველოსა და თბილისში წელს?
+    answer:
+      en: "In 2026 the average monthly nominal salary in Georgia was 2,363.8 lari in the first quarter and 2,389.3 lari in the second. In Tbilisi it was 2,779.6 and 2,758.5 lari. Geostat has not published the third quarter yet."
+      ka: "2026 წელს საშუალო თვიური ნომინალური ხელფასი საქართველოში პირველ კვარტალში 2 363,8 ლარი იყო, მეორეში კი 2 389,3 ლარი. თბილისში 2 779,6 და 2 758,5 ლარი. მესამე კვარტალი საქსტატს ჯერ არ გამოუქვეყნებია."
+    input:
+      code: Social Statistics/Labour/Wages_Region.px
+      selection:
+        - dimension: Region
+          values: ["0", "1"]
+        - dimension: Year
+          last: 1
+        - dimension: Quarter
+          values: ["0", "1", "2"]

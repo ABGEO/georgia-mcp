@@ -4,7 +4,7 @@ title: The cinemas, movies, sessions, and seats of Cavea
 type: spec
 status: approved
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-04
 context: cinema
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -38,6 +38,7 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | `CAVCINE-FR-012`   | 4.1 `adapter/cavea`. `CAVCINE-DD-012`. `CAVCINE-SC-027` |
 | `CAVCINE-FR-013`   | 4.3 configuration                                              |
 | `CAVCINE-FR-014`   | `CAVCINE-DD-012`. `CAVCINE-SC-014`                             |
+| `CAVCINE-FR-015`   | `CAVCINE-DD-012`. `CAVCINE-SC-030`                             |
 | `CAVCINE-NFR-001`  | 4.3 cache. `CAVCINE-SC-020`                                    |
 | `CAVCINE-NFR-002`  | 4.3 cache. `CAVCINE-SC-021`                                    |
 | `CAVCINE-NFR-003`  | 4.3 cache, `SeatSource`. `CAVCINE-SC-022`                      |
@@ -193,7 +194,8 @@ returns `ErrNotSuccess` when the field `status` of an API answer is `error`. Cav
 method is a JSON text that holds the array, and its `prices` is a JSON text that holds
 the object. The client decodes both texts.
 
-**`adapter/cavea`.** `NewAdapter(client *caveaclient.Client, now func() time.Time)`.
+**`adapter/cavea`.** `NewAdapter(client *caveaclient.Client, now func() time.Time, logger *slog.Logger)`.
+The logger receives one warning for each movie that the adapter leaves out.
 It implements the four ports of 4.2. `ReadAt` is `now()` in `kernel.TbilisiZone()` after
 the last call. Each failure returns an error that wraps `kernel.ErrSourceUnavailable`.
 `CAVCINE-DD-012` lists the values that fail an answer.
@@ -536,13 +538,16 @@ sends the two calls of `CAVCINE-DD-005` only.
 
 **Realizes:** `CAVCINE-FR-012`
 **Decision:** The adapter leaves out a session with an audio language or a subtitle
-language other than `geo` and `eng` (`CAVCINE-FR-014`). These values fail the whole answer
-with `kernel.ErrSourceUnavailable`: a session code that `ParseSessionCode` refuses, a
-seat class other than the four,
-a price that `NewPrice` refuses, a movie with no slug, and an empty list of open cinemas.
+language other than `geo` and `eng` (`CAVCINE-FR-014`). It leaves out a movie whose slug
+`ParseMovieCode` refuses, an empty slug too, and logs it at warn level (`CAVCINE-FR-015`).
+`readCatalog` already leaves out a session whose movie is not in the catalog. These values
+fail the whole answer with `kernel.ErrSourceUnavailable`: a session code that
+`ParseSessionCode` refuses, a seat class other than the four, a price that `NewPrice`
+refuses, and an empty list of open cinemas.
 An empty list of movies or sessions is a valid answer.
 **Rationale:** Each value means a change of Cavea. A list with a wrong row can hide the
-session that the person asks for.
+session that the person asks for. A movie is the exception: every list of sessions reads
+both lists of movies, so one bad code took down every session call on 2026-11-04.
 **Alternatives:** Leave out the bad row. The model then reads a list that looks complete.
 
 ### `CAVCINE-DD-013`
@@ -606,6 +611,7 @@ files from `httptest`.
 | `CAVCINE-SC-027` | `CAVCINE-FR-010`, `CAVCINE-FR-012` | integration | Each condition of tools 2 gives its message, as a tool result with `IsError`. A failure of Cavea with no stale list gives `Cavea did not answer. Try again in a few minutes.` and no text of Cavea. |
 | `CAVCINE-SC-028` | `CAVCINE-FR-002`, `CAVCINE-FR-003`, `CAVCINE-DD-014` | unit | At 2026-10-25 14:00, a movie now showing with the premiere `2026-10-26` is in the list of `coming_soon` after the movies of Cavea coming soon, and not in the list of `now_showing`. The premiere `2026-10-25` and the premiere `2026` keep `now_showing`. `SearchMovies` gives the found movie with the premiere `2026-10-26` the status `coming_soon`. |
 | `CAVCINE-SC-029` | `CAVCINE-FR-002`, `CAVCINE-FR-011` | integration | With the recorded answers at 2026-10-25 14:00, `cinema_list_movies` in `en` gives 20 movies, `street-fighter` with 4 actors, `moana-01` with no description, and `beri-gabrieli` with no genre. `coming_soon` gives 15 movies, the last 5 the documentaries. |
+| `CAVCINE-SC-030` | `CAVCINE-FR-015`, `CAVCINE-DD-012` | unit | `Movies(true)` with one of 10 slugs changed to `ramayana-rise-of-a-Legend` gives 9 movies and no error, and one record at warn level that holds the slug. `Search` with one slug changed to the empty text gives the other movies. |
 | `CAVCINE-SC-025` | `CAVCINE-FR-001`, `CAVCINE-FR-009` | live | Against `cavea.ge`: `Theaters` holds East Point. `Sessions` holds a session. `SeatMap` of the first session of tomorrow gives one seat or more. |
 
 ## 7. Build plan
@@ -620,6 +626,7 @@ files from `httptest`.
 | 6   | `adapter/tool`.                                                          | `CAVCINE-FR-001` to `CAVCINE-FR-011`       | [x]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`. | `CAVCINE-FR-013`, `CAVCINE-NFR-005`     | [x]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Cinema. | `DOM-002`                     | [x]  |
+| 9   | `adapter/cavea`: leave out a movie with a code that the domain refuses.  | `CAVCINE-FR-015`                           | [x]  |
 
 ## 8. Out of scope for this specification
 

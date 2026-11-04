@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-04
 ---
 
 # Glossary
@@ -168,6 +168,24 @@ define it. The identifier of a term is `GLO-<term>`.
 | seat class      | The class of a seat with its own price: `economy`, `standard`, `vip`, `status`. |
 | occupancy level | The share of sold seats of a session, as Cavea shows it: `many_seats`, `filling_up`, `almost_sold_out`. |
 | seat map        | The seats of the hall of one session, each with its row, number, class, and state. |
+
+## Stats
+
+| Term | Meaning |
+| ---- | ------- |
+| Geostat | The National Statistics Office of Georgia. Vendor code `geostat`. |
+| table | One statistical table of Geostat, with a title and dimensions. |
+| table code | The folder path and the file name of a table: `Price Statistics/CPI/National Consumer Price Index/CPI_in_Georgia_(previous_month=100)_orenovani2.px`. |
+| catalog | The list of every table of Geostat, with its code, title, and update date. |
+| dimension | One axis of a table, with an ordered list of values: `Region`, `Year`. |
+| dimension value | One value of a dimension, with a code and a text: `"1"`, `"Tbilisi"`. |
+| cell | One figure of a table at one value of each dimension. |
+| selection | The values of each dimension that a request asks for. |
+| annual inflation | The change of consumer prices since the same month of the previous year, in percent. |
+| monthly inflation | The change of consumer prices since the previous month, in percent. |
+| average inflation | The change of the average prices of the last 12 months over the 12 months before, in percent. |
+| core inflation | The annual inflation without the prices that Geostat excludes as volatile, as Geostat publishes it. |
+| price group | One of the 13 groups of the consumer price index of Geostat: `Total`, `Food and non-alcoholic beverages`. |
 
 ## The website
 

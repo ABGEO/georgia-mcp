@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-25
+updated: 2026-11-04
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -151,7 +151,7 @@ type Recording = {
 
 // tools/<tool name>.yaml. The file name is the tool name.
 type ToolContent = {
-  context: "rates" | "fuel" | "transit" | "offers" | "postal" | "cinema"
+  context: "rates" | "fuel" | "transit" | "offers" | "postal" | "cinema" | "stats"
   summary: Localized
   vendors: string[] // the codes of the vendors that the tool reads, each a vendor of its context. WEBSITE-DD-018.
   // The answer is written by hand from the recording of the example. It is the chat example of the home page.
@@ -161,7 +161,7 @@ type ToolContent = {
 // contexts.yaml: an object keyed by the context name.
 type ContextContent = {
   order: number
-  hue: "butter" | "peach" | "sky" | "lilac" | "sage" | "teal"
+  hue: "butter" | "peach" | "sky" | "lilac" | "sage" | "teal" | "slate"
   icon: string // a Lucide icon name
   name: Localized
   vendors: Array<Localized & { code: string }> // code: the code of the server, "tbc"; or a short name, "nbg"
@@ -281,7 +281,7 @@ sequenceDiagram
 | ----------------------------------------------- | -------------------- | --------------------------------------------------------------- |
 | A check of `WEBSITE-DD-004` fails               | `pnpm build`      | `CatalogError`, one line for each problem, for example `transit_list_vehicles: no tool content`. |
 | The server does not start                       | `pnpm refresh`    | The stderr of the server, and exit code 1. No file changes.     |
-| A tool call returns a result with `isError`     | `pnpm refresh`    | `<tool>.<example>: <the text of the result>`, and exit code 1. No file changes. |
+| A tool call returns a result with `isError`     | `pnpm refresh`    | `<tool>.<example>: <the text of the result>`, and exit code 1. No file changes. A catalog that is still loading after 15 minutes gives the same. |
 | The browser refuses the clipboard               | `CopyField`          | The field selects the address. The label says "Press Ctrl+C to copy". |
 
 ## 5. Design decisions
@@ -303,7 +303,7 @@ sequenceDiagram
 ### `WEBSITE-DD-003`
 
 **Realizes:** `WEBSITE-FR-018`, `WEBSITE-FR-023`
-**Decision:** `scripts/refresh.ts` runs with `node --experimental-strip-types`. It uses `Client` and `StdioClientTransport` of `@modelcontextprotocol/sdk`. The transport starts `go run ./cmd/georgia-mcp stdio` with `cwd` at the repository root. The script calls `tools/list`, then `tools/call` for each example of each `tools/*.yaml`, in sequence. It writes both files only after every call succeeds. Each file is sorted by key and ends with a newline.
+**Decision:** `scripts/refresh.ts` runs with `node --experimental-strip-types`. It uses `Client` and `StdioClientTransport` of `@modelcontextprotocol/sdk`. The transport starts `go run ./cmd/georgia-mcp stdio` with `cwd` at the repository root. The script calls `tools/list`, then `tools/call` for each example of each `tools/*.yaml`, in sequence. A call whose result starts with `The server is still reading the catalog` is sent again each 10 seconds, for 15 minutes at most: the server reads the catalog of Geostat in the background after its start (`GEOSTAT-NFR-007`). It writes both files only after every call succeeds. Each file is sorted by key and ends with a newline.
 **Rationale:** The server is the only source of a definition and an output. A sequence of calls stays under the rate limits of the vendors. A sorted file gives a small diff.
 **Alternatives:** A Go command in the server that writes the files. It adds a command to `CLI` for the site alone.
 
@@ -450,6 +450,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 | `offers`  | `tbc`, `bog`, `liberty`                                       |
 | `postal`  | `gpost`                                                       |
 | `cinema`  | `cavea`                                                       |
+| `stats`   | `geostat`                                                     |
 
 **Rationale:** The owner chose a list by hand, checked against the server. The names in Georgian come from the site, and the refresh catches a vendor that the site lacks.
 **Alternatives:** The list from the description alone. It gives no Georgian name, and a tool with no such sentence gives no list.

@@ -44,7 +44,11 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		return &Module{}, nil
 	}
 
-	adapter := caveaadapter.NewAdapter(caveaclient.New(cfg.Cavea.ClientOptions(nil)...), now)
+	adapter := caveaadapter.NewAdapter(
+		caveaclient.New(cfg.Cavea.ClientOptions(nil)...),
+		now,
+		logger,
+	)
 	module := &Module{}
 
 	var err error

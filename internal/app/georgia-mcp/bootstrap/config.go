@@ -6,6 +6,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/stats"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit"
 	"github.com/abgeo/georgia-mcp/internal/pkg/config"
 	"github.com/abgeo/georgia-mcp/internal/pkg/httpserver"
@@ -22,6 +23,7 @@ type Config struct {
 	Offers  offers.Config     `envPrefix:"OFFERS_"`
 	Postal  postal.Config     `envPrefix:"POSTAL_"`
 	Cinema  cinema.Config     `envPrefix:"CINEMA_"`
+	Stats   stats.Config      `envPrefix:"STATS_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -38,5 +40,6 @@ func Defaults() Config {
 		Offers:  offers.Defaults(),
 		Postal:  postal.Defaults(),
 		Cinema:  cinema.Defaults(),
+		Stats:   stats.Defaults(),
 	}
 }

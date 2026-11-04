@@ -4,7 +4,7 @@ title: The cinemas, movies, sessions, and seats of Cavea
 type: requirements
 status: approved
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-04
 context: cinema
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -238,6 +238,21 @@ such session must not fail the whole answer.
 - Normal case: 31 sessions, each `geo` or `eng`. The answer holds 31.
 - Unwanted case: 31 sessions, one with the audio language `rus`. The answer holds 30,
   and the total counts 30.
+
+### `CAVCINE-FR-015`
+
+The server must leave out a movie whose code it cannot read, and the sessions of that
+movie. The other movies stay. The server must log each movie that it leaves out.
+
+**Why:** Cavea can give a movie a code with a capital letter. One such movie must not
+fail every list of movies and every list of sessions.
+
+**Examples:**
+
+- Normal case: 10 movies coming soon, each with a code of `[a-z0-9-]`. The answer holds 10.
+- Unwanted case: 10 movies coming soon, one with the code `ramayana-rise-of-a-Legend`.
+  The answer holds 9, and the log holds one warning that names the code.
+- Unwanted case: a session of the left out movie is not in a list of sessions.
 
 ## 7. Non-functional requirements
 

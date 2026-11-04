@@ -9,7 +9,7 @@
 <p><strong>Georgia's public data, inside your chat.</strong></p>
 
 <p>
-An MCP server for exchange rates, fuel prices, card offers, and Tbilisi public transport.<br>
+An MCP server for Georgian public data, read from the organizations that publish it.<br>
 Ask Claude, ChatGPT, or any MCP client in your own words.
 </p>
 
@@ -57,6 +57,7 @@ model, so you can ask one question and get one answer.
 | Tbilisi public transport | Tbilisi Transport Company                                                              |
 | Postal codes           | Georgian Post                                                                            |
 | Cinemas                | Cavea                                                                                    |
+| Statistics and inflation | Geostat                                                                                |
 
 ## Install
 
@@ -165,6 +166,10 @@ Three sources need a key:
 | `cinema_search_movies`        | The movies of Cavea by a part of the English name.                      |
 | `cinema_list_sessions`        | The sessions of one date, with the prices and the occupancy.            |
 | `cinema_get_seat_map`         | The seats of one session, with the free seats of each class.            |
+| `stats_search_tables`         | The statistical tables of Geostat by words of the title or the folder.  |
+| `stats_get_table`             | One table of Geostat with its dimensions and their values.              |
+| `stats_get_cells`             | The figures of one table of Geostat for a selection.                    |
+| `stats_get_inflation`         | The inflation of Georgia for a month, a city, and a price group.        |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
@@ -201,7 +206,7 @@ public issue.
 ## Disclaimer
 
 Georgia MCP is not an official service. It is not affiliated with the National Bank of
-Georgia or any bank, fuel company, transport operator, postal operator, or cinema chain it reads. The data belongs to its
+Georgia or any bank, fuel company, transport operator, postal operator, cinema chain, or statistics office it reads. The data belongs to its
 publishers and can be late or wrong. Check with the source before you decide.
 
 ## Author
