@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-06
 scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -90,7 +90,30 @@ publishes them to GitHub Packages:
 `VERSION` is `git describe --tags --always --dirty` and `REVISION` is the commit.
 The label `org.opencontainers.image.source` of each image links the package to the repository.
 Each action is pinned to the commit of a release, with the version in a comment.
-`.github/dependabot.yml` proposes a new pin each week.
+Renovate (`.github/renovate.json`) proposes a new pin each week.
+
+## BLD-009
+
+`.github/workflows/ci.yml` runs the commands of `BLD-001` on a push to `main`, on a
+pull request that is not a draft, and on a manual run. A job runs only for the part
+that the change touches:
+
+| Part      | Paths                                                                  | Jobs                                            |
+| --------- | ---------------------------------------------------------------------- | ----------------------------------------------- |
+| Go        | `cmd/`, `internal/`, `pkg/`, `test/`, `go.mod`, `go.sum`, `.golangci.yaml` | `Go lint`, `Go test` (`go test -race`, `go build`) |
+| `website/` | `website/`                                                             | `Website lint`, `Website test` (`pnpm test` builds the site) |
+
+A change to `ci.yml` and a manual run start every job. The job `CI` fails when a job
+that ran has failed. The branch protection of `main` requires `CI` alone, because a
+skipped job passes a required check.
+
+The workflow takes the Go release from `go.mod` and the Node release from
+`website/.nvmrc`. It pins `golangci-lint` to the version of the owner (`BLD-006`).
+Each action is pinned to the commit of a release, as in `BLD-008`.
+
+The workflow caches the Go build and module caches of each Go job, the Playwright
+browser, and the fonts that Astro downloads. Only a run on `main` saves a cache. A pull
+request restores the cache of `main`.
 
 ## Retired identifiers
 
