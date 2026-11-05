@@ -1,0 +1,7 @@
+rules:
+  # A tag build restores the cache that main saved. A pull request saves its cache in
+  # its own scope, which main and a tag cannot read. To poison the cache of main, a
+  # change must already run in main.
+  cache-poisoning:
+    ignore:
+      - images.yml

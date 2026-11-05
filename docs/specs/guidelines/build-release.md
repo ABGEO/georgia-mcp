@@ -28,7 +28,7 @@ the version of Node is older than `website/.nvmrc`.
 
 ## BLD-002
 
-`go.mod` declares the current Go release, as `go 1.27.2`.
+`go.mod` declares the current Go release, as `go 1.27.3`.
 
 **Why:** The server is a binary, so it takes the newest release. A project that imports
 a vendor client needs the same release.
@@ -69,7 +69,8 @@ conflict with those of the project.
 
 ## BLD-007
 
-Before a release, `go tool govulncheck ./...` passes.
+Before a release, `go tool govulncheck ./...` passes. `BLD-009` runs it on each change
+to the Go code.
 
 ## BLD-008
 
@@ -94,14 +95,25 @@ Renovate (`.github/renovate.json`) proposes a new pin each week.
 
 ## BLD-009
 
-`.github/workflows/ci.yml` runs the commands of `BLD-001` on a push to `main`, on a
-pull request that is not a draft, and on a manual run. A job runs only for the part
-that the change touches:
+`.github/workflows/ci.yml` runs the commands of `BLD-001` and the security scanners on
+a push to `main`, on a pull request that is not a draft, and on a manual run. A job runs
+only for the part that the change touches:
 
-| Part      | Paths                                                                  | Jobs                                            |
-| --------- | ---------------------------------------------------------------------- | ----------------------------------------------- |
-| Go        | `cmd/`, `internal/`, `pkg/`, `test/`, `go.mod`, `go.sum`, `.golangci.yaml` | `Go lint`, `Go test` (`go test -race`, `go build`) |
-| `website/` | `website/`                                                             | `Website lint`, `Website test` (`pnpm test` builds the site) |
+| Part       | Paths                                                                      | Jobs                                                                                   |
+| ---------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Go         | `cmd/`, `internal/`, `pkg/`, `test/`, `go.mod`, `go.sum`, `.golangci.yaml` | `Go lint`, `Go test` (`go test -race`, `go build`), `Go vulnerabilities` (`BLD-007`)   |
+| `website/` | `website/`                                                                 | `Website lint`, `Website test` (`pnpm test` builds the site)                           |
+| Workflows  | `.github/workflows/`, `.github/zizmor.yml`                                 | `Workflow audit` (`zizmor`)                                                            |
+| Manifests  | Every pull request                                                         | `Dependency review`                                                                    |
+
+`Dependency review` fails on a new dependency with a known vulnerability, or with a
+license that `.github/dependency-review.yml` does not allow. Every allowed license is
+compatible with the GPL-3.0 license of the server. `.github/zizmor.yml` holds each
+finding of `zizmor` that the workflow accepts, with the reason.
+
+The repository also enables the dependency graph, the Dependabot alerts, secret
+scanning with push protection, and the default setup of CodeQL. Renovate, not
+Dependabot, proposes the updates.
 
 A change to `ci.yml` and a manual run start every job. The job `CI` fails when a job
 that ran has failed. The branch protection of `main` requires `CI` alone, because a
