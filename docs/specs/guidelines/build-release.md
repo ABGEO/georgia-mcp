@@ -90,7 +90,7 @@ publishes them to GitHub Packages:
 `VERSION` is `git describe --tags --always --dirty` and `REVISION` is the commit.
 The label `org.opencontainers.image.source` of each image links the package to the repository.
 Each action is pinned to the commit of a release, with the version in a comment.
-`.github/dependabot.yml` proposes a new pin each week.
+Renovate (`.github/renovate.json`) proposes a new pin each week.
 
 ## BLD-009
 
