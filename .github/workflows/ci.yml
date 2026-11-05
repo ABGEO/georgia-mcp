@@ -30,6 +30,7 @@ jobs:
     outputs:
       go: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.go == 'true' }}
       website: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.website == 'true' }}
+      workflows: ${{ github.event_name == 'workflow_dispatch' || steps.filter.outputs.workflows == 'true' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -52,6 +53,9 @@ jobs:
             website:
               - website/**
               - .github/workflows/ci.yml
+            workflows:
+              - .github/workflows/**
+              - .github/zizmor.yml
 
   go-lint:
     name: Go lint
@@ -257,12 +261,90 @@ jobs:
           path: website/node_modules/.astro/fonts
           key: ${{ steps.fonts.outputs.cache-primary-key }}
 
+  # govulncheck reports a vulnerability only when the code calls the affected function.
+  go-vuln:
+    name: Go vulnerabilities
+    needs: changes
+    if: needs.changes.outputs.go == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - id: go-env
+        name: Go cache paths
+        run: |
+          echo "build=$(go env GOCACHE)" >> "$GITHUB_OUTPUT"
+          echo "mod=$(go env GOMODCACHE)" >> "$GITHUB_OUTPUT"
+
+      # The job reads the cache of Go test and saves none of its own.
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-${{ github.sha }}
+          path: |
+            ${{ steps.go-env.outputs.build }}
+            ${{ steps.go-env.outputs.mod }}
+          restore-keys: |
+            go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-
+            go-test-${{ runner.os }}-
+
+      - name: Vulnerabilities
+        run: go tool govulncheck ./...
+
+  workflow-audit:
+    name: Workflow audit
+    needs: changes
+    if: needs.changes.outputs.workflows == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        with:
+          version: 1.31.1
+          advanced-security: false
+          annotations: true
+
+  # The review compares the manifests of the pull request with its base. It fails on a
+  # new dependency with a known vulnerability or with a license that
+  # .github/dependency-review.yml does not allow.
+  dependency-review:
+    name: Dependency review
+    needs: changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          config-file: ./.github/dependency-review.yml
+
   # A skipped job passes a required check, so the branch protection requires this job
   # alone. It fails when a job that ran has failed.
   ci:
     name: CI
     if: always()
-    needs: [ changes, go-lint, go-test, website-lint, website-test ]
+    needs: [ changes, go-lint, go-test, go-vuln, website-lint, website-test, workflow-audit, dependency-review ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: { }
