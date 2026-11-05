@@ -3,6 +3,7 @@ package mcpserver_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http/httptest"
@@ -11,13 +12,15 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 	"github.com/abgeo/georgia-mcp/internal/pkg/mcpserver"
 )
 
 const (
-	echoTool    = "test_get_echo"
-	failTool    = "test_get_failure"
-	testVersion = "v0.1.0"
+	echoTool        = "test_get_echo"
+	failTool        = "test_get_failure"
+	unavailableTool = "test_get_unavailable"
+	testVersion     = "v0.1.0"
 )
 
 var errTestCause = errors.New("cause")
@@ -60,6 +63,27 @@ func fail(
 	echoInput,
 ) (*mcp.CallToolResult, echoOutput, error) {
 	return nil, echoOutput{}, &mcpserver.ToolError{Message: "the test failed", Cause: errTestCause}
+}
+
+type unavailableModule struct{}
+
+func (unavailableModule) Register(registry *mcpserver.Registry) error {
+	return mcpserver.AddTool(
+		registry,
+		&mcp.Tool{Name: unavailableTool, Description: "Fails with an unavailable source."},
+		unavailable,
+	)
+}
+
+func unavailable(
+	context.Context,
+	*mcp.CallToolRequest,
+	echoInput,
+) (*mcp.CallToolResult, echoOutput, error) {
+	return nil, echoOutput{}, &mcpserver.ToolError{
+		Message: "the vendor did not answer",
+		Cause:   fmt.Errorf("reading the prices: %w: vendor down", kernel.ErrSourceUnavailable),
+	}
 }
 
 func newRegistry(

@@ -2,14 +2,32 @@ package mcpserver
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+
+	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
 const toolErrorType = "tool_error"
+
+// failureKey holds the slot of a tool call in its context. The SDK turns the error of a
+// handler into a result, so the wrapper of AddTool hands the error to the middleware
+// through the slot.
+type failureKey struct{}
+
+type failure struct {
+	err error
+}
+
+func recordFailure(ctx context.Context, err error) {
+	if slot, ok := ctx.Value(failureKey{}).(*failure); ok {
+		slot.err = err
+	}
+}
 
 func logToolCalls(logger *slog.Logger) mcp.Middleware {
 	return func(next mcp.MethodHandler) mcp.MethodHandler {
@@ -18,6 +36,9 @@ func logToolCalls(logger *slog.Logger) mcp.Middleware {
 			if !ok {
 				return next(ctx, method, req)
 			}
+
+			slot := &failure{}
+			ctx = context.WithValue(ctx, failureKey{}, slot)
 
 			start := time.Now()
 			result, err := next(ctx, method, req)
@@ -37,7 +58,14 @@ func logToolCalls(logger *slog.Logger) mcp.Middleware {
 				attrs = append(attrs, slog.String("error.type", errorType))
 			}
 
-			logger.LogAttrs(ctx, slog.LevelInfo, "tool call", attrs...)
+			level := slog.LevelInfo
+			if errors.Is(slot.err, kernel.ErrSourceUnavailable) {
+				level = slog.LevelWarn
+
+				attrs = append(attrs, slog.Any("error", causeOf(slot.err)))
+			}
+
+			logger.LogAttrs(ctx, level, "tool call", attrs...)
 
 			return result, err
 		}
@@ -54,4 +82,14 @@ func errorTypeOf(result mcp.Result, err error) string {
 	}
 
 	return ""
+}
+
+// causeOf returns the cause of a ToolError, which the model does not read, else err.
+func causeOf(err error) error {
+	var toolErr *ToolError
+	if errors.As(err, &toolErr) && toolErr.Cause != nil {
+		return toolErr.Cause
+	}
+
+	return err
 }

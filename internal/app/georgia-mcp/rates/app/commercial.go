@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
 	"strings"
 	"sync"
@@ -39,12 +40,18 @@ type CommercialRates struct {
 type GetCommercialRates struct {
 	sources map[domain.BankCode]CommercialRateSource
 	banks   []domain.Bank
+	logger  *slog.Logger
 }
 
-// NewGetCommercialRates returns the use case over one source for each bank.
-func NewGetCommercialRates(sources []CommercialRateSource) *GetCommercialRates {
+// NewGetCommercialRates returns the use case over one source for each bank. It logs
+// each bank that it leaves out of an answer to logger.
+func NewGetCommercialRates(
+	sources []CommercialRateSource,
+	logger *slog.Logger,
+) *GetCommercialRates {
 	use := &GetCommercialRates{
 		sources: make(map[domain.BankCode]CommercialRateSource, len(sources)),
+		logger:  logger,
 	}
 
 	for _, source := range sources {
@@ -114,7 +121,20 @@ func (u *GetCommercialRates) Get(
 		)
 	}
 
+	u.logLeftOut(ctx, banks, errs)
+
 	return answer, nil
+}
+
+// logLeftOut writes one record for each bank that failed while another answered. The
+// tool call succeeds, so its own record holds no failure.
+func (u *GetCommercialRates) logLeftOut(ctx context.Context, banks []domain.Bank, errs []error) {
+	for i, bank := range banks {
+		if errs[i] != nil {
+			u.logger.WarnContext(ctx, "source unavailable",
+				slog.String("vendor", bank.Name), slog.Any("error", errs[i]))
+		}
+	}
 }
 
 // resolve returns the requested banks sorted by code, or every bank for an empty list.

@@ -4,7 +4,7 @@ title: The platform of the server
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-06
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -53,12 +53,15 @@ It adds the container image, the local compose file, and the task file.
 | `PLATFORM-FR-025`  | 4.1 `vendors`. `PLATFORM-DD-011`                        |
 | `PLATFORM-FR-026`  | 4.1 `pkg/vendorhttp`. `PLATFORM-DD-013`                 |
 | `PLATFORM-FR-027`  | 4.1 `logger`, `buildinfo`. `PLATFORM-SC-038`            |
+| `PLATFORM-FR-028`  | 4.1 `mcpserver` middleware. `PLATFORM-DD-015`. `PLATFORM-SC-039` |
+| `PLATFORM-FR-029`  | 4.1 `httpclient`. `PLATFORM-SC-040`                     |
+| `PLATFORM-FR-030`  | 4.1 `vendors`. `PLATFORM-SC-041`                        |
 | `PLATFORM-NFR-001` | 4.4. `PLATFORM-SC-029`                                  |
 | `PLATFORM-NFR-002` | 4.4. `PLATFORM-SC-016`                                  |
 | `PLATFORM-NFR-003` | 4.1 `build/package/Dockerfile`. `PLATFORM-SC-030`       |
 | `PLATFORM-INV-001` | 3, `ARC-005`. `PLATFORM-SC-031`                         |
 | `PLATFORM-INV-002` | 4.1 `cli`. `PLATFORM-SC-032`                            |
-| `PLATFORM-INV-003` | 4.1 `mcpserver` middleware. `PLATFORM-SC-033`           |
+| `PLATFORM-INV-003` | 4.1 `mcpserver` middleware, `pkg/vendorhttp`. `PLATFORM-SC-033`, `PLATFORM-SC-040`, `PLATFORM-SC-042` |
 
 ## 3. Guideline compliance
 
@@ -72,6 +75,9 @@ It adds the container image, the local compose file, and the task file.
 | `MCP-001`, `MCP-004`   | `mcpserver.AddTool` builds the server tool with the annotations of `MCP-004`.       |
 | `MCP-006`              | `mcpserver.ToolError` carries the message for the model apart from the cause.       |
 | `MCP-011`, `LOG-009`   | One receiving middleware writes the tool call record.                               |
+| `LOG-012`              | The transport of `httpclient` writes the vendor request record.                     |
+| `LOG-013`              | A use case with a partial answer logs each vendor that it leaves out.               |
+| `CLT-012`              | `vendorhttp` removes the path and the query from a `*url.Error`.                    |
 | `API-001` to `API-007` | 4.1 `httpserver`, 4.3.                                                              |
 | `CFG-001` to `CFG-007` | 4.1 `config`, 4.3, `configs/.env.example`.                                                  |
 | `CLI-001` to `CLI-005` | 4.1 `cli`, 4.3.                                                                     |
@@ -171,6 +177,10 @@ func (e *ToolError) Unwrap() error { return e.Cause }
 - The log middleware acts on `tools/call` only. It writes the record of `LOG-009` at
   info level. It adds `mcp.tool.arguments` only at debug level (`LOG-008`).
   `error.type` is `tool_error` when `IsError` is set, else the `%T` of the error.
+- The middleware puts a slot in the context. `AddTool` wraps the handler, and the
+  wrapper writes the error of the handler into the slot. When that error wraps
+  `kernel.ErrSourceUnavailable`, the record is at warn level. Its `error` is the
+  `Cause` of a `ToolError`, else the error itself (`PLATFORM-DD-015`).
 
 **`httpserver`.**
 
@@ -240,8 +250,13 @@ type Config struct {
 }
 func Defaults() Config // 10s, 1 each second, burst 1
 func (c Config) WithLimit(rate float64, burst int) Config
-func New(cfg Config) *http.Client
+func New(cfg Config, logger *slog.Logger) *http.Client
+func NewWithTransport(cfg Config, base http.RoundTripper, logger *slog.Logger) *http.Client
 ```
+
+The transport of `New` waits for the vendor limit, then calls a logging transport over
+the base. The logging transport writes the record of `LOG-012` to logger. The caller
+adds `vendor` to logger. The wait for the limit is not part of `event.duration`.
 
 **`vendors`.**
 
@@ -260,7 +275,7 @@ type Entry[T io.Closer] struct {
     Transport http.RoundTripper // nil: the default transport
     Build     func(opts ...vendorhttp.Option) (T, error)
 }
-func (c Config) ClientOptions(transport http.RoundTripper) []vendorhttp.Option
+func (c Config) ClientOptions(transport http.RoundTripper, logger *slog.Logger) []vendorhttp.Option
 func New[T io.Closer](logger *slog.Logger) *Registry[T]
 func (r *Registry[T]) Add(entry Entry[T])
 func (r *Registry[T]) Build() ([]T, error)
@@ -298,10 +313,16 @@ type StatusError struct { StatusCode int; Body string } // Unwrap gives the sent
 (+https://github.com/abgeo/georgia-mcp)`. The default HTTP client has `DefaultTimeout`.
 `Do` returns the answer for any status. `Fetch` returns the body of a 200, and a
 `*StatusError` for any other status. `FetchJSON` decodes the body of `Fetch`.
+When the request fails, the `*url.Error` keeps the scheme and the host of the address
+only (`CLT-012`).
+
+A use case that answers with some vendors (the commercial rates, the fuel prices, the
+offer search) takes a logger. When it leaves out a vendor, and at least one vendor
+answered, it writes the record of `LOG-013` for each vendor that it left out.
 
 `Build` calls `Build` of each entry whose `Config.Enabled` is true, in the order of
 `Add`, with the client options of its `Config`: the base address, and an HTTP client
-with its timeout and limit over `Transport`. It returns the results in that order. It logs each entry that is off at info level: `<Name> is off`,
+with its timeout and limit over `Transport`. It returns the results in that order. It passes its logger with the attribute `vendor` = `Name` to the client options. It logs each entry that is off at info level: `<Name> is off`,
 with the attribute `variable`. When one `Build` fails, it closes each source that it
 built, and returns the error wrapped with the name. `CloseAll` closes each source and
 joins the errors.
@@ -601,9 +622,18 @@ to its field.
 address differs for each vendor, so each vendor keeps a struct. Every default in Go: a
 struct used one time then has its default far from its field.
 
+### `PLATFORM-DD-015`
+
+**Context:** The SDK turns the error of a typed tool handler into a result with
+`IsError`. The receiving middleware sees the result, not the error.
+**Decision:** The middleware puts a slot in the context of the call. The wrapper of
+`AddTool` writes the error into the slot. The middleware reads it after the call.
+**Alternatives:** A record in the wrapper. The call then has two records, against
+`LOG-009`. A cause in the content of the result. The model then reads the cause.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-037`.
+`spec-scenarios.md` holds `PLATFORM-SC-001` to `PLATFORM-SC-042`.
 
 ## 7. Build plan
 
@@ -623,6 +653,7 @@ struct used one time then has its default far from its field.
 | 12  | `pkg/vendorhttp`. Each vendor client sends its requests with it.               | `PLATFORM-FR-026`                               | [x]  |
 | 13  | `Defaults()` of each context. `vendors.Config` for each vendor.                | `CFG-005`, `CFG-008`                            | [x]  |
 | 14  | The registry builds the client options of each vendor from its `Config`.       | `PLATFORM-FR-025`                               | [x]  |
+| 15  | The cause of a failed source in the tool call record. The vendor request record. The record of a vendor left out. The address of a `*url.Error`. | `PLATFORM-FR-028` to `PLATFORM-FR-030`, `PLATFORM-INV-003` | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
 	"strings"
 	"sync"
@@ -60,13 +61,19 @@ type SearchResult struct {
 
 // SearchOffers finds the current offers of the banks of the server.
 type SearchOffers struct {
-	banks banks
-	now   func() time.Time
+	banks  banks
+	now    func() time.Time
+	logger *slog.Logger
 }
 
-// NewSearchOffers returns the use case over one source for each bank.
-func NewSearchOffers(sources []OfferSource, now func() time.Time) *SearchOffers {
-	return &SearchOffers{banks: newBanks(sources), now: now}
+// NewSearchOffers returns the use case over one source for each bank. It logs each bank
+// that it leaves out of an answer to logger.
+func NewSearchOffers(
+	sources []OfferSource,
+	now func() time.Time,
+	logger *slog.Logger,
+) *SearchOffers {
+	return &SearchOffers{banks: newBanks(sources), now: now, logger: logger}
 }
 
 // Banks returns the banks of the server, sorted by code.
@@ -134,7 +141,20 @@ func (u *SearchOffers) Search(ctx context.Context, query SearchQuery) (SearchRes
 		)
 	}
 
+	u.logLeftOut(ctx, requested, errs)
+
 	return result, nil
+}
+
+// logLeftOut writes one record for each bank that failed while another answered. The
+// tool call succeeds, so its own record holds no failure.
+func (u *SearchOffers) logLeftOut(ctx context.Context, banks []domain.Bank, errs []error) {
+	for i, bank := range banks {
+		if errs[i] != nil {
+			u.logger.WarnContext(ctx, "source unavailable",
+				slog.String("vendor", bank.Name), slog.Any("error", errs[i]))
+		}
+	}
 }
 
 // withRange sets the default dates and the default limit, and checks the range.

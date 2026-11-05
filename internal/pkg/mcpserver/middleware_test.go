@@ -111,6 +111,53 @@ func assertToolCallRecord(t *testing.T, record map[string]any, wantErrorType str
 	}
 }
 
+// PLATFORM-SC-039: A failed source makes the tool call record a warning with the cause.
+// A tool error with no source failure stays at info, with no cause.
+func TestMiddlewareLogsTheCauseOfAFailedSource(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		tool      string
+		wantLevel string
+		wantError string
+	}{
+		{name: "tool error", tool: failTool, wantLevel: "INFO"},
+		{
+			name:      "unavailable source",
+			tool:      unavailableTool,
+			wantLevel: "WARN",
+			wantError: "reading the prices: source: unavailable: vendor down",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			logger, buf := newBufferLogger(slog.LevelInfo)
+			session := connectInMemory(t, newRegistry(t, logger, failModule{}, unavailableModule{}))
+
+			callToolWith(t, session, tt.tool, "hello")
+
+			records := buf.records(t)
+			if len(records) != 1 {
+				t.Fatalf("got %d records, want 1: %v", len(records), records)
+			}
+
+			assertToolCallRecord(t, records[0], "tool_error")
+
+			if got, _ := records[0]["level"].(string); got != tt.wantLevel {
+				t.Errorf("level = %q, want %q", got, tt.wantLevel)
+			}
+
+			if got, _ := records[0]["error"].(string); got != tt.wantError {
+				t.Errorf("error = %q, want %q", got, tt.wantError)
+			}
+		})
+	}
+}
+
 // PLATFORM-SC-033: The arguments of a tool call appear in the log at the debug level only.
 func TestMiddlewareLogsTheArgumentsAtDebugOnly(t *testing.T) {
 	t.Parallel()

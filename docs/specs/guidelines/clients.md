@@ -4,7 +4,7 @@ title: Vendor clients
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-06
 scope: [pkg/]
 related: [ARC, DOM, PKG, RSL, BLD]
 ---
@@ -110,6 +110,14 @@ A vendor that publishes no API is "unofficial". The package comment and the
 A client has a `README.md` with one example, and an `example_test.go` with an
 `Example` function. A test of the client uses `httptest` and a recorded response
 in `testdata/`. See `TST-005`.
+
+## CLT-012
+
+An error of `vendorhttp` that tells that a request failed names the vendor by its
+scheme and host. It holds no path and no query.
+
+**Why:** A path or a query can hold the argument of a tool call, and the server logs the
+error (`LOG-008`, `LOG-009`).
 
 ## Retired identifiers
 

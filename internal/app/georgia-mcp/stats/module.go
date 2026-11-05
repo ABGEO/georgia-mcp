@@ -47,7 +47,8 @@ func newModule(cfg Config, logger *slog.Logger, transport http.RoundTripper) (*M
 		return &Module{}, nil
 	}
 
-	client := geostatclient.New(cfg.Geostat.ClientOptions(transport)...)
+	client := geostatclient.New(
+		cfg.Geostat.ClientOptions(transport, logger.With(slog.String("vendor", "Geostat")))...)
 	adapter := geostatadapter.NewAdapter(client, time.Now, geostatadapter.Pause)
 
 	tables, err := statscache.NewTableCache(adapter)

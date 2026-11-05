@@ -1,8 +1,12 @@
 package app_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
+	"strings"
 	"testing"
 	"time"
 
@@ -40,7 +44,7 @@ func TestGetPricesAsksEveryCompanyAndGrade(t *testing.T) {
 	use := app.NewGetPrices([]app.PriceSource{
 		newFake(wissol, domain.GradeDiesel, domain.GradeRegular),
 		newFake(beta, domain.GradeDiesel, domain.GradeRegular),
-	})
+	}, slog.New(slog.DiscardHandler))
 
 	every, err := use.Get(t.Context(), app.PricesQuery{})
 	if err != nil {
@@ -76,7 +80,7 @@ func TestGetPricesRefusesAnUnknownCompany(t *testing.T) {
 	t.Parallel()
 
 	source := newFake(wissol, domain.GradeRegular)
-	use := app.NewGetPrices([]app.PriceSource{source})
+	use := app.NewGetPrices([]app.PriceSource{source}, slog.New(slog.DiscardHandler))
 
 	_, err := use.Get(t.Context(), app.PricesQuery{Companies: []domain.CompanyCode{"gulf"}})
 
@@ -104,7 +108,10 @@ func TestGetPricesRefusesAnUnknownCompany(t *testing.T) {
 func TestGetPricesNamesTheMissingGrades(t *testing.T) {
 	t.Parallel()
 
-	use := app.NewGetPrices([]app.PriceSource{newFake(wissol, domain.GradeRegular)})
+	use := app.NewGetPrices(
+		[]app.PriceSource{newFake(wissol, domain.GradeRegular)},
+		slog.New(slog.DiscardHandler),
+	)
 
 	answer, err := use.Get(t.Context(), app.PricesQuery{
 		Grades:    []domain.Grade{domain.GradeCNG, domain.GradeRegular, domain.GradeRegular},
@@ -176,6 +183,7 @@ func TestGetPricesReportsAFailedCompany(t *testing.T) {
 			tt.wissol.company = domain.Company{Code: wissol, Name: "Wissol"}
 			use := app.NewGetPrices(
 				[]app.PriceSource{tt.wissol, newFake(beta, domain.GradeRegular)},
+				slog.New(slog.DiscardHandler),
 			)
 
 			start := time.Now()
@@ -212,4 +220,80 @@ func unavailableCodes(answer app.Prices) []domain.CompanyCode {
 	}
 
 	return codes
+}
+
+// leftOut returns the vendor and the error of each "source unavailable" record in buf.
+func leftOut(t *testing.T, buf *bytes.Buffer) [][2]string {
+	t.Helper()
+
+	var got [][2]string
+
+	for line := range strings.Lines(buf.String()) {
+		var record struct {
+			Level   string `json:"level"`
+			Message string `json:"msg"`
+			Vendor  string `json:"vendor"`
+			Error   string `json:"error"`
+		}
+		if err := json.Unmarshal([]byte(line), &record); err != nil {
+			t.Fatalf("a log line is not JSON: %q", line)
+		}
+
+		if record.Message == "source unavailable" && record.Level == "WARN" {
+			got = append(got, [2]string{record.Vendor, record.Error})
+		}
+	}
+
+	return got
+}
+
+func bufferLogger() (*slog.Logger, *bytes.Buffer) {
+	var buf bytes.Buffer
+
+	return slog.New(slog.NewJSONHandler(&buf, nil)), &buf
+}
+
+// PLATFORM-SC-041: A company that the answer leaves out writes one warning with its
+// error. When every company fails, the use case writes none.
+func TestGetPricesLogsALeftOutCompany(t *testing.T) {
+	t.Parallel()
+
+	failure := fmt.Errorf("reading: %w", kernel.ErrSourceUnavailable)
+
+	failing := func(code domain.CompanyCode) *fakeSource {
+		source := newFake(code)
+		source.err = failure
+
+		return source
+	}
+
+	tests := []struct {
+		name    string
+		sources []app.PriceSource
+		want    [][2]string
+	}{
+		{
+			name:    "one fails",
+			sources: []app.PriceSource{newFake(wissol, domain.GradeRegular), failing(beta)},
+			want:    [][2]string{{"beta", "reading: source: unavailable"}},
+		},
+		{
+			name:    "every one fails",
+			sources: []app.PriceSource{failing(wissol), failing(beta)},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			logger, buf := bufferLogger()
+
+			_, _ = app.NewGetPrices(tt.sources, logger).Get(t.Context(), app.PricesQuery{})
+
+			if diff := cmp.Diff(tt.want, leftOut(t, buf)); diff != "" {
+				t.Errorf("records (-want +got):\n%s", diff)
+			}
+		})
+	}
 }

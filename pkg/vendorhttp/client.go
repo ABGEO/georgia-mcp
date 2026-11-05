@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -138,7 +139,7 @@ func (c *Client) Do(ctx context.Context, req Request) (*Response, error) {
 
 	resp, err := c.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, fmt.Errorf("sending the request: %w", err)
+		return nil, fmt.Errorf("sending the request: %w", withoutPath(err))
 	}
 
 	defer func() { _ = resp.Body.Close() }()
@@ -200,6 +201,26 @@ func (e *StatusError) Error() string {
 // Unwrap returns the sentinel of the client.
 func (e *StatusError) Unwrap() error {
 	return e.sentinel
+}
+
+// withoutPath keeps the scheme and the host of the address in a *url.Error. The path
+// and the query can hold the argument of a tool call.
+func withoutPath(err error) error {
+	var urlErr *url.Error
+	if !errors.As(err, &urlErr) {
+		return err
+	}
+
+	address, parseErr := url.Parse(urlErr.URL)
+	if parseErr != nil {
+		urlErr.URL = ""
+
+		return err
+	}
+
+	urlErr.URL = (&url.URL{Scheme: address.Scheme, Host: address.Host}).String()
+
+	return err
 }
 
 // userAgent returns georgia-mcp/<the version of the server> (+<repository>).
