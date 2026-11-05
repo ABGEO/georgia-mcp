@@ -41,7 +41,8 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		return &Module{}, nil
 	}
 
-	client := gpostclient.New(cfg.GPost.ClientOptions(nil)...)
+	client := gpostclient.New(
+		cfg.GPost.ClientOptions(nil, logger.With(slog.String("vendor", "Georgian Post")))...)
 
 	addresses, err := postalcache.NewAddressCache(gpostadapter.NewAdapter(client, now))
 	if err != nil {

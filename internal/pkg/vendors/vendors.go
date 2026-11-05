@@ -56,7 +56,9 @@ func (r *Registry[T]) Build() ([]T, error) {
 			continue
 		}
 
-		source, err := entry.Build(entry.Config.ClientOptions(entry.Transport)...)
+		logger := r.logger.With(slog.String("vendor", entry.Name))
+
+		source, err := entry.Build(entry.Config.ClientOptions(entry.Transport, logger)...)
 		if err != nil {
 			return nil, errors.Join(
 				fmt.Errorf("building %s: %w", entry.Name, err),

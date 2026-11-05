@@ -181,3 +181,29 @@ func TestDoSendsTheMethodTheBodyAndTheHeader(t *testing.T) {
 		t.Errorf("Accept = %q, want text/html", accept)
 	}
 }
+
+// PLATFORM-SC-042: The error of a failed request names the scheme and the host only.
+func TestDoKeepsThePathAndTheQueryOutOfTheError(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.NotFoundHandler())
+	server.Close()
+
+	client := vendorhttp.New(errUnexpectedStatus, vendorhttp.WithBaseURL(server.URL))
+
+	_, err := client.Do(t.Context(), vendorhttp.Request{
+		Path:  []string{"stops", "secret-value"},
+		Query: url.Values{"q": {"secret-value"}},
+	})
+	if err == nil {
+		t.Fatal("Do() error = nil, want an error")
+	}
+
+	if strings.Contains(err.Error(), "secret-value") {
+		t.Errorf("the error holds the path or the query: %v", err)
+	}
+
+	if !strings.Contains(err.Error(), server.URL) {
+		t.Errorf("the error does not name %s: %v", server.URL, err)
+	}
+}

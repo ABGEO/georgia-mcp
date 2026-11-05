@@ -41,7 +41,10 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 		return &Module{}, nil
 	}
 
-	adapter := neaadapter.NewAdapter(neaclient.New(cfg.NEA.ClientOptions(nil)...), now)
+	adapter := neaadapter.NewAdapter(
+		neaclient.New(cfg.NEA.ClientOptions(nil, logger.With(slog.String("vendor", "NEA")))...),
+		now,
+	)
 
 	readings, err := aircache.NewReadingCache(adapter)
 	if err != nil {

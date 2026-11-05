@@ -4,7 +4,7 @@ title: The platform of the server
 type: requirements
 status: approved
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-06
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -246,6 +246,41 @@ Each log record must name the server and its version.
 
 **Why:** The operator reads the records of several servers and several versions in one place.
 
+### `PLATFORM-FR-028`
+
+When a tool call fails because a source is unavailable, its log record must hold the
+cause and must be a warning.
+
+**Examples:**
+
+- Normal case: the NEA times out. The record of the tool call is a warning and holds
+  the timeout.
+- Unwanted case: the model sends a wrong currency code. The record is no warning and
+  holds no cause.
+
+### `PLATFORM-FR-029`
+
+The server must write one log record for each request to a vendor, with the name of
+the vendor, the host, the status, and the duration. A request that gets no answer, a
+5xx, a refused key, or a limit must be a warning.
+
+**Why:** The operator must see a vendor that stops answering before a user reports it.
+
+**Examples:**
+
+- Normal case: Wissol answers 200. The record is at the debug level.
+- Unwanted case: Lukoil answers 503. The record is a warning, with the status.
+- Limit case: Geostat answers 404 for a table that the model asked for. The record is
+  no warning.
+
+### `PLATFORM-FR-030`
+
+When a tool answers with some vendors of a context and leaves out the others, the
+server must log each vendor that it left out, with the cause, as a warning.
+
+**Why:** The tool call succeeds, so its record holds no failure. A vendor that changes
+its format must not disappear from the answers with no trace.
+
 ## 6. Non-functional requirements
 
 ### `PLATFORM-NFR-001`
@@ -294,7 +329,7 @@ arguments of a tool call.
 | `CFG-001` to `CFG-007` | Configuration  | The environment, the local file, the prefix, the validation. |
 | `CLI-001` to `CLI-005` | Command line   | `serve`, `stdio`, `version`.                                 |
 | `LIF-001` to `LIF-006` | Lifecycle      | The start order and the shutdown.                            |
-| `LOG-002`, `LOG-009` to `LOG-011` | Logging | The output of each mode. The records. The service.       |
+| `LOG-002`, `LOG-009` to `LOG-013` | Logging | The output of each mode. The records. The service.       |
 | `RSL-003` to `RSL-008` | Resilience     | The cache, its stale values, its size, the vendor limit.     |
 | `BLD-004`, `BLD-005`   | Build          | The version from the build. The image.                       |
 | `GO-012`               | Go style       | The generic cache needs two instantiations. The tests give them. |

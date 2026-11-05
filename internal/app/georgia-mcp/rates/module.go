@@ -83,9 +83,13 @@ func New(cfg Config, logger *slog.Logger) (*Module, error) {
 }
 
 func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, error) {
+	logger = logger.With(slog.String("component", "context"), slog.String("context", "rates"))
+
 	client := nbgclient.New(
 		vendorhttp.WithBaseURL(cfg.NBG.BaseURL.String()),
-		vendorhttp.WithHTTPClient(httpclient.New(cfg.NBG.HTTP)),
+		vendorhttp.WithHTTPClient(
+			httpclient.New(cfg.NBG.HTTP, logger.With(slog.String("vendor", "NBG"))),
+		),
 	)
 
 	rateSets, err := ratecache.New(nbgadapter.NewAdapter(client, now), cfg.NBG.CacheEntries, now)
@@ -106,8 +110,6 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}
 
 	logger.Debug("built the context",
-		slog.String("component", "context"),
-		slog.String("context", "rates"),
 		slog.String("nbg", cfg.NBG.BaseURL.String()),
 		slog.Int("banks", len(banks)),
 	)
@@ -115,7 +117,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	return &Module{
 		getRates:   app.NewGetOfficialRates(rateSets, now),
 		history:    app.NewListOfficialHistory(rateSets, now),
-		commercial: app.NewGetCommercialRates(sources),
+		commercial: app.NewGetCommercialRates(sources, logger),
 		rateSets:   rateSets,
 		banks:      banks,
 	}, nil
@@ -127,8 +129,6 @@ func commercialSources(
 	logger *slog.Logger,
 	now func() time.Time,
 ) ([]*ratecache.CommercialRateCache, error) {
-	logger = logger.With(slog.String("component", "context"), slog.String("context", "rates"))
-
 	banks := vendors.New[*ratecache.CommercialRateCache](logger)
 
 	for _, bank := range slices.Concat(bankEntries(cfg, logger, now), otherEntries(cfg, now)) {

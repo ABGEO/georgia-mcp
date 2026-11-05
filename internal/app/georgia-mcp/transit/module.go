@@ -43,7 +43,10 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	}
 
 	client := ttcclient.New(
-		append(cfg.TTC.ClientOptions(nil), ttcclient.WithAPIKey(cfg.TTC.APIKey))...,
+		append(
+			cfg.TTC.ClientOptions(nil, logger.With(slog.String("vendor", "TTC"))),
+			ttcclient.WithAPIKey(cfg.TTC.APIKey),
+		)...,
 	)
 	adapter := ttcadapter.NewAdapter(client, now, logger)
 

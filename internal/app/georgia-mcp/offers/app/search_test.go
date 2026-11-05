@@ -1,8 +1,12 @@
 package app_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -19,7 +23,8 @@ func search(t *testing.T, sources []app.OfferSource, query app.SearchQuery) []st
 		query.Limit = 30
 	}
 
-	result, err := app.NewSearchOffers(sources, now).Search(t.Context(), query)
+	result, err := app.NewSearchOffers(sources, now, slog.New(slog.DiscardHandler)).
+		Search(t.Context(), query)
 	if err != nil {
 		t.Fatalf("Search() error = %v", err)
 	}
@@ -132,7 +137,7 @@ func TestSearchCutsToTheLimit(t *testing.T) {
 		o.Period.End = mustDate(t, "2026-11-01")
 	}))
 
-	result, err := app.NewSearchOffers([]app.OfferSource{newFake(bog, offers...)}, now).
+	result, err := app.NewSearchOffers([]app.OfferSource{newFake(bog, offers...)}, now, slog.New(slog.DiscardHandler)).
 		Search(t.Context(), app.SearchQuery{Limit: 10})
 	if err != nil {
 		t.Fatalf("Search() error = %v", err)
@@ -157,7 +162,11 @@ func TestSearchReportsTheBanks(t *testing.T) {
 	failing := newFake(xyz)
 	failing.err = fmt.Errorf("reading: %w", kernel.ErrSourceUnavailable)
 
-	use := app.NewSearchOffers([]app.OfferSource{failing, newFake(bog, offer(t, "1"))}, now)
+	use := app.NewSearchOffers(
+		[]app.OfferSource{failing, newFake(bog, offer(t, "1"))},
+		now,
+		slog.New(slog.DiscardHandler),
+	)
 
 	result, err := use.Search(t.Context(), app.SearchQuery{Limit: 10})
 	if err != nil {
@@ -190,7 +199,7 @@ func TestSearchReportsTheBanks(t *testing.T) {
 func TestSearchRefusesTheRange(t *testing.T) {
 	t.Parallel()
 
-	use := app.NewSearchOffers([]app.OfferSource{newFake(bog)}, now)
+	use := app.NewSearchOffers([]app.OfferSource{newFake(bog)}, now, slog.New(slog.DiscardHandler))
 
 	ranges := [][2]string{{"2026-10-31", "2026-10-01"}, {"2026-01-01", "2027-01-03"}}
 	for _, dates := range ranges {
@@ -223,7 +232,11 @@ func TestSearchPagesWithTheOffset(t *testing.T) {
 		)
 	}
 
-	use := app.NewSearchOffers([]app.OfferSource{newFake(bog, offers...)}, now)
+	use := app.NewSearchOffers(
+		[]app.OfferSource{newFake(bog, offers...)},
+		now,
+		slog.New(slog.DiscardHandler),
+	)
 
 	whole, err := use.Search(t.Context(), app.SearchQuery{Limit: 30})
 	if err != nil {
@@ -254,5 +267,80 @@ func TestSearchPagesWithTheOffset(t *testing.T) {
 
 	if diff := cmp.Diff(ids(whole.Banks[0].Offers), paged); diff != "" {
 		t.Errorf("pages mismatch (-whole +pages):\n%s", diff)
+	}
+}
+
+// leftOut returns the vendor and the error of each "source unavailable" record in buf.
+func leftOut(t *testing.T, buf *bytes.Buffer) [][2]string {
+	t.Helper()
+
+	var got [][2]string
+
+	for line := range strings.Lines(buf.String()) {
+		var record struct {
+			Level   string `json:"level"`
+			Message string `json:"msg"`
+			Vendor  string `json:"vendor"`
+			Error   string `json:"error"`
+		}
+		if err := json.Unmarshal([]byte(line), &record); err != nil {
+			t.Fatalf("a log line is not JSON: %q", line)
+		}
+
+		if record.Message == "source unavailable" && record.Level == "WARN" {
+			got = append(got, [2]string{record.Vendor, record.Error})
+		}
+	}
+
+	return got
+}
+
+func bufferLogger() (*slog.Logger, *bytes.Buffer) {
+	var buf bytes.Buffer
+
+	return slog.New(slog.NewJSONHandler(&buf, nil)), &buf
+}
+
+// PLATFORM-SC-041: A bank that the answer leaves out writes one warning with its error.
+// When every bank fails, the use case writes none.
+func TestSearchLogsALeftOutBank(t *testing.T) {
+	t.Parallel()
+
+	failing := func(code domain.BankCode) *fakeSource {
+		source := newFake(code)
+		source.err = fmt.Errorf("reading: %w", kernel.ErrSourceUnavailable)
+
+		return source
+	}
+
+	tests := []struct {
+		name    string
+		sources []app.OfferSource
+		want    [][2]string
+	}{
+		{
+			name:    "one fails",
+			sources: []app.OfferSource{failing(xyz), newFake(bog, offer(t, "1"))},
+			want:    [][2]string{{"xyz", "reading: source: unavailable"}},
+		},
+		{
+			name:    "every one fails",
+			sources: []app.OfferSource{failing(xyz), failing(bog)},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			logger, buf := bufferLogger()
+
+			_, _ = app.NewSearchOffers(tt.sources, now, logger).
+				Search(t.Context(), app.SearchQuery{Limit: 10})
+
+			if diff := cmp.Diff(tt.want, leftOut(t, buf)); diff != "" {
+				t.Errorf("records (-want +got):\n%s", diff)
+			}
+		})
 	}
 }

@@ -1,10 +1,14 @@
 package app_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
+	"strings"
 	"sync"
 	"testing"
 	"testing/synctest"
@@ -89,7 +93,7 @@ func newUseCase(banks ...*fakeBank) *app.GetCommercialRates {
 		sources = append(sources, bank)
 	}
 
-	return app.NewGetCommercialRates(sources)
+	return app.NewGetCommercialRates(sources, slog.New(slog.DiscardHandler))
 }
 
 func codesOf(answer app.BankRates) []domain.CurrencyCode {
@@ -338,5 +342,83 @@ func wantCountError(t *testing.T, err error, count int) {
 	countErr, ok := errors.AsType[*app.CurrencyCountError](err)
 	if !ok || countErr.Count != count {
 		t.Fatalf("Get() error = %v, want a CurrencyCountError with %d", err, count)
+	}
+}
+
+// leftOut returns the vendor and the error of each "source unavailable" record in buf.
+func leftOut(t *testing.T, buf *bytes.Buffer) [][2]string {
+	t.Helper()
+
+	var got [][2]string
+
+	for line := range strings.Lines(buf.String()) {
+		var record struct {
+			Level   string `json:"level"`
+			Message string `json:"msg"`
+			Vendor  string `json:"vendor"`
+			Error   string `json:"error"`
+		}
+		if err := json.Unmarshal([]byte(line), &record); err != nil {
+			t.Fatalf("a log line is not JSON: %q", line)
+		}
+
+		if record.Message == "source unavailable" && record.Level == "WARN" {
+			got = append(got, [2]string{record.Vendor, record.Error})
+		}
+	}
+
+	return got
+}
+
+func bufferLogger() (*slog.Logger, *bytes.Buffer) {
+	var buf bytes.Buffer
+
+	return slog.New(slog.NewJSONHandler(&buf, nil)), &buf
+}
+
+// PLATFORM-SC-041: A bank that the answer leaves out writes one warning with its error.
+// When every bank fails, the use case writes none.
+func TestGetCommercialRatesLogsALeftOutBank(t *testing.T) {
+	t.Parallel()
+
+	query := app.CommercialRatesQuery{Currencies: []domain.CurrencyCode{usd}}
+	quotes := []domain.CurrencyCode{usd}
+
+	tests := []struct {
+		name  string
+		banks []*fakeBank
+		want  [][2]string
+	}{
+		{
+			name: "one fails",
+			banks: []*fakeBank{
+				{bank: tbcBank(), quotes: quotes},
+				{bank: bogBank(), fail: true},
+			},
+			want: [][2]string{{"Bank of Georgia", "calling Bank of Georgia: source: unavailable"}},
+		},
+		{
+			name:  "every one fails",
+			banks: []*fakeBank{{bank: tbcBank(), fail: true}, {bank: bogBank(), fail: true}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			logger, buf := bufferLogger()
+
+			sources := make([]app.CommercialRateSource, 0, len(tt.banks))
+			for _, bank := range tt.banks {
+				sources = append(sources, bank)
+			}
+
+			_, _ = app.NewGetCommercialRates(sources, logger).Get(t.Context(), query)
+
+			if diff := cmp.Diff(tt.want, leftOut(t, buf)); diff != "" {
+				t.Errorf("records (-want +got):\n%s", diff)
+			}
+		})
 	}
 }

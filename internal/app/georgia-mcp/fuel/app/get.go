@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
 	"strings"
 	"sync"
@@ -43,11 +44,16 @@ type Prices struct {
 type GetPrices struct {
 	sources   map[domain.CompanyCode]PriceSource
 	companies []domain.Company
+	logger    *slog.Logger
 }
 
-// NewGetPrices returns the use case over one source for each fuel company.
-func NewGetPrices(sources []PriceSource) *GetPrices {
-	use := &GetPrices{sources: make(map[domain.CompanyCode]PriceSource, len(sources))}
+// NewGetPrices returns the use case over one source for each fuel company. It logs each
+// company that it leaves out of an answer to logger.
+func NewGetPrices(sources []PriceSource, logger *slog.Logger) *GetPrices {
+	use := &GetPrices{
+		sources: make(map[domain.CompanyCode]PriceSource, len(sources)),
+		logger:  logger,
+	}
 
 	for _, source := range sources {
 		company := source.Company()
@@ -110,7 +116,20 @@ func (u *GetPrices) Get(ctx context.Context, query PricesQuery) (Prices, error) 
 		)
 	}
 
+	u.logLeftOut(ctx, companies, errs)
+
 	return answer, nil
+}
+
+// logLeftOut writes one record for each company that failed while another answered. The
+// tool call succeeds, so its own record holds no failure.
+func (u *GetPrices) logLeftOut(ctx context.Context, companys []domain.Company, errs []error) {
+	for i, company := range companys {
+		if errs[i] != nil {
+			u.logger.WarnContext(ctx, "source unavailable",
+				slog.String("vendor", company.Name), slog.Any("error", errs[i]))
+		}
+	}
 }
 
 // resolve returns the requested companies sorted by code, or every company for an

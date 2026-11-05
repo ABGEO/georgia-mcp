@@ -4,7 +4,7 @@ title: The platform of the server, the scenarios
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-06
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -269,6 +269,60 @@ Two invalid values give two errors, and each one is a `*FieldError`.
 | `json` | A record of a `With` child | `georgia-mcp`  | `v0.1.0`          |
 
 The logger gets `buildinfo.Info{Version: "v0.1.0"}`.
+
+### `PLATFORM-SC-039`
+
+**Verifies:** `PLATFORM-FR-028`
+**Layer:** unit
+
+| Call                                                        | Level  | `error.type` | `error`         |
+| ----------------------------------------------------------- | ------ | ------------ | --------------- |
+| A tool returns a `ToolError` with no cause                  | `INFO` | `tool_error` | Absent          |
+| A tool returns an error that wraps `ErrSourceUnavailable`   | `WARN` | `tool_error` | The error text  |
+
+### `PLATFORM-SC-040`
+
+**Verifies:** `PLATFORM-FR-029`, `PLATFORM-INV-003`
+**Layer:** unit
+
+The client of `httpclient.New` calls an `httptest` server at `/rates?q=secret-value`,
+with a logger at debug level and the attribute `vendor` = `Acme`.
+
+| Answer                                  | Level   | `http.response.status_code` | `error.type`   |
+| --------------------------------------- | ------- | --------------------------- | -------------- |
+| 200                                     | `DEBUG` | 200                         | Absent         |
+| 404                                     | `INFO`  | 404                         | `404`          |
+| 503                                     | `WARN`  | 503                         | `503`          |
+| 401                                     | `WARN`  | 401                         | `401`          |
+| A closed server                         | `WARN`  | Absent                      | The Go type    |
+| A context that the caller cancelled     | `DEBUG` | Absent                      | The Go type    |
+
+Each record holds `vendor`, `http.request.method`, `server.address`, and
+`event.duration`. The debug record holds `url.path` = `/rates`. No record holds
+`secret-value`. At info level, no record holds `url.path`.
+
+### `PLATFORM-SC-041`
+
+**Verifies:** `PLATFORM-FR-030`
+**Layer:** unit
+
+**Given** a use case with two vendors: one answers, one fails with an error that wraps
+`kernel.ErrSourceUnavailable`.
+**When** the use case runs.
+**Then** the log holds one `WARN` record `source unavailable`, with `vendor` = the name
+of the failed vendor and `error`. When both vendors fail, the use case writes no such
+record. The use cases are the commercial rates, the fuel prices, and the offer search.
+
+### `PLATFORM-SC-042`
+
+**Verifies:** `PLATFORM-INV-003`
+**Layer:** unit
+
+**Given** a `vendorhttp` client whose base address is a closed `httptest` server.
+**When** it sends a request with the path `stops/secret-value` and the query
+`q=secret-value`.
+**Then** the error names the scheme and the host of the server, and holds no
+`secret-value`.
 
 ## The cache
 

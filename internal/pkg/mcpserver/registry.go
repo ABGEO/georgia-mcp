@@ -73,9 +73,20 @@ func AddTool[In, Out any](
 	annotated := *tool
 	annotated.Annotations = readOnlyAnnotations()
 
-	mcp.AddTool(registry.server, &annotated, handler)
+	mcp.AddTool(registry.server, &annotated, withFailure(handler))
 
 	return nil
+}
+
+func withFailure[In, Out any](handler mcp.ToolHandlerFor[In, Out]) mcp.ToolHandlerFor[In, Out] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in In) (*mcp.CallToolResult, Out, error) {
+		result, out, err := handler(ctx, req, in)
+		if err != nil {
+			recordFailure(ctx, err)
+		}
+
+		return result, out, err
+	}
 }
 
 func readOnlyAnnotations() *mcp.ToolAnnotations {

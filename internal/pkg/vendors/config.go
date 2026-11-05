@@ -1,6 +1,7 @@
 package vendors
 
 import (
+	"log/slog"
 	"net/http"
 	"net/url"
 
@@ -32,13 +33,17 @@ func (c Config) WithLimit(rate float64, burst int) Config {
 }
 
 // ClientOptions returns the options of the client of the vendor: its base address, and an
-// HTTP client with its timeout and its limit over transport. A nil transport gives the
-// default transport.
-func (c Config) ClientOptions(transport http.RoundTripper) []vendorhttp.Option {
-	httpClient := httpclient.New(c.HTTP)
-	if transport != nil {
-		httpClient = httpclient.NewWithTransport(c.HTTP, transport)
+// HTTP client with its timeout and its limit over transport, that logs each call to
+// logger. A nil transport gives the default transport. logger names the vendor.
+func (c Config) ClientOptions(
+	transport http.RoundTripper,
+	logger *slog.Logger,
+) []vendorhttp.Option {
+	if transport == nil {
+		transport = http.DefaultTransport
 	}
+
+	httpClient := httpclient.NewWithTransport(c.HTTP, transport, logger)
 
 	return []vendorhttp.Option{
 		vendorhttp.WithBaseURL(c.BaseURL.String()),

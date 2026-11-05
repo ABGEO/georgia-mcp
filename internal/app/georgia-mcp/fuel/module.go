@@ -76,7 +76,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 
 	logger.Debug("built the context", slog.Int("companies", len(companies)))
 
-	return &Module{prices: app.NewGetPrices(sources), companies: companies}, nil
+	return &Module{prices: app.NewGetPrices(sources, logger), companies: companies}, nil
 }
 
 // companySources lists each fuel company, with its switch, in the order of the build.

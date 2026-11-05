@@ -83,7 +83,7 @@ func newModule(cfg Config, logger *slog.Logger, now func() time.Time) (*Module, 
 	logger.Debug("built the context", slog.Int("banks", len(banks)))
 
 	return &Module{
-		search: app.NewSearchOffers(sources, now),
+		search: app.NewSearchOffers(sources, now, logger),
 		get:    app.NewGetOffer(sources, now),
 		banks:  banks,
 	}, nil
