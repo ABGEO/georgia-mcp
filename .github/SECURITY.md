@@ -33,6 +33,11 @@ The disclosure is coordinated: the advisory and the fix are published together, 
 security page of the repository. The advisory names you, unless you ask otherwise.
 Please keep the report private until then.
 
+## Assessment
+
+The [security assessment](../docs/security-assessment.md) names the likely threats and
+the defenses against each.
+
 ## Scope
 
 In scope:

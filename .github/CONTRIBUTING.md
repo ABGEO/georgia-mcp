@@ -53,3 +53,5 @@ the keys of `.env`. A test whose key is empty skips.
 
 By contributing, you agree to the [code of conduct](CODE_OF_CONDUCT.md) and to license
 your work under the [GPL-3.0](../LICENSE).
+
+[`GOVERNANCE.md`](GOVERNANCE.md) names the roles and who decides.
