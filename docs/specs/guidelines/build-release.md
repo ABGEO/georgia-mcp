@@ -148,7 +148,14 @@ request restores the cache of `main`.
 task reads the keys of the sources from `.env`. A test whose key is empty skips.
 
 `.github/workflows/live.yml` runs the same command each day at 03:17 UTC and on a
-manual run. The keys come from the repository secrets
+manual run, without the packages of this table. The tests of such a package stay in the
+repository, and `task test:live` still runs them.
+
+| Package      | Reason                                                                  |
+| ------------ | ----------------------------------------------------------------------- |
+| `pkg/wissol` | `api.wissol.ge` does not answer a GitHub runner. The hosted server reaches it. |
+
+The keys come from the repository secrets
 `GEOMCP_TRANSIT_TTC_API_KEY`, `GEOMCP_RATES_TBC_API_KEY`, and
 `GEOMCP_RATES_CREDO_API_KEY`. The job summary lists each failed test and each skipped
 test.
