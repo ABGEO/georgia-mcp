@@ -21,6 +21,20 @@ the sources.
 The assets are the API keys of the sources, the availability of the hosted server, the
 integrity of the released files and images, and the privacy of the users.
 
+## Attack surface
+
+| Entry point                       | Reached by                     | Input                                    | Protection                                                    |
+| --------------------------------- | ------------------------------ | ---------------------------------------- | ------------------------------------------------------------- |
+| `POST, GET, DELETE /mcp`          | Anyone, without an account     | MCP messages, the arguments of a tool    | The rate limit, the `Origin` check, the header limits (`API-002` to `API-007`). The server checks the arguments against the input schema of each tool, which rejects an unknown field. |
+| `GET /livez`, `GET /readyz`       | Anyone                         | None                                     | No call to a source, no data (`API-005`).                     |
+| stdio                             | The local user who starts it   | MCP messages                             | Runs with the rights of that user. Nothing but the protocol on stdout (`LOG-002`). |
+| The calls to the sources          | The server, out to each source | The answer of a source                   | A fixed host for each client, a body limit, a timeout (`CLT-004`, `RSL-001`). |
+| The configuration                 | The operator                   | Environment variables                    | Validated at the start. A wrong value stops the server (`CFG`). |
+| The workflows                     | A pull request, a push, a tag  | The code and the metadata of the event   | No permission by default. Untrusted values pass through `env`. zizmor checks each workflow. A pull request reads no secret. |
+
+The critical code paths are the tool handlers, the vendor clients that parse the
+answers, and the release workflow that signs the files. Threats 1, 4, and 5 cover them.
+
 ## Threats
 
 Each threat has a likelihood and an impact: low, medium, or high.

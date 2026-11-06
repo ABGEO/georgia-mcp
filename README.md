@@ -134,12 +134,34 @@ With a release binary, over stdio: download the archive for your system from the
 claude mcp add georgia-mcp -- georgia-mcp stdio
 ```
 
-Each release signs `checksums.txt` with cosign and carries build provenance. To check an
+Each release signs `checksums.txt` with cosign and carries build provenance. Each check
+also proves that the workflow of this repository built the file from the tag. To check an
 archive, run:
 
 ```sh
-gh attestation verify georgia-mcp_<version>_linux_amd64.tar.gz --owner ABGEO
+gh attestation verify georgia-mcp_<version>_linux_amd64.tar.gz --owner ABGEO \
+  --signer-workflow ABGEO/georgia-mcp/.github/workflows/release.yml
 ```
+
+Or check the checksums with [cosign](https://docs.sigstore.dev/cosign/system_config/installation/),
+then the archive:
+
+```sh
+cosign verify-blob checksums.txt --bundle checksums.txt.sigstore.json \
+  --certificate-identity "https://github.com/ABGEO/georgia-mcp/.github/workflows/release.yml@refs/tags/v<version>" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+sha256sum --ignore-missing -c checksums.txt
+```
+
+To check an image:
+
+```sh
+cosign verify ghcr.io/abgeo/georgia-mcp:<version> \
+  --certificate-identity "https://github.com/ABGEO/georgia-mcp/.github/workflows/images.yml@refs/tags/v<version>" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+```
+
+Each archive and each image comes with an SPDX SBOM.
 
 With Go, over stdio:
 
