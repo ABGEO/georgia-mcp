@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank, the scenarios
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-22
+updated: 2026-11-06
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -267,7 +267,7 @@ bank counts 2 calls. The test runs in `synctest`.
 **Verifies:** `TBCRATE-NFR-002`
 **Layer:** unit
 
-**Given** an environment with the key only.
+**Given** an environment with TBC on and its key.
 **When** the configuration loads.
 **Then** `TBC.HTTP.Rate` is 1 and `TBC.HTTP.Burst` is 1.
 
@@ -288,9 +288,10 @@ bank counts 2 calls. The test runs in `synctest`.
 
 | Settings                                | Result of `LoadConfig`                                        |
 | --------------------------------------- | ------------------------------------------------------------- |
-| No key, no switch                       | An error that names `GEOMCP_RATES_TBC_API_KEY` and `GEOMCP_RATES_TBC_ENABLED`. |
-| No key, `GEOMCP_RATES_TBC_ENABLED=false` | No error. TBC is off.                                         |
-| A key, no switch                        | No error. TBC is on.                                          |
+| No key, `GEOMCP_RATES_TBC_ENABLED=true` | An error that names `GEOMCP_RATES_TBC_API_KEY` and `GEOMCP_RATES_TBC_ENABLED`. |
+| No key, no switch                       | No error. TBC is off.                                         |
+| A key, no switch                        | No error. TBC is off.                                         |
+| A key, `GEOMCP_RATES_TBC_ENABLED=true`  | No error. TBC is on.                                          |
 
 ## Retired identifiers
 

@@ -97,9 +97,9 @@ export const en = {
       },
     },
     keys: {
-      ttc: "The transit tools need a TTC API key in GEOMCP_TRANSIT_TTC_API_KEY. To start without them, set GEOMCP_TRANSIT_TTC_ENABLED=false.",
-      tbc: "The commercial rates of TBC Bank need a TBC API key in GEOMCP_RATES_TBC_API_KEY. To start without TBC Bank, set GEOMCP_RATES_TBC_ENABLED=false.",
-      credo: "The commercial rates of Credo Bank need a Credo API key in GEOMCP_RATES_CREDO_API_KEY. To start without Credo Bank, set GEOMCP_RATES_CREDO_ENABLED=false.",
+      ttc: "The transit tools are off by default. To turn them on, set GEOMCP_TRANSIT_TTC_ENABLED=true and a TTC API key in GEOMCP_TRANSIT_TTC_API_KEY.",
+      tbc: "TBC Bank is off by default in the commercial rates. To turn it on, set GEOMCP_RATES_TBC_ENABLED=true and a TBC API key in GEOMCP_RATES_TBC_API_KEY.",
+      credo: "Credo Bank is off by default in the commercial rates. To turn it on, set GEOMCP_RATES_CREDO_ENABLED=true and a Credo API key in GEOMCP_RATES_CREDO_API_KEY.",
     },
     download: "Latest release",
     directory: "the Claude directory",

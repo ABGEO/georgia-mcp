@@ -248,13 +248,13 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 | Cursor         | `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}`                   | `WEBSITE-FR-007` |
 | VS Code        | `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}`        | `WEBSITE-FR-007` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
-| Docker         | `docker run -p 8080:8080 -e GEOMCP_TRANSIT_TTC_API_KEY=... -e GEOMCP_RATES_TBC_API_KEY=... -e GEOMCP_RATES_CREDO_API_KEY=... ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
+| Docker         | `docker run -p 8080:8080 ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
 
 The two local guides state the settings of the keys:
 
-- `GEOMCP_TRANSIT_TTC_API_KEY` is required. `GEOMCP_TRANSIT_TTC_ENABLED=false` starts the server without the transit tools.
-- `GEOMCP_RATES_TBC_API_KEY` is required. `GEOMCP_RATES_TBC_ENABLED=false` starts the server without TBC Bank in the commercial rates.
-- `GEOMCP_RATES_CREDO_API_KEY` is required. `GEOMCP_RATES_CREDO_ENABLED=false` starts the server without Credo Bank in the commercial rates.
+- The transit tools need `GEOMCP_TRANSIT_TTC_ENABLED=true` and a key in `GEOMCP_TRANSIT_TTC_API_KEY`.
+- TBC Bank in the commercial rates needs `GEOMCP_RATES_TBC_ENABLED=true` and a key in `GEOMCP_RATES_TBC_API_KEY`.
+- Credo Bank in the commercial rates needs `GEOMCP_RATES_CREDO_ENABLED=true` and a key in `GEOMCP_RATES_CREDO_API_KEY`.
 
 ### 4.5 Flow of the refresh
 

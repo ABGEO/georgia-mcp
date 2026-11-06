@@ -116,11 +116,7 @@ Add this to `.vscode/mcp.json` in your project:
 With Docker:
 
 ```sh
-docker run -p 8080:8080 \
-  -e GEOMCP_TRANSIT_TTC_API_KEY=... \
-  -e GEOMCP_RATES_TBC_API_KEY=... \
-  -e GEOMCP_RATES_CREDO_API_KEY=... \
-  ghcr.io/abgeo/georgia-mcp
+docker run -p 8080:8080 ghcr.io/abgeo/georgia-mcp
 ```
 
 Then connect your client to `http://localhost:8080/mcp`.
@@ -132,13 +128,14 @@ go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest
 claude mcp add georgia-mcp -- georgia-mcp stdio
 ```
 
-Three sources need a key:
+Three sources need a key, so they are off by default. To turn one on, set its switch to
+`true` and its key:
 
-| Setting                      | Source                    | Without the key                          |
-| ---------------------------- | ------------------------- | ---------------------------------------- |
-| `GEOMCP_TRANSIT_TTC_API_KEY` | Tbilisi Transport Company | Set `GEOMCP_TRANSIT_TTC_ENABLED=false`.  |
-| `GEOMCP_RATES_TBC_API_KEY`   | TBC Bank developer API    | Set `GEOMCP_RATES_TBC_ENABLED=false`.    |
-| `GEOMCP_RATES_CREDO_API_KEY` | Credo Bank rates API      | Set `GEOMCP_RATES_CREDO_ENABLED=false`.  |
+| Source                    | Switch                       | Key                          |
+| ------------------------- | ---------------------------- | ---------------------------- |
+| Tbilisi Transport Company | `GEOMCP_TRANSIT_TTC_ENABLED` | `GEOMCP_TRANSIT_TTC_API_KEY` |
+| TBC Bank developer API    | `GEOMCP_RATES_TBC_ENABLED`   | `GEOMCP_RATES_TBC_API_KEY`   |
+| Credo Bank rates API      | `GEOMCP_RATES_CREDO_ENABLED` | `GEOMCP_RATES_CREDO_API_KEY` |
 
 [`configs/.env.example`](configs/.env.example) lists every setting.
 

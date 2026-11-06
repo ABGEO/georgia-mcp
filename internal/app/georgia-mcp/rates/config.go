@@ -45,7 +45,7 @@ type NBGConfig struct {
 	HTTP         httpclient.Config
 }
 
-// TBCConfig is the configuration of the calls to TBC Bank. Enabled turns TBC off. The key
+// TBCConfig is the configuration of the calls to TBC Bank. Enabled turns TBC on. The key
 // does not: while TBC is on, the key is required.
 type TBCConfig struct {
 	vendors.Config
@@ -53,7 +53,7 @@ type TBCConfig struct {
 	APIKey string `env:"API_KEY" validate:"required_if=Enabled true"`
 }
 
-// CredoConfig is the configuration of the calls to Credo Bank. Enabled turns Credo off.
+// CredoConfig is the configuration of the calls to Credo Bank. Enabled turns Credo on.
 // The key does not: while Credo is on, the key is required.
 type CredoConfig struct {
 	vendors.Config
@@ -65,7 +65,7 @@ type CredoConfig struct {
 func Defaults() Config {
 	return Config{
 		NBG:       NBGConfig{HTTP: httpclient.Defaults().WithLimit(nbgRate, nbgBurst)},
-		TBC:       TBCConfig{Config: vendors.Defaults("https://api.tbcbank.ge")},
+		TBC:       TBCConfig{Config: vendors.Defaults("https://api.tbcbank.ge").Off()},
 		BOG:       vendors.Defaults("https://api.businessonline.ge").WithLimit(bogRate, bogBurst),
 		Liberty:   vendors.Defaults("https://www.libertybank.ge"),
 		Terabank:  vendors.Defaults("https://terabank.ge"),
@@ -74,7 +74,7 @@ func Defaults() Config {
 		Scapp:     vendors.Defaults("https://scapp.ge"),
 		Halyk:     vendors.Defaults("https://halykbank.ge"),
 		Basisbank: vendors.Defaults("https://static.bb.ge/api/view"),
-		Credo:     CredoConfig{Config: vendors.Defaults("https://n1.noxtton.com")},
+		Credo:     CredoConfig{Config: vendors.Defaults("https://n1.noxtton.com").Off()},
 		MJC:       vendors.Defaults("https://mjc.ge"),
 		Inteli:    vendors.Defaults("https://inteliexpress.com"),
 		MBC:       vendors.Defaults("https://fxrates.mbc.com.ge:8022"),

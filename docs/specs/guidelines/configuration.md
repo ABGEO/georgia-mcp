@@ -4,7 +4,7 @@ title: Configuration and secrets
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-22
+updated: 2026-11-06
 scope: [internal/pkg/config/, internal/app/georgia-mcp/bootstrap/, internal/app/georgia-mcp/*/config.go, configs/]
 related: [ARC, LIF, LOG]
 ---
@@ -82,18 +82,19 @@ A secret does not go into the repository. `.env` stays in `.gitignore`.
 ## CFG-008
 
 A vendor that its context can serve without has a switch `<PREFIX>_ENABLED`, on by
-default. The operator turns the vendor off with `false`. A vendor with a key needs the
+default. The operator turns the vendor off with `false`. A vendor with a key is off by
+default. The operator turns it on with `true` and the key. A vendor with a key needs the
 key while it is on: an empty key fails the start, and the error names the key and the
 switch.
 
 ```
-GEOMCP_RATES_TBC_ENABLED=true
+GEOMCP_RATES_TBC_ENABLED=false
 GEOMCP_RATES_TBC_API_KEY=
 ```
 
 The configuration of such a vendor is `vendors.Config`: the switch, the base address,
 and the calls. `vendors.Defaults(address)` gives it on, at the address, with 1 call each
-second. `WithLimit` sets another limit. A vendor with a value of its own embeds
+second. `WithLimit` sets another limit. `Off` turns it off, for a vendor with a key. A vendor with a value of its own embeds
 `vendors.Config` and adds the field.
 
 ```go
@@ -111,7 +112,8 @@ func Defaults() Config {
 ```
 
 **Why:** One rule for every vendor. A vendor never goes off because a value is missing,
-so a wrong deployment fails at the start. See `CFG-005`.
+so a wrong deployment fails at the start. See `CFG-005`. The server has no key of its
+own, so a vendor with a key that is on by default stops a server with no configuration.
 
 ## Retired identifiers
 

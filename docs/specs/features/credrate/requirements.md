@@ -4,7 +4,7 @@ title: The commercial exchange rates of Credo Bank
 type: requirements
 status: approved
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-06
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -109,7 +109,7 @@ the call did not succeed.
 ### `CREDRATE-FR-005`
 
 The server must read the key of Credo from its configuration. The operator must be able
-to turn Credo off. It is on by default. If Credo is on and the key is empty, the server
+to turn Credo on. It is off by default. If Credo is on and the key is empty, the server
 must not start, and must name the missing setting.
 
 **Examples:**
@@ -151,13 +151,13 @@ divided by the published multiplier. The server rounds no digit.
 | `CLT-001`            | Clients       | The client is the package `pkg/credo`.                                   |
 | `CLT-005`, `CLT-009` | Clients       | The client takes the key with `WithAPIKey`, holds no key, and says that the API is unofficial. |
 | `RSL-004`, `RSL-006` | Resilience    | The time to live is 5 minutes, the stale age 1 hour, for each currency. |
-| `CFG-007`, `CFG-008` | Configuration | The key is a secret, not in the repository. The switch is on by default. |
+| `CFG-007`, `CFG-008` | Configuration | The key is a secret, not in the repository. The switch is off by default. |
 
 ## 10. Open questions
 
 | #   | Question | Owner | Answer |
 | --- | -------- | ----- | ------ |
-| 1   | How does the server use the key that the page of Credo publishes? | Temuri | As for the TTC and TBC: the operator sets it, Credo is on by default, and the start fails with no key (2026-10-25). |
+| 1   | How does the server use the key that the page of Credo publishes? | Temuri | As for the TTC and TBC: the operator sets it, Credo is on by default, and the start fails with no key (2026-10-25). Changed on 2026-11-06: Credo is off by default (`CFG-008`). |
 | 2   | Who records an answer of the method? | Temuri | The analysis, with one call (2026-10-25). |
 
 ## Retired identifiers

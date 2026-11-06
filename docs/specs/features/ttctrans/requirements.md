@@ -4,7 +4,7 @@ title: The public transport of Tbilisi
 type: requirements
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-11-06
 context: transit
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -269,7 +269,7 @@ language, the server must give the name that the TTC has.
 
 ### `TTCTRANS-FR-021`
 
-The operator must be able to turn the TTC off. It is on by default. When the TTC is off,
+The operator must be able to turn the TTC on. It is off by default. When the TTC is off,
 the server must offer no tool of transport.
 
 ### `TTCTRANS-FR-022`
@@ -350,6 +350,7 @@ Every collection in an answer has no more items than the limit of the request.
 | #   | Question | Owner | Answer |
 | --- | -------- | ----- | ------ |
 | 1   | What happens when the TTC is on and no key is set? | Temuri | The server does not start (2026-10-19). |
+| 2   | Is the TTC on by default? | Temuri | No. A server with no configuration starts without it (2026-11-06). |
 | 2   | What does a client see when the TTC is off? | Temuri | No tool of transport (2026-10-19). |
 | 3   | Does an arrival from the timetable appear? | Temuri | Yes, marked as not live (2026-10-19). |
 | 4   | How does an arrival give its time? | Temuri | Minutes from now and an instant (2026-10-19). |
