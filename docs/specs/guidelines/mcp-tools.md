@@ -4,7 +4,7 @@ title: The MCP server and its tools
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-18
+updated: 2026-11-07
 scope: [internal/pkg/mcpserver/, internal/app/georgia-mcp/*/adapter/tool/]
 related: [ARC, DOM, API, LOG, RSL]
 ---
@@ -59,7 +59,8 @@ A tool declares a title, a description, and these annotations:
 A tool that writes to a vendor needs an ADR.
 
 The description is in English. It states what the tool returns, when to use it,
-the unit of each number, and the source of the data.
+the unit of each number, and the source of the data. It does not compare the source
+or the tool with another, and does not tell the model to prefer the tool.
 
 ## MCP-005
 

@@ -57,9 +57,9 @@ const (
 
 	dataNote = " Data from the web site of Cavea, cavea.ge."
 
-	listCinemasDescription = "Lists the open cinemas of Cavea, the largest cinema chain of " +
-		"Georgia, in Tbilisi and Batumi. Returns the code, the name, the city, and the address " +
-		"of each cinema. Use the code in cinema_list_sessions." + dataNote
+	listCinemasDescription = "Lists the open cinemas of Cavea, in Tbilisi and Batumi. Returns " +
+		"the code, the name, the city, and the address of each cinema. Use the code in " +
+		"cinema_list_sessions." + dataNote
 	listMoviesDescription = "Lists the movies that Cavea shows now, or the movies coming soon. " +
 		"Returns the code, the name, the genres, the duration in minutes, the age rating, the " +
 		"premiere, the directors, the actors, and a description of each movie. Use the code in " +

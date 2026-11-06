@@ -533,7 +533,7 @@
   "cinema_list_cinemas": {
     "name": "cinema_list_cinemas",
     "title": "List the cinemas of Cavea",
-    "description": "Lists the open cinemas of Cavea, the largest cinema chain of Georgia, in Tbilisi and Batumi. Returns the code, the name, the city, and the address of each cinema. Use the code in cinema_list_sessions. Data from the web site of Cavea, cavea.ge.",
+    "description": "Lists the open cinemas of Cavea, in Tbilisi and Batumi. Returns the code, the name, the city, and the address of each cinema. Use the code in cinema_list_sessions. Data from the web site of Cavea, cavea.ge.",
     "inputSchema": {
       "type": "object",
       "properties": {
