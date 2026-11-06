@@ -1,0 +1,129 @@
+name: live
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions: { }
+
+concurrency:
+  group: live
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Live tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    outputs:
+      failed: ${{ steps.test.outputs.failed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - id: go-env
+        name: Go cache paths
+        run: |
+          echo "build=$(go env GOCACHE)" >> "$GITHUB_OUTPUT"
+          echo "mod=$(go env GOMODCACHE)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-${{ github.sha }}
+          path: |
+            ${{ steps.go-env.outputs.build }}
+            ${{ steps.go-env.outputs.mod }}
+          restore-keys: |
+            go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-
+            go-test-${{ runner.os }}-
+
+      - id: test
+        name: Test
+        env:
+          GEOMCP_TRANSIT_TTC_API_KEY: ${{ secrets.GEOMCP_TRANSIT_TTC_API_KEY }}
+          GEOMCP_RATES_TBC_API_KEY: ${{ secrets.GEOMCP_RATES_TBC_API_KEY }}
+          GEOMCP_RATES_CREDO_API_KEY: ${{ secrets.GEOMCP_RATES_CREDO_API_KEY }}
+        run: |
+          report="$RUNNER_TEMP/live.json"
+          status=0
+          go test -tags live -run '^TestLive' -count=1 -json ./internal/... ./pkg/... > "$report" || status=$?
+
+          jq -j 'select(.Action == "output" or .Action == "build-output") | .Output' "$report"
+
+          tests() {
+            jq -r --arg action "$1" '
+              select(.Action == $action and .Test != null)
+              | "- `\(.Package | sub("^github.com/abgeo/georgia-mcp/"; ""))` \(.Test)"
+            ' "$report"
+          }
+          failed="$(tests fail)"
+          skipped="$(tests skip)"
+          if [ "$status" -ne 0 ] && [ -z "$failed" ]; then
+            failed="- The run failed before a test failed. Read the log."
+          fi
+
+          {
+            echo "## Failed"
+            echo
+            echo "${failed:-None.}"
+            echo
+            echo "## Skipped"
+            echo
+            echo "${skipped:-None.}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          delimiter="$(openssl rand -hex 16)"
+          {
+            echo "failed<<$delimiter"
+            echo "$failed"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
+
+          exit "$status"
+
+  report:
+    name: Report
+    needs: test
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.test.result == 'success' || needs.test.result == 'failure') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULT: ${{ needs.test.result }}
+          FAILED: ${{ needs.test.outputs.failed }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Live tests fail"
+          number="$(gh issue list --state open --search "\"$title\" in:title" --json number,title \
+            --jq "map(select(.title == \"$title\")) | first | .number // empty")"
+
+          if [ "$RESULT" = "success" ]; then
+            if [ -n "$number" ]; then
+              gh issue close "$number" --comment "The run $RUN passed."
+            fi
+            exit 0
+          fi
+
+          if [ -z "$FAILED" ]; then
+            FAILED="- The run failed before a test failed. Read the log."
+          fi
+          body="$(printf 'The run %s failed.\n\n%s\n' "$RUN" "$FAILED")"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi

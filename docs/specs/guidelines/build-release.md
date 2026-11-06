@@ -5,7 +5,7 @@ type: guideline
 status: active
 created: 2026-10-17
 updated: 2026-11-06
-scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, .github/workflows/]
+scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -23,8 +23,9 @@ Every command must pass before the work is complete.
 
 `Taskfile.yml` runs each row with one command: `task lint`, `task test`, and `task build`
 run the Go commands, and `task website:lint`, `task website:test`, and
-`task website:build` run the commands of `website/`. A task of the website stops when
-the version of Node is older than `website/.nvmrc`.
+`task website:build` run the commands of `website/`. `website/Taskfile.yml` holds the
+tasks of the website, and `Taskfile.yml` includes it under the namespace `website`. A
+task of the website stops when the version of Node is older than `website/.nvmrc`.
 
 ## BLD-002
 
@@ -139,6 +140,33 @@ Each action is pinned to the commit of a release, as in `BLD-008`.
 The workflow caches the Go build and module caches of each Go job, the Playwright
 browser, and the fonts that Astro downloads. Only a run on `main` saves a cache. A pull
 request restores the cache of `main`.
+
+## BLD-010
+
+`task test:live` runs the `live` tests of `TST-004`:
+`go test -tags live -run '^TestLive' -count=1 ./internal/... ./pkg/...`. The
+task reads the keys of the sources from `.env`. A test whose key is empty skips.
+
+`.github/workflows/live.yml` runs the same command each day at 03:17 UTC and on a
+manual run. The keys come from the repository secrets
+`GEOMCP_TRANSIT_TTC_API_KEY`, `GEOMCP_RATES_TBC_API_KEY`, and
+`GEOMCP_RATES_CREDO_API_KEY`. The job summary lists each failed test and each skipped
+test.
+
+A run on `main` reports to one issue, titled `Live tests fail`:
+
+| Result of the run | Open issue  | Action                                      |
+| ----------------- | ----------- | ------------------------------------------- |
+| A test failed     | None        | Open the issue with the failed tests.       |
+| A test failed     | One         | Comment on the issue with the failed tests. |
+| Passed            | One         | Close the issue with a link to the run.     |
+| Passed            | None        | Nothing.                                    |
+
+The job that runs the tests holds the secrets and reads the repository only. A
+separate job, with no secret, writes to the issue.
+
+**Why:** A source changes its page or its API without notice. `go test ./...` runs no
+`live` test, so only a scheduled run finds the change before a user does.
 
 ## Retired identifiers
 

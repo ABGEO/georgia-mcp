@@ -34,6 +34,9 @@ Run the commands of the part that you changed. Each must pass.
 | Go (`internal/`, `pkg/`, `cmd/`) | `task lint test build`                    |
 | `website/`                       | `task website:lint website:test website:build` |
 
+A change to a vendor client also runs `task test:live`. It calls the real source, with
+the keys of `.env`. A test whose key is empty skips.
+
 ## Pull request
 
 - The title is the commit message: `<type>(<scope>): <description>`.
