@@ -4,7 +4,7 @@ title: The public transport of Tbilisi
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-22
+updated: 2026-11-06
 context: transit
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -478,7 +478,7 @@ GET /v2/stops/1:1000?locale=en   (with a wrong key)
 
 | Variable                         | Type     | Default                                         | Secret | Realizes          |
 | -------------------------------- | -------- | ----------------------------------------------- | ------ | ----------------- |
-| `GEOMCP_TRANSIT_TTC_ENABLED`     | bool     | `true`                                          | No     | `TTCTRANS-FR-021` |
+| `GEOMCP_TRANSIT_TTC_ENABLED`     | bool     | `false`                                         | No     | `TTCTRANS-FR-021` |
 | `GEOMCP_TRANSIT_TTC_API_KEY`     | string   | empty                                           | Yes    | `TTCTRANS-FR-022` |
 | `GEOMCP_TRANSIT_TTC_BASE_URL`    | URL      | `https://transit.ttc.com.ge/pis-gateway/api`    | No     | `TTCTRANS-FR-001` |
 | `GEOMCP_TRANSIT_TTC_TIMEOUT`     | duration | `10s`                                           | No     | `RSL-001`         |
@@ -487,7 +487,7 @@ GET /v2/stops/1:1000?locale=en   (with a wrong key)
 
 `transit.Config` holds `TTC TTCConfig` with `envPrefix:"TTC_"`. `TTCConfig` embeds
 `vendors.Config` and adds `APIKey`. `transit.Defaults` gives the defaults of this table,
-with `WithLimit(4, 1)` (`PLATFORM-DD-014`).
+with `WithLimit(4, 1)` and `Off()` (`PLATFORM-DD-014`, `CFG-008`).
 `APIKey` has `validate:"required_if=Enabled true"`, so `config.Load` fails with
 `GEOMCP_TRANSIT_TTC_API_KEY: must be set while GEOMCP_TRANSIT_TTC_ENABLED is true. Set it,
 or set GEOMCP_TRANSIT_TTC_ENABLED=false` when `Enabled` is true and `APIKey` is empty

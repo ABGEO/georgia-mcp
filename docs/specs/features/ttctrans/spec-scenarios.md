@@ -4,7 +4,7 @@ title: The public transport of Tbilisi, the scenarios
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-11-06
 context: transit
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -102,7 +102,7 @@ through the in-memory MCP transport. `T` is `internal/app/georgia-mcp/transit`.
 | `TTCTRANS-SC-041` | `TTCTRANS-NFR-002` | unit | `testing/synctest`. Two calls for one stop 14 seconds apart cause one source call. A call at 16 seconds causes a second. If it fails, the answer is the error, with no stale value. |
 | `TTCTRANS-SC-042` | `TTCTRANS-NFR-003` | integration | 30 calls of `transit_search_stops`, `transit_list_nearby_stops`, and `transit_search_routes`. `httptest` counts 4 calls in total: 2 of stops, 2 of routes. |
 | `TTCTRANS-SC-043` | `TTCTRANS-NFR-004` | integration | 20 calls of `transit_list_arrivals` for 20 stops at once, with the defaults of the configuration. `httptest` gets at most 5 calls in any second. |
-| `TTCTRANS-SC-044` | `TTCTRANS-FR-022` | unit | `LoadConfig` with no key fails, and the error names `GEOMCP_TRANSIT_TTC_API_KEY`. With `GEOMCP_TRANSIT_TTC_ENABLED=false` and no key it passes. The defaults match 4.3 of `spec.md`. |
+| `TTCTRANS-SC-044` | `TTCTRANS-FR-022` | unit | `LoadConfig` with `GEOMCP_TRANSIT_TTC_ENABLED=true` and no key fails, and the error names `GEOMCP_TRANSIT_TTC_API_KEY`. With no variable of the TTC it passes, and the TTC is off. The defaults match 4.3 of `spec.md`. |
 
 ## Retired identifiers
 

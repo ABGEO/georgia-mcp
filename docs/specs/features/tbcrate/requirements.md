@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank
 type: requirements
 status: approved
 created: 2026-10-18
-updated: 2026-10-22
+updated: 2026-11-06
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -157,7 +157,7 @@ message must give the limit.
 
 ### `TBCRATE-FR-012`
 
-The operator must be able to turn TBC off. It is on by default. When TBC is off, the
+The operator must be able to turn TBC on. It is off by default. When TBC is off, the
 server must not offer TBC in an answer.
 
 **Examples:**

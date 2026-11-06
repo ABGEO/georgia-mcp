@@ -25,6 +25,13 @@ func Defaults(baseURL string) Config {
 	return Config{Enabled: true, BaseURL: config.URL(baseURL), HTTP: httpclient.Defaults()}
 }
 
+// Off returns the configuration with the vendor off.
+func (c Config) Off() Config {
+	c.Enabled = false
+
+	return c
+}
+
 // WithLimit returns the configuration with rate calls each second and a burst.
 func (c Config) WithLimit(rate float64, burst int) Config {
 	c.HTTP = c.HTTP.WithLimit(rate, burst)

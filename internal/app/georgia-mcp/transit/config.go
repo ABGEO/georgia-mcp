@@ -14,7 +14,7 @@ type Config struct {
 	TTC TTCConfig `envPrefix:"TTC_"`
 }
 
-// TTCConfig is the configuration of the calls to the TTC. Enabled turns the TTC off. The
+// TTCConfig is the configuration of the calls to the TTC. Enabled turns the TTC on. The
 // key does not: while the TTC is on, the key is required.
 type TTCConfig struct {
 	vendors.Config
@@ -26,6 +26,7 @@ type TTCConfig struct {
 func Defaults() Config {
 	return Config{TTC: TTCConfig{
 		Config: vendors.Defaults("https://transit.ttc.com.ge/pis-gateway/api").
-			WithLimit(ttcRate, ttcBurst),
+			WithLimit(ttcRate, ttcBurst).
+			Off(),
 	}}
 }

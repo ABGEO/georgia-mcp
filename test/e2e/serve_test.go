@@ -31,10 +31,13 @@ const (
 	initializedNotification = `{"jsonrpc":"2.0","method":"notifications/initialized"}`
 	listToolsRequest        = `{"jsonrpc":"2.0","id":2,"method":"tools/list"}`
 	listToolsID             = "2"
-	// ttcKey, tbcKey, and credoKey let the server start: the TTC, TBC, and Credo Bank are
-	// on by default and need a key.
+	// The test turns on the TTC, TBC, and Credo Bank, with a key each, so the server starts
+	// every vendor.
+	ttcOn    = "GEOMCP_TRANSIT_TTC_ENABLED=true"
 	ttcKey   = "GEOMCP_TRANSIT_TTC_API_KEY=test-key"
+	tbcOn    = "GEOMCP_RATES_TBC_ENABLED=true"
 	tbcKey   = "GEOMCP_RATES_TBC_API_KEY=test-key"
+	credoOn  = "GEOMCP_RATES_CREDO_ENABLED=true"     //nolint:gosec // A switch, not a key.
 	credoKey = "GEOMCP_RATES_CREDO_API_KEY=test-key" //nolint:gosec // A key of the test.
 	// The catalog job reads at start, so the test points it at a port that answers nothing.
 	geostat = "GEOMCP_STATS_GEOSTAT_BASE_URL=http://127.0.0.1:1"
@@ -95,8 +98,11 @@ func startServe(t *testing.T, dir, address string) *exec.Cmd {
 	cmd.Env = append(
 		os.Environ(),
 		"GEOMCP_HTTP_ADDRESS="+address,
+		ttcOn,
 		ttcKey,
+		tbcOn,
 		tbcKey,
+		credoOn,
 		credoKey,
 		geostat,
 	)
@@ -216,7 +222,17 @@ func TestStdioWritesOnlyTheProtocolToStdout(t *testing.T) {
 	cmd := exec.CommandContext(ctx, binary, "stdio")
 	cmd.Dir = t.TempDir()
 
-	cmd.Env = append(os.Environ(), "GEOMCP_LOG_LEVEL=debug", ttcKey, tbcKey, credoKey, geostat)
+	cmd.Env = append(
+		os.Environ(),
+		"GEOMCP_LOG_LEVEL=debug",
+		ttcOn,
+		ttcKey,
+		tbcOn,
+		tbcKey,
+		credoOn,
+		credoKey,
+		geostat,
+	)
 
 	var stderr bytes.Buffer
 

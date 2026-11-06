@@ -4,7 +4,7 @@ title: The commercial exchange rates of Credo Bank
 type: spec
 status: approved
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-06
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -151,7 +151,7 @@ No key, or a wrong key: 401 Unauthorized
 
 | Variable                       | Type     | Default                   | Secret | Realizes           |
 | ------------------------------ | -------- | ------------------------- | ------ | ------------------ |
-| `GEOMCP_RATES_CREDO_ENABLED`   | bool     | `true`                    | No     | `CREDRATE-FR-005`  |
+| `GEOMCP_RATES_CREDO_ENABLED`   | bool     | `false`                   | No     | `CREDRATE-FR-005`  |
 | `GEOMCP_RATES_CREDO_API_KEY`   | string   | none, required while on   | Yes    | `CREDRATE-FR-005`  |
 | `GEOMCP_RATES_CREDO_BASE_URL`  | URL      | `https://n1.noxtton.com`  | No     | `CREDRATE-FR-001`  |
 | `GEOMCP_RATES_CREDO_TIMEOUT`   | duration | `10s`                     | No     | `CREDRATE-FR-001`  |
@@ -159,7 +159,7 @@ No key, or a wrong key: 401 Unauthorized
 | `GEOMCP_RATES_CREDO_BURST`     | int      | `1`                       | No     | `CREDRATE-NFR-001` |
 
 ```go
-// CredoConfig is the configuration of the calls to Credo Bank. Enabled turns Credo off.
+// CredoConfig is the configuration of the calls to Credo Bank. Enabled turns Credo on.
 // The key does not: while Credo is on, the key is required.
 type CredoConfig struct {
     vendors.Config
@@ -169,7 +169,7 @@ type CredoConfig struct {
 ```
 
 `rates.Config` gains `Credo CredoConfig` with `envPrefix:"CREDO_"`. `rates.Defaults`
-gives the defaults of this table (`PLATFORM-DD-014`). `config.Load` refuses an empty key
+gives the defaults of this table, with `Off()` (`PLATFORM-DD-014`, `CFG-008`). `config.Load` refuses an empty key
 while `Enabled` is true, and names `GEOMCP_RATES_CREDO_ENABLED` (`PLATFORM-DD-012`). The
 cache is a `CommercialRateCache`: 5 minutes to live, 55 minutes of maximum stale, 256
 entries.
@@ -324,9 +324,9 @@ holds the key.
 
 | Environment                                | Result of `config.Load`                                |
 | ------------------------------------------ | ------------------------------------------------------ |
-| `GEOMCP_RATES_CREDO_API_KEY=k1`            | `Credo.Enabled` true, `Credo.BaseURL` `https://n1.noxtton.com`, `Credo.HTTP.Rate` 1, `Credo.HTTP.Burst` 1 |
-| No variable of Credo                       | An error that names `GEOMCP_RATES_CREDO_API_KEY` and `GEOMCP_RATES_CREDO_ENABLED` |
-| `GEOMCP_RATES_CREDO_ENABLED=false`, no key | `Credo.Enabled` false, no error                        |
+| `GEOMCP_RATES_CREDO_ENABLED=true`, `GEOMCP_RATES_CREDO_API_KEY=k1` | `Credo.Enabled` true, `Credo.BaseURL` `https://n1.noxtton.com`, `Credo.HTTP.Rate` 1, `Credo.HTTP.Burst` 1 |
+| `GEOMCP_RATES_CREDO_ENABLED=true`, no key  | An error that names `GEOMCP_RATES_CREDO_API_KEY` and `GEOMCP_RATES_CREDO_ENABLED` |
+| No variable of Credo                       | `Credo.Enabled` false, no error                        |
 
 ### `CREDRATE-SC-011`
 

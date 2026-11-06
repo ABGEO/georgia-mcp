@@ -4,7 +4,7 @@ title: The commercial exchange rates of TBC Bank
 type: spec
 status: approved
 created: 2026-10-18
-updated: 2026-10-22
+updated: 2026-11-06
 context: rates
 approved_by: Temuri
 approved_on: 2026-10-18
@@ -269,7 +269,7 @@ oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is sta
 
 | Variable                      | Type     | Default                  | Secret | Realizes          |
 | ----------------------------- | -------- | ------------------------ | ------ | ----------------- |
-| `GEOMCP_RATES_TBC_ENABLED`    | bool     | `true`                   | No     | `TBCRATE-FR-012`  |
+| `GEOMCP_RATES_TBC_ENABLED`    | bool     | `false`                  | No     | `TBCRATE-FR-012`  |
 | `GEOMCP_RATES_TBC_API_KEY`    | string   | none, required while on  | Yes    | `TBCRATE-FR-013`  |
 | `GEOMCP_RATES_TBC_BASE_URL`   | URL      | `https://api.tbcbank.ge` | No     | `TBCRATE-FR-001`  |
 | `GEOMCP_RATES_TBC_TIMEOUT`    | duration | `10s`                    | No     | `TBCRATE-FR-008`  |
@@ -277,8 +277,8 @@ oldest `ReadAt` of the quotes, and `Stale` is true when one entry or more is sta
 | `GEOMCP_RATES_TBC_BURST`      | int      | `1`                      | No     | `TBCRATE-NFR-002` |
 
 `rates.Config` gains `TBC TBCConfig` with `envPrefix:"TBC_"`. `TBCConfig` embeds
-`vendors.Config` and adds `APIKey`. `rates.Defaults` gives the defaults of this table
-(`PLATFORM-DD-014`). `APIKey` has
+`vendors.Config` and adds `APIKey`. `rates.Defaults` gives the defaults of this table,
+with `Off()` (`PLATFORM-DD-014`, `CFG-008`). `APIKey` has
 `validate:"required_if=Enabled true"`, so `config.Load` refuses an empty key while
 `Enabled` is true, and names `GEOMCP_RATES_TBC_ENABLED` (`PLATFORM-DD-012`).
 

@@ -15,24 +15,28 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/bootstrap"
 )
 
-// testKey is a key of the TTC, of TBC, and of Credo Bank. Every configuration of the
-// server needs each while its vendor is on.
+// testKey is a key of the TTC, of TBC, and of Credo Bank. Each vendor needs its key while
+// it is on.
 const testKey = "test-key"
 
 const (
 	ttcKeyVariable = "GEOMCP_TRANSIT_TTC_API_KEY"
+	ttcSwitch      = "GEOMCP_TRANSIT_TTC_ENABLED"
 	tbcKeyVariable = "GEOMCP_RATES_TBC_API_KEY"
 	tbcSwitch      = "GEOMCP_RATES_TBC_ENABLED"
 	credoKey       = "GEOMCP_RATES_CREDO_API_KEY" //nolint:gosec // A name, not a key.
 	credoSwitch    = "GEOMCP_RATES_CREDO_ENABLED" //nolint:gosec // A name, not a key.
 )
 
-// setKeys sets the key of each vendor that is on by default and needs one.
+// setKeys turns on each vendor that needs a key, with its key.
 func setKeys(t *testing.T) {
 	t.Helper()
 
+	t.Setenv(ttcSwitch, "true")
 	t.Setenv(ttcKeyVariable, testKey)
+	t.Setenv(tbcSwitch, "true")
 	t.Setenv(tbcKeyVariable, testKey)
+	t.Setenv(credoSwitch, "true")
 	t.Setenv(credoKey, testKey)
 }
 
@@ -123,7 +127,8 @@ func TestLoadConfigNamesTheInvalidVariable(t *testing.T) {
 	}
 }
 
-// TBCRATE-SC-024: With the key only, the calls to TBC default to 1 each second, burst 1.
+// TBCRATE-SC-024: With TBC on and its key, the calls to TBC default to 1 each second,
+// burst 1.
 func TestLoadConfigGivesTheLimitOfTBC(t *testing.T) {
 	t.Chdir(t.TempDir())
 	setKeys(t)
@@ -379,11 +384,11 @@ func TestLoadConfigGivesTheDefaultsOfPortal(t *testing.T) {
 	}
 }
 
-// TTCTRANS-SC-044: With no key of the TTC, the configuration fails and names the variable.
+// TTCTRANS-SC-044: With the TTC on and no key, the configuration fails and names the
+// variable.
 func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv(tbcKeyVariable, testKey)
-	t.Setenv(credoKey, testKey)
+	t.Setenv(ttcSwitch, "true")
 
 	_, err := bootstrap.LoadConfig()
 	if err == nil || !strings.Contains(err.Error(), "GEOMCP_TRANSIT_TTC_API_KEY") {
@@ -391,12 +396,9 @@ func TestLoadConfigNeedsTheKeyOfTheTTC(t *testing.T) {
 	}
 }
 
-// TTCTRANS-SC-044: With the TTC off, the configuration needs no key.
+// TTCTRANS-SC-044: With no variable of the TTC, the TTC is off and needs no key.
 func TestLoadConfigTurnsTheTTCOff(t *testing.T) {
 	t.Chdir(t.TempDir())
-	t.Setenv("GEOMCP_TRANSIT_TTC_ENABLED", "false")
-	t.Setenv(tbcKeyVariable, testKey)
-	t.Setenv(credoKey, testKey)
 
 	cfg, err := bootstrap.LoadConfig()
 	if err != nil {
@@ -757,8 +759,8 @@ func TestLoadConfigGivesTheDefaultsOfBasisbank(t *testing.T) {
 	}
 }
 
-// CREDRATE-SC-010: With its key only, Credo Bank is on, at its production address, with
-// 1 call each second and a burst of 1.
+// CREDRATE-SC-010: With its switch and its key, Credo Bank is on, at its production
+// address, with 1 call each second and a burst of 1.
 func TestLoadConfigGivesTheDefaultsOfCredo(t *testing.T) {
 	t.Chdir(t.TempDir())
 	setKeys(t)
@@ -792,12 +794,11 @@ func TestLoadConfigGivesTheDefaultsOfCredo(t *testing.T) {
 }
 
 // CREDRATE-SC-010: While Credo Bank is on, the configuration needs its key, and the error
-// names the key and the switch. With Credo Bank off, no key is needed.
+// names the key and the switch. With no variable of Credo Bank, it is off and needs no key.
 func TestLoadConfigNeedsTheKeyOfCredo(t *testing.T) {
-	t.Run("no key, no switch", func(t *testing.T) {
+	t.Run("no key, on", func(t *testing.T) {
 		t.Chdir(t.TempDir())
-		setKeys(t)
-		t.Setenv(credoKey, "")
+		t.Setenv(credoSwitch, "true")
 
 		_, err := bootstrap.LoadConfig()
 		if err == nil || !strings.Contains(err.Error(), credoKey) ||
@@ -807,11 +808,8 @@ func TestLoadConfigNeedsTheKeyOfCredo(t *testing.T) {
 		}
 	})
 
-	t.Run("no key, off", func(t *testing.T) {
+	t.Run("no variable", func(t *testing.T) {
 		t.Chdir(t.TempDir())
-		setKeys(t)
-		t.Setenv(credoKey, "")
-		t.Setenv(credoSwitch, "false")
 
 		cfg, err := bootstrap.LoadConfig()
 		if err != nil {
@@ -850,29 +848,28 @@ func TestLoadConfigGivesTheDefaultsOfGulf(t *testing.T) {
 }
 
 // TBCRATE-SC-026: While TBC is on, the configuration needs its key, and the error names
-// the key and the switch. With TBC off, no key is needed.
+// the key and the switch. With no switch, TBC is off and needs no key.
 func TestLoadConfigNeedsTheKeyOfTBC(t *testing.T) {
 	tests := []struct {
 		name        string
 		key         string
-		off         bool
+		on          bool
 		wantErr     bool
 		wantEnabled bool
 	}{
-		{name: "no key, no switch", wantErr: true},
-		{name: "no key, off", off: true},
-		{name: "key, no switch", key: testKey, wantEnabled: true},
+		{name: "no key, on", on: true, wantErr: true},
+		{name: "no key, no switch"},
+		{name: "key, no switch", key: testKey},
+		{name: "key, on", key: testKey, on: true, wantEnabled: true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Chdir(t.TempDir())
-			t.Setenv(ttcKeyVariable, testKey)
 			t.Setenv(tbcKeyVariable, tt.key)
-			t.Setenv(credoKey, testKey)
 
-			if tt.off {
-				t.Setenv(tbcSwitch, "false")
+			if tt.on {
+				t.Setenv(tbcSwitch, "true")
 			}
 
 			cfg, err := bootstrap.LoadConfig()
