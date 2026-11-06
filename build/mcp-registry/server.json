@@ -1,0 +1,78 @@
+  {
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ABGEO/georgia-mcp",
+  "title": "Georgia MCP",
+  "description": "An MCP server for Georgian public data, read from the organizations that publish it.",
+  "version": "1.0.0",
+  "websiteUrl": "https://geo-mcp.abgeo.cloud",
+  "repository": {
+    "url": "https://github.com/abgeo/georgia-mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://geo-mcp.abgeo.cloud/favicon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    },
+    {
+      "src": "https://geo-mcp.abgeo.cloud/apple-touch-icon.png",
+      "mimeType": "image/png",
+      "sizes": ["180x180"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://geo-mcp.abgeo.cloud/mcp"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/abgeo/georgia-mcp:1.0.0",
+      "runtimeHint": "docker",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "stdio"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "GEOMCP_TRANSIT_TTC_ENABLED",
+          "description": "Turns on the Tbilisi Transport Company. Set it to true with the key.",
+          "choices": ["true", "false"]
+        },
+        {
+          "name": "GEOMCP_TRANSIT_TTC_API_KEY",
+          "description": "The key of the Tbilisi Transport Company API.",
+          "isSecret": true
+        },
+        {
+          "name": "GEOMCP_RATES_TBC_ENABLED",
+          "description": "Turns on the TBC Bank developer API. Set it to true with the key.",
+          "choices": ["true", "false"]
+        },
+        {
+          "name": "GEOMCP_RATES_TBC_API_KEY",
+          "description": "The key of the TBC Bank developer API.",
+          "isSecret": true
+        },
+        {
+          "name": "GEOMCP_RATES_CREDO_ENABLED",
+          "description": "Turns on Credo Bank. Set it to true with the key.",
+           "choices": ["true", "false"]
+        },
+        {
+          "name": "GEOMCP_RATES_CREDO_API_KEY",
+          "description": "The key of the Credo Bank API.",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

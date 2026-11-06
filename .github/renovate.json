@@ -33,6 +33,16 @@
       "groupName": "pnpm"
     }
   ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The version of mcp-publisher in images.yml.",
+      "managerFilePatterns": ["/^\\.github/workflows/images\\.yml$/"],
+      "matchStrings": ["MCP_PUBLISHER_VERSION: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "modelcontextprotocol/registry"
+    }
+  ],
   "postUpdateOptions": [
     "gomodTidy",
     "pnpmDedupe"
