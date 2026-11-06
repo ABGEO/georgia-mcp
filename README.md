@@ -16,6 +16,7 @@ Ask Claude, ChatGPT, or any MCP client in your own words.
 [![Images](https://github.com/abgeo/georgia-mcp/actions/workflows/images.yml/badge.svg)](https://github.com/abgeo/georgia-mcp/actions/workflows/images.yml)
 [![Go version](https://img.shields.io/github/go-mod/go-version/abgeo/georgia-mcp)](go.mod)
 [![License: GPL v3](https://img.shields.io/github/license/abgeo/georgia-mcp)](LICENSE)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/ABGEO/georgia-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/ABGEO/georgia-mcp)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/abgeo/georgia-mcp)
 
 [Website](https://geo-mcp.abgeo.cloud) ·
