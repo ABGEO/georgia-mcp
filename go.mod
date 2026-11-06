@@ -21,13 +21,13 @@ require (
 )
 
 require (
-	github.com/andybalholm/brotli v1.0.6 // indirect
+	github.com/andybalholm/brotli v1.2.7 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.16 // indirect
 	github.com/go-playground/locales v0.14.2 // indirect
 	github.com/go-playground/universal-translator v0.18.2 // indirect
 	github.com/google/jsonschema-go v0.4.3 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/klauspost/compress v1.18.7 // indirect
+	github.com/klauspost/compress v1.20.3 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/leodido/go-urn v1.5.0 // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
