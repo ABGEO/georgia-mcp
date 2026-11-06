@@ -1,4 +1,4 @@
-    <div align="center">
+<div align="center">
 
 <a href="https://geo-mcp.abgeo.cloud">
   <img src="website/public/favicon.svg" alt="Georgia MCP" width="96" height="96">
