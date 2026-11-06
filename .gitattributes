@@ -1,0 +1,20 @@
+# Store text with LF, and check it out with LF on every system.
+* text=auto eol=lf
+
+# A capture of a vendor answer keeps each byte, CRLF included. The tests read it as is.
+**/testdata/** -text
+
+# The verification token of OpenAI must match byte for byte.
+website/public/.well-known/openai-apps-challenge -text
+
+*.png binary
+
+# Function names in the hunk headers of a diff.
+*.go diff=golang
+*.md diff=markdown
+
+# Generated files: GitHub folds their diff and leaves them out of the language count.
+go.sum linguist-generated
+website/pnpm-lock.yaml linguist-generated
+website/src/data/definitions.json linguist-generated
+website/src/data/recordings.json linguist-generated
