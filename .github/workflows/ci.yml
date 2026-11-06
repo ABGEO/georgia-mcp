@@ -387,7 +387,7 @@ jobs:
               echo "Sign off each commit with \`git commit -s\`. To sign off a branch, run \`git rebase --signoff main\`."
             } >> "$GITHUB_STEP_SUMMARY"
             echo "$missing"
-            echo "Each commit needs a Signed-off-by trailer with the email of its author (GIT-007)."
+            echo "Each commit needs a Signed-off-by trailer with the email of its author (GIT-008)."
             exit 1
           fi
           echo "Each commit is signed off."

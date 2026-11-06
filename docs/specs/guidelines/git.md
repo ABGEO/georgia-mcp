@@ -21,7 +21,7 @@ the same session. A push happens only on a direct instruction of the owner.
 
 ## GIT-002
 
-A commit message is one line, followed by the sign-off of `GIT-007`. It has no other
+A commit message is one line, followed by the sign-off of `GIT-008`. It has no other
 body.
 
 ```
@@ -87,7 +87,7 @@ A release is a tag `v<semver>`. A vendor client has no tag of its own.
 
 **Why:** The repository is one module. One tag versions the server and every client.
 
-## GIT-007
+## GIT-008
 
 Each commit of a pull request carries a `Signed-off-by` trailer with the name and the
 email of its author: `git commit -s`. The sign-off certifies the

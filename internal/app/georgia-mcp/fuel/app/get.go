@@ -123,8 +123,8 @@ func (u *GetPrices) Get(ctx context.Context, query PricesQuery) (Prices, error) 
 
 // logLeftOut writes one record for each company that failed while another answered. The
 // tool call succeeds, so its own record holds no failure.
-func (u *GetPrices) logLeftOut(ctx context.Context, companys []domain.Company, errs []error) {
-	for i, company := range companys {
+func (u *GetPrices) logLeftOut(ctx context.Context, companies []domain.Company, errs []error) {
+	for i, company := range companies {
 		if errs[i] != nil {
 			u.logger.WarnContext(ctx, "source unavailable",
 				slog.String("vendor", company.Name), slog.Any("error", errs[i]))

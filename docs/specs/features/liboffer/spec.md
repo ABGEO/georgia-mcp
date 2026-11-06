@@ -223,7 +223,7 @@ row, and a warning one time for each id.
 | 2       | Cashback               | the kind `cashback`                       |
 | 3       | Visa                   | the card `visa`, "Visa"                   |
 | 4       | MasterCard             | the card `mastercard`, "Mastercard"       |
-| 5       | Top\|Card Black Edition | the card `top_card_black`, "Top|Card Black Edition" |
+| 5       | Top\|Card Black Edition | the card `top_card_black`, "Top\|Card Black Edition" |
 | other   |                        | the card `type_<id>`, with the name of the type |
 
 The bank category is the title of the category in the language, trimmed.

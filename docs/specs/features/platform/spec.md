@@ -592,6 +592,7 @@ their own type and read `Do`:
 | `tbc`                        | `Title` and `SystemCode` from the body. Any 2xx is a success. |
 | `nbg`                        | The text holds the body. Any 2xx is a success.             |
 | `kursi`, `terabank`, `libertyrates`, `rico` | Their tests build the error as a value. `StatusError` holds the sentinel of the client, which a value of a test leaves empty. |
+
 **Rationale:** `ADR-0006`.
 **Alternatives:** `ADR-0006`.
 
