@@ -16,6 +16,7 @@ Fast lane: name the identifier that the change restores, for example MCP-005.
 
 ## Checks
 
+- [ ] Each commit is signed off (`git commit -s`).
 - [ ] The commands of `BLD-001` pass for each part that I changed.
 - [ ] Each new test cites the identifier of its scenario.
 - [ ] The documents follow `LNG`.

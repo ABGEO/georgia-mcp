@@ -7,7 +7,8 @@
     ":semanticCommitTypeAll(chore)",
     ":semanticCommitScope(deps)",
     "helpers:pinGitHubActionDigests",
-    "docker:pinDigests"
+    "docker:pinDigests",
+    "group:allNonMajor"
   ],
   "draftPR": true,
   "ignorePaths": [
@@ -31,6 +32,13 @@
       "description": "The pnpm image of the website Dockerfile follows packageManager in website/package.json.",
       "matchPackageNames": ["pnpm", "ghcr.io/pnpm/pnpm"],
       "groupName": "pnpm"
+    },
+    {
+      "description": "A non-major update opens ready for review. GitHub merges it after the approval of the code owner and the checks.",
+      "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
+      "draftPR": false,
+      "automerge": true,
+      "platformAutomerge": true
     }
   ],
   "customManagers": [

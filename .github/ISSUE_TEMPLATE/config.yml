@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask a question
+    url: https://github.com/abgeo/georgia-mcp/discussions/categories/q-a
+    about: Ask how to use or run the server.
   - name: Report a vulnerability
     url: https://github.com/abgeo/georgia-mcp/security/advisories/new
     about: Report a security problem in private. Do not open a public issue.

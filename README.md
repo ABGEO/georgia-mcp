@@ -209,7 +209,8 @@ Each vendor client is a package under `pkg/<vendor>` that another project can im
 
 ## Contributing
 
-Bug reports and ideas are welcome in [issues](https://github.com/abgeo/georgia-mcp/issues).
+Bug reports and ideas are welcome in [issues](https://github.com/abgeo/georgia-mcp/issues),
+and questions in [Q&A](https://github.com/abgeo/georgia-mcp/discussions/categories/q-a).
 To add a source or a tool, open an issue first: each one starts as a requirements document.
 Read the [contributing guide](.github/CONTRIBUTING.md) before you open a pull request.
 
