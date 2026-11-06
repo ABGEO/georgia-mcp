@@ -30,6 +30,10 @@ archives:
 
 checksum:
   name_template: checksums.txt
+  # release.yml writes the OpenVEX statement before GoReleaser runs (BLD-013).
+  extra_files:
+    - glob: "{{ .Env.RUNNER_TEMP }}/openvex.json"
+      name_template: "{{ .ProjectName }}_{{ .Version }}.openvex.json"
 
 sboms:
   - artifacts: archive
@@ -52,3 +56,6 @@ changelog:
 release:
   mode: keep-existing
   replace_existing_artifacts: true
+  extra_files:
+    - glob: "{{ .Env.RUNNER_TEMP }}/openvex.json"
+      name_template: "{{ .ProjectName }}_{{ .Version }}.openvex.json"

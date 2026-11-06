@@ -28,6 +28,12 @@ required check `CI`, so nothing merges and nothing ships while it is open.
 
 Before a release, the maintainer checks that `main` has no open blocking finding.
 
+Each release carries `georgia-mcp_<version>.openvex.json`, an
+[OpenVEX](https://openvex.dev) document from govulncheck. It states each known
+vulnerability of a dependency and whether it affects the server, for example
+`not_affected` when the code never reaches the vulnerable function. `checksums.txt` and
+its signature cover it.
+
 ## Report a vulnerability
 
 Do not open a public issue.
