@@ -27,7 +27,8 @@ LABEL org.opencontainers.image.title="georgia-mcp" \
   org.opencontainers.image.description="An MCP server for Georgian public services." \
   org.opencontainers.image.source="https://github.com/abgeo/georgia-mcp" \
   org.opencontainers.image.version="${VERSION}" \
-  org.opencontainers.image.revision="${REVISION}"
+  org.opencontainers.image.revision="${REVISION}" \
+  io.modelcontextprotocol.server.name="io.github.ABGEO/georgia-mcp"
 
 COPY --from=build /georgia-mcp /georgia-mcp
 

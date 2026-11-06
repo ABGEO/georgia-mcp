@@ -56,7 +56,8 @@ that runs as a user that is not root. Its command is `georgia-mcp serve`.
 
 The final stage carries the OpenContainers labels `title`, `description`, `source`,
 `version`, and `revision`. The build arguments `VERSION` and `REVISION` give the
-last two. `task image` passes `git describe` and the commit.
+last two. `task image` passes `git describe` and the commit. The final stage also carries
+the label `io.modelcontextprotocol.server.name`, with the name of `BLD-011`.
 
 ## BLD-006
 
@@ -174,6 +175,31 @@ separate job, with no secret, writes to the issue.
 
 **Why:** A source changes its page or its API without notice. `go test ./...` runs no
 `live` test, so only a scheduled run finds the change before a user does.
+
+## BLD-011
+
+`build/mcp-registry/server.json` describes the server to the official MCP Registry, in
+the schema `2025-12-11`. Its name is `io.github.ABGEO/georgia-mcp`. It lists two ways to
+connect:
+
+| Entry            | Value                                                                         |
+| ---------------- | ----------------------------------------------------------------------------- |
+| A remote         | `streamable-http` at `https://geo-mcp.abgeo.cloud/mcp`                        |
+| An OCI package   | `ghcr.io/abgeo/georgia-mcp:<version>`, over stdio, with the argument `stdio` |
+
+The package lists the key and the switch of each source that needs a key. Each such
+source is off by default (`CFG-008`), so the package starts with no variable.
+
+The job `MCP Registry` of `.github/workflows/images.yml` runs on a tag `v<x.y.z>`, after
+each image is pushed. It verifies the release of `mcp-publisher` with `cosign`, writes
+`<x.y.z>` into the version and the image tag of a copy of `server.json`, signs in with
+GitHub OIDC, and publishes the copy. The version of `server.json` in the repository is
+that of the last release. `MCP_PUBLISHER_VERSION` pins `mcp-publisher`, and Renovate
+proposes a new release.
+
+**Why:** The registry checks the label of `BLD-005` on the image of the tag, so the job
+waits for the push. OIDC needs no secret. A version in the registry cannot change, so
+only a release publishes.
 
 ## Retired identifiers
 
