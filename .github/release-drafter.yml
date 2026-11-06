@@ -7,6 +7,19 @@ template: |
 
   **Full changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
+sync-labels: true
+autolabeler:
+  - labels: [ breaking ]
+    title: [ '/^[a-z]+(\([^)]+\))?!:/' ]
+  - labels: [ dependencies ]
+    title: [ '/^[a-z]+\(deps\)!?:/' ]
+  - labels: [ enhancement ]
+    title: [ '/^feat(\([^)]+\))?!?:/' ]
+  - labels: [ bug ]
+    title: [ '/^fix(\([^)]+\))?!?:/' ]
+  - labels: [ documentation ]
+    title: [ '/^docs(\([^)]+\))?!?:/' ]
+
 categories:
   - type: pre-exclude
     when:

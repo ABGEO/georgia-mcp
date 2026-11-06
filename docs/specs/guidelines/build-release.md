@@ -4,8 +4,8 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-06
-scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/workflows/]
+updated: 2026-11-07
+scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -247,6 +247,32 @@ bundle. `GORELEASER_VERSION` pins GoReleaser, and Renovate proposes a new releas
 user check that a file comes from this workflow. The Scorecard finds the signature and
 the provenance by the suffixes `.sigstore.json` and `.intoto.jsonl`. GoReleaser adds files
 to a published release, so the repository keeps immutable releases off.
+
+## BLD-014
+
+`.github/labels.yml` holds every label of the repository, with its color and its
+description. `.github/workflows/labels.yml` syncs the labels on a push to `main` that
+changes the file, and on a manual run. It deletes a label that the file does not hold. A
+pull request that changes the file runs the sync without a change and shows its plan. To
+rename a label, the file gives the old name in `from_name`.
+
+The autolabeler of release-drafter labels a pull request from its title (`GIT-002`):
+
+| Title                         | Label           |
+| ----------------------------- | --------------- |
+| `<type>(<scope>)!:`           | `breaking`      |
+| `<type>(deps):`               | `dependencies`  |
+| `feat:`                       | `enhancement`   |
+| `fix:`                        | `bug`           |
+| `docs:`                       | `documentation` |
+
+It runs in `.github/workflows/release-drafter.yml` on each change to a pull request from a
+branch of the repository, and removes such a label when the title no longer matches. A
+fork gets a token that cannot add a label. `skip-changelog` keeps a pull request out of
+the release notes. The owner adds it by hand.
+
+**Why:** A label that lives only in the settings drifts, and a label that nobody adds
+filters nothing. The title already follows `GIT-002`, so it gives the label.
 
 ## Retired identifiers
 
