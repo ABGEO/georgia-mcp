@@ -26,6 +26,11 @@
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days",
       "internalChecksFilter": "strict"
+    },
+    {
+      "description": "The pnpm image of the website Dockerfile follows packageManager in website/package.json.",
+      "matchPackageNames": ["pnpm", "ghcr.io/pnpm/pnpm"],
+      "groupName": "pnpm"
     }
   ],
   "postUpdateOptions": [
