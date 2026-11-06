@@ -86,9 +86,12 @@ publishes them to GitHub Packages:
 
 | Event                 | Tags                                      | Push |
 | --------------------- | ----------------------------------------- | ---- |
-| A push to `main`      | `main`, `sha-<short>`                     | Yes  |
-| A tag `v<x.y.z>`      | `<x.y.z>`, `<x.y>`, `latest`, `sha-<short>` | Yes  |
+| A push to `main`      | `latest`, `sha-<short>`                   | Yes  |
+| A tag `v<x.y.z>`      | `<x.y.z>`, `<x.y>`, `<x>`                 | Yes  |
 | A pull request        | `pr-<n>`                                  | No   |
+
+`latest` follows `main`: the hosted server runs it. A release pins a version. A tag
+`v0.<y>.<z>` gets no `<x>` tag, because a release before `1.0.0` keeps no compatibility.
 
 A pull request and a push to `main` build only the image whose files changed:
 
@@ -120,7 +123,7 @@ only for the part that the change touches:
 | `website/` | `website/`                                                                 | `Website lint`, `Website test` (`pnpm test` builds the site)                           |
 | Workflows  | `.github/workflows/`, `.github/zizmor.yml`                                 | `Workflow audit` (`zizmor`)                                                            |
 | Manifests  | Every pull request                                                         | `Dependency review`                                                                    |
-| Commits    | Every pull request                                                         | `DCO` (`GIT-007`)                                                                      |
+| Commits    | Every pull request                                                         | `DCO` (`GIT-008`)                                                                      |
 
 `Go test` writes the total coverage and the coverage of each package to the summary of
 the job, and keeps the profile as an artifact. `Coverage` uploads the profile to Codecov
