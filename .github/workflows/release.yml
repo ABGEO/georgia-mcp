@@ -38,6 +38,19 @@ jobs:
 
       - uses: anchore/sbom-action/download-syft@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
 
+      - name: OpenVEX
+        env:
+          TAG: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          go tool govulncheck -format openvex ./... > "$RUNNER_TEMP/govulncheck.json"
+          jq --arg author "https://github.com/$REPOSITORY" \
+            --arg product "pkg:golang/github.com/abgeo/georgia-mcp@$TAG" '
+            .author = $author
+            | .statements |= map(.products = [{"@id": $product}])
+          ' "$RUNNER_TEMP/govulncheck.json" > "$RUNNER_TEMP/openvex.json"
+          jq -r '.statements[] | "\(.vulnerability.name): \(.status)"' "$RUNNER_TEMP/openvex.json"
+
       - uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7.3.0
         with:
           distribution: goreleaser

@@ -238,18 +238,22 @@ are `-s -w` only, so the version comes from `BLD-004`. Each archive holds the bi
 | -------------------------------------- | -------------------------------------------------------- |
 | `georgia-mcp_<x.y.z>_<os>_<arch>`      | The archive: `.zip` for `windows`, `.tar.gz` otherwise   |
 | `<archive>.sbom.json`                  | The SPDX SBOM of the archive, from Syft                  |
-| `checksums.txt`                        | The SHA-256 of each archive and SBOM                     |
+| `georgia-mcp_<x.y.z>.openvex.json`     | The OpenVEX statement of govulncheck at the tag: each known vulnerability of a dependency, and whether it affects the server |
+| `checksums.txt`                        | The SHA-256 of each archive, SBOM, and the OpenVEX file  |
 | `checksums.txt.sigstore.json`          | The keyless `cosign` signature of `checksums.txt`        |
 | `georgia-mcp_<x.y.z>.intoto.jsonl`     | The build provenance of each file of `checksums.txt`     |
 
 release-drafter writes the notes of the release. The owner publishes the draft, which
-creates the tag. GoReleaser finds the release of the tag, keeps its notes, and attaches
+creates the tag. Before GoReleaser, the job runs `govulncheck -format openvex` and sets the
+author and the product (`pkg:golang/github.com/abgeo/georgia-mcp@v<x.y.z>`) of the
+statement. GoReleaser finds the release of the tag, keeps its notes, and attaches
 the files. `actions/attest` records the provenance with GitHub, and the job attaches its
 bundle. `GORELEASER_VERSION` pins GoReleaser, and Renovate proposes a new release.
 
 **Why:** A user of stdio needs no Go and no Docker. The signature and the provenance let a
 user check that a file comes from this workflow. The Scorecard finds the signature and
-the provenance by the suffixes `.sigstore.json` and `.intoto.jsonl`. GoReleaser adds files
+the provenance by the suffixes `.sigstore.json` and `.intoto.jsonl`. The OpenVEX file
+tells a scanner which finding of a dependency does not reach the code of the server. GoReleaser adds files
 to a published release, so the repository keeps immutable releases off.
 
 ## BLD-014
