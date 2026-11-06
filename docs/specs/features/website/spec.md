@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-11-05
+updated: 2026-11-06
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -94,7 +94,7 @@ Every path is under `website/`. Every file is new.
 
 | Part         | Path                                     | Holds                                                         |
 | ------------ | ---------------------------------------- | ------------------------------------------------------------- |
-| Project      | `package.json`, `.nvmrc`, `astro.config.mjs`, `tsconfig.json`, `.oxlintrc.json` | The dependencies, Node 24, the i18n routing, the fonts. |
+| Project      | `package.json`, `.nvmrc`, `astro.config.mjs`, `tsconfig.json`, `.oxlintrc.json` | The dependencies, Node 26, the i18n routing, the fonts. |
 | Tests        | `vitest.config.ts`, `playwright.config.ts`, `tests/unit/`, `tests/build/`, `tests/browser/` | `WEBSITE-DD-012`. |
 | Refresh      | `scripts/refresh.ts`                     | The command of `WEBSITE-FR-018`.                              |
 | Preview card | `scripts/og.ts`, `scripts/og-card.html`  | The command of `WEBSITE-DD-010`.                              |
@@ -396,7 +396,7 @@ sequenceDiagram
 ### `WEBSITE-DD-013`
 
 **Realizes:** `BLD-001`
-**Decision:** `pnpm lint` runs `astro check`, then `oxlint`. The versions: Node 24, `pnpm` 11.25.0 through Corepack, `astro` 7.4.1, `@astrojs/check` 0.9.11, `@astrojs/sitemap` 3.7.4, `@modelcontextprotocol/sdk` 1.32.1, `ajv` 8.20.0, `vitest` 5.0.5, `@playwright/test` 1.64.1, `@axe-core/playwright` 4.14.0, `node-html-parser` 9.0.4 for the build tests, `@lucide/astro` 1.60.0 for the icons, `oxlint` 1.89.0, `typescript` 6.0.3, `yaml` 2.9.1. `@astrojs/sitemap` writes the sitemap with the `hreflang` pairs.
+**Decision:** `pnpm lint` runs `astro check`, then `oxlint`. The versions: Node 26, `pnpm` at the version of `packageManager`, `astro` 7.4.1, `@astrojs/check` 0.9.11, `@astrojs/sitemap` 3.7.4, `@modelcontextprotocol/sdk` 1.32.1, `ajv` 8.20.0, `vitest` 5.0.5, `@playwright/test` 1.64.1, `@axe-core/playwright` 4.14.0, `node-html-parser` 9.0.4 for the build tests, `@lucide/astro` 1.60.0 for the icons, `oxlint` 1.89.0, `typescript` 6.0.3, `yaml` 2.9.1. `@astrojs/sitemap` writes the sitemap with the `hreflang` pairs.
 **Rationale:** `astro check` reads the types of `.astro` files. Astro 7 needs Node 22.22 at least. `@astrojs/check` 0.9.11 accepts TypeScript 5 or 6 only.
 **Alternatives:** ESLint. Slower, with more configuration.
 
@@ -433,7 +433,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 ### `WEBSITE-DD-017`
 
 **Realizes:** `WEBSITE-FR-021`, `WEBSITE-NFR-003`
-**Decision:** `website/.docker/Dockerfile` builds the site, with `website/` as the build context, in `node:24.15.0-alpine` with `pnpm install --frozen-lockfile` and `pnpm build`. The build stage runs on `$BUILDPLATFORM`, so the static files build once for both platforms. The final stage carries the OpenContainers labels of `BLD-005`. `BLD-008` publishes the image as `ghcr.io/abgeo/georgia-mcp-website`. The image runs `nginxinc/nginx-unprivileged:1.30.6-alpine` as a user that is not root, on port 8080. `.docker/nginx.conf` serves `dist/`, answers an unknown address with `404.html` and the status 404, compresses text with gzip, and gives each file in `/_astro/` the header `Cache-Control: public, max-age=31536000, immutable`. A redirect is relative (`absolute_redirect off`), so the proxy in front keeps its own host name.
+**Decision:** `website/.docker/Dockerfile` builds the site, with `website/` as the build context, in `node:26-alpine` with `pnpm install --frozen-lockfile` and `pnpm build`. The build stage copies pnpm from `ghcr.io/pnpm/pnpm`, at the version of `packageManager`, because Node 25 and later ship no Corepack. The build stage runs on `$BUILDPLATFORM`, so the static files build once for both platforms. The final stage carries the OpenContainers labels of `BLD-005`. `BLD-008` publishes the image as `ghcr.io/abgeo/georgia-mcp-website`. The image runs `nginxinc/nginx-unprivileged:1.30.6-alpine` as a user that is not root, on port 8080. `.docker/nginx.conf` serves `dist/`, answers an unknown address with `404.html` and the status 404, compresses text with gzip, and gives each file in `/_astro/` the header `Cache-Control: public, max-age=31536000, immutable`. A redirect is relative (`absolute_redirect off`), so the proxy in front keeps its own host name.
 **Rationale:** The owner asked for a build in Node and a server in nginx. Astro gives each file in `/_astro/` a hash in its name, so a long cache never serves an old file.
 **Alternatives:** The official `nginx` image. It starts as root.
 
