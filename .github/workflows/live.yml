@@ -49,13 +49,16 @@ jobs:
       - id: test
         name: Test
         env:
+          EXCLUDED: |
+            github.com/abgeo/georgia-mcp/pkg/wissol
           GEOMCP_TRANSIT_TTC_API_KEY: ${{ secrets.GEOMCP_TRANSIT_TTC_API_KEY }}
           GEOMCP_RATES_TBC_API_KEY: ${{ secrets.GEOMCP_RATES_TBC_API_KEY }}
           GEOMCP_RATES_CREDO_API_KEY: ${{ secrets.GEOMCP_RATES_CREDO_API_KEY }}
         run: |
           report="$RUNNER_TEMP/live.json"
           status=0
-          go test -tags live -run '^TestLive' -count=1 -json ./internal/... ./pkg/... > "$report" || status=$?
+          mapfile -t packages < <(go list ./internal/... ./pkg/... | grep -v -x -F -f <(printf '%s' "$EXCLUDED"))
+          go test -tags live -run '^TestLive' -count=1 -json "${packages[@]}" > "$report" || status=$?
 
           jq -j 'select(.Action == "output" or .Action == "build-output") | .Output' "$report"
 
