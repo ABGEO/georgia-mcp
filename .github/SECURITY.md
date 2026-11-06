@@ -8,7 +8,25 @@
 | The latest release                        | Yes       |
 | An older release                          | No        |
 
-A fix goes into a new release. Update to it.
+A release gets security fixes until the next release ships. Then it gets no more fixes,
+and a fix goes into a new release. Update to it. The hosted server always runs a
+supported release.
+
+## Dependency and code findings
+
+CI checks each pull request and each push to `main`. A blocking finding fails the
+required check `CI`, so nothing merges and nothing ships while it is open.
+
+| Finding                                                                  | Tool              | Threshold                                             |
+| ------------------------------------------------------------------------ | ----------------- | ----------------------------------------------------- |
+| A known vulnerability that the Go code calls                             | govulncheck       | Blocks at any severity. Fix it before the next merge. |
+| A known vulnerability in a new or changed dependency                     | Dependency review | Blocks at any severity.                               |
+| A dependency with a license outside the allowed list                     | Dependency review | Blocks. The list holds the licenses compatible with the GPL-3.0. |
+| A known vulnerability that the code does not call                        | govulncheck       | Does not block. Take the fixed version when it ships: Renovate proposes it. |
+| A weakness in a workflow                                                 | zizmor            | Blocks. Fix it, or suppress it in `.github/zizmor.yml` with the reason why it cannot be exploited. |
+| A weakness in the code                                                   | CodeQL            | Fix a high or a critical alert before the next release. Dismiss an alert only with the reason why it cannot be exploited. |
+
+Before a release, the maintainer checks that `main` has no open blocking finding.
 
 ## Report a vulnerability
 

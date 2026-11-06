@@ -36,6 +36,28 @@ with the OIDC token of GitHub Actions:
 - The entry `io.github.ABGEO/georgia-mcp` in the MCP Registry.
 - The coverage upload to Codecov.
 
+## Granting access
+
+A contributor gets write access, or access to a sensitive resource, only after a record
+of reviewed contributions. The maintainer proposes it in a public issue and decides
+there. A new maintainer turns on two-factor authentication and signs each commit.
+The access starts with the least that the role needs.
+
 When a person joins as a maintainer, this file names them and the resources they get.
 When a person leaves, the maintainer removes their access and rotates each secret
 that they held.
+
+## Secrets
+
+| Secret                      | Stored in                                                      | Who reads it                                     |
+| --------------------------- | -------------------------------------------------------------- | ------------------------------------------------ |
+| The API keys of the sources | The Actions secrets of the repository, and the environment of the hosted server | The live tests, the hosted server, the maintainer |
+| A key of a contributor      | The local `.env`, which git ignores                            | That contributor                                 |
+
+- A secret never enters the repository, an issue, a log, or an error (`CFG-007`,
+  `LOG-008`). Push protection of secret scanning blocks a known key format.
+- Only the scheduled live tests read the API keys. No workflow that a pull request
+  starts reads a secret.
+- Signing and publishing use the OIDC token of a workflow, never a stored key.
+- The maintainer rotates a secret at its source when it leaks, when a person who held
+  it leaves, or when the source asks. Then the maintainer replaces it in each store.
