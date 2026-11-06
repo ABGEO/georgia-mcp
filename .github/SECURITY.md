@@ -21,8 +21,17 @@ repository. If you cannot use GitHub, write through the
 
 Give the affected version or the hosted server, the steps to reproduce, and the impact.
 
-You get an answer when the report is read. The fix and the advisory follow. The advisory
-names you, unless you ask otherwise.
+## Response and disclosure
+
+| Step                             | Time                               |
+| -------------------------------- | ---------------------------------- |
+| First answer to the report       | 7 days                             |
+| Assessment of the report         | 14 days                            |
+| Fix of a confirmed vulnerability | 90 days, sooner for a critical one |
+
+The disclosure is coordinated: the advisory and the fix are published together, on the
+security page of the repository. The advisory names you, unless you ask otherwise.
+Please keep the report private until then.
 
 ## Scope
 
