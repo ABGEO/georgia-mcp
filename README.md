@@ -123,6 +123,21 @@ docker run -p 8080:8080 ghcr.io/abgeo/georgia-mcp
 
 Then connect your client to `http://localhost:8080/mcp`.
 
+With a release binary, over stdio: download the archive for your system from the
+[latest release](https://github.com/abgeo/georgia-mcp/releases/latest), unpack it, and put
+`georgia-mcp` on your `PATH`. Then run:
+
+```sh
+claude mcp add georgia-mcp -- georgia-mcp stdio
+```
+
+Each release signs `checksums.txt` with cosign and carries build provenance. To check an
+archive, run:
+
+```sh
+gh attestation verify georgia-mcp_<version>_linux_amd64.tar.gz --owner ABGEO
+```
+
 With Go, over stdio:
 
 ```sh

@@ -5,7 +5,7 @@ type: guideline
 status: active
 created: 2026-10-17
 updated: 2026-11-06
-scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .github/workflows/]
+scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -215,6 +215,32 @@ variable, and only it holds `id-token: write`. The workflow blocks the cache.
 
 **Why:** The API refuses a result from a workflow that breaks the restrictions. A check
 such as `Maintained` changes with time, so the weekly run keeps the badge current.
+
+## BLD-013
+
+`.github/workflows/release.yml` runs GoReleaser (`.goreleaser.yaml`) on a tag `v<x.y.z>`.
+It builds `georgia-mcp` for `linux`, `darwin`, and `windows` on `amd64` and `arm64`, with
+`CGO_ENABLED=0`, `-trimpath`, and the commit time as the time of each file. The ldflags
+are `-s -w` only, so the version comes from `BLD-004`. Each archive holds the binary,
+`LICENSE`, and `README.md`.
+
+| File                                   | Holds                                                    |
+| -------------------------------------- | -------------------------------------------------------- |
+| `georgia-mcp_<x.y.z>_<os>_<arch>`      | The archive: `.zip` for `windows`, `.tar.gz` otherwise   |
+| `<archive>.sbom.json`                  | The SPDX SBOM of the archive, from Syft                  |
+| `checksums.txt`                        | The SHA-256 of each archive and SBOM                     |
+| `checksums.txt.sigstore.json`          | The keyless `cosign` signature of `checksums.txt`        |
+| `georgia-mcp_<x.y.z>.intoto.jsonl`     | The build provenance of each file of `checksums.txt`     |
+
+release-drafter writes the notes of the release. The owner publishes the draft, which
+creates the tag. GoReleaser finds the release of the tag, keeps its notes, and attaches
+the files. `actions/attest` records the provenance with GitHub, and the job attaches its
+bundle. `GORELEASER_VERSION` pins GoReleaser, and Renovate proposes a new release.
+
+**Why:** A user of stdio needs no Go and no Docker. The signature and the provenance let a
+user check that a file comes from this workflow. The Scorecard finds the signature and
+the provenance by the suffixes `.sigstore.json` and `.intoto.jsonl`. GoReleaser adds files
+to a published release, so the repository keeps immutable releases off.
 
 ## Retired identifiers
 
