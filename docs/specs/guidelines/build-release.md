@@ -201,6 +201,21 @@ proposes a new release.
 waits for the push. OIDC needs no secret. A version in the registry cannot change, so
 only a release publishes.
 
+## BLD-012
+
+`.github/workflows/scorecard.yml` runs the OpenSSF Scorecard on a push to `main`, each
+Monday at 04:15 UTC, and on a change to the branch rules. It publishes the result to
+`api.scorecard.dev`, which serves the badge of the README, and uploads it to code
+scanning.
+
+The job holds only the steps that the workflow restrictions of the Scorecard allow:
+`actions/checkout`, `ossf/scorecard-action`, `actions/upload-artifact`, and
+`github/codeql-action/upload-sarif`. The job has no `run` step and no environment
+variable, and only it holds `id-token: write`. The workflow blocks the cache.
+
+**Why:** The API refuses a result from a workflow that breaks the restrictions. A check
+such as `Maintained` changes with time, so the weekly run keeps the badge current.
+
 ## Retired identifiers
 
 This file has no retired identifier.
