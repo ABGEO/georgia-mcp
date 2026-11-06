@@ -88,6 +88,19 @@ publishes them to GitHub Packages:
 | A tag `v<x.y.z>`      | `<x.y.z>`, `<x.y>`, `latest`, `sha-<short>` | Yes  |
 | A pull request        | `pr-<n>`                                  | No   |
 
+A pull request and a push to `main` build only the image whose files changed:
+
+| Image                 | Paths                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `georgia-mcp`         | `cmd/`, `internal/`, `pkg/`, `go.mod`, `go.sum`, `build/package/`                      |
+| `georgia-mcp-website` | `website/`                                                                             |
+
+A change to `images.yml`, a tag, and a manual run build both images. A release so
+publishes each image at its version. A push to `main` that changes one image leaves the
+other image with no `sha-<short>` tag for that commit. The job `Images` fails when an
+image that ran has failed. The branch protection of `main` requires `Images`, because a
+skipped image reports no check.
+
 `VERSION` is `git describe --tags --always --dirty` and `REVISION` is the commit.
 The label `org.opencontainers.image.source` of each image links the package to the repository.
 Each action is pinned to the commit of a release, with the version in a comment.
@@ -116,8 +129,8 @@ scanning with push protection, and the default setup of CodeQL. Renovate, not
 Dependabot, proposes the updates.
 
 A change to `ci.yml` and a manual run start every job. The job `CI` fails when a job
-that ran has failed. The branch protection of `main` requires `CI` alone, because a
-skipped job passes a required check.
+that ran has failed. The branch protection of `main` requires `CI` and no job of the
+workflow, because a skipped job passes a required check.
 
 The workflow takes the Go release from `go.mod` and the Node release from
 `website/.nvmrc`. It pins `golangci-lint` to the version of the owner (`BLD-006`).
