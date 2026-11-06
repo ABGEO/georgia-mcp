@@ -65,7 +65,7 @@
         {
           "name": "GEOMCP_RATES_CREDO_ENABLED",
           "description": "Turns on Credo Bank. Set it to true with the key.",
-           "choices": ["true", "false"]
+          "choices": ["true", "false"]
         },
         {
           "name": "GEOMCP_RATES_CREDO_API_KEY",
