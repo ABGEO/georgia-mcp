@@ -83,42 +83,6 @@
               "prompt": "What current restaurant offers are available for Bank of Georgia premium card holders?",
               "tools_triggered": "offers_search_offers",
               "expected_output": "A list of current Bank of Georgia dining offers for premium card holders, each with the partner, the benefit, and the period. The answer lists only the returned offers and includes a link when one is returned."
-            },
-            {
-              "description": "The postal code of a town.",
-              "prompt": "What is the postal code of Rustavi?",
-              "tools_triggered": "postal_search_codes",
-              "expected_output": "The postal code 3700 of the city of Rustavi from Georgian Post. The answer names Georgian Post as the source and lists any other match with the same name, such as a village, with its own code."
-            },
-            {
-              "description": "The movies at Cavea now.",
-              "prompt": "What movies are showing at Cavea cinemas now?",
-              "tools_triggered": "cinema_list_movies",
-              "expected_output": "The movies that Cavea shows now, each with its name and, when returned, its genre and length. The answer lists only the returned movies and names Cavea as the source."
-            },
-            {
-              "description": "The current inflation in Georgia.",
-              "prompt": "What is the annual inflation in Georgia now?",
-              "tools_triggered": "stats_get_inflation",
-              "expected_output": "The annual inflation of Georgia in percent for the newest published month, with that month. The answer names Geostat as the source, and may add the monthly and the core inflation when returned."
-            },
-            {
-              "description": "A statistical table of salaries.",
-              "prompt": "What was the average monthly salary in Tbilisi this year, according to Geostat?",
-              "tools_triggered": "stats_search_tables; stats_get_table; stats_get_cells",
-              "expected_output": "The average monthly nominal salary of employees in Tbilisi for the quarters of the current year, in GEL, from the Geostat table of salaries by region. The answer uses only the returned figures and says when a quarter is not yet published."
-            },
-            {
-              "description": "The air quality of a city now.",
-              "prompt": "How is the air in Tbilisi right now?",
-              "tools_triggered": "air_get_quality",
-              "expected_output": "The newest readings of the air quality stations in Tbilisi from the National Environmental Agency, each station with its level and its pollutants, such as PM10 and PM2.5, with the value, the unit, and the hour. The answer names the agency as the source and uses only the returned readings."
-            },
-            {
-              "description": "The recent history of one pollutant at a station.",
-              "prompt": "How has PM2.5 changed on Tsereteli Avenue in Tbilisi over the last day?",
-              "tools_triggered": "air_get_quality; air_list_history",
-              "expected_output": "The hourly PM2.5 readings of the station TSRT on Tsereteli Avenue from the National Environmental Agency, newest first, in µg/m³ with their levels. The answer names the agency as the source and uses only the returned readings."
             }
           ]
         }
