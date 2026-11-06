@@ -1,0 +1,42 @@
+# The labels of the repository. The workflow labels deletes each label that is not here.
+# To rename a label, give the old name in from_name, so it stays on its issues.
+
+- name: bug
+  color: d73a4a
+  description: Something does not work.
+- name: enhancement
+  color: a2eeef
+  description: A new feature or a request for one.
+- name: documentation
+  color: 0075ca
+  description: A change to the documentation.
+- name: dependencies
+  color: 0366d6
+  description: An update of a dependency.
+- name: breaking
+  color: b60205
+  description: A change that a client must adapt to.
+- name: skip-changelog
+  color: ededed
+  description: The release notes leave out the pull request.
+- name: accessibility
+  color: f143ab
+  description: A barrier for people with disabilities.
+- name: good first issue
+  color: 7057ff
+  description: A good start for a new contributor.
+- name: help wanted
+  color: 008672
+  description: The maintainer asks for help.
+- name: question
+  color: d876e3
+  description: A request for information.
+- name: duplicate
+  color: cfd3d7
+  description: The issue or pull request already exists.
+- name: invalid
+  color: e4e669
+  description: The issue or pull request is not valid.
+- name: wontfix
+  color: ffffff
+  description: The maintainer will not do this.
