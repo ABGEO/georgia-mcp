@@ -4,7 +4,7 @@ title: The cinemas, movies, sessions, and seats of Cavea, the tools
 type: spec
 status: approved
 created: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-07
 context: cinema
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -40,9 +40,8 @@ type languageField struct {
 
 Title: `List the cinemas of Cavea`. Description:
 
-> Lists the open cinemas of Cavea, the largest cinema chain of Georgia, in Tbilisi and
-> Batumi. Returns the code, the name, the city, and the address of each cinema. Use the
-> code in cinema_list_sessions.
+> Lists the open cinemas of Cavea, in Tbilisi and Batumi. Returns the code, the name,
+> the city, and the address of each cinema. Use the code in cinema_list_sessions.
 
 ```go
 type listCinemasInput struct{ languageField }
