@@ -1,4 +1,4 @@
-<div align="center">
+    <div align="center">
 
 <a href="https://geo-mcp.abgeo.cloud">
   <img src="website/public/favicon.svg" alt="Georgia MCP" width="96" height="96">
@@ -17,6 +17,7 @@ Ask Claude, ChatGPT, or any MCP client in your own words.
 [![Go version](https://img.shields.io/github/go-mod/go-version/abgeo/georgia-mcp)](go.mod)
 [![License: GPL v3](https://img.shields.io/github/license/abgeo/georgia-mcp)](LICENSE)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/ABGEO/georgia-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/ABGEO/georgia-mcp)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16395/badge)](https://www.bestpractices.dev/projects/16395)
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/abgeo/georgia-mcp)
 
 [Website](https://geo-mcp.abgeo.cloud) ·
