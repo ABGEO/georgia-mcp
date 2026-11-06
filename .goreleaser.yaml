@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: georgia-mcp
+
+builds:
+  - id: georgia-mcp
+    main: ./cmd/georgia-mcp
+    binary: georgia-mcp
+    env:
+      - CGO_ENABLED=0
+    goos: [ linux, darwin, windows ]
+    goarch: [ amd64, arm64 ]
+    flags:
+      - -trimpath
+    # No version here: Go writes the version and the commit of the tag (BLD-004).
+    ldflags:
+      - -s -w
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - formats: [ tar.gz ]
+    format_overrides:
+      - goos: windows
+        formats: [ zip ]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+
+sboms:
+  - artifacts: archive
+
+signs:
+  - cmd: cosign
+    artifacts: checksum
+    signature: "${artifact}.sigstore.json"
+    args:
+      - sign-blob
+      - --bundle=${signature}
+      - --yes
+      - ${artifact}
+    output: true
+
+# release-drafter writes the notes. GoReleaser attaches the files to that release.
+changelog:
+  disable: true
+
+release:
+  mode: keep-existing
+  replace_existing_artifacts: true
