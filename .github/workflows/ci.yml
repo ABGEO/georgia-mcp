@@ -353,6 +353,45 @@ jobs:
       - name: Vulnerabilities
         run: go tool govulncheck ./...
 
+  dco:
+    name: DCO
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Sign-off
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # The single quotes keep the jq program from the shell.
+          # shellcheck disable=SC2016
+          missing="$(gh api --paginate "repos/$GH_REPO/pulls/$NUMBER/commits" --jq '
+            .[]
+            | select((.author.type // "") != "Bot" and (.parents | length) == 1)
+            | (.commit.author.email | ascii_downcase) as $email
+            | select([.commit.message | scan("(?im)^Signed-off-by: [^<\\n]+ <([^>\\n]+)>[ \\t]*$") | .[0] | ascii_downcase] | any(. == $email) | not)
+            | "- \(.sha[0:7]) \(.commit.message | split("\n") | first)"
+          ')"
+
+          if [ -n "$missing" ]; then
+            {
+              echo "## Commits with no sign-off"
+              echo
+              echo "$missing"
+              echo
+              echo "Sign off each commit with \`git commit -s\`. To sign off a branch, run \`git rebase --signoff main\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "$missing"
+            echo "Each commit needs a Signed-off-by trailer with the email of its author (GIT-007)."
+            exit 1
+          fi
+          echo "Each commit is signed off."
+
   workflow-audit:
     name: Workflow audit
     needs: changes
@@ -397,7 +436,7 @@ jobs:
   ci:
     name: CI
     if: always()
-    needs: [ changes, go-lint, go-test, coverage, go-vuln, website-lint, website-test, workflow-audit, dependency-review ]
+    needs: [ changes, dco, go-lint, go-test, coverage, go-vuln, website-lint, website-test, workflow-audit, dependency-review ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions: { }

@@ -4,7 +4,7 @@ title: Git conventions
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-07
 scope: [.]
 related: [PRC, LNG, CLT]
 ---
@@ -21,10 +21,13 @@ the same session. A push happens only on a direct instruction of the owner.
 
 ## GIT-002
 
-A commit message is one line. It has no body.
+A commit message is one line, followed by the sign-off of `GIT-007`. It has no other
+body.
 
 ```
 <type>(<scope>): <description>
+
+Signed-off-by: <name> <email>
 ```
 
 ## GIT-003
@@ -83,6 +86,18 @@ Do not add a trailer, a line, or a footer that names a tool or a model.
 A release is a tag `v<semver>`. A vendor client has no tag of its own.
 
 **Why:** The repository is one module. One tag versions the server and every client.
+
+## GIT-007
+
+Each commit of a pull request carries a `Signed-off-by` trailer with the name and the
+email of its author: `git commit -s`. The sign-off certifies the
+[Developer Certificate of Origin](https://developercertificate.org/). The job `DCO` of
+`BLD-009` fails a pull request with a commit that has no sign-off. It skips a commit of
+a bot and a merge commit. The repository also requires a sign-off on a commit made on
+the web.
+
+**Why:** The sign-off records that the author has the right to submit the change under
+the GPL-3.0. A bot certifies nothing, and a merge commit adds no work of its own.
 
 ## Retired identifiers
 

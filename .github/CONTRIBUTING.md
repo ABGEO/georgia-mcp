@@ -43,6 +43,10 @@ the keys of `.env`. A test whose key is empty skips.
   [`git.md`](../docs/specs/guidelines/git.md) holds the types and the scopes. A check
   fails a title with an unknown type.
 - The pull request merges as one squashed commit.
+- Sign off each commit with `git commit -s`. The sign-off certifies the
+  [Developer Certificate of Origin](https://developercertificate.org/): you have the right
+  to submit the change under the license of the project. A check fails a commit with no
+  sign-off. To sign off the commits of a branch, run `git rebase --signoff main`.
 - A test cites the identifier of the scenario that it verifies.
 - A document, a comment, and a tool description follow
   [`language.md`](../docs/specs/guidelines/language.md).

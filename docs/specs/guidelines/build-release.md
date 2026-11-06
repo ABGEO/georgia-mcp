@@ -120,6 +120,7 @@ only for the part that the change touches:
 | `website/` | `website/`                                                                 | `Website lint`, `Website test` (`pnpm test` builds the site)                           |
 | Workflows  | `.github/workflows/`, `.github/zizmor.yml`                                 | `Workflow audit` (`zizmor`)                                                            |
 | Manifests  | Every pull request                                                         | `Dependency review`                                                                    |
+| Commits    | Every pull request                                                         | `DCO` (`GIT-007`)                                                                      |
 
 `Go test` writes the total coverage and the coverage of each package to the summary of
 the job, and keeps the profile as an artifact. `Coverage` uploads the profile to Codecov
