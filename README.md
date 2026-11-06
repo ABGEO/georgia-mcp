@@ -13,6 +13,8 @@ An MCP server for Georgian public data, read from the organizations that publish
 Ask Claude, ChatGPT, or any MCP client in your own words.
 </p>
 
+[![CI](https://github.com/abgeo/georgia-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/abgeo/georgia-mcp/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/ABGEO/georgia-mcp/graph/badge.svg)](https://codecov.io/gh/ABGEO/georgia-mcp)
 [![Images](https://github.com/abgeo/georgia-mcp/actions/workflows/images.yml/badge.svg)](https://github.com/abgeo/georgia-mcp/actions/workflows/images.yml)
 [![Go version](https://img.shields.io/github/go-mod/go-version/abgeo/georgia-mcp)](go.mod)
 [![License: GPL v3](https://img.shields.io/github/license/abgeo/georgia-mcp)](LICENSE)

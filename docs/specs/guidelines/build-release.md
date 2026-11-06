@@ -116,10 +116,16 @@ only for the part that the change touches:
 
 | Part       | Paths                                                                      | Jobs                                                                                   |
 | ---------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Go         | `cmd/`, `internal/`, `pkg/`, `test/`, `go.mod`, `go.sum`, `.golangci.yaml` | `Go lint`, `Go test` (`go test -race`, `go build`), `Go vulnerabilities` (`BLD-007`)   |
+| Go         | `cmd/`, `internal/`, `pkg/`, `test/`, `go.mod`, `go.sum`, `.golangci.yaml` | `Go lint`, `Go test` (`go test -race -coverprofile`, `go build`), `Coverage`, `Go vulnerabilities` (`BLD-007`) |
 | `website/` | `website/`                                                                 | `Website lint`, `Website test` (`pnpm test` builds the site)                           |
 | Workflows  | `.github/workflows/`, `.github/zizmor.yml`                                 | `Workflow audit` (`zizmor`)                                                            |
 | Manifests  | Every pull request                                                         | `Dependency review`                                                                    |
+
+`Go test` writes the total coverage and the coverage of each package to the summary of
+the job, and keeps the profile as an artifact. `Coverage` uploads the profile to Codecov
+with GitHub OIDC, so the job that runs the code of a pull request holds no `id-token`. A
+pull request from a fork uploads without a token. `.github/codecov.yml` makes each status
+of Codecov informational: the coverage gates no merge. A failed upload fails no job.
 
 `Dependency review` fails on a new dependency with a known vulnerability, or with a
 license that `.github/dependency-review.yml` does not allow. Every allowed license is
