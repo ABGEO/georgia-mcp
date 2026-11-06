@@ -90,7 +90,7 @@ publishes them to GitHub Packages:
 | A tag `v<x.y.z>`      | `<x.y.z>`, `<x.y>`, `<x>`                 | Yes  |
 | A pull request        | `pr-<n>`                                  | No   |
 
-`latest` follows `main`: the hosted server runs it. A release pins a version. A tag
+`latest` follows `main`. A release pins a version. A tag
 `v0.<y>.<z>` gets no `<x>` tag, because a release before `1.0.0` keeps no compatibility.
 
 A pull request and a push to `main` build only the image whose files changed:
