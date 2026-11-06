@@ -186,6 +186,7 @@ You need Go (the version in [`go.mod`](go.mod)) and [Task](https://taskfile.dev)
 cp configs/.env.example .env  # then fill in the keys
 task run                      # serve over HTTP on :8080
 task lint test build          # check the server
+task test:live                # run the tests against the real sources
 ```
 
 Each vendor client is a package under `pkg/<vendor>` that another project can import. `task --list` shows every task.

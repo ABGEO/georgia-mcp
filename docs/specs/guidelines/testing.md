@@ -4,9 +4,9 @@ title: Testing
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-17
+updated: 2026-11-06
 scope: [cmd/, internal/, pkg/, test/]
-related: [GO, PRC, TRC, CLT]
+related: [GO, PRC, TRC, CLT, BLD]
 ---
 
 # Testing
@@ -41,7 +41,8 @@ A scenario declares its layer:
 | `live`        | A vendor client against the real vendor. Build tag `live`.     | Yes     |
 | `manual`      | The owner, with a real MCP client.                             | Yes     |
 
-`go test ./...` runs `unit` and `integration` only.
+`go test ./...` runs `unit` and `integration` only. `task test:live` runs `live`
+(`BLD-010`). The name of a `live` test starts with `TestLive`.
 
 ## TST-005
 

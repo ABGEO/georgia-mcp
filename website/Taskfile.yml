@@ -1,0 +1,64 @@
+version: "3"
+
+vars:
+  NODE_VERSION:
+    sh: cat .nvmrc
+
+tasks:
+  node:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: |
+          node -e "
+            const v = (s) => s.trim().replace(/^v/, '').split('.').map(Number)
+            const [have, want] = [v(process.version), v(require('fs').readFileSync('.nvmrc', 'utf8'))]
+            const i = have.findIndex((n, j) => n !== want[j])
+            process.exit(i === -1 || have[i] > want[i] ? 0 : 1)
+          "
+        msg: Node {{.NODE_VERSION}} or later is needed (website/.nvmrc). Run nvm use in website/.
+
+  dev:
+    desc: Serve the website with reload.
+    deps: [ node ]
+    cmds:
+      - pnpm dev
+
+  lint:
+    desc: Run the checks of the website.
+    deps: [ node ]
+    cmds:
+      - pnpm lint
+
+  test:
+    desc: Build the website and run its unit, build, and browser tests.
+    deps: [ node ]
+    cmds:
+      - pnpm test
+
+  build:
+    desc: Build the website into website/dist.
+    deps: [ node ]
+    cmds:
+      - pnpm build
+
+  refresh:
+    desc: Record the tool definitions and the tool examples of the website from the local server.
+    deps: [ node ]
+    cmds:
+      - pnpm refresh
+
+  image:
+    desc: Build the container image of the website.
+    vars:
+      IMAGE: georgia-mcp-website:dev
+      VERSION:
+        sh: git describe --tags --always --dirty 2>/dev/null || echo dev
+      REVISION:
+        sh: git rev-parse HEAD 2>/dev/null || echo unknown
+    cmds:
+      - >-
+        docker build -f .docker/Dockerfile
+        --build-arg VERSION={{.VERSION}}
+        --build-arg REVISION={{.REVISION}}
+        -t {{.IMAGE}} .

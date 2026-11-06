@@ -517,9 +517,10 @@ the vendor client still ends the load (`RSL-001`).
 ### `PLATFORM-DD-009`
 
 **Realizes:** `PLATFORM-FR-024`
-**Decision:** `Taskfile.yml` holds the commands of `BLD-001`. The tasks of the website
-carry the prefix `website:`: `dev`, `lint`, `test`, `build`, `refresh`, and `image`. Each
-one, except `image`, first checks the version of Node against `website/.nvmrc`.
+**Decision:** `Taskfile.yml` holds the commands of `BLD-001`. `website/Taskfile.yml`
+holds the tasks of the website, and `Taskfile.yml` includes it under the namespace
+`website`: `dev`, `lint`, `test`, `build`, `refresh`, and `image`. Each one, except
+`image`, first checks the version of Node against `website/.nvmrc`.
 **Rationale:** A task has a directory, so one task serves every module of `go.work`. The
 website runs pnpm, not Go, so its tasks have names of their own. Task cannot switch the
 version of Node, so a check gives the reason before pnpm fails.
