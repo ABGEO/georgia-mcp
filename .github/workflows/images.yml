@@ -15,9 +15,75 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # A pull request and a push to main build the image whose files changed. A tag and a
+  # manual run build every image, so each release publishes both versions.
+  changes:
+    name: Image changes
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - id: filter
+        if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            georgia-mcp:
+              - cmd/**
+              - internal/**
+              - pkg/**
+              - go.mod
+              - go.sum
+              - build/package/**
+              - .github/workflows/images.yml
+            georgia-mcp-website:
+              - website/**
+              - .github/workflows/images.yml
+
+      - id: matrix
+        name: Images to build
+        env:
+          EVERY: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/') }}
+          CHANGED: ${{ steps.filter.outputs.changes || '[]' }}
+          IMAGES: |
+            [
+              {
+                "name": "georgia-mcp",
+                "description": "An MCP server for Georgian public services.",
+                "context": ".",
+                "file": "build/package/Dockerfile",
+                "lockfile": "go.sum"
+              },
+              {
+                "name": "georgia-mcp-website",
+                "description": "The website of Georgia MCP.",
+                "context": "website",
+                "file": "website/.docker/Dockerfile",
+                "lockfile": "website/pnpm-lock.yaml"
+              }
+            ]
+        run: |
+          if [ "$EVERY" = "true" ]; then
+            CHANGED=$(jq -c '[.[].name]' <<<"$IMAGES")
+          fi
+          value=$(jq -c --argjson changed "$CHANGED" \
+            '[.[] | select(.name as $name | $changed | index($name))]' <<<"$IMAGES")
+          echo "value=$value" >> "$GITHUB_OUTPUT"
+          echo "Images to build: $value"
+
   image:
     name: ${{ matrix.name }}
-    if: ${{ !github.event.pull_request.draft }}
+    needs: changes
+    if: needs.changes.outputs.matrix != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -27,17 +93,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: georgia-mcp
-            description: An MCP server for Georgian public services.
-            context: .
-            file: build/package/Dockerfile
-            lockfile: go.sum
-          - name: georgia-mcp-website
-            description: The website of Georgia MCP.
-            context: website
-            file: website/.docker/Dockerfile
-            lockfile: website/pnpm-lock.yaml
+        include: ${{ fromJSON(needs.changes.outputs.matrix) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -128,3 +184,22 @@ jobs:
           IMAGE: ghcr.io/${{ github.repository_owner }}/${{ matrix.name }}
           DIGEST: ${{ steps.build.outputs.digest }}
         run: cosign sign --yes "${IMAGE,,}@${DIGEST}"
+
+  # A skipped image reports no check, so the branch protection requires this job instead
+  # of the image jobs. It fails when an image that ran has failed.
+  images:
+    name: Images
+    if: always()
+    needs: [ changes, image ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: { }
+    steps:
+      - name: Result
+        env:
+          FAILED: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          if [ "$FAILED" = "true" ]; then
+            echo "An image of the workflow failed."
+            exit 1
+          fi
