@@ -1,11 +1,13 @@
 ---
 import { Font } from "astro:assets"
+import { PUBLIC_VERSION } from "astro:env/client"
 
 import Band from "../components/Band.astro"
 import LangSwitch from "../components/LangSwitch.astro"
 import Mark from "../components/Mark.astro"
 import ThemeToggle from "../components/ThemeToggle.astro"
 import { localize, other, t } from "../i18n"
+import { releaseUrl } from "../lib/release"
 import type { Lang } from "../lib/schemas"
 import { AUTHOR_URL, REPO_URL, SITE_NAME, SITE_URL } from "../site"
 import "../styles/global.css"
@@ -20,6 +22,7 @@ interface Props {
 
 const { lang, path, title, description, noindex = false } = Astro.props
 const copy = t(lang)
+const release = releaseUrl(REPO_URL, PUBLIC_VERSION)
 const canonical = new URL(localize(path, lang), SITE_URL).href
 const image = new URL(`/og/${lang}.png`, SITE_URL).href
 ---
@@ -97,6 +100,7 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
           <a href={localize("/privacy/", lang)}>{copy.footer.privacy}</a>
           <a href={localize("/terms/", lang)}>{copy.footer.terms}</a>
           <a href={REPO_URL}>{copy.footer.repo}</a>
+          <a class="version" href={release}>{PUBLIC_VERSION}</a>
         </nav>
       </div>
     </footer>
@@ -204,5 +208,9 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--u) * 2) calc(var(--u) * 5);
+  }
+
+  .version {
+    font-family: var(--mono);
   }
 </style>

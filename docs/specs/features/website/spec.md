@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-11-06
+updated: 2026-11-07
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -55,6 +55,7 @@ from the server.
 | `WEBSITE-FR-036`  | 4.3 Pages, `WEBSITE-DD-022`, `WEBSITE-SC-047`           |
 | `WEBSITE-FR-037`  | 4.3 Pages, `WEBSITE-SC-049`                             |
 | `WEBSITE-FR-038`  | 4.1 Static, `WEBSITE-DD-024`, `WEBSITE-SC-050`          |
+| `WEBSITE-FR-039`  | 4.3 Pages, `WEBSITE-DD-025`, `WEBSITE-SC-052`, `SC-053` |
 | `WEBSITE-NFR-001` | `WEBSITE-DD-008`, `WEBSITE-SC-028`                      |
 | `WEBSITE-NFR-002` | `WEBSITE-DD-007`, `WEBSITE-SC-029`                      |
 | `WEBSITE-NFR-003` | `WEBSITE-DD-006`, `WEBSITE-SC-030`                      |
@@ -202,7 +203,7 @@ The `glob` loader reads `tools/*.yaml`.
 - Each page links to its pair with `LangSwitch` and with `<link rel="alternate" hreflang>`. `WEBSITE-FR-002`.
 - No file exists under `src/pages/mcp`. `WEBSITE-FR-010`.
 - The home page holds the sections of `WEBSITE-FR-030` in order, each a `<section>` with an `id`: `intro`, `examples`, `contexts`, `install`, `tools`.
-- `Base.astro` ends each page with `Footer`: the byline of `BRD-011`, `REPO_URL`, and the links to the two legal pages in the language of the page. `WEBSITE-FR-019`, `FR-037`.
+- `Base.astro` ends each page with `Footer`: the byline of `BRD-011`, `REPO_URL`, the links to the two legal pages in the language of the page, and the site version. `WEBSITE-FR-019`, `FR-037`, `FR-039`.
 - `Base.astro` writes `<title>`, `<meta name="description">`, `og:title`, `og:description`, `og:image`, `og:locale`, and `twitter:card` from the dictionary of the page. `WEBSITE-FR-022`.
 
 **Data files.**
@@ -226,13 +227,14 @@ The `glob` loader reads `tools/*.yaml`.
 | `pnpm og`       | Builds the site, then writes `public/og/en.png` and `public/og/ka.png`. `WEBSITE-DD-010`. | `WEBSITE-FR-022`          |
 
 **Configuration.** The refresh reads the `.env` file of the repository root, because
-the server starts in that directory. The site reads no variable.
+the server starts in that directory. The build of the site reads one variable, `PUBLIC_VERSION`.
 
 | Variable                     | Type   | Default | Secret | Realizes         |
 | ---------------------------- | ------ | ------- | ------ | ---------------- |
 | `GEOMCP_RATES_TBC_API_KEY`   | string | none    | Yes    | `WEBSITE-FR-018` |
 | `GEOMCP_RATES_CREDO_API_KEY` | string | none    | Yes    | `WEBSITE-FR-018` |
 | `GEOMCP_TRANSIT_TTC_API_KEY` | string | none    | Yes    | `WEBSITE-FR-018` |
+| `PUBLIC_VERSION`             | string | `dev`   | No     | `WEBSITE-FR-039` |
 
 ### 4.4 Install guides
 
@@ -511,6 +513,13 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **Decision:** `public/.well-known/openai-apps-challenge` holds the token, with no line break at the end. The build copies it to `dist/`. `.docker/nginx.conf` serves `/.well-known/` with the type `text/plain`.
 **Rationale:** The proxy sends every address but `/mcp` to the site, so a static file answers at the root of the host. The token is public: it proves control of the host and grants nothing.
 **Alternatives:** A handler in the server. It puts a fact of one directory into the server, and the proxy sends the address to the site.
+
+### `WEBSITE-DD-025`
+
+**Realizes:** `WEBSITE-FR-039`
+**Decision:** `astro.config.mjs` declares `PUBLIC_VERSION` in the schema of `astro:env`, as a public client string with the default `dev`. `Base.astro` imports it from `astro:env/client` and writes it into the footer as a link in the mono font. A value of the form `v<major>.<minor>.<patch>` links to `REPO_URL/releases/tag/<value>`. Any other value links to `REPO_URL/releases`. The site is static, so the build writes the value into each page and ships no script for it. The build stage of `.docker/Dockerfile` declares `ARG VERSION=dev` and runs `PUBLIC_VERSION=$VERSION pnpm build`, so the `VERSION` of `BLD-005` reaches the site. Another host, such as Vercel, sets `PUBLIC_VERSION` in its build environment.
+**Rationale:** The value comes from outside the build, so every host supplies it the same way. `astro:env` checks the type, and `astro check` sees the import.
+**Alternatives:** A call to `git describe` in the configuration. The owner refused it: the build must not compute the value. A `define` of Vite. It has no type and no check.
 
 ## 6. Scenarios
 
@@ -958,6 +967,24 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **When** the test reads the panel of claude.ai.
 **Then** it links to `CLAUDE_DIRECTORY_URL`, holds a `CopyField` with `SERVER_URL`, and does not name the limit of the Free plan.
 
+### `WEBSITE-SC-052`
+
+**Verifies:** `WEBSITE-FR-039`
+**Layer:** build
+
+**Given** a build of the site with no `PUBLIC_VERSION`.
+**When** the test reads the footer of each built page and `/404.html`.
+**Then** it shows `dev` and links to `REPO_URL/releases`.
+
+### `WEBSITE-SC-053`
+
+**Verifies:** `WEBSITE-FR-039`
+**Layer:** unit
+
+**Given** the site versions `v1.2.3`, `v1.1.2-8-g8def960`, and `dev`.
+**When** the test computes the link of each.
+**Then** `v1.2.3` links to `REPO_URL/releases/tag/v1.2.3`. The other two link to `REPO_URL/releases`.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -987,6 +1014,7 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 | 23  | Write the test of the token. Add the token file and the `text/plain` type of `/.well-known/` to `nginx.conf`. | `WEBSITE-DD-024`, `SC-050` | [x] |
 | 24  | Write the test of the guide of claude.ai. Add `CLAUDE_DIRECTORY_URL`, the link of the directory, and its copy. | `WEBSITE-FR-007`, `SC-051` | [x] |
 | 25  | Add the key of Credo Bank to the local guides. Add `halyk`, `basisbank`, `credo`, and `scapp` to `contexts.yaml` and the tool file of the commercial rates. Run the refresh. Rewrite each answer of the commercial rates from its new recording. | `WEBSITE-FR-009`, `FR-018`, `DD-018` | [x] |
+| 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [x] |
 
 ## 8. Out of scope for this specification
 

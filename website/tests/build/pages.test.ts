@@ -141,6 +141,14 @@ describe("the legal pages", () => {
     expect(links).toContain(`${prefix}/privacy/`)
     expect(links).toContain(`${prefix}/terms/`)
   })
+
+  // WEBSITE-SC-052: A build with no site version shows dev and links to the list of releases.
+  test.each([...paths, "/404.html"])("%s shows the site version", (path) => {
+    const version = page(path).querySelector("footer a.version")
+
+    expect(version?.text).toBe("dev")
+    expect(version?.getAttribute("href")).toBe(`${REPO_URL}/releases`)
+  })
 })
 
 // WEBSITE-SC-050: The token of the domain verification is one line of base64url.
