@@ -1,0 +1,21 @@
+{
+  "name": "georgia-mcp",
+  "displayName": "Georgia MCP",
+  "version": "1.1.2",
+  "description": "An MCP server for Georgian public data, read from the organizations that publish it.",
+  "author": {
+    "name": "Temuri Takalandze",
+    "email": "takalandzet@gmail.com",
+    "url": "https://www.abgeo.dev/"
+  },
+  "homepage": "https://geo-mcp.abgeo.cloud/",
+  "repository": "https://github.com/abgeo/georgia-mcp",
+  "license": "GPL-3.0",
+  "keywords": [
+    "mcp",
+    "georgia",
+    "public-data",
+    "read-only"
+  ],
+  "logo": "assets/logo.svg"
+}
