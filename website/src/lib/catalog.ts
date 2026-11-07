@@ -134,6 +134,11 @@ export function buildCatalog(
 
   for (const ctx of catalogContexts) {
     if (ctx.tools.length === 0) problems.push(`${ctx.key}: no tool`)
+    for (const vendor of ctx.vendors) {
+      if (!ctx.tools.some((tool) => tool.vendors.some((v) => v.code === vendor.code))) {
+        problems.push(`${ctx.key}.${vendor.code}: no tool reads the vendor`)
+      }
+    }
   }
 
   if (problems.length > 0) throw new CatalogError(problems)

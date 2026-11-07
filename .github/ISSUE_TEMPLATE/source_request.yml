@@ -1,0 +1,57 @@
+name: Source request
+description: Ask to correct or remove a source of the server. For a vendor, or anyone who finds a wrong fact.
+title: "[Source] "
+labels: [ source ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is public. The sources page lists each source, its kind, and its link:
+        https://geo-mcp.abgeo.cloud/sources/
+
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: The vendor and the subject, or the link of the source on the sources page.
+      placeholder: https://geo-mcp.abgeo.cloud/sources/#fuel-wissol
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request
+    attributes:
+      label: Request
+      options:
+        - Correct a fact on the sources page
+        - Correct the data of a tool
+        - Remove the source
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: requester
+    attributes:
+      label: Requester
+      options:
+        - I work for the vendor
+        - I do not work for the vendor
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What is wrong or what to change, with a link that shows it.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: The request holds no key, token, or personal data.
+          required: true

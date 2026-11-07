@@ -1,0 +1,170 @@
+---
+import ContextIcon from "../components/ContextIcon.astro"
+import { localize, t } from "../i18n"
+import { getCatalog } from "../lib/catalog"
+import type { Lang } from "../lib/schemas"
+import { sourceGroups } from "../lib/sources"
+import Base from "../layouts/Base.astro"
+import { REPO_URL } from "../site"
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const copy = t(lang)
+const notes = copy.sources.notes as Record<string, string>
+const groups = sourceGroups(await getCatalog())
+---
+
+<Base lang={lang} path="/sources/" title={`${copy.sources.title} · Georgia MCP`} description={copy.sources.description}>
+  <div class="wrap page">
+    <h1>{copy.sources.title}</h1>
+    <p class="lead">{copy.sources.lead}</p>
+
+    {
+      groups.map(({ context, sources }) => (
+        <section class="group" id={context.key} data-hue={context.hue} aria-labelledby={`${context.key}-title`}>
+          <h2 id={`${context.key}-title`}>
+            <ContextIcon name={context.icon} size={24} />
+            {context.name[lang]}
+          </h2>
+          <div class="sources">
+            {sources.map(({ vendor, tools }) => (
+              <article class="source" id={`${context.key}-${vendor.code}`} data-kind={vendor.kind}>
+                <h3>{vendor[lang]}</h3>
+                <p class="kind label">{copy.sources.kinds[vendor.kind]}</p>
+                {vendor.kind in notes && <p class="note">{notes[vendor.kind]}</p>}
+                <a class="visit" href={vendor.url} rel="noopener">
+                  {copy.sources.visit}
+                </a>
+                <p class="tools-label label">{copy.sources.tools}</p>
+                <ul class="tools">
+                  {tools.map((tool) => (
+                    <li>
+                      <a href={localize(`/tools/${tool.name}/`, lang)}>
+                        <code>{tool.name}</code>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+
+    <section id="how" class="part" aria-labelledby="how-title">
+      <h2 id="how-title">{copy.sources.how.heading}</h2>
+      {copy.sources.how.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </section>
+
+    <section id="vendors" class="part" aria-labelledby="vendors-title">
+      <h2 id="vendors-title">{copy.sources.vendors.heading}</h2>
+      <p>{copy.sources.vendors.text}</p>
+      <p class="contact"><a href={`${REPO_URL}/issues/new?template=source_request.yml`}>{copy.sources.vendors.issue}</a></p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: calc(var(--u) * 12);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+  }
+
+  .lead {
+    max-width: 68ch;
+    margin-top: calc(var(--u) * 3);
+    color: var(--muted);
+  }
+
+  .group {
+    margin-top: calc(var(--u) * 10);
+    scroll-margin-top: calc(var(--u) * 6);
+  }
+
+  .group h2 {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 2);
+    font-size: var(--step-2);
+  }
+
+  .group h2 :global(svg) {
+    color: var(--hue);
+  }
+
+  .sources {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: calc(var(--u) * 4);
+    margin-top: calc(var(--u) * 4);
+  }
+
+  .source {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--u) * 2);
+    padding: calc(var(--u) * 5);
+    background: var(--hue-fill);
+    border-radius: var(--radius);
+    scroll-margin-top: calc(var(--u) * 6);
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  .source .label {
+    color: var(--ink);
+  }
+
+  .note {
+    font-size: 0.92rem;
+  }
+
+  .visit {
+    justify-self: start;
+  }
+
+  .tools-label {
+    margin-top: calc(var(--u) * 2);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--u) calc(var(--u) * 3);
+  }
+
+  .tools code {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .part {
+    max-width: 68ch;
+    margin-top: calc(var(--u) * 12);
+  }
+
+  .part h2 {
+    font-size: var(--step-2);
+  }
+
+  .part p,
+  .contact {
+    margin-top: calc(var(--u) * 3);
+  }
+
+</style>

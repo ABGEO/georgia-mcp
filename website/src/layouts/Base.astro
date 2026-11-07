@@ -107,6 +107,7 @@ const jsonLd = structuredData && JSON.stringify(structuredData).replaceAll("<", 
       <div class="wrap row">
         <p lang="en">Made with <span role="img" aria-label="love">❤️</span> in Georgia by <a href={AUTHOR_URL}>ABGEO</a></p>
         <nav class="links" aria-label={copy.footer.label}>
+          <a href={localize("/sources/", lang)}>{copy.footer.sources}</a>
           <a href={localize("/privacy/", lang)}>{copy.footer.privacy}</a>
           <a href={localize("/terms/", lang)}>{copy.footer.terms}</a>
           <a href={REPO_URL}>{copy.footer.repo}</a>

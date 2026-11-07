@@ -9,48 +9,78 @@ rates:
     - code: nbg
       en: National Bank of Georgia
       ka: საქართველოს ეროვნული ბანკი
+      kind: open-api
+      url: https://nbg.gov.ge/en/monetary-policy/currency
     - code: tbc
       en: TBC Bank
       ka: თიბისი ბანკი
+      kind: developer-api
+      url: https://developers.tbcbank.ge/
     - code: bog
       en: Bank of Georgia
       ka: საქართველოს ბანკი
+      kind: developer-api
+      url: https://api.bog.ge/docs/en/bonline/rates/commercial-currency.md
     - code: liberty
       en: Liberty Bank
       ka: ლიბერთი ბანკი
+      kind: web-page
+      url: https://www.libertybank.ge/ka/
     - code: terabank
       en: Terabank
       ka: ტერაბანკი
+      kind: unofficial-api
+      url: https://terabank.ge/ka/retail/exchangerates
     - code: halyk
       en: Halyk Bank
       ka: ხალიკ ბანკი
+      kind: web-page
+      url: https://halykbank.ge/ka/individuals/currency
     - code: basisbank
       en: Basisbank
       ka: ბაზისბანკი
+      kind: unofficial-api
+      url: https://bb.ge/ge/currencies
     - code: credo
       en: Credo Bank
       ka: კრედო ბანკი
+      kind: unofficial-api
+      url: https://credobank.ge/currency
     - code: rico
       en: Rico Credit
       ka: რიკო კრედიტი
+      kind: web-page
+      url: https://www.rico.ge/ka/
     - code: scapp
       en: Scapp
       ka: სკაპი
+      kind: web-page
+      url: https://scapp.ge/ka/currency
     - code: mjc
       en: MJC
       ka: ემჯეის კრედიტი
+      kind: web-page
+      url: https://mjc.ge/rates
     - code: inteli
       en: Inteli Express
       ka: ინტელიექსპრესი
+      kind: web-page
+      url: https://inteliexpress.com/ka/main-page-geo/
     - code: mbc
       en: MBC
       ka: ემბისი
+      kind: unofficial-api
+      url: https://fx.mbc.com.ge/
     - code: crystal
       en: Crystal
       ka: კრისტალი
+      kind: unofficial-api
+      url: https://crystal.ge/valutis-kursebi/
     - code: kursi
       en: Kursi.ge
       ka: Kursi.ge
+      kind: unofficial-api
+      url: https://kursi.ge/ka/
 fuel:
   order: 2
   hue: peach
@@ -62,27 +92,43 @@ fuel:
     - code: wissol
       en: Wissol
       ka: ვისოლი
+      kind: unofficial-api
+      url: https://wissol.ge/ka/fuel-prices
     - code: rompetrol
       en: Rompetrol
       ka: რომპეტროლი
+      kind: web-page
+      url: https://www.rompetrol.ge/
     - code: socar
       en: SOCAR
       ka: სოკარი
+      kind: unofficial-api
+      url: https://sgp.ge/
     - code: connect
       en: Connect
       ka: კონექტი
+      kind: unofficial-api
+      url: https://connect.com.ge/%E1%83%A1%E1%83%90%E1%83%AC%E1%83%95%E1%83%90%E1%83%95%E1%83%98/
     - code: lukoil
       en: Lukoil
       ka: ლუკოილი
+      kind: web-page
+      url: https://www.lukoil.ge/prices-history
     - code: neogas
       en: Neogas
       ka: ნეოგაზი
+      kind: web-page
+      url: https://neogas.ge/ka/
     - code: portal
       en: Portal
       ka: პორტალი
+      kind: web-page
+      url: https://portal.com.ge/ka/fuel-prices
     - code: gulf
       en: Gulf
       ka: გალფი
+      kind: web-page
+      url: https://gulf.ge/en/fuel_prices
 transit:
   order: 3
   hue: sky
@@ -94,6 +140,8 @@ transit:
     - code: ttc
       en: Tbilisi Transport Company
       ka: თბილისის სატრანსპორტო კომპანია
+      kind: unofficial-api
+      url: https://transit.ttc.com.ge/
 offers:
   order: 4
   hue: lilac
@@ -105,12 +153,18 @@ offers:
     - code: tbc
       en: TBC Bank
       ka: თიბისი ბანკი
+      kind: unofficial-api
+      url: https://tbcbank.ge/ka/offers
     - code: bog
       en: Bank of Georgia
       ka: საქართველოს ბანკი
+      kind: unofficial-api
+      url: https://bankofgeorgia.ge/ka/offers-hub/catalog
     - code: liberty
       en: Liberty Bank
       ka: ლიბერთი ბანკი
+      kind: unofficial-api
+      url: https://studioliberty.ge/ka/studio-lifestyle/offers
 postal:
   order: 5
   hue: sage
@@ -122,6 +176,8 @@ postal:
     - code: gpost
       en: Georgian Post
       ka: საქართველოს ფოსტა
+      kind: web-page
+      url: https://www.gpost.ge/help/postal-codes
 cinema:
   order: 6
   hue: teal
@@ -133,6 +189,8 @@ cinema:
     - code: cavea
       en: Cavea
       ka: კავეა
+      kind: unofficial-api
+      url: https://cavea.ge/
 stats:
   order: 7
   hue: slate
@@ -144,6 +202,8 @@ stats:
     - code: geostat
       en: Geostat
       ka: საქსტატი
+      kind: open-api
+      url: https://pc-axis.geostat.ge/PXWeb/pxweb/en/Database/
 air:
   order: 8
   hue: iris
@@ -155,3 +215,5 @@ air:
     - code: nea
       en: National Environmental Agency
       ka: გარემოს ეროვნული სააგენტო
+      kind: unofficial-api
+      url: https://air.gov.ge/

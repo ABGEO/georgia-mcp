@@ -133,6 +133,7 @@ export const en = {
     no: "No",
     examples: "Examples",
     stamp: "Read-only",
+    sourcesLink: "About these sources",
   },
   chat: {
     you: "You",
@@ -324,11 +325,40 @@ export const en = {
       ],
     },
   },
+  sources: {
+    title: "Sources",
+    description: "Where the data of Georgia MCP comes from, and whether each source is official.",
+    lead: "Georgia MCP reads each answer from the organization that publishes the data. Each source below names its kind, a link to the vendor, and the tools that read it.",
+    kinds: {
+      "open-api": "Official open API",
+      "developer-api": "Documented developer API",
+      "unofficial-api": "Unofficial API",
+      "web-page": "Web page",
+    },
+    notes: {
+      "unofficial-api": "The vendor does not publish this API for reuse. It can change without notice.",
+      "web-page": "The server reads a page that the vendor writes for people. It can change without notice.",
+    },
+    visit: "Visit the source",
+    tools: "Tools",
+    how: {
+      heading: "How the server reads a source",
+      paragraphs: [
+        "The server calls a source only when a tool runs. It keeps an answer for a short time, from seconds to a few days, by the pace at which the source changes. It sends the vendor only the input of the call, never data about the person who asks. Each answer names its source and the time of its data.",
+      ],
+    },
+    vendors: {
+      heading: "For a vendor",
+      text: "To correct or remove your source, open a source request in the repository. A request is public.",
+      issue: "Open a source request",
+    },
+  },
   footer: {
     repo: "Source on GitHub",
     label: "Legal and source",
     privacy: "Privacy",
     terms: "Terms",
+    sources: "Sources",
   },
 }
 

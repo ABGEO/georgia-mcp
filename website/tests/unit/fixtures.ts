@@ -51,6 +51,8 @@ export function contextContent(order: number, vendors = 1): ContextContent {
       code: `vendor${i}`,
       en: `Vendor ${i}`,
       ka: `მომწოდებელი ${i}`,
+      kind: "open-api" as const,
+      url: `https://example.ge/vendor${i}`,
     })),
   }
 }

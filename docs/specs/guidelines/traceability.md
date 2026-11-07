@@ -206,6 +206,7 @@ Add a row before you create the file or the directory.
 | `NEAAIR`   | `features/neaair/`   | `air`      | The air quality of the National Environmental Agency.           | Approved |
 | `LLMSTXT`  | `features/llmstxt/`  | `website`  | The catalog files of the site, for an agent or a crawler.       | Approved |
 | `JSONLD`   | `features/jsonld/`   | `website`  | The structured data of the home pages.                          | Approved |
+| `SOURCES`  | `features/sources/`  | `website`  | The sources page: the kind and the link of each source.         | Approved |
 
 ## Retired identifiers
 
