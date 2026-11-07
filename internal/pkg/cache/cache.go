@@ -108,7 +108,7 @@ func (c *Cache[V]) Get(
 	}
 
 	cached, found := c.store.GetIfPresent(key)
-	if found && time.Since(cached.fetchedAt) < c.ttl {
+	if c.fresh(cached, found) {
 		return Result[V]{Value: cached.value, FetchedAt: cached.fetchedAt}, nil
 	}
 
@@ -125,13 +125,19 @@ func (c *Cache[V]) Get(
 	return Result[V]{}, err
 }
 
-// load runs the load of one key, shared between the concurrent calls for the key.
+// load runs the load of one key, shared between the concurrent calls for the key. A
+// caller can miss the store and join the group after the last load has ended, so the
+// shared run reads the store again first.
 func (c *Cache[V]) load(
 	ctx context.Context,
 	key string,
 	load func(context.Context) (V, error),
 ) (entry[V], error) {
 	return share(ctx, &c.group, key, func(ctx context.Context) (entry[V], error) {
+		if cached, found := c.store.GetIfPresent(key); c.fresh(cached, found) {
+			return cached, nil
+		}
+
 		value, err := load(ctx)
 		if err != nil {
 			return entry[V]{}, err
@@ -199,7 +205,7 @@ func (c *Cache[V]) split(keys []string) (map[string]Result[V], map[string]entry[
 
 	for _, key := range keys {
 		cached, found := c.store.GetIfPresent(key)
-		if found && time.Since(cached.fetchedAt) < c.ttl {
+		if c.fresh(cached, found) {
 			results[key] = Result[V]{Value: cached.value, FetchedAt: cached.fetchedAt}
 
 			continue
@@ -245,6 +251,8 @@ func toResults[V any](entries map[string]entry[V], stale bool) map[string]Result
 	return results
 }
 
+// loadMany runs the load of the keys, shared as load does. The shared run loads only
+// the keys that are still not fresh.
 func (c *Cache[V]) loadMany(
 	ctx context.Context,
 	keys []string,
@@ -257,18 +265,41 @@ func (c *Cache[V]) loadMany(
 		&c.groupMany,
 		strings.Join(sorted, ","),
 		func(ctx context.Context) (map[string]entry[V], error) {
-			loaded, err := loadAll(ctx, sorted, load)
+			entries := make(map[string]entry[V], len(sorted))
+
+			var missing []string
+
+			for _, key := range sorted {
+				if cached, found := c.store.GetIfPresent(key); c.fresh(cached, found) {
+					entries[key] = cached
+
+					continue
+				}
+
+				missing = append(missing, key)
+			}
+
+			if len(missing) == 0 {
+				return entries, nil
+			}
+
+			loaded, err := loadAll(ctx, missing, load)
 			if err != nil {
 				return nil, err
 			}
 
 			for key, value := range loaded {
 				c.store.Set(key, value)
+				entries[key] = value
 			}
 
-			return loaded, nil
+			return entries, nil
 		},
 	)
+}
+
+func (c *Cache[V]) fresh(cached entry[V], found bool) bool {
+	return found && time.Since(cached.fetchedAt) < c.ttl
 }
 
 func loadAll[V any](

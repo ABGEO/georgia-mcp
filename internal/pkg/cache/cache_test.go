@@ -11,6 +11,8 @@ import (
 	"testing/synctest"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/abgeo/georgia-mcp/internal/pkg/cache"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
@@ -108,6 +110,74 @@ func TestGetLoadsAKeyOneTime(t *testing.T) {
 			if got != usdRate {
 				t.Errorf("caller %d got %q, want %q", i, got, usdRate)
 			}
+		}
+	})
+}
+
+// PLATFORM-SC-043: A caller that joins the shared load of a key after the last load
+// ended gets the stored value.
+func TestSharedLoadReadsTheStoreAgain(t *testing.T) {
+	t.Parallel()
+
+	synctest.Test(t, func(t *testing.T) {
+		values := newCache[string](t, cache.Config{TTL: time.Hour, MaxEntries: 10})
+
+		var loads atomic.Int32
+
+		load := func(context.Context) (string, error) {
+			loads.Add(1)
+
+			return usdRate, nil
+		}
+
+		if _, err := values.Get(t.Context(), usdKey, load); err != nil {
+			t.Fatalf("Get() error = %v", err)
+		}
+
+		time.Sleep(time.Minute)
+
+		got, err := cache.SharedLoad(t.Context(), values, usdKey, load)
+		if err != nil {
+			t.Fatalf("SharedLoad() error = %v", err)
+		}
+
+		if got != usdRate || loads.Load() != 1 {
+			t.Errorf(
+				"SharedLoad() = %q after %d loads, want %q after 1",
+				got,
+				loads.Load(),
+				usdRate,
+			)
+		}
+	})
+}
+
+// PLATFORM-SC-043: A caller that joins the shared load of the keys of GetMany after the
+// last load ended gets the stored values.
+func TestSharedLoadManyReadsTheStoreAgain(t *testing.T) {
+	t.Parallel()
+
+	synctest.Test(t, func(t *testing.T) {
+		values := newCache[string](t, cache.Config{TTL: time.Hour, MaxEntries: 10})
+		source := &manySource{}
+
+		getMany(t, values, source, usdKey, eurKey)
+		time.Sleep(time.Minute)
+
+		keys := []string{eurKey, usdKey}
+
+		got, err := cache.SharedLoadMany(t.Context(), values, keys, source.load)
+		if err != nil {
+			t.Fatalf("SharedLoadMany() error = %v", err)
+		}
+
+		want := map[string]string{usdKey: usdKey, eurKey: eurKey}
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("SharedLoadMany() mismatch (-want +got):\n%s", diff)
+		}
+
+		if loads := len(source.recorded()); loads != 1 {
+			t.Errorf("the source recorded %d loads, want 1", loads)
 		}
 	})
 }
