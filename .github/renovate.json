@@ -39,6 +39,11 @@
       "draftPR": false,
       "automerge": true,
       "platformAutomerge": true
+    },
+    {
+      "description": "zizmor-action takes a plain version in its input version, not a digest. The action itself is pinned by its commit.",
+      "matchPackageNames": ["ghcr.io/zizmorcore/zizmor"],
+      "pinDigests": false
     }
   ],
   "customManagers": [
