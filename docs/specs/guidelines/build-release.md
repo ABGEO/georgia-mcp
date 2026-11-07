@@ -5,7 +5,7 @@ type: guideline
 status: active
 created: 2026-10-17
 updated: 2026-11-07
-scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
+scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, build/agent-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -335,6 +335,30 @@ workflow writes it.
 upload, and it needs no tag. Cursor reviews each change by hand before the listing
 changes, so a change to the plugin reaches readers late. A workflow that prepares each
 file of a release replaces the manual step later.
+
+## BLD-017
+
+`build/agent-plugin/` holds the plugin of the Agent Plugins format 1.0.0, for the
+marketplace `awesome-copilot` that VS Code and GitHub Copilot CLI read.
+
+| File                            | Holds                                                                  |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| `build/agent-plugin/plugin.json` | The name `georgia-mcp`, the version, the description of `BLD-011`, the author, the home page, the repository, the licence, and the keywords. |
+| `build/agent-plugin/mcp.json`    | The server `georgia-mcp`, `streamable-http` at `https://geo-mcp.abgeo.cloud/mcp`. |
+
+Each file names the schema of its format in `$schema`. Before each release, the owner
+writes the version `<x.y.z>` of the tag into `plugin.json`, in the same pull request as
+`BLD-016`. No workflow writes it.
+
+The owner submits the plugin through the external plugin form of `github/awesome-copilot`,
+with the path `build/agent-plugin`, the tag `v<x.y.z>`, and the commit of the tag. A new
+version reaches the marketplace through a pull request to `plugins/external.json` of
+that repository.
+
+**Why:** The marketplace reviews a tag and a commit that cannot change, and it refuses a
+version that differs from the manifest at that commit. The plugin of `BLD-016` uses the
+format of Cursor, which this marketplace does not read. The plugin of OpenAI carries
+the fields of OpenAI and another name.
 
 ## Retired identifiers
 
