@@ -1,4 +1,4 @@
-  {
+{
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.ABGEO/georgia-mcp",
   "title": "Georgia MCP",
@@ -13,12 +13,16 @@
     {
       "src": "https://geo-mcp.abgeo.cloud/favicon.svg",
       "mimeType": "image/svg+xml",
-      "sizes": ["any"]
+      "sizes": [
+        "any"
+      ]
     },
     {
       "src": "https://geo-mcp.abgeo.cloud/apple-touch-icon.png",
       "mimeType": "image/png",
-      "sizes": ["180x180"]
+      "sizes": [
+        "180x180"
+      ]
     }
   ],
   "remotes": [
@@ -45,7 +49,10 @@
         {
           "name": "GEOMCP_TRANSIT_TTC_ENABLED",
           "description": "Turns on the Tbilisi Transport Company. Set it to true with the key.",
-          "choices": ["true", "false"]
+          "choices": [
+            "true",
+            "false"
+          ]
         },
         {
           "name": "GEOMCP_TRANSIT_TTC_API_KEY",
@@ -55,7 +62,10 @@
         {
           "name": "GEOMCP_RATES_TBC_ENABLED",
           "description": "Turns on the TBC Bank developer API. Set it to true with the key.",
-          "choices": ["true", "false"]
+          "choices": [
+            "true",
+            "false"
+          ]
         },
         {
           "name": "GEOMCP_RATES_TBC_API_KEY",
@@ -65,7 +75,10 @@
         {
           "name": "GEOMCP_RATES_CREDO_ENABLED",
           "description": "Turns on Credo Bank. Set it to true with the key.",
-          "choices": ["true", "false"]
+          "choices": [
+            "true",
+            "false"
+          ]
         },
         {
           "name": "GEOMCP_RATES_CREDO_API_KEY",
