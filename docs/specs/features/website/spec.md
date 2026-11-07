@@ -1014,7 +1014,7 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 | 23  | Write the test of the token. Add the token file and the `text/plain` type of `/.well-known/` to `nginx.conf`. | `WEBSITE-DD-024`, `SC-050` | [x] |
 | 24  | Write the test of the guide of claude.ai. Add `CLAUDE_DIRECTORY_URL`, the link of the directory, and its copy. | `WEBSITE-FR-007`, `SC-051` | [x] |
 | 25  | Add the key of Credo Bank to the local guides. Add `halyk`, `basisbank`, `credo`, and `scapp` to `contexts.yaml` and the tool file of the commercial rates. Run the refresh. Rewrite each answer of the commercial rates from its new recording. | `WEBSITE-FR-009`, `FR-018`, `DD-018` | [x] |
-| 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [ ] |
+| 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [x] |
 
 ## 8. Out of scope for this specification
 

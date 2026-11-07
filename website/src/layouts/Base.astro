@@ -7,6 +7,7 @@ import LangSwitch from "../components/LangSwitch.astro"
 import Mark from "../components/Mark.astro"
 import ThemeToggle from "../components/ThemeToggle.astro"
 import { localize, other, t } from "../i18n"
+import { releaseUrl } from "../lib/release"
 import type { Lang } from "../lib/schemas"
 import { AUTHOR_URL, REPO_URL, SITE_NAME, SITE_URL } from "../site"
 import "../styles/global.css"
@@ -21,9 +22,7 @@ interface Props {
 
 const { lang, path, title, description, noindex = false } = Astro.props
 const copy = t(lang)
-const release = /^v\d+\.\d+\.\d+$/.test(PUBLIC_VERSION)
-  ? `${REPO_URL}/releases/tag/${PUBLIC_VERSION}`
-  : `${REPO_URL}/releases`
+const release = releaseUrl(REPO_URL, PUBLIC_VERSION)
 const canonical = new URL(localize(path, lang), SITE_URL).href
 const image = new URL(`/og/${lang}.png`, SITE_URL).href
 ---
