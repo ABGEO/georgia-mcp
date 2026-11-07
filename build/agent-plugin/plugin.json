@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "georgia-mcp",
+  "description": "An MCP server for Georgian public data, read from the organizations that publish it.",
+  "version": "1.1.2",
+  "author": {
+    "name": "Temuri Takalandze",
+    "email": "takalandzet@gmail.com",
+    "url": "https://www.abgeo.dev/"
+  },
+  "homepage": "https://geo-mcp.abgeo.cloud/",
+  "repository": "https://github.com/abgeo/georgia-mcp",
+  "license": "GPL-3.0",
+  "keywords": [
+    "mcp",
+    "georgia",
+    "public-data",
+    "read-only"
+  ]
+}
