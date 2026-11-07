@@ -143,7 +143,23 @@ jobs:
             go-test-${{ runner.os }}-
 
       - name: Test
-        run: go test -race -coverprofile=coverage.out ./...
+        run: >-
+          go tool gotestsum
+          --format pkgname-and-test-fails
+          --format-hide-empty-pkg
+          --junitfile junit.xml
+          --junitfile-hide-empty-pkg
+          --junitfile-testsuite-name relative
+          --junitfile-testcase-classname relative
+          -- -race -coverprofile=coverage.out ./...
+
+      # Codecov learns a flaky test from a failed run, so the report also uploads then.
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results
+          path: junit.xml
+          retention-days: 5
 
       - name: Coverage summary
         run: |
@@ -188,6 +204,7 @@ jobs:
   coverage:
     name: Coverage
     needs: go-test
+    if: ${{ !cancelled() && needs.go-test.result != 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -198,13 +215,27 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      - if: needs.go-test.result == 'success'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: coverage
 
-      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+      - if: needs.go-test.result == 'success'
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: coverage.out
+          disable_search: true
+          use_oidc: ${{ !github.event.pull_request.head.repo.fork }}
+          fail_ci_if_error: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: test-results
+
+      - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          report_type: test_results
+          files: junit.xml
           disable_search: true
           use_oidc: ${{ !github.event.pull_request.head.repo.fork }}
           fail_ci_if_error: false
