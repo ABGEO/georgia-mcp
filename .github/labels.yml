@@ -7,6 +7,9 @@
 - name: enhancement
   color: a2eeef
   description: A new feature or a request for one.
+- name: source
+  color: fbca04
+  description: A request about a source of the server.
 - name: documentation
   color: 0075ca
   description: A change to the documentation.

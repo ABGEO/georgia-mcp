@@ -18,6 +18,7 @@ describe("buildCatalog", () => {
   test("joins each context with its vendors and its tools", () => {
     const data = valid("fuel_get_prices", "fuel")
     data.contexts.fuel = contextContent(2, 3)
+    data.tools.fuel_get_prices.vendors = ["vendor0", "vendor1", "vendor2"]
     data.definitions.rates_get_official_rates = definition("rates_get_official_rates")
     data.tools.rates_get_official_rates = content("rates")
     data.recordings["rates_get_official_rates.today"] = recording("rates_get_official_rates")
@@ -149,8 +150,8 @@ describe("buildCatalog", () => {
   test("gives each tool its vendors, and whether it takes their codes", () => {
     const data = valid("rates_get_commercial_rates", "rates")
     data.contexts.rates.vendors = [
-      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი" },
-      { code: "bog", en: "Bank of Georgia", ka: "საქართველოს ბანკი" },
+      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი", kind: "open-api", url: "https://example.ge/tbc" },
+      { code: "bog", en: "Bank of Georgia", ka: "საქართველოს ბანკი", kind: "open-api", url: "https://example.ge/bog" },
     ]
     data.tools.rates_get_commercial_rates.vendors = ["bog", "tbc"]
     data.definitions.rates_get_commercial_rates.description =
@@ -163,8 +164,8 @@ describe("buildCatalog", () => {
     const byName = Object.fromEntries(catalog.tools.map((tool) => [tool.name, tool]))
 
     expect(byName.rates_get_commercial_rates.vendors).toEqual([
-      { code: "bog", en: "Bank of Georgia", ka: "საქართველოს ბანკი" },
-      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი" },
+      { code: "bog", en: "Bank of Georgia", ka: "საქართველოს ბანკი", kind: "open-api", url: "https://example.ge/bog" },
+      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი", kind: "open-api", url: "https://example.ge/tbc" },
     ])
     expect(byName.rates_get_commercial_rates.takesVendorCode).toBe(true)
     expect(byName.rates_get_official_rates.takesVendorCode).toBe(false)
@@ -174,8 +175,8 @@ describe("buildCatalog", () => {
   test("refuses vendors that do not match the context or the server", () => {
     const data = valid("rates_get_commercial_rates", "rates")
     data.contexts.rates.vendors = [
-      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი" },
-      { code: "kursi", en: "Kursi.ge", ka: "Kursi.ge" },
+      { code: "tbc", en: "TBC Bank", ka: "თიბისი ბანკი", kind: "open-api", url: "https://example.ge/tbc" },
+      { code: "kursi", en: "Kursi.ge", ka: "Kursi.ge", kind: "open-api", url: "https://example.ge/kursi" },
     ]
     data.tools.rates_get_commercial_rates.vendors = ["tbc", "kursi", "hydro"]
     data.definitions.rates_get_commercial_rates.description =

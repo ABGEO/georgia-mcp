@@ -221,3 +221,5 @@ define it. The identifier of a term is `GLO-<term>`.
 | catalog file       | `/llms.txt` or `/tools.json`: the tools of the server in a form that an agent reads, written at each build. |
 | Markdown copy      | The text of one English tool page as Markdown, for a model to read.                                   |
 | structured data    | The facts of a page as fields of the vocabulary of schema.org, written into the page for a search engine or a model. |
+| sources page       | The page of the site that lists each source, its kind, its link, and its tools.                         |
+| kind of source     | One of: an official open API, a documented developer API, an unofficial API, or a web page.             |

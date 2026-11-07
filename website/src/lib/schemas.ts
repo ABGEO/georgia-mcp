@@ -59,9 +59,21 @@ export const toolContentSchema = z.object({
 /** The content of one tool, written for the site. */
 export type ToolContent = z.infer<typeof toolContentSchema>
 
-const vendor = localized.extend({ code: z.string().regex(/^[a-z]+$/) })
+/** The kinds of source. The first two are official. */
+export const sourceKinds = ["open-api", "developer-api", "unofficial-api", "web-page"] as const
 
-/** A vendor of a context: its name in each language, and its code. */
+/** A kind of source. */
+export type SourceKind = (typeof sourceKinds)[number]
+
+const vendor = localized.extend({
+  code: z.string().regex(/^[a-z]+$/),
+  kind: z.enum(sourceKinds),
+  url: z
+    .url({ protocol: /^https$/ })
+    .refine((url) => !new URL(url).pathname.includes("/api"), "a page for people, not the address of an API"),
+})
+
+/** A vendor of a context: its name in each language, its code, the kind of its source, and its link. */
 export type Vendor = z.infer<typeof vendor>
 
 /** The hand-written content of one context. */
