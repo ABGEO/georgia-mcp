@@ -220,3 +220,4 @@ define it. The identifier of a term is `GLO-<term>`.
 | site version       | The version that the build of the site receives from outside. The site shows it and never computes it. |
 | catalog file       | `/llms.txt` or `/tools.json`: the tools of the server in a form that an agent reads, written at each build. |
 | Markdown copy      | The text of one English tool page as Markdown, for a model to read.                                   |
+| structured data    | The facts of a page as fields of the vocabulary of schema.org, written into the page for a search engine or a model. |
