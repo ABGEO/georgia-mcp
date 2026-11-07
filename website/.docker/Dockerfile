@@ -2,6 +2,8 @@ FROM --platform=$BUILDPLATFORM ghcr.io/pnpm/pnpm:12.18.0-alpine@sha256:937d5b248
 
 FROM --platform=$BUILDPLATFORM node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216 AS build
 
+ARG VERSION=dev
+
 COPY --from=pnpm /opt/pnpm /opt/pnpm
 RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 
@@ -14,7 +16,7 @@ RUN --mount=type=cache,target=/pnpm/store \
 
 COPY . .
 
-RUN pnpm build
+RUN PUBLIC_VERSION=$VERSION pnpm build
 
 FROM nginxinc/nginx-unprivileged:1.31.7-alpine@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e
 

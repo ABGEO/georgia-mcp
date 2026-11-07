@@ -4,7 +4,7 @@ title: The website
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-10-24
+updated: 2026-11-07
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -300,6 +300,18 @@ The site must answer `/.well-known/openai-apps-challenge` with the verification 
 
 - Normal case: a request to the address answers 200 with the token alone.
 - Limit case: OpenAI gives a new token. The owner replaces the file, and the next build serves it.
+
+### `WEBSITE-FR-039`
+
+The footer of each page must show the site version and link to its release on GitHub. A site version that names no release must link to the list of releases.
+
+**Why:** A reader and the owner can tell which version a host serves. The build fixes the value, so every host shows the version that it built, with no call at run time.
+
+**Examples:**
+
+- Normal case: a build of `v1.2.3` shows `v1.2.3` and links to the release `v1.2.3`.
+- Limit case: a build between two releases, `v1.1.2-8-g8def960`, links to the list of releases.
+- Unwanted case: a build that receives no site version shows `dev` and links to the list of releases.
 
 ## 7. Non-functional requirements
 

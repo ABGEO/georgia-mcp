@@ -1,10 +1,15 @@
 import sitemap from "@astrojs/sitemap"
-import { defineConfig, fontProviders } from "astro/config"
+import { defineConfig, envField, fontProviders } from "astro/config"
 
 export default defineConfig({
   site: "https://geo-mcp.abgeo.cloud",
   output: "static",
   trailingSlash: "ignore",
+  env: {
+    schema: {
+      PUBLIC_VERSION: envField.string({ context: "client", access: "public", default: "dev" }),
+    },
+  },
   i18n: {
     locales: ["en", "ka"],
     defaultLocale: "en",
