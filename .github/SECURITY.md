@@ -59,7 +59,7 @@ Please keep the report private until then.
 
 ## Assessment
 
-The [security assessment](../docs/security-assessment.md) names the likely threats and
+The [security assessment](https://github.com/abgeo/georgia-mcp/blob/main/docs/security-assessment.md) names the likely threats and
 the defenses against each.
 
 ## Scope

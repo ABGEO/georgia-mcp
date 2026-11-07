@@ -1,0 +1,173 @@
+name: fuzz
+
+on:
+  schedule:
+    - cron: "41 2 * * 1,4"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: The minutes of each fuzz test.
+        type: number
+        required: false
+        default: 5
+
+permissions: { }
+
+concurrency:
+  group: fuzz
+  cancel-in-progress: false
+
+jobs:
+  targets:
+    name: Targets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      targets: ${{ steps.list.outputs.targets }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - id: list
+        name: List
+        run: |
+          targets="$(
+            go test -list '^Fuzz' ./internal/... ./pkg/... |
+              awk '/^ok /{ for (i = 0; i < n; i++) print $2, names[i]; n = 0; next } /^Fuzz/{ names[n++] = $1 }' |
+              jq -R -s -c '
+                split("\n") | map(select(length > 0) | split(" ") | {
+                  package: .[0],
+                  name: .[1],
+                  id: ((.[0] | sub("^github.com/abgeo/georgia-mcp/(internal/app/georgia-mcp/)?"; "") | gsub("/"; "-")) + "-" + .[1])
+                })
+              '
+          )"
+          jq -r '.[] | "\(.package) \(.name)"' <<< "$targets"
+
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+
+  fuzz:
+    name: Fuzz ${{ matrix.target.id }}
+    needs: targets
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        target: ${{ fromJSON(needs.targets.outputs.targets) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - id: go-env
+        name: Go cache paths
+        env:
+          PACKAGE: ${{ matrix.target.package }}
+          NAME: ${{ matrix.target.name }}
+        run: |
+          {
+            echo "mod=$(go env GOMODCACHE)"
+            echo "corpus=$(go env GOCACHE)/fuzz/$PACKAGE/$NAME"
+            echo "testdata=${PACKAGE#github.com/abgeo/georgia-mcp/}/testdata/fuzz/$NAME"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-${{ github.sha }}
+          path: ${{ steps.go-env.outputs.mod }}
+          restore-keys: |
+            go-test-${{ runner.os }}-${{ hashFiles('go.mod', 'go.sum') }}-
+            go-test-${{ runner.os }}-
+
+      # Each run starts from the corpus of the last run, so the corpus grows.
+      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: fuzz-${{ matrix.target.id }}-${{ github.run_id }}
+          path: ${{ steps.go-env.outputs.corpus }}
+          restore-keys: |
+            fuzz-${{ matrix.target.id }}-
+
+      - name: Fuzz
+        env:
+          PACKAGE: ${{ matrix.target.package }}
+          NAME: ${{ matrix.target.name }}
+          MINUTES: ${{ inputs.minutes || 5 }}
+        run: go test -run '^$' -fuzz "^$NAME\$" -fuzztime "${MINUTES}m" "$PACKAGE"
+
+      - if: ${{ !cancelled() && github.ref == 'refs/heads/main' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          key: fuzz-${{ matrix.target.id }}-${{ github.run_id }}
+          path: ${{ steps.go-env.outputs.corpus }}
+
+      # The fuzzer writes the failing input to testdata/fuzz. Commit it as a seed.
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fuzz-${{ matrix.target.id }}
+          path: ${{ steps.go-env.outputs.testdata }}
+          if-no-files-found: ignore
+          retention-days: 30
+
+  report:
+    name: Report
+    needs: fuzz
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.fuzz.result == 'success' || needs.fuzz.result == 'failure') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: fuzz-*
+          path: inputs
+
+      - name: Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULT: ${{ needs.fuzz.result }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Fuzz tests fail"
+          number="$(gh issue list --state open --search "\"$title\" in:title" --json number,title \
+            --jq "map(select(.title == \"$title\")) | first | .number // empty")"
+
+          if [ "$RESULT" = "success" ]; then
+            if [ -n "$number" ]; then
+              gh issue close "$number" --comment "The run $RUN passed."
+            fi
+            exit 0
+          fi
+
+          failed=""
+          if [ -d inputs ]; then
+            failed="$(find inputs -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | sed 's/^fuzz-//' | xargs -r printf -- '- %s\n')"
+          fi
+          if [ -z "$failed" ]; then
+            failed="- A job failed before a fuzz test failed. Read the log."
+          fi
+          body="$(printf 'The run %s failed. Each artifact holds the failing input.\n\n%s\n' "$RUN" "$failed")"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body "$body"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi

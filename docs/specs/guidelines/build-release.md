@@ -285,6 +285,36 @@ the release notes. The owner adds it by hand.
 **Why:** A label that lives only in the settings drifts, and a label that nobody adds
 filters nothing. The title already follows `GIT-002`, so it gives the label.
 
+## BLD-015
+
+`go test ./...` runs only the seed corpus of each fuzz test of `TST-009`.
+`.github/workflows/fuzz.yml` fuzzes each of them on Monday and Thursday at 02:41 UTC,
+and on a manual run:
+
+1. A job lists each fuzz test with `go test -list '^Fuzz'`. A new fuzz test joins the
+   run with no change to the workflow.
+2. A job for each fuzz test runs
+   `go test -run '^$' -fuzz '^<name>$' -fuzztime 5m <package>`. A manual run sets the
+   minutes. The timeout of the job, 30 minutes, caps them.
+3. Each job restores the generated corpus of its fuzz test (`$GOCACHE/fuzz`) from the
+   cache of the last run. A run on `main` saves the corpus again, also when the job
+   fails.
+4. A failed job keeps the failing input from `testdata/fuzz/<name>` as an artifact.
+
+The run uses no `-race`. A fuzz test parses one input on one goroutine, and the race
+detector slows each input.
+
+A run on `main` reports to one issue, titled `Fuzz tests fail`, as `BLD-010` does for
+the live tests. The issue lists each failed fuzz test. The job that writes to the issue
+reads no code.
+
+To fix a failure, commit the failing input under `testdata/fuzz/<name>/` of the
+package. `go test ./...` then runs it as a seed, and the fix makes it pass.
+
+**Why:** The seed corpus tests the inputs that the author thought of. Fuzzing finds the
+input that nobody thought of. GitHub drops a cache that no run reads for 7 days, so two
+runs a week keep the corpus.
+
 ## Retired identifiers
 
 This file has no retired identifier.
