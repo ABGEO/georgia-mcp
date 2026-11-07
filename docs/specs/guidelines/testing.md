@@ -4,7 +4,7 @@ title: Testing
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-06
+updated: 2026-11-07
 scope: [cmd/, internal/, pkg/, test/]
 related: [GO, PRC, TRC, CLT, BLD]
 ---
@@ -63,7 +63,7 @@ from `t.Context()`. A test of a time to live uses `testing/synctest`.
 
 ## TST-008
 
-Every test run uses `-race`.
+Every test run uses `-race`, apart from the fuzz run of `BLD-015`.
 
 ## TST-009
 
