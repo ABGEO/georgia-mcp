@@ -3,6 +3,7 @@ import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
 
+import { cursorInstallUrl, vscodeInstallUrl } from "../../src/lib/install"
 import { AUTHOR_URL, CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
 import { definitions, dist, page, pagePaths, pair, text } from "./helpers"
 
@@ -104,6 +105,24 @@ describe("the home page", () => {
     expect(panel?.querySelectorAll("a").map((a) => a.getAttribute("href"))).toContain(CLAUDE_DIRECTORY_URL)
     expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
     expect(text(panel)).not.toMatch(/Free plan|უფასო პაკეტ/)
+  })
+
+  // WEBSITE-SC-055: Only the guides of Cursor and VS Code hold an install link, and both keep the configuration.
+  test.each(homes)("%s offers the install links", (path) => {
+    const lang = path === "/" ? "en" : "ka"
+    const html = page(path)
+    const want: Record<string, string> = {
+      [`guide-${lang}-cursor`]: cursorInstallUrl("georgia-mcp", SERVER_URL),
+      [`guide-${lang}-vscode`]: vscodeInstallUrl("georgia-mcp", SERVER_URL),
+    }
+
+    for (const panel of html.querySelectorAll("[data-panel]")) {
+      const links = panel.querySelectorAll("a.install").map((a) => a.getAttribute("href"))
+      const id = panel.getAttribute("id") ?? ""
+
+      expect(links).toEqual(want[id] ? [want[id]] : [])
+      if (want[id]) expect(panel.querySelector("pre")).not.toBeNull()
+    }
   })
 })
 

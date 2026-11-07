@@ -56,6 +56,7 @@ from the server.
 | `WEBSITE-FR-037`  | 4.3 Pages, `WEBSITE-SC-049`                             |
 | `WEBSITE-FR-038`  | 4.1 Static, `WEBSITE-DD-024`, `WEBSITE-SC-050`          |
 | `WEBSITE-FR-039`  | 4.3 Pages, `WEBSITE-DD-025`, `WEBSITE-SC-052`, `SC-053` |
+| `WEBSITE-FR-040`  | 4.4 Install guides, `WEBSITE-DD-026`, `WEBSITE-SC-054`, `SC-055` |
 | `WEBSITE-NFR-001` | `WEBSITE-DD-008`, `WEBSITE-SC-028`                      |
 | `WEBSITE-NFR-002` | `WEBSITE-DD-007`, `WEBSITE-SC-029`                      |
 | `WEBSITE-NFR-003` | `WEBSITE-DD-006`, `WEBSITE-SC-030`                      |
@@ -247,8 +248,8 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | The connector of claude.ai appears in Claude Code under the same account, listed in `/mcp` as `claude.ai Georgia MCP`. To add it yourself: `claude mcp add --transport http georgia-mcp {url}` | `WEBSITE-FR-007` |
 | ChatGPT        | Plugins, the plus button, Add custom MCP server. Name `Georgia MCP`, URL `{url}`, authentication None, accept the warning. A paid plan. | `WEBSITE-FR-007` |
-| Cursor         | `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}`                   | `WEBSITE-FR-007` |
-| VS Code        | `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}`        | `WEBSITE-FR-007` |
+| Cursor         | An install link, "Add to Cursor". Then `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
+| VS Code        | An install link, "Add to VS Code". Then `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
 | Docker         | `docker run -p 8080:8080 ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
 
@@ -520,6 +521,34 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **Decision:** `astro.config.mjs` declares `PUBLIC_VERSION` in the schema of `astro:env`, as a public client string with the default `dev`. `Base.astro` imports it from `astro:env/client` and writes it into the footer as a link in the mono font. A value of the form `v<major>.<minor>.<patch>` links to `REPO_URL/releases/tag/<value>`. Any other value links to `REPO_URL/releases`. The site is static, so the build writes the value into each page and ships no script for it. The build stage of `.docker/Dockerfile` declares `ARG VERSION=dev` and runs `PUBLIC_VERSION=$VERSION pnpm build`, so the `VERSION` of `BLD-005` reaches the site. Another host, such as Vercel, sets `PUBLIC_VERSION` in its build environment.
 **Rationale:** The value comes from outside the build, so every host supplies it the same way. `astro:env` checks the type, and `astro check` sees the import.
 **Alternatives:** A call to `git describe` in the configuration. The owner refused it: the build must not compute the value. A `define` of Vite. It has no type and no check.
+
+### `WEBSITE-DD-026`
+
+**Realizes:** `WEBSITE-FR-040`
+**Decision:** `src/lib/install.ts` exports two functions. The build calls them, so the page ships no script for them.
+
+```ts
+/** The install link of Cursor for a remote server. */
+export function cursorInstallUrl(name: string, url: string): string
+/** The install link of VS Code for a remote server. */
+export function vscodeInstallUrl(name: string, url: string): string
+```
+
+| Client  | Link                                                                                   | Payload                                       |
+| ------- | -------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Cursor  | `cursor://anysphere.cursor-deeplink/mcp/install?name=<name>&config=<config>`           | `config` is the base64 of `{"url":"<url>"}`, then percent encoded. |
+| VS Code | `vscode:mcp/install?<payload>`                                                         | `payload` is `{"name":"<name>","type":"http","url":"<url>"}`, percent encoded. |
+
+`InstallGuides` gives the guides of Cursor and VS Code a field `install` with the link, for `georgia-mcp` and `SERVER_URL`. The panel shows the link as a button, with the icon `Plug` of Lucide and the label of the dictionary, before the steps. The steps and the configuration stay. A local guide has no `install`. The dictionary adds `add` to `install.guides.cursor` and `install.guides.vscode`:
+
+| Key      | English          | Georgian             |
+| -------- | ---------------- | -------------------- |
+| `cursor.add` | Add to Cursor  | დაამატე Cursor-ში    |
+| `vscode.add` | Add to VS Code | დაამატე VS Code-ში   |
+
+The button reads the tokens of `BRD-007`, so it needs no image from another host.
+**Rationale:** The formats come from the documentation of Cursor (cursor.com/docs/mcp/install-links) and from the handler of VS Code (`mcpWorkbenchService.ts`, `parseMcpInstallUriPayload`, in microsoft/vscode). The payload of VS Code reads the name from the JSON, and `type` `http` marks a remote server. Percent encoding keeps a `+`, a `/`, or a `=` of base64 intact in the query. The owner chose the buttons of the site, the scheme of each client, and the remote guides only.
+**Alternatives:** The badge images of Cursor and of shields.io. Each page view would send a request to a third party. The redirect `https://vscode.dev/redirect/mcp/install`. It answers 302 to the same `vscode:` link, with one more host. The web link `https://cursor.com/install-mcp`. It opens a sign-in page of Cursor. A link for the Docker guide. The address answers only after the reader starts the container.
 
 ## 6. Scenarios
 
@@ -985,6 +1014,24 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 **When** the test computes the link of each.
 **Then** `v1.2.3` links to `REPO_URL/releases/tag/v1.2.3`. The other two link to `REPO_URL/releases`.
 
+### `WEBSITE-SC-054`
+
+**Verifies:** `WEBSITE-FR-040`
+**Layer:** unit
+
+**Given** the name `georgia-mcp` and the address `https://geo-mcp.abgeo.cloud/mcp`.
+**When** the test builds the link of each client and decodes its payload.
+**Then** the link of Cursor starts with `cursor://anysphere.cursor-deeplink/mcp/install?name=georgia-mcp&config=`, and its `config` decodes to `{"url":"https://geo-mcp.abgeo.cloud/mcp"}`. The link of VS Code starts with `vscode:mcp/install?`, and its payload decodes to `{"name":"georgia-mcp","type":"http","url":"https://geo-mcp.abgeo.cloud/mcp"}`.
+
+### `WEBSITE-SC-055`
+
+**Verifies:** `WEBSITE-FR-040`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads the panels of the install guides.
+**Then** the panel of Cursor holds one install link equal to `cursorInstallUrl("georgia-mcp", SERVER_URL)`, the panel of VS Code holds one equal to `vscodeInstallUrl("georgia-mcp", SERVER_URL)`, both panels still hold their configuration, and no other panel holds an install link.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -1015,6 +1062,7 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 | 24  | Write the test of the guide of claude.ai. Add `CLAUDE_DIRECTORY_URL`, the link of the directory, and its copy. | `WEBSITE-FR-007`, `SC-051` | [x] |
 | 25  | Add the key of Credo Bank to the local guides. Add `halyk`, `basisbank`, `credo`, and `scapp` to `contexts.yaml` and the tool file of the commercial rates. Run the refresh. Rewrite each answer of the commercial rates from its new recording. | `WEBSITE-FR-009`, `FR-018`, `DD-018` | [x] |
 | 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [x] |
+| 27  | Write the tests of the install links. Write `src/lib/install.ts`, the `add` copy of both dictionaries, and the button in `InstallGuides`. | `WEBSITE-DD-026`, `SC-054`, `SC-055` | [x] |
 
 ## 8. Out of scope for this specification
 

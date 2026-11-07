@@ -313,6 +313,18 @@ The footer of each page must show the site version and link to its release on Gi
 - Limit case: a build between two releases, `v1.1.2-8-g8def960`, links to the list of releases.
 - Unwanted case: a build that receives no site version shows `dev` and links to the list of releases.
 
+### `WEBSITE-FR-040`
+
+The install guide of Cursor and the install guide of Visual Studio Code must each offer an install link for the server at `SERVER_URL`. Each guide must still show the configuration to add by hand.
+
+**Why:** A reader with the client on the computer connects in one step, without editing a file. A reader without it still has the configuration.
+
+**Examples:**
+
+- Normal case: the reader has Cursor and presses "Add to Cursor". Cursor opens and asks to add `georgia-mcp` with the address `https://geo-mcp.abgeo.cloud/mcp`.
+- Limit case: the reader does not have VS Code. The link does nothing, and the configuration under it still works.
+- Unwanted case: the reader runs the server in a container. The local guides offer no install link, because the address answers only after the reader starts the container.
+
 ## 7. Non-functional requirements
 
 ### `WEBSITE-NFR-001`

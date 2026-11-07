@@ -78,8 +78,8 @@ export const ka: Dictionary = {
           "დაარქვი Georgia MCP, ჩასვი ქვემოთ მოცემული მისამართი, ავთენტიფიკაციად აირჩიე None და დაეთანხმე გაფრთხილებას. საჭიროა ფასიანი პაკეტი.",
         ],
       },
-      cursor: { name: "Cursor", steps: ["დაამატე ეს ფაილში ~/.cursor/mcp.json."] },
-      vscode: { name: "VS Code", steps: ["დაამატე ეს შენი პროექტის ფაილში .vscode/mcp.json."] },
+      cursor: { name: "Cursor", add: "დაამატე Cursor-ში", steps: ["ან დაამატე ეს ფაილში ~/.cursor/mcp.json."] },
+      vscode: { name: "VS Code", add: "დაამატე VS Code-ში", steps: ["ან დაამატე ეს შენი პროექტის ფაილში .vscode/mcp.json."] },
       binary: {
         name: "ბინარი",
         steps: [

@@ -215,5 +215,6 @@ define it. The identifier of a term is `GLO-<term>`.
 | install guide      | The steps that connect one client to the server.                                                      |
 | legal page         | The privacy policy page or the terms of service page of the site.                                     |
 | access log         | The record of one HTTP request that the server or the site writes.                                    |
+| install link       | A link that opens a client and asks the reader to add the server, with no file to edit.                 |
 | release            | A version of the project that the owner publishes on GitHub under a tag such as `v1.2.3`.             |
 | site version       | The version that the build of the site receives from outside. The site shows it and never computes it. |
