@@ -1,0 +1,131 @@
+name: prepare-release
+
+on:
+  workflow_dispatch:
+
+permissions: { }
+
+concurrency:
+  group: prepare-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      # The version and the body come from the draft release.
+      - name: Version
+        id: version
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          draft="$(gh api "repos/$GH_REPO/releases" --jq '[.[] | select(.draft)][0] // {}')"
+          tag="$(jq -r '.tag_name // ""' <<<"$draft")"
+          version="${tag#v}"
+          jq -r '.body // ""' <<<"$draft" > "$RUNNER_TEMP/body.md"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "No draft release with a version x.y.z: '$version'."
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      # The release notes of the OpenAI plugin keep the changes that a user can see: the
+      # entries of the breaking changes, the features, and the bug fixes.
+      - name: Release notes
+        run: |
+          tr -d '\r' < "$RUNNER_TEMP/body.md" | awk '
+            /^## / {
+              section = substr($0, 4)
+              keep = section == "Breaking changes" || section == "Features" || section == "Bug fixes"
+              next
+            }
+            keep && /^- / {
+              line = substr($0, 3)
+              sub(/ \(#[0-9]+\)$/, "", line)
+              gsub(/\*\*/, "", line)
+              if (section != printed) {
+                if (printed != "") print ""
+                print section
+                printed = section
+              }
+              print "- " line
+            }
+          ' > "$RUNNER_TEMP/release-notes.txt"
+          if [ ! -s "$RUNNER_TEMP/release-notes.txt" ]; then
+            echo "This version has no change that a user can see." > "$RUNNER_TEMP/release-notes.txt"
+          fi
+          cat "$RUNNER_TEMP/release-notes.txt"
+
+      - name: Cursor plugin
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          jq --arg version "$VERSION" '.version = $version' build/cursor-plugin/.cursor-plugin/plugin.json > "$RUNNER_TEMP/plugin.json"
+          mv "$RUNNER_TEMP/plugin.json" build/cursor-plugin/.cursor-plugin/plugin.json
+          jq --arg version "$VERSION" '.metadata.version = $version' .cursor-plugin/marketplace.json > "$RUNNER_TEMP/marketplace.json"
+          mv "$RUNNER_TEMP/marketplace.json" .cursor-plugin/marketplace.json
+          git diff --stat -- build/cursor-plugin .cursor-plugin
+
+      - name: Agent plugin
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          jq --arg version "$VERSION" '.version = $version' build/agent-plugin/plugin.json > "$RUNNER_TEMP/plugin.json"
+          mv "$RUNNER_TEMP/plugin.json" build/agent-plugin/plugin.json
+          git diff --stat -- build/agent-plugin
+
+      - name: MCP Registry
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          jq --arg version "$VERSION" '
+            .version = $version
+            | .packages |= map(if .registryType == "oci" then .identifier |= sub(":[^:]+$"; ":" + $version) else . end)
+          ' build/mcp-registry/server.json > "$RUNNER_TEMP/server.json"
+          mv "$RUNNER_TEMP/server.json" build/mcp-registry/server.json
+          git diff --stat -- build/mcp-registry
+
+      - name: OpenAI plugin
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          jq --arg version "$VERSION" --rawfile notes "$RUNNER_TEMP/release-notes.txt" '
+            .version = $version
+            | .extensions["com.openai"].publication.release_notes = ($notes | rtrimstr("\n"))
+          ' build/openai-plugin/plugin.json > "$RUNNER_TEMP/plugin.json"
+          mv "$RUNNER_TEMP/plugin.json" build/openai-plugin/plugin.json
+          git diff --stat -- build/openai-plugin
+
+      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.app.outputs.token }}
+          sign-commits: true
+          base: main
+          branch: release/prepare
+          delete-branch: true
+          commit-message: "build: prepare the release v${{ steps.version.outputs.value }}"
+          title: "build: prepare the release v${{ steps.version.outputs.value }}"
+          labels: skip-changelog
+          body: |
+            Writes the version ${{ steps.version.outputs.value }} of the draft release into the files of `BLD-018`.
+
+            Merge this pull request, then publish the draft release.

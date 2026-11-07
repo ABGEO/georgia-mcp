@@ -206,8 +206,8 @@ source is off by default (`CFG-008`), so the package starts with no variable.
 The job `MCP Registry` of `.github/workflows/images.yml` runs on a tag `v<x.y.z>`, after
 each image is pushed. It verifies the release of `mcp-publisher` with `cosign`, writes
 `<x.y.z>` into the version and the image tag of a copy of `server.json`, signs in with
-GitHub OIDC, and publishes the copy. The version of `server.json` in the repository is
-that of the last release. `MCP_PUBLISHER_VERSION` pins `mcp-publisher`, and Renovate
+GitHub OIDC, and publishes the copy. The pull request of `BLD-018` writes the version of
+the next release into `server.json` in the repository. `MCP_PUBLISHER_VERSION` pins `mcp-publisher`, and Renovate
 proposes a new release.
 
 **Why:** The registry checks the label of `BLD-005` on the image of the tag, so the job
@@ -327,14 +327,12 @@ runs a week keep the corpus.
 | `build/cursor-plugin/assets/logo.svg`            | A copy of `website/public/favicon.svg`.                                |
 | `.cursor-plugin/marketplace.json`                | The owner, the version, and the entry with the source `./build/cursor-plugin`. |
 
-Before each release, the owner writes the version `<x.y.z>` of the tag into
-`plugin.json` and `marketplace.json`, in the last pull request before the tag. No
-workflow writes it.
+Before each release, the pull request of `BLD-018` writes the version `<x.y.z>` of the
+tag into `plugin.json` and `marketplace.json`.
 
 **Why:** Cursor reads the plugin from the default branch of the repository. It has no
 upload, and it needs no tag. Cursor reviews each change by hand before the listing
-changes, so a change to the plugin reaches readers late. A workflow that prepares each
-file of a release replaces the manual step later.
+changes, so a change to the plugin reaches readers late.
 
 ## BLD-017
 
@@ -346,9 +344,8 @@ marketplace `awesome-copilot` that VS Code and GitHub Copilot CLI read.
 | `build/agent-plugin/plugin.json` | The name `georgia-mcp`, the version, the description of `BLD-011`, the author, the home page, the repository, the licence, and the keywords. |
 | `build/agent-plugin/mcp.json`    | The server `georgia-mcp`, `streamable-http` at `https://geo-mcp.abgeo.cloud/mcp`. |
 
-Each file names the schema of its format in `$schema`. Before each release, the owner
-writes the version `<x.y.z>` of the tag into `plugin.json`, in the same pull request as
-`BLD-016`. No workflow writes it.
+Each file names the schema of its format in `$schema`. Before each release, the pull
+request of `BLD-018` writes the version `<x.y.z>` of the tag into `plugin.json`.
 
 The owner submits the plugin through the external plugin form of `github/awesome-copilot`,
 with the path `build/agent-plugin`, the tag `v<x.y.z>`, and the commit of the tag. A new
@@ -359,6 +356,49 @@ that repository.
 version that differs from the manifest at that commit. The plugin of `BLD-016` uses the
 format of Cursor, which this marketplace does not read. The plugin of OpenAI carries
 the fields of OpenAI and another name.
+
+## BLD-018
+
+`.github/workflows/prepare-release.yml` prepares the files of the next release in one
+pull request, so the tag lands on a commit that holds its own version.
+
+The owner runs it by hand before a release. It reads the version `<x.y.z>` and the body
+of the draft release, then writes the version into each file of this table:
+
+| File                                             | Field                                                         |
+| ------------------------------------------------ | ------------------------------------------------------------- |
+| `build/cursor-plugin/.cursor-plugin/plugin.json` | `version`                                                     |
+| `.cursor-plugin/marketplace.json`                | `metadata.version`                                            |
+| `build/agent-plugin/plugin.json`                 | `version`                                                     |
+| `build/mcp-registry/server.json`                 | `version`, and the tag `<x.y.z>` of the OCI package           |
+| `build/openai-plugin/plugin.json`                | `version`, and `extensions["com.openai"].publication.release_notes` |
+
+When a file differs, `peter-evans/create-pull-request` writes the branch
+`release/prepare` from the head of `main` with one commit, and opens or updates the pull
+request `build: prepare the release v<x.y.z>`, with the label `skip-changelog`. When no
+file differs and no pull request is open, it deletes the branch.
+
+The job acts as the GitHub App of the owner, with a token from
+`actions/create-github-app-token`. The App holds `contents: write` and
+`pull-requests: write` on this repository only, and the token asks for these two only.
+The secrets `RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY` hold its identity. The
+action writes the commit through the API of GitHub with `sign-commits`, so GitHub signs
+it as the bot of the App.
+
+The release notes of the OpenAI plugin keep the entries of the sections "Breaking
+changes", "Features", and "Bug fixes" of the draft, with no number of a pull request. A
+draft with none of them gives "This version has no change that a user can see."
+
+The owner merges the pull request, then publishes the draft release. On the release,
+`.github/workflows/openai-plugin.yml` fails when the version of
+`build/openai-plugin/plugin.json` differs from the tag. Otherwise it zips the directory as
+it is and uploads the archive to the release. A file that a release must prepare joins
+the table.
+
+**Why:** The marketplace of `BLD-017` checks the version at the tag, so the version must
+be on `main` before the tag. A pull request from the built-in token starts no workflow,
+so the required checks `CI` and `Images` never run. A pull request from the App starts
+them. The ruleset demands a signed commit, and a push from a runner is not signed.
 
 ## Retired identifiers
 
