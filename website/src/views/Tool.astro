@@ -22,6 +22,7 @@ const copy = t(lang)
   path={`/tools/${tool.name}/`}
   title={copy.meta.tool(tool.title)}
   description={tool.summary[lang]}
+  markdown={lang === "en" ? `/tools/${tool.name}.md` : undefined}
 >
   <section class="head" data-hue={context.hue}>
     <div class="wrap head-inner">

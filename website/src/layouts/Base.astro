@@ -18,9 +18,11 @@ interface Props {
   title: string
   description: string
   noindex?: boolean
+  /** The address of the Markdown copy of the page, when it has one. */
+  markdown?: string
 }
 
-const { lang, path, title, description, noindex = false } = Astro.props
+const { lang, path, title, description, noindex = false, markdown } = Astro.props
 const copy = t(lang)
 const release = releaseUrl(REPO_URL, PUBLIC_VERSION)
 const canonical = new URL(localize(path, lang), SITE_URL).href
@@ -47,6 +49,9 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
         </>
       )
     }
+    <link rel="alternate" type="text/markdown" title="llms.txt" href="/llms.txt" />
+    <link rel="alternate" type="application/json" title="Tools" href="/tools.json" />
+    {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbf7f0" />

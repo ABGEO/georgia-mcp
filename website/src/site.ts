@@ -1,4 +1,5 @@
 export const SITE_NAME = "Georgia MCP"
+export const SITE_SUMMARY = "An MCP server for Georgian public data, read from the organizations that publish it."
 export const SITE_URL = "https://geo-mcp.abgeo.cloud"
 export const SERVER_URL = "https://geo-mcp.abgeo.cloud/mcp"
 export const REPO_URL = "https://github.com/abgeo/georgia-mcp"
