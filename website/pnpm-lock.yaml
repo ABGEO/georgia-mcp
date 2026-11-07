@@ -170,8 +170,8 @@ importers:
         specifier: 3.7.4
         version: 3.7.4
       '@lucide/astro':
-        specifier: 1.67.0
-        version: 1.67.0(astro@7.4.5(@types/node@26.6.6)(yaml@2.9.1))
+        specifier: 1.68.0
+        version: 1.68.0(astro@7.4.5(@types/node@26.6.6)(yaml@2.9.1))
       ajv:
         specifier: 8.20.0
         version: 8.20.0
@@ -626,8 +626,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lucide/astro@1.67.0':
-    resolution: {integrity: sha512-6fYwtxCiWfri3wIsyTuj3hY6ki5mUJeiiIIFNCZB0vGnD8LPfIMsRmM9eMiJCwpKAWnXjIHRZDKZ+ceaGfBuVw==}
+  '@lucide/astro@1.68.0':
+    resolution: {integrity: sha512-gRSV2aoSL13kdJiJkCr1LFL8whh4LZvDC321u+xLXG8rWAoXByJLFwvy1SSufjiX5hghe8HPK6rObZdeBqg25Q==}
     peerDependencies:
       astro: ^4 || ^5 || ^6 || ^7
 
@@ -2779,7 +2779,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@lucide/astro@1.67.0(astro@7.4.5(@types/node@26.6.6)(yaml@2.9.1))':
+  '@lucide/astro@1.68.0(astro@7.4.5(@types/node@26.6.6)(yaml@2.9.1))':
     dependencies:
       astro: 7.4.5(@types/node@26.6.6)(yaml@2.9.1)
 
