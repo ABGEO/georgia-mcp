@@ -9,6 +9,7 @@ import ThemeToggle from "../components/ThemeToggle.astro"
 import { localize, other, t } from "../i18n"
 import { releaseUrl } from "../lib/release"
 import type { Lang } from "../lib/schemas"
+import type { StructuredData } from "../lib/structured-data"
 import { AUTHOR_URL, REPO_URL, SITE_NAME, SITE_URL } from "../site"
 import "../styles/global.css"
 
@@ -20,13 +21,16 @@ interface Props {
   noindex?: boolean
   /** The address of the Markdown copy of the page, when it has one. */
   markdown?: string
+  /** The JSON-LD of the page, when it has one. */
+  structuredData?: StructuredData
 }
 
-const { lang, path, title, description, noindex = false, markdown } = Astro.props
+const { lang, path, title, description, noindex = false, markdown, structuredData } = Astro.props
 const copy = t(lang)
 const release = releaseUrl(REPO_URL, PUBLIC_VERSION)
 const canonical = new URL(localize(path, lang), SITE_URL).href
 const image = new URL(`/og/${lang}.png`, SITE_URL).href
+const jsonLd = structuredData && JSON.stringify(structuredData).replaceAll("<", "\\u003c")
 ---
 
 <!doctype html>
@@ -75,6 +79,7 @@ const image = new URL(`/og/${lang}.png`, SITE_URL).href
     <Font cssVariable="--font-body" preload />
     <Font cssVariable="--font-mono" />
     <Font cssVariable="--font-georgian" preload={lang === "ka"} />
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
   </head>
   <body>
     <a class="skip" href="#main">{copy.nav.skip}</a>
