@@ -204,6 +204,7 @@ Add a row before you create the file or the directory.
 | `CAVCINE`  | `features/cavcine/`  | `cinema`   | The cinemas, movies, sessions, and seats of Cavea.              | Approved |
 | `GEOSTAT`  | `features/geostat/`  | `stats`    | The statistical tables and the inflation of Geostat.            | Approved |
 | `NEAAIR`   | `features/neaair/`   | `air`      | The air quality of the National Environmental Agency.           | Approved |
+| `LLMSTXT`  | `features/llmstxt/`  | `website`  | The catalog files of the site, for an agent or a crawler.       | Approved |
 
 ## Retired identifiers
 

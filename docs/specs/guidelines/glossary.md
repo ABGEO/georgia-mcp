@@ -218,3 +218,5 @@ define it. The identifier of a term is `GLO-<term>`.
 | install link       | A link that opens a client and asks the reader to add the server, with no file to edit.                 |
 | release            | A version of the project that the owner publishes on GitHub under a tag such as `v1.2.3`.             |
 | site version       | The version that the build of the site receives from outside. The site shows it and never computes it. |
+| catalog file       | `/llms.txt` or `/tools.json`: the tools of the server in a form that an agent reads, written at each build. |
+| Markdown copy      | The text of one English tool page as Markdown, for a model to read.                                   |
