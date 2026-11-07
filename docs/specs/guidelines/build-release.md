@@ -5,7 +5,7 @@ type: guideline
 status: active
 created: 2026-10-17
 updated: 2026-11-07
-scope: [., pkg/, website/, build/package/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
+scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
 
@@ -314,6 +314,27 @@ package. `go test ./...` then runs it as a seed, and the fix makes it pass.
 **Why:** The seed corpus tests the inputs that the author thought of. Fuzzing finds the
 input that nobody thought of. GitHub drops a cache that no run reads for 7 days, so two
 runs a week keep the corpus.
+
+## BLD-016
+
+`build/cursor-plugin/` holds the plugin of the Cursor Marketplace, and
+`.cursor-plugin/marketplace.json` at the root of the repository points to it.
+
+| File                                             | Holds                                                                  |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| `build/cursor-plugin/.cursor-plugin/plugin.json` | The name `georgia-mcp`, the display name `Georgia MCP`, the version, the description of `BLD-011`, the author, the licence, and the logo. |
+| `build/cursor-plugin/mcp.json`                   | The server `georgia-mcp` at `https://geo-mcp.abgeo.cloud/mcp`, as the install link of `WEBSITE-DD-026` gives it. |
+| `build/cursor-plugin/assets/logo.svg`            | A copy of `website/public/favicon.svg`.                                |
+| `.cursor-plugin/marketplace.json`                | The owner, the version, and the entry with the source `./build/cursor-plugin`. |
+
+Before each release, the owner writes the version `<x.y.z>` of the tag into
+`plugin.json` and `marketplace.json`, in the last pull request before the tag. No
+workflow writes it.
+
+**Why:** Cursor reads the plugin from the default branch of the repository. It has no
+upload, and it needs no tag. Cursor reviews each change by hand before the listing
+changes, so a change to the plugin reaches readers late. A workflow that prepares each
+file of a release replaces the manual step later.
 
 ## Retired identifiers
 

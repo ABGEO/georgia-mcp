@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "georgia-mcp": {
+      "url": "https://geo-mcp.abgeo.cloud/mcp"
+    }
+  }
+}
