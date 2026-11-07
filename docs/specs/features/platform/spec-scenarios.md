@@ -4,7 +4,7 @@ title: The platform of the server, the scenarios
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-11-06
+updated: 2026-11-07
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -345,6 +345,16 @@ Each test of the cache runs in `synctest.Test` and uses `Cache[string]` and `Cac
 **Given** an empty cache, and a load that blocks until the test releases it.
 **When** 10 goroutines call `Get` with one key, and the test releases the load.
 **Then** the load runs one time, and the 10 calls return the same value.
+
+### `PLATFORM-SC-043`
+
+**Verifies:** `PLATFORM-FR-018`
+**Layer:** unit
+
+**Given** `TTL` 1 hour, and a value that `Get` loaded at 0.
+**When** at 1 minute a caller that missed the store runs the shared load of the key, or
+of the keys of `GetMany`.
+**Then** the load runs one time, and the caller gets the stored value.
 
 ### `PLATFORM-SC-021`
 

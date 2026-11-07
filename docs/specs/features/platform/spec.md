@@ -4,7 +4,7 @@ title: The platform of the server
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-11-06
+updated: 2026-11-07
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -501,7 +501,9 @@ seconds. An entry past its stale age costs one slot until the size bound evicts 
 
 **Realizes:** `PLATFORM-FR-018`
 **Decision:** `singleflight` loads a key one time. The shared load runs with
-`context.WithoutCancel` of the first caller.
+`context.WithoutCancel` of the first caller. The shared load reads the store again
+before it calls the source: a caller can miss the store and join the group after the
+last load ended.
 **Rationale:** A first caller that leaves must not fail the others. The timeout of
 the vendor client still ends the load (`RSL-001`).
 **Alternatives:** The context of the first caller. Its cancel fails every waiting call.
