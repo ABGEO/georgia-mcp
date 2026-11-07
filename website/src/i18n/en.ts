@@ -82,8 +82,8 @@ export const en = {
           "Name it Georgia MCP, paste the address below, set the authentication to None, and accept the warning. It needs a paid plan.",
         ],
       },
-      cursor: { name: "Cursor", steps: ["Add this to ~/.cursor/mcp.json."] },
-      vscode: { name: "VS Code", steps: ["Add this to .vscode/mcp.json in your project."] },
+      cursor: { name: "Cursor", add: "Add to Cursor", steps: ["Or add this to ~/.cursor/mcp.json."] },
+      vscode: { name: "VS Code", add: "Add to VS Code", steps: ["Or add this to .vscode/mcp.json in your project."] },
       binary: {
         name: "Binary",
         steps: [
