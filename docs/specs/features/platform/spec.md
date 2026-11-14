@@ -4,7 +4,7 @@ title: The platform of the server
 type: spec
 status: approved
 created: 2026-10-17
-updated: 2026-11-07
+updated: 2026-11-14
 context: platform
 approved_by: Temuri
 approved_on: 2026-10-17
@@ -338,7 +338,7 @@ A context passes the client to a vendor client with `vendorhttp.WithHTTPClient` 
 | ------------------ | ----------------------------------------------------------------------------------------- |
 | `go.mod`           | The libraries of 4.1 at the versions of 4.6. `tool golang.org/x/vuln/cmd/govulncheck`.     |
 | `configs/.env.example` | Every variable of 4.3 with its default.                                                |
-| `build/package/Dockerfile` | Stage `build`: `golang:1.27.3`, `COPY . .`, `CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp` with cache mounts for the module cache and the build cache (`NBGRATE-DD-010`). Stage final: `gcr.io/distroless/static-debian13:nonroot`, the labels of `BLD-005` from `ARG VERSION=dev` and `ARG REVISION=unknown`, `EXPOSE 8080`, `ENTRYPOINT ["/georgia-mcp"]`, `CMD ["serve"]`. |
+| `build/package/Dockerfile` | Stage `build`: `golang:1.27.4`, `COPY . .`, `CGO_ENABLED=0 go build -trimpath -o /georgia-mcp ./cmd/georgia-mcp` with cache mounts for the module cache and the build cache (`NBGRATE-DD-010`). Stage final: `gcr.io/distroless/static-debian13:nonroot`, the labels of `BLD-005` from `ARG VERSION=dev` and `ARG REVISION=unknown`, `EXPOSE 8080`, `ENTRYPOINT ["/georgia-mcp"]`, `CMD ["serve"]`. |
 | `build/package/Dockerfile.dockerignore` | `.env`, `bin/`, `dist/`, `docs/specs/`. It keeps `.git` (`BLD-005`). |
 | `deployments/compose.yaml` | Service `georgia-mcp`: builds `..` with `build/package/Dockerfile`, `env_file: ../.env` with `required: false`, port `8080:8080`. |
 | `Taskfile.yml`     | Tasks `lint`, `test`, `build`, `vuln`: take `MODULE`, default `.`, and run in that directory. `release-check`: the build with `GOWORK=off` and `vuln` (`BLD-003`). `run`: `go run ./cmd/georgia-mcp serve`. `compose:up`, `compose:start`, `compose:stop`, `compose:down`: the compose file. `image`: the image with its build arguments. `website:dev`, `website:lint`, `website:test`, `website:build`, `website:refresh`, `website:image`: the commands of `website/` (`PLATFORM-DD-009`). |
