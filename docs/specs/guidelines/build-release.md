@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-07
+updated: 2026-11-14
 scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, build/agent-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -29,7 +29,7 @@ task of the website stops when the version of Node is older than `website/.nvmrc
 
 ## BLD-002
 
-`go.mod` declares the current Go release, as `go 1.27.3`.
+`go.mod` declares the current Go release, as `go 1.27.4`.
 
 **Why:** The server is a binary, so it takes the newest release. A project that imports
 a vendor client needs the same release.
