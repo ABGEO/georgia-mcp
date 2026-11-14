@@ -19,7 +19,7 @@ jobs:
       group: release-drafter
       cancel-in-progress: false
     steps:
-      - uses: release-drafter/release-drafter@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
+      - uses: release-drafter/release-drafter@d1a19e60e81a7e650d00a7de9277f87e439117ea # v7.11.0
 
   label:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
@@ -28,7 +28,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: release-drafter/release-drafter/autolabeler@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
+      - uses: release-drafter/release-drafter/autolabeler@d1a19e60e81a7e650d00a7de9277f87e439117ea # v7.11.0
 
   check-pr:
     if: github.event_name == 'pull_request' && !github.event.pull_request.draft
@@ -36,4 +36,4 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: release-drafter/release-drafter/check-pr@978bb0b30c5ee8cdd332ced253758157150d43f0 # v7.10.0
+      - uses: release-drafter/release-drafter/check-pr@d1a19e60e81a7e650d00a7de9277f87e439117ea # v7.11.0

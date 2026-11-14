@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
-    "@lucide/astro": "1.70.0",
+    "@lucide/astro": "1.72.0",
     "ajv": "8.20.0",
-    "astro": "7.4.7"
+    "astro": "7.4.11"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
@@ -28,7 +28,7 @@
     "@playwright/test": "1.65.0",
     "@types/node": "26.6.6",
     "node-html-parser": "9.0.7",
-    "oxlint": "1.92.0",
+    "oxlint": "1.93.0",
     "typescript": "6.0.3",
     "vitest": "5.1.0",
     "yaml": "2.9.1"
