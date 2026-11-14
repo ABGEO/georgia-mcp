@@ -24,15 +24,15 @@ type StationCode struct {
 // ParseStationCode returns the station code of 2 to 8 ASCII letters and digits, in upper
 // case.
 func ParseStationCode(text string) (StationCode, error) {
-	code := strings.ToUpper(strings.TrimSpace(text))
+	code := strings.TrimSpace(text)
 	if len(code) < minCodeLength || len(code) > maxCodeLength ||
 		strings.ContainsFunc(code, func(r rune) bool {
-			return (r < 'A' || r > 'Z') && (r < '0' || r > '9')
+			return (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') && (r < '0' || r > '9')
 		}) {
 		return StationCode{}, fmt.Errorf("%w: %q", ErrInvalidStationCode, text)
 	}
 
-	return StationCode{code: code}, nil
+	return StationCode{code: strings.ToUpper(code)}, nil
 }
 
 // String returns the code.

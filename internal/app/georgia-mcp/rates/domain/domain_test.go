@@ -26,6 +26,7 @@ func TestParseCurrencyCode(t *testing.T) {
 		{input: euro, want: euro},
 		{input: "US", wantErr: domain.ErrInvalidCurrencyCode},
 		{input: "U$D", wantErr: domain.ErrInvalidCurrencyCode},
+		{input: "ſA", wantErr: domain.ErrInvalidCurrencyCode},
 		{input: "USDT", wantErr: domain.ErrInvalidCurrencyCode},
 		{input: "", wantErr: domain.ErrInvalidCurrencyCode},
 	}

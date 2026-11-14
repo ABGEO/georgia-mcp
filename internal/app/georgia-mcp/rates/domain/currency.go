@@ -16,12 +16,11 @@ func ParseCurrencyCode(text string) (CurrencyCode, error) {
 		return "", fmt.Errorf("%w: %q", ErrInvalidCurrencyCode, text)
 	}
 
-	code := strings.ToUpper(text)
-	for _, r := range code {
-		if r < 'A' || r > 'Z' {
+	for i := range len(text) {
+		if c := text[i]; (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {
 			return "", fmt.Errorf("%w: %q", ErrInvalidCurrencyCode, text)
 		}
 	}
 
-	return CurrencyCode(code), nil
+	return CurrencyCode(strings.ToUpper(text)), nil
 }
