@@ -95,6 +95,7 @@ func TestParseStationCode(t *testing.T) {
 		{input: "TOOLONGCODE", wantErr: domain.ErrInvalidStationCode},
 		{input: "TS-RT", wantErr: domain.ErrInvalidStationCode},
 		{input: "ТSRT", wantErr: domain.ErrInvalidStationCode},
+		{input: "ſA", wantErr: domain.ErrInvalidStationCode},
 		{input: "", wantErr: domain.ErrInvalidStationCode},
 	}
 
