@@ -47,7 +47,7 @@ jobs:
           jq --arg author "https://github.com/$REPOSITORY" \
             --arg product "pkg:golang/github.com/abgeo/georgia-mcp@$TAG" '
             .author = $author
-            | .statements |= map(.products = [{"@id": $product}])
+            | .statements = ((.statements // []) | map(.products = [{"@id": $product}]))
           ' "$RUNNER_TEMP/govulncheck.json" > "$RUNNER_TEMP/openvex.json"
           jq -r '.statements[] | "\(.vulnerability.name): \(.status)"' "$RUNNER_TEMP/openvex.json"
 
