@@ -274,3 +274,47 @@ test.describe("how it works", () => {
     expect(await fill("answer")).not.toBe("rgb(244, 207, 211)")
   })
 })
+
+test.describe("rows of the contexts", () => {
+  const widths = [
+    { width: 1280, columns: 4 },
+    { width: 900, columns: 3 },
+    { width: 600, columns: 2 },
+    { width: 375, columns: 1 },
+  ]
+
+  for (const { width, columns } of widths) {
+    // WEBSITE-SC-056: Full rows span the list, and a short last row sits in the middle.
+    test(`puts ${columns} cards in a row at ${width} px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto("/")
+
+      const list = await page.locator("#contexts .cards").boundingBox()
+      const cards = await page.locator("#contexts .cards > .card").evaluateAll((items) =>
+        items.map((item) => {
+          const box = item.getBoundingClientRect()
+          return { left: box.left + window.scrollX, top: box.top + window.scrollY, width: box.width }
+        }),
+      )
+      expect(list).not.toBeNull()
+      if (!list) return
+
+      const rows = Map.groupBy(cards, (card) => Math.round(card.top))
+      const sizes = [...rows.values()].map((row) => row.length)
+      expect(sizes.slice(0, -1).every((size) => size === columns)).toBe(true)
+      expect(sizes.at(-1)).toBeLessThanOrEqual(columns)
+
+      for (const card of cards) expect(Math.abs(card.width - cards[0].width)).toBeLessThanOrEqual(1)
+
+      for (const row of rows.values()) {
+        const left = Math.min(...row.map((card) => card.left))
+        const right = Math.max(...row.map((card) => card.left + card.width))
+        expect(Math.abs((left + right) / 2 - (list.x + list.width / 2))).toBeLessThanOrEqual(1)
+        if (row.length === columns) {
+          expect(Math.abs(left - list.x)).toBeLessThanOrEqual(1)
+          expect(Math.abs(right - (list.x + list.width))).toBeLessThanOrEqual(1)
+        }
+      }
+    })
+  }
+})
