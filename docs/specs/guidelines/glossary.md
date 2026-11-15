@@ -224,6 +224,21 @@ define it. The identifier of a term is `GLO-<term>`.
 | public holiday | A day that the law of Georgia names as a day off for every employee. |
 | holiday name | The name of a public holiday, in `ka` and in `en`. |
 
+## Parcels
+
+| Term | Meaning |
+| ---- | ------- |
+| NAPR | The National Agency of Public Registry. It keeps the cadastre of Georgia. Vendor code `napr`. |
+| parcel | One plot of land in the cadastre, with a cadastral code. |
+| cadastral code | The code of a parcel: 4 or 5 groups of digits with dots, `01.15.05.066.020`. |
+| land type | `agricultural` or `non_agricultural`. |
+| ownership type | `ownership` (one owner or more, each in full) or `co_ownership` (shared). |
+| owner | A person or a body that the registry names as the holder of a parcel. |
+| registry document | A document of the registry about a parcel: a kind, a registration number, a date, and a link. |
+| document kind | `registry_extract` or `cadastral_plan`. |
+| address | In `parcels`, the text of NAPR that names a settlement, a street, and a number. |
+| municipality | The unit under which NAPR groups an address: `ქალაქი თბილისი`, `გორის მუნიციპალიტეტი`. |
+
 ## The website
 
 | Term               | Meaning                                                                                               |
