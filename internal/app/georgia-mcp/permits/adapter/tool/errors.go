@@ -14,21 +14,6 @@ import (
 // defaultDays is the period of one end alone.
 const defaultDays = 7
 
-func parseLanguage(text string) (kernel.Language, error) {
-	language, err := kernel.ParseLanguage(text)
-	if err != nil {
-		return "", &mcpserver.ToolError{
-			Message: fmt.Sprintf(
-				"language: %q is not a language of this tool. Use ka or en.",
-				text,
-			),
-			Cause: err,
-		}
-	}
-
-	return language, nil
-}
-
 // withinRange returns the default for 0, the value inside 1 to the maximum, or an error.
 func withinRange(field string, value, fallback, maximum int) (int, error) {
 	if value == 0 {

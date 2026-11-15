@@ -1,16 +1,14 @@
 package tool
 
 type searchInput struct {
-	Code     string `json:"code,omitempty"     jsonschema:"The cadastral code of the parcel: 4 or 5 groups of digits with dots, as 01.18.04.020.005."`
-	From     string `json:"from,omitempty"     jsonschema:"The first date of registration, YYYY-MM-DD. Without to, the period is 7 days."`
-	To       string `json:"to,omitempty"       jsonschema:"The last date of registration, YYYY-MM-DD. Without from, the period is 7 days."`
-	Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of applications, 1 to 50. The default is 10."`
-	Language string `json:"language,omitempty" jsonschema:"The language of the names of the statuses: ka or en. The default is en. TAS texts stay in Georgian."`
+	Code  string `json:"code,omitempty"  jsonschema:"The cadastral code of the parcel: 4 or 5 groups of digits with dots, as 01.18.04.020.005."`
+	From  string `json:"from,omitempty"  jsonschema:"The first date of registration, YYYY-MM-DD. Without to, the period is 7 days."`
+	To    string `json:"to,omitempty"    jsonschema:"The last date of registration, YYYY-MM-DD. Without from, the period is 7 days."`
+	Limit int    `json:"limit,omitempty" jsonschema:"The maximum count of applications, 1 to 50. The default is 10."`
 }
 
 type getInput struct {
-	Number   string `json:"number"             jsonschema:"The application number, as AR11168188."`
-	Language string `json:"language,omitempty" jsonschema:"ka or en. The default is en. TAS texts stay in Georgian."`
+	Number string `json:"number" jsonschema:"The application number, as AR11168188."`
 }
 
 type searchOutput struct {
@@ -47,5 +45,5 @@ type applicationOutput struct {
 
 type codeOutput struct {
 	Code string `json:"code" jsonschema:"The code."`
-	Name string `json:"name" jsonschema:"The name of the code in the language."`
+	Name string `json:"name" jsonschema:"The name of the code at TAS, in Georgian."`
 }

@@ -79,11 +79,6 @@ func (h handler) search(
 	_ *mcp.CallToolRequest,
 	in searchInput,
 ) (*mcp.CallToolResult, searchOutput, error) {
-	language, err := parseLanguage(in.Language)
-	if err != nil {
-		return nil, searchOutput{}, err
-	}
-
 	limit, err := withinRange("limit", in.Limit, defaultLimit, maxLimit)
 	if err != nil {
 		return nil, searchOutput{}, err
@@ -102,7 +97,7 @@ func (h handler) search(
 		return nil, searchOutput{}, toolError(err, domain.ApplicationNumber{})
 	}
 
-	return nil, toSearchOutput(list, language), nil
+	return nil, toSearchOutput(list), nil
 }
 
 func (h handler) get(
@@ -110,11 +105,6 @@ func (h handler) get(
 	_ *mcp.CallToolRequest,
 	in getInput,
 ) (*mcp.CallToolResult, getOutput, error) {
-	language, err := parseLanguage(in.Language)
-	if err != nil {
-		return nil, getOutput{}, err
-	}
-
 	number, err := parseNumber(in.Number)
 	if err != nil {
 		return nil, getOutput{}, err
@@ -125,5 +115,5 @@ func (h handler) get(
 		return nil, getOutput{}, toolError(err, number)
 	}
 
-	return nil, toGetOutput(read, language), nil
+	return nil, toGetOutput(read), nil
 }
