@@ -207,6 +207,7 @@ Add a row before you create the file or the directory.
 | `LLMSTXT`  | `features/llmstxt/`  | `website`  | The catalog files of the site, for an agent or a crawler.       | Approved |
 | `JSONLD`   | `features/jsonld/`   | `website`  | The structured data of the home pages.                          | Approved |
 | `SOURCES`  | `features/sources/`  | `website`  | The sources page: the kind and the link of each source.         | Approved |
+| `MATSNE`   | `features/matsne/`   | `law`      | The legal acts of the Legislative Herald: search, versions, and articles. | Approved |
 
 ## Retired identifiers
 

@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-11-07
+updated: 2026-11-15
 ---
 
 # Glossary
@@ -199,6 +199,22 @@ define it. The identifier of a term is `GLO-<term>`.
 | air quality level | One of five bands: `good`, `fair`, `moderate`, `poor`, `very_poor`. |
 | band limits | The concentrations that the NEA gives as the bounds of each level of a pollutant. |
 | station level | The worst air quality level of the newest readings of a station. |
+
+## Law
+
+| Term                   | Meaning |
+| ---------------------- | ------- |
+| Legislative Herald     | Matsne (საქართველოს საკანონმდებლო მაცნე), the official publisher of the legal acts of Georgia. Vendor code `matsne`. |
+| act                    | One legal document at the Legislative Herald, with an identifier: the Tax Code, `1043717`. |
+| act identifier         | The number of an act at the Legislative Herald: `1043717`. |
+| version                | One consolidated text of an act, with a number and a publication date. |
+| version number         | The number of a version, from `0` for the first. |
+| act status             | `active`, `expired`, or `pending` (published, not yet in force). |
+| document type          | The class of an act: `law`, `order`. `MATSNE` 5.1 gives the codes. |
+| issuer                 | The body that adopted an act: "Parliament of Georgia". |
+| part                   | A section, a chapter, or an article of an act. |
+| article number         | The number of an article, with its superscript: `82`, `133^3`. |
+| table of contents      | The ordered sections, chapters, and articles of an act, with their titles. |
 
 ## The website
 
