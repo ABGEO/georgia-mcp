@@ -1,0 +1,19 @@
+context: law
+vendors: [matsne]
+summary:
+  en: The legal acts of the Legislative Herald whose title or text holds a phrase, with their type, issuer, number, signing date, and status.
+  ka: საკანონმდებლო მაცნის სამართლებრივი აქტები, რომელთა სათაური ან ტექსტი შეიცავს ფრაზას, მათი სახით, მიმღებით, ნომრით, მიღების თარიღითა და სტატუსით.
+examples:
+  - id: labour-code
+    question:
+      en: Find the Labour Code of Georgia.
+      ka: მოძებნე საქართველოს შრომის კოდექსი.
+    answer:
+      en: "The Legislative Herald has one active law with this title: the Organic Law of Georgia, Labour Code of Georgia, number N4113-რს. The Parliament of Georgia signed it on 17 December 2010."
+      ka: "საკანონმდებლო მაცნეში ამ სათაურით ერთი მოქმედი კანონია: საქართველოს ორგანული კანონი, საქართველოს შრომის კოდექსი, ნომერი N4113-რს. საქართველოს პარლამენტმა ის 2010 წლის 17 დეკემბერს მიიღო."
+    input:
+      query: შრომის კოდექსი
+      type: law
+      status: active
+      language: en
+      limit: 3

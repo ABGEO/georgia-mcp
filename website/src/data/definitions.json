@@ -1244,6 +1244,444 @@
       "openWorldHint": true
     }
   },
+  "law_get_act": {
+    "name": "law_get_act",
+    "title": "Get a legal act of Georgia",
+    "description": "Returns one legal act of the Legislative Herald (matsne.gov.ge) by its identifier from law_search_acts. With no article, returns the metadata, the newest 20 consolidated versions with their publication dates, the count of every version, and the table of contents. With articles, returns the full text of at most 10 articles, for example 82 or 133^3 (article 133 with the superscript 3). Give a version number or a date to read the act as it stood then; the default is the newest version, or in English the newest translated version. A version date is its publication date, not the date it took effect. The Georgian text is the only official text; an English text is a translation, and not every act has one. Data from the Legislative Herald of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The identifier of the act from law_search_acts, for example 1043717."
+        },
+        "version": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "description": "A version number from the versions of the act, from 0. Give a version or a date, not both."
+        },
+        "date": {
+          "type": "string",
+          "description": "A date, YYYY-MM-DD. Reads the newest version published on or before it."
+        },
+        "articles": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "At most 10 article numbers, for example 82 or 133^3. Leave empty for the table of contents."
+        },
+        "piece": {
+          "type": "integer",
+          "description": "For an act with no articles: the piece of 50,000 characters of its text, from 1. The default is 1."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the text: ka or en. The default is en. Only ka is official."
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Legislative Herald of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the act, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the source did not answer and the server returns a text it read before."
+        },
+        "url": {
+          "type": "string",
+          "description": "The page of this version at the Legislative Herald."
+        },
+        "language": {
+          "type": "string",
+          "description": "ka or en."
+        },
+        "official": {
+          "type": "boolean",
+          "description": "True for the Georgian text. False for a translation."
+        },
+        "notice": {
+          "type": "string",
+          "description": "Set for a translation: only the Georgian text is official."
+        },
+        "id": {
+          "type": "string",
+          "description": "The identifier of the act."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the act."
+        },
+        "type": {
+          "type": "string",
+          "description": "The document type as the source names it."
+        },
+        "issuer": {
+          "type": "string",
+          "description": "The body that adopted the act."
+        },
+        "number": {
+          "type": "string",
+          "description": "The number of the act."
+        },
+        "signed": {
+          "type": "string",
+          "description": "The signing date, YYYY-MM-DD."
+        },
+        "status": {
+          "type": "string",
+          "description": "active, expired, or pending. Empty when the source gives none."
+        },
+        "registration_code": {
+          "type": "string",
+          "description": "The registration code of the act."
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "integer",
+              "description": "The version number, from 0."
+            },
+            "date": {
+              "type": "string",
+              "description": "The publication date of the version, YYYY-MM-DD."
+            }
+          },
+          "description": "The version of this text.",
+          "required": [
+            "number",
+            "date"
+          ],
+          "additionalProperties": false
+        },
+        "newest_version": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "number": {
+              "type": "integer",
+              "description": "The version number, from 0."
+            },
+            "date": {
+              "type": "string",
+              "description": "The publication date of the version, YYYY-MM-DD."
+            }
+          },
+          "description": "The newest version of the act, when it is newer than this text. A translation can trail the Georgian text.",
+          "required": [
+            "number",
+            "date"
+          ],
+          "additionalProperties": false
+        },
+        "versions": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "integer",
+                "description": "The version number, from 0."
+              },
+              "date": {
+                "type": "string",
+                "description": "The publication date of the version, YYYY-MM-DD."
+              }
+            },
+            "required": [
+              "number",
+              "date"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The newest 20 versions, newest first. Only when no article is requested."
+        },
+        "version_count": {
+          "type": "integer",
+          "description": "The count of every version of the act. Give a version or a date to read an older one."
+        },
+        "contents": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "description": "section, chapter, or article."
+              },
+              "number": {
+                "type": "string",
+                "description": "The number, for example IV or 133^3."
+              },
+              "title": {
+                "type": "string",
+                "description": "The title of the part."
+              }
+            },
+            "required": [
+              "kind",
+              "number",
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The sections, chapters, and articles, in order. Only when no article is requested."
+        },
+        "articles": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "string",
+                "description": "The article number, for example 133^3."
+              },
+              "title": {
+                "type": "string",
+                "description": "The title of the article."
+              },
+              "paragraphs": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The paragraphs of the article as published, with the notes of each amendment."
+              }
+            },
+            "required": [
+              "number",
+              "title",
+              "paragraphs"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The requested articles, in the order of the act."
+        },
+        "next_article": {
+          "type": "string",
+          "description": "The first requested article left out by the size limit. Ask for it in a new call."
+        },
+        "truncated": {
+          "type": "boolean",
+          "description": "True when one article passed the size limit and its last paragraphs are left out."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of an act that has no articles: one piece."
+        },
+        "piece": {
+          "type": "integer",
+          "description": "The piece of the text, from 1."
+        },
+        "pieces": {
+          "type": "integer",
+          "description": "The count of pieces of the text."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "url",
+        "language",
+        "official",
+        "id",
+        "title",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "law_search_acts": {
+    "name": "law_search_acts",
+    "title": "Search the legal acts of Georgia",
+    "description": "Searches the legal acts of Georgia in the Legislative Herald (matsne.gov.ge): laws, codes, resolutions, decrees, orders, treaties, and court decisions. Returns 20 acts on a page, each with its identifier, title, document type, issuer, number, signing date, and status, and the total count. The source has no order by relevance: give a type, a status, or an issuer to bring an act to the first page. A Georgian query that equals the full title of an active act puts that act first. Search in Georgian for the best match; an English query matches the titles of translated acts only. Call law_get_act with the identifier to read the act. Data from the Legislative Herald of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "The text to find, 1 to 128 characters. Georgian finds every act; English finds translated acts only."
+        },
+        "target": {
+          "type": "string",
+          "description": "Where to search: title or text. The default is title."
+        },
+        "type": {
+          "type": "string",
+          "description": "A document type: law, parliament_resolution, presidential_decree, government_resolution, government_decree, edict, order, international_treaty, constitutional_court_decision, court_act, self_government_ordinance, self_government_decision, revenue_service_order, individual_legal_act, eu_law, or draft. A code is a law."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the act: active, expired, or pending."
+        },
+        "issuer": {
+          "type": "string",
+          "description": "The body that adopted the act, in the language of the request, for example Parliament of Georgia."
+        },
+        "number": {
+          "type": "string",
+          "description": "The number of the act, for example 3591."
+        },
+        "signed_from": {
+          "type": "string",
+          "description": "The first signing date, YYYY-MM-DD."
+        },
+        "signed_to": {
+          "type": "string",
+          "description": "The last signing date, YYYY-MM-DD."
+        },
+        "order": {
+          "type": "string",
+          "description": "newest or oldest signing date first. The default is newest."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page of 20 results, from 1. The default is 1."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the titles: ka or en. The default is en."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of acts of the page, 1 to 20. The default is 20."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Legislative Herald of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the results, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the source did not answer and the server returns results it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of matching acts at the source."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page of 20 results."
+        },
+        "acts": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The identifier of the act."
+              },
+              "title": {
+                "type": "string",
+                "description": "The title of the act."
+              },
+              "type": {
+                "type": "string",
+                "description": "The document type as the source names it."
+              },
+              "issuer": {
+                "type": "string",
+                "description": "The body that adopted the act."
+              },
+              "number": {
+                "type": "string",
+                "description": "The number of the act."
+              },
+              "signed": {
+                "type": "string",
+                "description": "The signing date, YYYY-MM-DD."
+              },
+              "status": {
+                "type": "string",
+                "description": "active, expired, or pending."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the act at the Legislative Herald."
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The acts of the page."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "page",
+        "acts"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "offers_get_offer": {
     "name": "offers_get_offer",
     "title": "Terms of a card offer",
