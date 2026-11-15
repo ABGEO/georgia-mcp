@@ -393,13 +393,15 @@ review: bill 32449 ends with "I მოსმენა", its last stage in `billR
 ### `PARL-DD-005`
 
 **Realizes:** `PARL-FR-003`, `PARL-NFR-003`
-**Decision:** `Bill` reads the bill and its stages, then one `voteSession` page with
-`billReviewId` for each stage whose `voteY` or `voteN` is set, one after the other, with
-`limit` 10. A stage with neither has no vote. The cache keeps the whole `BillRead`.
+**Decision:** `Bill` reads the bill and its stages at the same time. Then it reads one
+`voteSession` page with `billReviewId` and `limit` 10 for each stage whose `voteY` or
+`voteN` is set, all at the same time. A stage with neither has no vote. The first error
+ends the read. The cache keeps the whole `BillRead`.
 **Rationale:** Only a stage with a vote has counts: bill 32449 has 1 of 17. A bill
-through three readings sends 5 calls, 0.5 seconds at the speed of 2026-11-15.
-**Alternatives:** One `voteSession` call with the title of the bill. A title can match
-more than one bill.
+through three readings sends 5 calls in two rounds. At 2.9 seconds a call, one after the
+other takes 14.5 seconds and breaks `PARL-NFR-003`. Two rounds take 5.8 seconds.
+**Alternatives:** Every call one after the other. It breaks `PARL-NFR-003`. One
+`voteSession` call with the title of the bill. A title can match more than one bill.
 
 ### `PARL-DD-006`
 

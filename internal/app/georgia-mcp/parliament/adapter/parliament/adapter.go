@@ -9,7 +9,10 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/parliament/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/parliament/domain"
@@ -79,15 +82,27 @@ func (a *Adapter) SearchBills(
 	return app.BillPage{Bills: bills, Total: list.Total, ReadAt: a.readAt()}, nil
 }
 
-// Bill reads the bill, its stages, and the votes of each stage that has counts.
+// Bill reads the bill and its stages at the same time, then the votes of each stage that
+// has counts at the same time.
 func (a *Adapter) Bill(ctx context.Context, id domain.ID) (app.BillRead, error) {
-	item, err := a.client.Bill(ctx, int(id))
-	if err != nil {
-		return app.BillRead{}, unavailable(err)
-	}
+	var (
+		group               sync.WaitGroup
+		item                *parliamentclient.Bill
+		reviews             []parliamentclient.BillReview
+		billErr, reviewsErr error
+	)
 
-	if item == nil {
+	group.Go(func() { item, billErr = a.client.Bill(ctx, int(id)) })
+	group.Go(func() { reviews, reviewsErr = a.client.BillReviews(ctx, int(id)) })
+	group.Wait()
+
+	switch {
+	case billErr != nil:
+		return app.BillRead{}, unavailable(billErr)
+	case item == nil:
 		return app.BillRead{}, fmt.Errorf("reading the bill %d: %w", id, app.ErrBillNotFound)
+	case reviewsErr != nil:
+		return app.BillRead{}, unavailable(reviewsErr)
 	}
 
 	bill, err := toBill(*item)
@@ -95,20 +110,9 @@ func (a *Adapter) Bill(ctx context.Context, id domain.ID) (app.BillRead, error) 
 		return app.BillRead{}, unavailable(err)
 	}
 
-	reviews, err := a.client.BillReviews(ctx, int(id))
+	stages, err := a.toStages(ctx, reviews)
 	if err != nil {
 		return app.BillRead{}, unavailable(err)
-	}
-
-	stages := make([]domain.Stage, 0, len(reviews))
-
-	for _, review := range reviews {
-		stage, err := a.toStage(ctx, review)
-		if err != nil {
-			return app.BillRead{}, unavailable(err)
-		}
-
-		stages = append(stages, stage)
 	}
 
 	return app.BillRead{Bill: bill, Stages: stages, ReadAt: a.readAt()}, nil
@@ -219,10 +223,66 @@ func (a *Adapter) readAt() time.Time {
 	return a.now().In(kernel.TbilisiZone())
 }
 
-func (a *Adapter) toStage(
+func (a *Adapter) toStages(
 	ctx context.Context,
-	review parliamentclient.BillReview,
-) (domain.Stage, error) {
+	reviews []parliamentclient.BillReview,
+) ([]domain.Stage, error) {
+	stages := make([]domain.Stage, len(reviews))
+
+	for index, review := range reviews {
+		stage, err := toStage(review)
+		if err != nil {
+			return nil, err
+		}
+
+		stages[index] = stage
+	}
+
+	group, groupCtx := errgroup.WithContext(ctx)
+
+	for index, review := range reviews {
+		if review.VoteY == nil && review.VoteN == nil {
+			continue
+		}
+
+		group.Go(func() error {
+			votes, err := a.stageVotes(groupCtx, review.ID)
+			stages[index].Votes = votes
+
+			return err
+		})
+	}
+
+	if err := group.Wait(); err != nil {
+		return nil, fmt.Errorf("reading the votes of the stages: %w", err)
+	}
+
+	return stages, nil
+}
+
+func (a *Adapter) stageVotes(ctx context.Context, reviewID int) ([]domain.ID, error) {
+	list, err := a.client.VoteSessions(ctx, parliamentclient.VoteSessionQuery{
+		Limit: stageVotes, BillReviewID: reviewID,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("reading the votes of the stage %d: %w", reviewID, err)
+	}
+
+	votes := make([]domain.ID, 0, len(list.List))
+
+	for _, vote := range list.List {
+		id, err := domain.NewID(vote.ID)
+		if err != nil {
+			return nil, fmt.Errorf("converting a vote of the stage %d: %w", reviewID, err)
+		}
+
+		votes = append(votes, id)
+	}
+
+	return votes, nil
+}
+
+func toStage(review parliamentclient.BillReview) (domain.Stage, error) {
 	stage := domain.Stage{
 		Name:          strings.TrimSpace(review.ReviewTypeName),
 		SessionNumber: text(review.SessionNumber),
@@ -252,30 +312,6 @@ func (a *Adapter) toStage(
 		}
 
 		*item.target = parsed
-	}
-
-	if review.VoteY == nil && review.VoteN == nil {
-		return stage, nil
-	}
-
-	list, err := a.client.VoteSessions(ctx, parliamentclient.VoteSessionQuery{
-		Limit: stageVotes, BillReviewID: review.ID,
-	})
-	if err != nil {
-		return domain.Stage{}, err
-	}
-
-	for _, vote := range list.List {
-		id, err := domain.NewID(vote.ID)
-		if err != nil {
-			return domain.Stage{}, fmt.Errorf(
-				"converting a vote of the stage %d: %w",
-				review.ID,
-				err,
-			)
-		}
-
-		stage.Votes = append(stage.Votes, id)
 	}
 
 	return stage, nil
