@@ -43,7 +43,7 @@ type SearchQuery struct {
     Query, QueryTarget, Type, Group, Status, Issuer, Number string
     SigningFrom, SigningTo string // "dd/mm/yyyy"
     RegistrationCode, Sort      string
-    Page                        int // from 1; the page sends page=Page-1 when Page > 1
+    Page                        int // from 1; the page sends page=Page when Page > 1
 }
 
 type SearchPage struct {

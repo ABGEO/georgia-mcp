@@ -134,7 +134,7 @@ func TestClientSendsTheRequests(t *testing.T) {
 	want := []recorded{
 		{
 			method: http.MethodGet, path: "/ka/document/search",
-			query: url.Values{"query": {"კოდექსი"}, "type": {"main"}, "page": {"1"}}.Encode(),
+			query: url.Values{"query": {"კოდექსი"}, "type": {"main"}, "page": {"2"}}.Encode(),
 		},
 		{
 			method: http.MethodPost, path: "/document/suggest",

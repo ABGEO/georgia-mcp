@@ -134,9 +134,8 @@ func (q SearchQuery) values() url.Values {
 	set("registration_code", q.RegistrationCode)
 	set("sort", q.Sort)
 
-	// The page counts its pages from 0 in the address and from 1 on the screen.
 	if q.Page > 1 {
-		values.Set("page", strconv.Itoa(q.Page-1))
+		values.Set("page", strconv.Itoa(q.Page))
 	}
 
 	return values
