@@ -521,7 +521,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | 2   | `domain`: the values, the codes, `QuestionStatusOn`, `Tally`, the fuzz test.  | `PARL-FR-005`, `PARL-FR-007`, `PARL-FR-009` to `PARL-FR-011` | [x]  |
 | 3   | `app`: the ports, the filters, the five use cases, the errors.                | `PARL-FR-001` to `PARL-FR-011`             | [x]  |
 | 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [x]  |
-| 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [ ]  |
+| 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [x]  |
 | 6   | `adapter/tool`.                                                               | `PARL-FR-001` to `PARL-FR-011`, `PARL-INV-002` | [ ]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `PARL-FR-013`, `PARL-NFR-002`              | [ ]  |
 
