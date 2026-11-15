@@ -77,7 +77,7 @@ type Publication struct{ Value, Text string } // "248", "28/10/2026"
 
 type Paragraph struct {
     Class string // "muxlixml", "MsoNormal"
-    Text  string // white space folded; a sup gives "^" and its digits
+    Text  string // white space folded; a sup gives "^" and its digits, an invisible sup nothing, and a space at the end of a sup stays
     Bold  bool   // every letter of the text sits inside b or strong
 }
 ```

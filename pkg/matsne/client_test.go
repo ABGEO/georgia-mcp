@@ -398,6 +398,14 @@ func TestDocumentReadsTheParagraphs(t *testing.T) {
 	}) {
 		t.Error("no paragraph of class muxlixml starts with მუხლი 133^3.")
 	}
+
+	for _, want := range []string{"ბ^1) იმ პირის მიერ", "კანონის 34^1 მუხლის შესაბამისად"} {
+		if !slices.ContainsFunc(doc.Paragraphs, func(p matsne.Paragraph) bool {
+			return strings.Contains(p.Text, want)
+		}) {
+			t.Errorf("no paragraph holds %q", want)
+		}
+	}
 }
 
 // MATSNE-SC-004: An English page marks its article headings bold, and a version whose

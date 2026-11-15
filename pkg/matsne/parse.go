@@ -257,9 +257,10 @@ func (w *paragraphWriter) walk(node *html.Node, bold bool) {
 	}
 }
 
-// superscript writes "^" and the text of a sup, with no space before it.
+// superscript writes "^" and the text of a sup, with no space before it. A sup that holds
+// only invisible characters writes nothing. A space at the end of the sup stays.
 func (w *paragraphWriter) superscript(node *html.Node, bold bool) {
-	sup := text(node)
+	sup := strings.TrimFunc(text(node), invisible)
 	if sup == "" {
 		return
 	}
@@ -268,7 +269,29 @@ func (w *paragraphWriter) superscript(node *html.Node, bold bool) {
 
 	w.builder.Reset()
 	w.builder.WriteString(before + "^" + sup)
+
+	if raw := rawText(node); strings.TrimRightFunc(raw, unicode.IsSpace) != raw {
+		w.builder.WriteByte(' ')
+	}
+
 	w.mark(bold)
+}
+
+func invisible(r rune) bool {
+	return unicode.IsSpace(r) || unicode.Is(unicode.Cf, r)
+}
+
+// rawText returns the text of the descendants of a node as written.
+func rawText(node *html.Node) string {
+	var builder strings.Builder
+
+	for descendant := range node.Descendants() {
+		if descendant.Type == html.TextNode {
+			builder.WriteString(descendant.Data)
+		}
+	}
+
+	return builder.String()
 }
 
 func (w *paragraphWriter) mark(bold bool) {
