@@ -525,7 +525,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [x]  |
 | 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [x]  |
 | 6   | `adapter/tool`.                                                               | `PARL-FR-001` to `PARL-FR-011`, `PARL-INV-002` | [x]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `PARL-FR-013`, `PARL-NFR-002`              | [ ]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `PARL-FR-013`, `PARL-NFR-002`              | [x]  |
 
 ## 8. Out of scope for this specification
 
