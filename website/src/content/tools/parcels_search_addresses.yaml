@@ -1,0 +1,17 @@
+context: parcels
+vendors: [napr]
+summary:
+  en: The addresses of the address registry of Georgia that match a street and a number, with the municipality and the centre point of each.
+  ka: საქართველოს მისამართების რეესტრის მისამართები ქუჩითა და ნომრით, თითოეულის მუნიციპალიტეტითა და ცენტრალური წერტილით.
+examples:
+  - id: chavchavadze-44
+    question:
+      en: Where is Chavchavadze Avenue 44 in Tbilisi?
+      ka: სად არის ჭავჭავაძის გამზირი 44 თბილისში?
+    answer:
+      en: "Ilia Chavchavadze Avenue 44 is in Tbilisi, at 41.709532, 44.766125. The registry also lists two shelters at the same number, a few metres away."
+      ka: "ილია ჭავჭავაძის გამზირი 44 თბილისშია, წერტილზე 41.709532, 44.766125. რეესტრში იმავე ნომერზე ორი თავშესაფარიცაა, რამდენიმე მეტრში."
+    input:
+      query: ჭავჭავაძის გამზირი 44
+      municipality: თბილისი
+      limit: 3

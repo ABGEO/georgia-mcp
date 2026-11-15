@@ -86,9 +86,25 @@ type Request struct {
 	// Path holds the segments after the base address.
 	Path  []string
 	Query url.Values
+	// RawQuery follows Query as it is, with no encoding, for a vendor that refuses an
+	// encoded character.
+	RawQuery string
 	// Header wins over the header of the client.
 	Header http.Header
 	Body   []byte
+}
+
+func (r Request) query() string {
+	query := r.Query.Encode()
+
+	switch {
+	case query == "":
+		return r.RawQuery
+	case r.RawQuery == "":
+		return query
+	default:
+		return query + "&" + r.RawQuery
+	}
 }
 
 // Response is an answer of the vendor, with at most the limit of the body.
@@ -110,8 +126,8 @@ func (c *Client) Do(ctx context.Context, req Request) (*Response, error) {
 		return nil, fmt.Errorf("building the address: %w", err)
 	}
 
-	if len(req.Query) > 0 {
-		endpoint += "?" + req.Query.Encode()
+	if query := req.query(); query != "" {
+		endpoint += "?" + query
 	}
 
 	method := req.Method

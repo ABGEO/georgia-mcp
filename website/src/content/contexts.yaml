@@ -243,3 +243,16 @@ holidays:
       ka: Nager.Date
       kind: community-api
       url: https://date.nager.at/
+parcels:
+  order: 11
+  hue: rose
+  icon: land-plot
+  name:
+    en: Land parcels
+    ka: მიწის ნაკვეთები
+  vendors:
+    - code: napr
+      en: National Agency of Public Registry
+      ka: საჯარო რეესტრის ეროვნული სააგენტო
+      kind: unofficial-api
+      url: https://maps.gov.ge/

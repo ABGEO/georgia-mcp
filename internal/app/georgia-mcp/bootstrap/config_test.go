@@ -1043,3 +1043,28 @@ func TestLoadConfigGivesTheDefaultsOfNager(t *testing.T) {
 		t.Errorf("Nager.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
 	}
 }
+
+// NAPRPARC-SC-023: With no variable of parcels, NAPR is on, at its address, with a timeout
+// of 10 seconds, 5 calls each second, and a burst of 5.
+func TestLoadConfigGivesTheDefaultsOfNAPR(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	napr := cfg.Parcels.NAPR
+	if !napr.Enabled {
+		t.Error("NAPR.Enabled = false, want true")
+	}
+
+	if got := napr.BaseURL.String(); got != "https://maps.gov.ge" {
+		t.Errorf("NAPR.BaseURL = %q, want https://maps.gov.ge", got)
+	}
+
+	if http := napr.HTTP; http.Timeout != 10*time.Second || http.Rate != 5 || http.Burst != 5 {
+		t.Errorf("NAPR.HTTP = %+v, want a timeout of 10s, rate 5, burst 5", http)
+	}
+}

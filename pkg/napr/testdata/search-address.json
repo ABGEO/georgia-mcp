@@ -1,0 +1,224 @@
+{
+"status":true,
+"result":[
+{
+"id": 936616,
+"name": " ქალაქი გორი, ილია ჭავჭავაძის გამზირი, N 44",
+"descript": "გორის მუნიციპალიტეტი",
+"resulttext" :"გორის მუნიციპალიტეტი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAF",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAF",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAF&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 936737,
+"name": " ქალაქი გორი, ილია ჭავჭავაძის გამზირი, N 44ა",
+"descript": "გორის მუნიციპალიტეტი",
+"resulttext" :"გორის მუნიციპალიტეტი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAG",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAG",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADyJ1AAG&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 924134,
+"name": " ქალაქი თელავი, ილია ჭავჭავაძის გამზირი, N 144",
+"descript": "თელავის მუნიციპალიტეტი",
+"resulttext" :"თელავის მუნიციპალიტეტი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAwAADlt4AAF",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAwAADlt4AAF",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAwAADlt4AAF&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 922110,
+"name": " ქალაქი თელავი, ილია ჭავჭავაძის გამზირი, N 44",
+"descript": "თელავის მუნიციპალიტეტი",
+"resulttext" :"თელავის მუნიციპალიტეტი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAvAADx4WAAI",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADx4WAAI",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAvAADx4WAAI&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 66315,
+"name": " ილია ჭავჭავაძის გამზირი, N 44",
+"descript": "ქალაქი თბილისი",
+"resulttext" :"ქალაქი თბილისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAyAAEGARAAD",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAyAAEGARAAD",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAyAAEGARAAD&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2007",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 793577,
+"name": " ილია ჭავჭავაძის გამზირი, N 44, თავშესაფარი UN872843",
+"descript": "ქალაქი თბილისი",
+"resulttext" :"ქალაქი თბილისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAA2AAEyy1AAH",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA2AAEyy1AAH",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA2AAEyy1AAH&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 793618,
+"name": " ილია ჭავჭავაძის გამზირი, N 44, თავშესაფარი UN872895",
+"descript": "ქალაქი თბილისი",
+"resulttext" :"ქალაქი თბილისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAnAAFjGIAAN",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAnAAFjGIAAN",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAnAAFjGIAAN&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 789455,
+"name": " ილია ჭავჭავაძის გამზირი, N 44ა",
+"descript": "ქალაქი თბილისი",
+"resulttext" :"ქალაქი თბილისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAA2AAEyv1AAF",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA2AAEyv1AAF",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA2AAEyv1AAF&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 2573632,
+"name": " ილია ჭავჭავაძის გამზირი, N 44ბ",
+"descript": "ქალაქი თბილისი",
+"resulttext" :"ქალაქი თბილისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAAzAAE7oCAAK",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAzAAE7oCAAK",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAAzAAE7oCAAK&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+},
+{
+"id": 1979076,
+"name": " ილია ჭავჭავაძის გამზირი, N 44",
+"descript": "ქალაქი ქუთაისი",
+"resulttext" :"ქალაქი ქუთაისი",
+"resultlink" :"/map/portal/getbylbl?lbl=ract_g_borders:AAAlnvAA3AAGCFAAAG",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA3AAGCFAAAG",
+        "geometry_link": "/ar/mg/getinfo?lbl=ract_g_borders:AAAlnvAA3AAGCFAAAG&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "7",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+}]
+}

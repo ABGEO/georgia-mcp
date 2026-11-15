@@ -7,6 +7,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/holidays"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/law"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/parcels"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/stats"
@@ -30,6 +31,7 @@ type Config struct {
 	Air      air.Config        `envPrefix:"AIR_"`
 	Law      law.Config        `envPrefix:"LAW_"`
 	Holidays holidays.Config   `envPrefix:"HOLIDAYS_"`
+	Parcels  parcels.Config    `envPrefix:"PARCELS_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -50,5 +52,6 @@ func Defaults() Config {
 		Air:      air.Defaults(),
 		Law:      law.Defaults(),
 		Holidays: holidays.Defaults(),
+		Parcels:  parcels.Defaults(),
 	}
 }

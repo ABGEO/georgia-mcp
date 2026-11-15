@@ -1,0 +1,56 @@
+{
+"provider":"immovable",
+"data":[
+{
+
+"_obj_type_id_":"1002",
+"_obj_type_":"ნაკვეთი",
+"_obj_name_":"01.15.05.066.020",
+"_obj_detail_":{"_cadcode_":"01.15.05.066.020",
+"_area_measured_":"618",
+"_unit_":"კვ.მ.",
+"_address_":"ქალაქი თბილისი , მოედანი თავისუფლება ,   (ნაკვეთი 66\/020)",
+"_land_type_":"არასასოფლო სამეურნეო",
+"_owntype_name_":"საკუთრება"
+
+
+},
+"_owners_":[
+
+{
+"_person_":" ქალაქ თბილისის თვითმმართველი ერთეული"
+}
+
+
+
+]
+,
+"_docs_":[
+{
+"_doc_name_":"საკადასტრო გეგმა",
+"_list_":[
+
+{
+"_blob_uri_":"https:\/\/bs.napr.gov.ge\/GetBlob?pid=101&bid=boVlyOwlsX3qmYsntmLmFM0sdxzVF3sTa2pQdDnI[r8S7y9h7s]MKrCunItMpQw6",
+"_regnumber_":"882009244097",
+"_doc_date_":"13.08.2009"
+}
+]
+},
+{
+"_doc_name_":"ამონაწერი საჯარო რეესტრიდან",
+"_list_":[
+
+{
+"_blob_uri_":"https:\/\/bs.napr.gov.ge\/GetBlob?pid=101&bid=boVlyOwlsX3qmYsntmLmFFjxrN8WiL2qY8hVoi5Sirpl7Dhpgt4ilh57K51h1XXK",
+"_regnumber_":"882009244097",
+"_doc_date_":"14.08.2009"
+}
+]
+}]
+}
+
+
+
+]
+}

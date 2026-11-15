@@ -209,6 +209,7 @@ Add a row before you create the file or the directory.
 | `SOURCES`  | `features/sources/`  | `website`  | The sources page: the kind and the link of each source.         | Approved |
 | `MATSNE`   | `features/matsne/`   | `law`      | The legal acts of the Legislative Herald: search, versions, and articles. | Approved |
 | `HOLIDAY`  | `features/holiday/`  | `holidays` | The public holidays of Georgia: a year, a date, and the next holiday. | Approved |
+| `NAPRPARC` | `features/naprparc/` | `parcels`  | The land parcels of the NAPR cadastral map: by code, near a point, and by address. | Approved |
 
 ## Retired identifiers
 

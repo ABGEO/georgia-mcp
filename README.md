@@ -215,6 +215,9 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `law_get_act`                 | One legal act: its versions and contents, or the text of its articles.  |
 | `holidays_list_holidays`      | The public holidays of Georgia in a year, or the next ones from a date. |
 | `holidays_get_day`            | Whether one date is a public holiday in Georgia, with its name.         |
+| `parcels_get_parcel`          | One land parcel by its cadastral code: area, land type, and owners.     |
+| `parcels_list_nearby_parcels` | The land parcels nearest a point in Georgia, with the distance.         |
+| `parcels_search_addresses`    | The addresses of Georgia by street and number, with a centre point.     |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 

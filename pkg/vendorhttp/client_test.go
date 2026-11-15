@@ -207,3 +207,45 @@ func TestDoKeepsThePathAndTheQueryOutOfTheError(t *testing.T) {
 		t.Errorf("the error does not name %s: %v", server.URL, err)
 	}
 }
+
+// NAPRPARC-SC-002: Do appends the raw query after the query, with no encoding.
+func TestDoAppendsTheRawQuery(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		request vendorhttp.Request
+		want    string
+	}{
+		{
+			name: "with a query",
+			request: vendorhttp.Request{
+				Path:     []string{"info"},
+				Query:    url.Values{"a": {"1"}},
+				RawQuery: "b=x:y/z",
+			},
+			want: "/info?a=1&b=x:y/z",
+		},
+		{
+			name:    "alone",
+			request: vendorhttp.Request{Path: []string{"info"}, RawQuery: "b=x:y/z"},
+			want:    "/info?b=x:y/z",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			server, got := serve(t, http.StatusOK, "{}")
+
+			if _, err := client(server).Do(t.Context(), tt.request); err != nil {
+				t.Fatalf("Do() error = %v", err)
+			}
+
+			if got.uri != tt.want {
+				t.Errorf("uri = %q, want %q", got.uri, tt.want)
+			}
+		})
+	}
+}
