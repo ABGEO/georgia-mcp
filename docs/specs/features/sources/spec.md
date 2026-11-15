@@ -4,7 +4,7 @@ title: The sources page
 type: spec
 status: approved
 created: 2026-11-08
-updated: 2026-11-08
+updated: 2026-11-15
 context: website
 approved_by: Temuri
 approved_on: 2026-11-08
@@ -75,7 +75,7 @@ Every path is under `website/`.
 // contexts.yaml: a vendor of a context gains two fields.
 type Vendor = Localized & {
   code: string
-  kind: "open-api" | "developer-api" | "unofficial-api" | "web-page" // SOURCES-FR-002
+  kind: "open-api" | "developer-api" | "unofficial-api" | "web-page" | "community-api" // SOURCES-FR-002
   url: string // https, a page for people or the documentation of the API. SOURCES-FR-003
 }
 
@@ -92,6 +92,7 @@ type SourceGroup = {
 | `developer-api`  | Yes      | Documented developer API   |
 | `unofficial-api` | No       | Unofficial API             |
 | `web-page`       | No       | Web page                   |
+| `community-api`  | No       | Community open API         |
 
 ### 4.3 Declarations
 
@@ -122,6 +123,7 @@ The sitemap integration of `WEBSITE` adds both addresses.
 | `kinds.<kind>`            | The labels of 4.2.                                                                         |
 | `notes.unofficial-api`    | The vendor does not publish this API for reuse. It can change without notice.             |
 | `notes.web-page`          | The server reads a page that the vendor writes for people. It can change without notice.  |
+| `notes.community-api`     | An open source project publishes this API. It is not the official record of the data.     |
 | `visit`                   | Visit the source                                                                           |
 | `tools`                   | Tools                                                                                      |
 | `how.heading`             | How the server reads a source                                                              |

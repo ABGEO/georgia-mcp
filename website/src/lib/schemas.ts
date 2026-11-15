@@ -36,7 +36,7 @@ export const recordingSchema = z.object({
 /** One recorded output. */
 export type Recording = z.infer<typeof recordingSchema>
 
-export const contextKeys = ["rates", "fuel", "transit", "offers", "postal", "cinema", "stats", "air", "law"] as const
+export const contextKeys = ["rates", "fuel", "transit", "offers", "postal", "cinema", "stats", "air", "law", "holidays"] as const
 
 /** The name of a context. */
 export type ContextKey = (typeof contextKeys)[number]
@@ -60,7 +60,7 @@ export const toolContentSchema = z.object({
 export type ToolContent = z.infer<typeof toolContentSchema>
 
 /** The kinds of source. The first two are official. */
-export const sourceKinds = ["open-api", "developer-api", "unofficial-api", "web-page"] as const
+export const sourceKinds = ["open-api", "developer-api", "unofficial-api", "web-page", "community-api"] as const
 
 /** A kind of source. */
 export type SourceKind = (typeof sourceKinds)[number]
@@ -79,7 +79,7 @@ export type Vendor = z.infer<typeof vendor>
 /** The hand-written content of one context. */
 export const contextContentSchema = z.object({
   order: z.number().int(),
-  hue: z.enum(["butter", "peach", "sky", "lilac", "sage", "teal", "slate", "iris", "clay"]),
+  hue: z.enum(["butter", "peach", "sky", "lilac", "sage", "teal", "slate", "iris", "clay", "olive"]),
   icon: z.string(),
   name: localized,
   vendors: z.array(vendor).min(1),

@@ -4,7 +4,7 @@ title: The sources page
 type: requirements
 status: approved
 created: 2026-11-08
-updated: 2026-11-08
+updated: 2026-11-15
 context: website
 approved_by: Temuri
 approved_on: 2026-11-08
@@ -60,7 +60,7 @@ The site must have a sources page at `/sources/` and `/ka/sources/`. It lists ea
 
 ### `SOURCES-FR-002`
 
-Each source must show its kind of source: an official open API, a documented developer API, an unofficial API, or a web page. A source that is not official must say so in words.
+Each source must show its kind of source: an official open API, a documented developer API, an unofficial API, a web page, or a community open API. A source that is not official must say so in words.
 
 **Why:** A reader weighs an answer by its source. An unofficial source can change without notice.
 
@@ -68,6 +68,7 @@ Each source must show its kind of source: an official open API, a documented dev
 
 - Normal case: the NBG shows "Official open API".
 - Limit case: the TTC shows "Unofficial API", with a sentence that the TTC does not publish it for reuse.
+- Limit case: Nager.Date shows "Community open API", with a sentence that it is not the official record.
 
 ### `SOURCES-FR-003`
 

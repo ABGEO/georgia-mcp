@@ -1,0 +1,16 @@
+context: holidays
+vendors: [nager]
+summary:
+  en: Whether one date is a public holiday in Georgia, with its weekday and the holiday name in Georgian or English.
+  ka: არის თუ არა თარიღი საქართველოში დასვენების დღე, კვირის დღით და დღესასწაულის სახელით ქართულად ან ინგლისურად.
+examples:
+  - id: independence-day
+    question:
+      en: Is May 26, 2027 a day off in Georgia?
+      ka: არის თუ არა 2027 წლის 26 მაისი საქართველოში დასვენების დღე?
+    answer:
+      en: "Yes. 26 May 2027 is Independence Day, a public holiday in Georgia. It falls on a Wednesday."
+      ka: "დიახ. 2027 წლის 26 მაისი დამოუკიდებლობის დღეა, საქართველოში დასვენების დღე. ის ოთხშაბათს მოდის."
+    input:
+      date: "2027-05-26"
+      language: ka

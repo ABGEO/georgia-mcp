@@ -230,3 +230,16 @@ law:
       ka: საქართველოს საკანონმდებლო მაცნე
       kind: web-page
       url: https://matsne.gov.ge/
+holidays:
+  order: 10
+  hue: olive
+  icon: calendar-heart
+  name:
+    en: Public holidays
+    ka: დასვენების დღეები
+  vendors:
+    - code: nager
+      en: Nager.Date
+      ka: Nager.Date
+      kind: community-api
+      url: https://date.nager.at/
