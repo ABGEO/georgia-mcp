@@ -2700,6 +2700,864 @@
       "openWorldHint": true
     }
   },
+  "parliament_get_bill": {
+    "name": "parliament_get_bill",
+    "title": "Get a bill of the Parliament of Georgia",
+    "description": "Returns one bill by its identifier (32449): its description, its package, and every review stage in order, committee hearings and readings, with dates, yes and no counts, and the identifiers of its votes. Read a vote with parliament_get_vote. Texts are in Georgian. Search in Georgian. Data from the Parliament of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The identifier, from a search or a list, for example 32449."
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Parliament of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the data, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the Parliament did not answer and the server returns data it read before."
+        },
+        "id": {
+          "type": "integer",
+          "description": "The bill identifier."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the bill."
+        },
+        "type": {
+          "type": "string",
+          "description": "The bill type."
+        },
+        "registration_number": {
+          "type": "string",
+          "description": "The registration number of the package."
+        },
+        "registered": {
+          "type": "string",
+          "description": "The date of registration, YYYY-MM-DD."
+        },
+        "initiator": {
+          "type": "string",
+          "description": "The body that submitted the bill."
+        },
+        "author": {
+          "type": "string",
+          "description": "The body that drafted the bill."
+        },
+        "newest_stage": {
+          "type": "string",
+          "description": "The name of the newest review stage."
+        },
+        "newest_reading": {
+          "type": "string",
+          "description": "The reading code of the newest stage, when it is a reading."
+        },
+        "url": {
+          "type": "string",
+          "description": "The page of the bill at the Parliament."
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the bill."
+        },
+        "package_name": {
+          "type": "string",
+          "description": "The name of the package of the bill."
+        },
+        "stages": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the stage at the Parliament."
+              },
+              "reading": {
+                "type": "string",
+                "description": "first_reading, second_reading, third_reading, single_reading, plenary_draft, alternative_proposal, or other. Empty for a committee stage."
+              },
+              "from": {
+                "type": "string",
+                "description": "The first day of the review, YYYY-MM-DD."
+              },
+              "to": {
+                "type": "string",
+                "description": "The last day of the review, YYYY-MM-DD."
+              },
+              "session_date": {
+                "type": "string",
+                "description": "The day of the plenary sitting, YYYY-MM-DD."
+              },
+              "session_number": {
+                "type": "string",
+                "description": "The number of the plenary sitting."
+              },
+              "bureau_date": {
+                "type": "string",
+                "description": "The day of the sitting of the bureau, YYYY-MM-DD."
+              },
+              "bureau_number": {
+                "type": "string",
+                "description": "The number of the sitting of the bureau."
+              },
+              "yes": {
+                "type": [
+                  "null",
+                  "integer"
+                ],
+                "description": "The count of yes."
+              },
+              "no": {
+                "type": [
+                  "null",
+                  "integer"
+                ],
+                "description": "The count of no."
+              },
+              "votes": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "integer"
+                },
+                "description": "The identifiers of the votes of the stage."
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Every review stage, in the order of the review."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "id",
+        "title",
+        "type",
+        "registration_number",
+        "registered",
+        "initiator",
+        "newest_stage",
+        "url",
+        "package_name",
+        "stages"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "parliament_get_vote": {
+    "name": "parliament_get_vote",
+    "title": "Get a plenary vote of the Parliament of Georgia",
+    "description": "Returns one vote by its identifier (31510), with the choice of each member (yes, no, or absent), grouped by faction, with the count of each choice in each faction. Texts are in Georgian. Search in Georgian. Data from the Parliament of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "The identifier, from a search or a list, for example 32449."
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Parliament of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the data, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the Parliament did not answer and the server returns data it read before."
+        },
+        "id": {
+          "type": "integer",
+          "description": "The vote identifier."
+        },
+        "date": {
+          "type": "string",
+          "description": "The day of the vote, YYYY-MM-DD."
+        },
+        "bill_id": {
+          "type": "integer",
+          "description": "The bill identifier."
+        },
+        "bill_title": {
+          "type": "string",
+          "description": "The title of the bill."
+        },
+        "registration_number": {
+          "type": "string",
+          "description": "The registration number of the package."
+        },
+        "reading": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name at the Parliament, in Georgian."
+            }
+          },
+          "description": "The reading: first_reading, second_reading, third_reading, single_reading, plenary_draft, alternative_proposal, or other.",
+          "required": [
+            "code",
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "outcome": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name at the Parliament, in Georgian."
+            }
+          },
+          "description": "adopted, rejected, or other.",
+          "required": [
+            "code",
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "quorum": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "description": "The count of yes that the item needs."
+        },
+        "yes": {
+          "type": "integer",
+          "description": "The count of yes."
+        },
+        "no": {
+          "type": "integer",
+          "description": "The count of no."
+        },
+        "absent": {
+          "type": "integer",
+          "description": "The count of members who did not vote."
+        },
+        "url": {
+          "type": "string",
+          "description": "The page of the bill at the Parliament."
+        },
+        "factions": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The faction, in Georgian. Empty for the members of no faction."
+              },
+              "yes": {
+                "type": "integer",
+                "description": "The count of yes."
+              },
+              "no": {
+                "type": "integer",
+                "description": "The count of no."
+              },
+              "absent": {
+                "type": "integer",
+                "description": "The count of absent."
+              },
+              "other": {
+                "type": "integer",
+                "description": "The count of any other choice."
+              },
+              "members": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The family name and the first name."
+                    },
+                    "choice": {
+                      "type": "string",
+                      "description": "yes, no, absent, or other."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choice"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "The members of the faction, by family name."
+              }
+            },
+            "required": [
+              "name",
+              "yes",
+              "no",
+              "absent",
+              "other",
+              "members"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The members by faction, the largest first. A faction with an empty name holds the members of no faction."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "id",
+        "date",
+        "bill_id",
+        "bill_title",
+        "registration_number",
+        "reading",
+        "outcome",
+        "yes",
+        "no",
+        "absent",
+        "url",
+        "factions"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "parliament_list_votes": {
+    "name": "parliament_list_votes",
+    "title": "List the plenary votes of the Parliament of Georgia",
+    "description": "Returns the plenary votes in a period, or on bills whose title holds a text, newest first. Each vote has its identifier, date, bill, reading, outcome (adopted or rejected), quorum, and the counts of yes, no, and absent. Read the choice of each member with parliament_get_vote. Texts are in Georgian. Search in Georgian. Data from the Parliament of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "A text of the title of the bill, in Georgian, 1 to 128 characters."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of the vote, YYYY-MM-DD."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of the vote, YYYY-MM-DD."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page, from 1. The default is 1."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The count of votes of a page, 1 to 50. The default is 10."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Parliament of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the data, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the Parliament did not answer and the server returns data it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of all the matches at the source."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page of this answer, from 1."
+        },
+        "notice": {
+          "type": "string",
+          "description": "Set when a text with no Georgian letter found nothing."
+        },
+        "votes": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The vote identifier."
+              },
+              "date": {
+                "type": "string",
+                "description": "The day of the vote, YYYY-MM-DD."
+              },
+              "bill_id": {
+                "type": "integer",
+                "description": "The bill identifier."
+              },
+              "bill_title": {
+                "type": "string",
+                "description": "The title of the bill."
+              },
+              "registration_number": {
+                "type": "string",
+                "description": "The registration number of the package."
+              },
+              "reading": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "The code."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name at the Parliament, in Georgian."
+                  }
+                },
+                "description": "The reading: first_reading, second_reading, third_reading, single_reading, plenary_draft, alternative_proposal, or other.",
+                "required": [
+                  "code",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "outcome": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "The code."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name at the Parliament, in Georgian."
+                  }
+                },
+                "description": "adopted, rejected, or other.",
+                "required": [
+                  "code",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "quorum": {
+                "type": [
+                  "null",
+                  "integer"
+                ],
+                "description": "The count of yes that the item needs."
+              },
+              "yes": {
+                "type": "integer",
+                "description": "The count of yes."
+              },
+              "no": {
+                "type": "integer",
+                "description": "The count of no."
+              },
+              "absent": {
+                "type": "integer",
+                "description": "The count of members who did not vote."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the bill at the Parliament."
+              }
+            },
+            "required": [
+              "id",
+              "date",
+              "bill_id",
+              "bill_title",
+              "registration_number",
+              "reading",
+              "outcome",
+              "yes",
+              "no",
+              "absent",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The votes of the page, newest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "page",
+        "votes"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "parliament_search_bills": {
+    "name": "parliament_search_bills",
+    "title": "Search the bills of the Parliament of Georgia",
+    "description": "Returns the bills whose title holds a text, or that the Parliament registered in a period, or that carry a registration number (372/2-XIმპ), newest first. Each bill has its identifier, title, type, registration number and date, initiator, author, and newest review stage. Read the stages and votes with parliament_get_bill. Texts are in Georgian. Search in Georgian. Data from the Parliament of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "A text of the title, in Georgian, 1 to 128 characters, for example ბიუჯეტ."
+        },
+        "number": {
+          "type": "string",
+          "description": "A registration number, for example 372/2-XIმპ."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of registration, YYYY-MM-DD."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of registration, YYYY-MM-DD."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page, from 1. The default is 1."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The count of bills of a page, 1 to 50. The default is 10."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Parliament of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the data, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the Parliament did not answer and the server returns data it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of all the matches at the source."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page of this answer, from 1."
+        },
+        "notice": {
+          "type": "string",
+          "description": "Set when a text with no Georgian letter found nothing."
+        },
+        "bills": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The bill identifier."
+              },
+              "title": {
+                "type": "string",
+                "description": "The title of the bill."
+              },
+              "type": {
+                "type": "string",
+                "description": "The bill type."
+              },
+              "registration_number": {
+                "type": "string",
+                "description": "The registration number of the package."
+              },
+              "registered": {
+                "type": "string",
+                "description": "The date of registration, YYYY-MM-DD."
+              },
+              "initiator": {
+                "type": "string",
+                "description": "The body that submitted the bill."
+              },
+              "author": {
+                "type": "string",
+                "description": "The body that drafted the bill."
+              },
+              "newest_stage": {
+                "type": "string",
+                "description": "The name of the newest review stage."
+              },
+              "newest_reading": {
+                "type": "string",
+                "description": "The reading code of the newest stage, when it is a reading."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the bill at the Parliament."
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "type",
+              "registration_number",
+              "registered",
+              "initiator",
+              "newest_stage",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The bills of the page, newest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "page",
+        "bills"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "parliament_search_questions": {
+    "name": "parliament_search_questions",
+    "title": "Search the questions of the members of the Parliament of Georgia",
+    "description": "Returns the written questions of members to the bodies of the state, newest first: by a text of the request, by the member (a family name, ხორგუანი), or by a period of registration. Each question has its addressee, deadline, response date, and status: answered, pending, or overdue. The texts of a question and an answer are PDF files on its page. Texts are in Georgian. Search in Georgian. Data from the Parliament of Georgia.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "A text of the request, in Georgian, 1 to 128 characters."
+        },
+        "member": {
+          "type": "string",
+          "description": "A name of the member, in Georgian: the family name, or the family name and the first name."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of registration, YYYY-MM-DD."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of registration, YYYY-MM-DD."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page, from 1. The default is 1."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The count of questions of a page, 1 to 50. The default is 10."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Parliament of Georgia."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the data, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when the Parliament did not answer and the server returns data it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of all the matches at the source."
+        },
+        "page": {
+          "type": "integer",
+          "description": "The page of this answer, from 1."
+        },
+        "notice": {
+          "type": "string",
+          "description": "Set when a text with no Georgian letter found nothing."
+        },
+        "questions": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The question identifier."
+              },
+              "type": {
+                "type": "string",
+                "description": "The type of the question."
+              },
+              "registration_number": {
+                "type": "string",
+                "description": "The registration number."
+              },
+              "registered": {
+                "type": "string",
+                "description": "The date of registration, YYYY-MM-DD."
+              },
+              "request": {
+                "type": "string",
+                "description": "The request, as the Parliament summarizes it."
+              },
+              "member": {
+                "type": "string",
+                "description": "The member who asked."
+              },
+              "faction": {
+                "type": "string",
+                "description": "The faction of the member."
+              },
+              "addressee": {
+                "type": "string",
+                "description": "The body and the person that the question goes to."
+              },
+              "deadline": {
+                "type": "string",
+                "description": "The last day of the answer, YYYY-MM-DD."
+              },
+              "responded": {
+                "type": "string",
+                "description": "The day of the answer, YYYY-MM-DD."
+              },
+              "status": {
+                "type": "string",
+                "description": "answered, pending, or overdue."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the question, with the files of the question and the answer."
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "registration_number",
+              "registered",
+              "request",
+              "member",
+              "addressee",
+              "status",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The questions of the page, newest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "page",
+        "questions"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "permits_get_application": {
     "name": "permits_get_application",
     "title": "Get a building application of Tbilisi",

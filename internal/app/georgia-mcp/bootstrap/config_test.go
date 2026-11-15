@@ -1093,3 +1093,28 @@ func TestLoadConfigGivesTheDefaultsOfTAS(t *testing.T) {
 		t.Errorf("TAS.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
 	}
 }
+
+// PARL-SC-020: With no variable of the parliament, the Parliament is on, at its address,
+// with a timeout of 10 seconds, 5 calls each second, and a burst of 5.
+func TestLoadConfigGivesTheDefaultsOfTheParliament(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	source := cfg.Parliament.Parliament
+	if !source.Enabled {
+		t.Error("Parliament.Enabled = false, want true")
+	}
+
+	if got := source.BaseURL.String(); got != "https://info.parliament.ge" {
+		t.Errorf("Parliament.BaseURL = %q, want https://info.parliament.ge", got)
+	}
+
+	if http := source.HTTP; http.Timeout != 10*time.Second || http.Rate != 5 || http.Burst != 5 {
+		t.Errorf("Parliament.HTTP = %+v, want a timeout of 10s, rate 5, burst 5", http)
+	}
+}

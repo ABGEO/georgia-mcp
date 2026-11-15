@@ -254,6 +254,26 @@ define it. The identifier of a term is `GLO-<term>`.
 | decision text | The text with which TAS answers an application. |
 | executor | The employee of TAS who handles an application. |
 
+## Parliament
+
+| Term | Meaning |
+| ---- | ------- |
+| the Parliament | The Parliament of Georgia, as the publisher of `info.parliament.ge`. Vendor code `parliament`. |
+| bill | One draft that the Parliament reviews, with a bill identifier: `32449`. |
+| bill identifier | The number of a bill at the Parliament. |
+| registration number | The number of a package of bills: `372/2-XIმპ`. |
+| initiator | The body that submits a bill: "საქართველოს მთავრობა". |
+| author | The body that drafted a bill: "საქართველოს ფინანსთა სამინისტრო". |
+| review stage | One step in the review of a bill: a committee hearing or a reading. |
+| reading | A plenary review stage. `PARL` 5.1 gives the codes. |
+| vote | One plenary vote on a review stage, with a vote identifier: `31510`. |
+| outcome | `adopted` or `rejected`. |
+| choice | What one member did in a vote: `yes`, `no`, `absent`, or `other`. |
+| faction | A group of members in the Parliament: "ფრაქცია „ქართული ოცნება“". |
+| member question | A written question of a member to a body of the state. |
+| addressee | The body and the person that a member question goes to. |
+| question status | `answered`, `pending`, or `overdue`. |
+
 ## The website
 
 | Term               | Meaning                                                                                               |

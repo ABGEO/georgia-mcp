@@ -1,0 +1,15 @@
+context: parliament
+vendors: [parliament]
+summary:
+  en: One plenary vote by its identifier, with the choice of each member grouped by faction and the count of each choice in each faction.
+  ka: ერთი პლენარული კენჭისყრა იდენტიფიკატორით, თითოეული დეპუტატის არჩევანით ფრაქციების მიხედვით და თითოეულ ფრაქციაში ხმების რაოდენობით.
+examples:
+  - id: vote-31507
+    question:
+      en: How did the factions vote in the vote 31507 on the Election Code?
+      ka: როგორ მისცეს ხმა ფრაქციებმა საარჩევნო კოდექსის შესახებ კენჭისყრაზე 31507?
+    answer:
+      en: "On 11 November 2026 the Parliament adopted the change of the Election Code, 383/3-XIმპ, in the first reading: 79 yes and 10 no, while 12 members did not vote. It needed 76. Georgian Dream gave 70 yes, and 8 of its members did not vote. For Georgia gave all 10 no, and 2 of its members did not vote. Of the 11 members of no faction, 9 voted yes and 2 did not vote."
+      ka: "პარლამენტმა 2026 წლის 11 ნოემბერს საარჩევნო კოდექსის ცვლილება, 383/3-XIმპ, პირველი მოსმენით მიიღო: 79 მომხრე და 10 წინააღმდეგი, 12 დეპუტატს ხმა არ მიუცია. საჭირო იყო 76 ხმა. ფრაქცია „ქართული ოცნების“ 70 წევრი მომხრე იყო, 8-ს ხმა არ მიუცია. ფრაქცია „საქართველოსთვის“ წევრებმა 10-ვე წინააღმდეგი ხმა მისცეს, 2-ს ხმა არ მიუცია. ფრაქციის გარეშე 11 დეპუტატიდან 9 მომხრე იყო, 2-ს ხმა არ მიუცია."
+    input:
+      id: 31507

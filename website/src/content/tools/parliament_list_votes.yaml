@@ -1,0 +1,17 @@
+context: parliament
+vendors: [parliament]
+summary:
+  en: The plenary votes of the Parliament in a period or on a bill, newest first, with the reading, the outcome, the quorum, and the counts of yes, no, and absent.
+  ka: პარლამენტის პლენარული კენჭისყრები პერიოდით ან კანონპროექტით, ჯერ უახლესი, მოსმენით, შედეგით, კვორუმითა და მომხრე, წინააღმდეგი და ხმის არმიმცემი დეპუტატების რაოდენობით.
+examples:
+  - id: november-11
+    question:
+      en: What did the Parliament vote on on 11 November 2026?
+      ka: რას უყარა კენჭი პარლამენტმა 2026 წლის 11 ნოემბერს?
+    answer:
+      en: "The Parliament held 7 votes that day, and the first 5 all passed. The change of the Election Code, 383/3-XIმპ, passed its first reading 79 to 10, above its quorum of 76. The Budget Code bill passed its first reading 77 to 0, the bill on medical practice 78 to 0, and the bill on the Chamber of Commerce and Industry its second reading 77 to 0. The main directions of the monetary and currency policy for 2027 to 2029 passed 76 to 0."
+      ka: "იმ დღეს პარლამენტმა 7 კენჭისყრა ჩაატარა, პირველი 5-ვე საკითხი მიღებულია. საარჩევნო კოდექსის ცვლილება, 383/3-XIმპ, პირველი მოსმენით 79 ხმით 10-ის წინააღმდეგ მიიღეს, საჭირო 76 ხმაზე მეტით. საბიუჯეტო კოდექსის კანონპროექტი პირველი მოსმენით 77:0 მიიღეს, საექიმო საქმიანობის კანონპროექტი 78:0, სავაჭრო-სამრეწველო პალატის კანონპროექტი კი მეორე მოსმენით 77:0. 2027-2029 წლების ფულად-საკრედიტო და სავალუტო პოლიტიკის ძირითადი მიმართულებები 76:0 მიიღეს."
+    input:
+      from: "2026-11-11"
+      to: "2026-11-11"
+      limit: 5

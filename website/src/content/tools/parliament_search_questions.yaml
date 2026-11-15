@@ -1,0 +1,16 @@
+context: parliament
+vendors: [parliament]
+summary:
+  en: The written questions of the members of the Parliament by a text of the request, the member, or a period, newest first, with the addressee, the deadline, and the status.
+  ka: პარლამენტის წევრების წერილობითი შეკითხვები მოთხოვნის ტექსტით, დეპუტატით ან პერიოდით, ჯერ უახლესი, ადრესატით, ვადითა და სტატუსით.
+examples:
+  - id: storm
+    question:
+      en: What have members of the Parliament asked about natural disasters?
+      ka: რას ეკითხებოდნენ პარლამენტის წევრები სტიქიურ მოვლენებზე?
+    answer:
+      en: "21 questions name a natural disaster. The four newest come from Sopio Khorguani, on the storm of 12 July 2026 in Telavi, Tsinandali, and Kisiskhevi. The Prime Minister and the mayor's office of Telavi answered her questions of 15 September 2026. Her question of 12 October to the mayor's office and her question of 2 November to the Prime Minister are overdue: their deadlines passed on 27 October and 14 November."
+      ka: "სტიქიურ მოვლენებს 21 შეკითხვა ეხება. ოთხი უახლესი სოფიო ხორგუანმა დასვა 2026 წლის 12 ივლისს თელავში, წინანდალსა და კისისხევში მომხდარ სტიქიაზე. 2026 წლის 15 სექტემბრის შეკითხვებს პრემიერ-მინისტრმა და თელავის მერიამ უპასუხეს. 12 ოქტომბრის შეკითხვა მერიისადმი და 2 ნოემბრის შეკითხვა პრემიერ-მინისტრისადმი ვადაგადაცილებულია: მათი ვადები 27 ოქტომბერსა და 14 ნოემბერს ამოიწურა."
+    input:
+      query: სტიქი
+      limit: 4

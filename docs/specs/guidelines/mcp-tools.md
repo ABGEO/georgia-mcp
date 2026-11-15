@@ -4,7 +4,7 @@ title: The MCP server and its tools
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-07
+updated: 2026-11-15
 scope: [internal/pkg/mcpserver/, internal/app/georgia-mcp/*/adapter/tool/]
 related: [ARC, DOM, API, LOG, RSL]
 ---
@@ -89,6 +89,11 @@ A message never holds a vendor body, a vendor status code, or a Go error text.
 
 A tool whose output holds a text from a source takes the optional input
 `language`, with the values `ka` and `en`. The default is `en`.
+
+A tool whose source publishes every text in one language takes no `language`.
+Its description names that language. Its closed sets are codes in English.
+
+**Why:** An input that changes nothing misleads the model.
 
 ## MCP-008
 

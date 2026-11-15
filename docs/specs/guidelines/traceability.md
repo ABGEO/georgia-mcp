@@ -211,6 +211,7 @@ Add a row before you create the file or the directory.
 | `HOLIDAY`  | `features/holiday/`  | `holidays` | The public holidays of Georgia: a year, a date, and the next holiday. | Approved |
 | `NAPRPARC` | `features/naprparc/` | `parcels`  | The land parcels of the NAPR cadastral map: by code, near a point, and by address. | Approved |
 | `TASPERM`  | `features/tasperm/`  | `permits`  | The applications of the Tbilisi Architecture Service: by parcel, by number, and by period. | Approved |
+| `PARL`     | `features/parl/`     | `parliament` | The bills, votes, and questions of the members of the Parliament of Georgia. | Approved |
 
 ## Retired identifiers
 

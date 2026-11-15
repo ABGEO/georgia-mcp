@@ -220,6 +220,11 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `parcels_search_addresses`    | The addresses of Georgia by street and number, with a centre point.     |
 | `permits_search_applications` | The building applications of Tbilisi for a parcel or a period.          |
 | `permits_get_application`     | One building application of Tbilisi, with the text of its decision.     |
+| `parliament_search_bills`     | The bills of the Parliament of Georgia by title, number, or period.     |
+| `parliament_get_bill`         | One bill of the Parliament, with every review stage and its votes.      |
+| `parliament_list_votes`       | The plenary votes of the Parliament in a period or on a bill.           |
+| `parliament_get_vote`         | One plenary vote, with the choice of each member by faction.            |
+| `parliament_search_questions` | The written questions of the members, with their status.                |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
