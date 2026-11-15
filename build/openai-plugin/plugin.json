@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "georgia-public-data",
   "description": "Read-only public data from Georgia, from the organizations that publish it. Each result names its source.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "email": "takalandzet@gmail.com",
     "name": "Temuri Takalandze",
@@ -32,7 +32,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Features\n- Remove the language input of the permits and parcels tools\n- parliament: Add the bills, votes, and member questions of the parliament of georgia\n- permits: Add the building applications of the tbilisi architecture service\n- parcels: Add the land parcels of the napr cadastral map\n- holidays: Add the public holidays of nager.date\n- law: Add the legal acts of the legislative herald\n\nBug fixes\n- Reject a currency or station code that is not ASCII\n- platform: Read the cache again in the shared load"
+        "release_notes": "Bug fixes\n- Accept an empty openvex document in the release"
       },
       "review": {
         "test_cases": {
