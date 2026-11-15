@@ -217,3 +217,16 @@ air:
       ka: გარემოს ეროვნული სააგენტო
       kind: unofficial-api
       url: https://air.gov.ge/
+law:
+  order: 9
+  hue: clay
+  icon: scale
+  name:
+    en: Legal acts
+    ka: სამართლებრივი აქტები
+  vendors:
+    - code: matsne
+      en: Legislative Herald of Georgia
+      ka: საქართველოს საკანონმდებლო მაცნე
+      kind: web-page
+      url: https://matsne.gov.ge/

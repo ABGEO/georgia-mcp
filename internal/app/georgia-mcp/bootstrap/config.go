@@ -4,6 +4,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/air"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/law"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
@@ -26,6 +27,7 @@ type Config struct {
 	Cinema  cinema.Config     `envPrefix:"CINEMA_"`
 	Stats   stats.Config      `envPrefix:"STATS_"`
 	Air     air.Config        `envPrefix:"AIR_"`
+	Law     law.Config        `envPrefix:"LAW_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -44,5 +46,6 @@ func Defaults() Config {
 		Cinema:  cinema.Defaults(),
 		Stats:   stats.Defaults(),
 		Air:     air.Defaults(),
+		Law:     law.Defaults(),
 	}
 }

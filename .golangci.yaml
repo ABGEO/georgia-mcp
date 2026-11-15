@@ -93,6 +93,7 @@ linters:
             - "!**/pkg/neogas/**"
             - "!**/pkg/lukoil/**"
             - "!**/pkg/gulf/**"
+            - "!**/pkg/matsne/**"
             - "!**/pkg/scapp/**"
             - "!**/pkg/halyk/**"
             - "!**/pkg/mjc/**"
@@ -143,9 +144,11 @@ linters:
           list-mode: strict
           files:
             - "**/pkg/gulf/**"
+            - "**/pkg/matsne/**"
           allow:
             - $gostd
             - github.com/abgeo/georgia-mcp/pkg/gulf
+            - github.com/abgeo/georgia-mcp/pkg/matsne
             - github.com/abgeo/georgia-mcp/pkg/vendorhttp
             - golang.org/x/net/html
             - github.com/refraction-networking/utls

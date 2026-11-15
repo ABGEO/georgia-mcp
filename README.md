@@ -211,6 +211,8 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `stats_get_inflation`         | The inflation of Georgia for a month, a city, and a price group.        |
 | `air_get_quality`             | The newest air quality readings of a city, a station, or every station. |
 | `air_list_history`            | The hourly air quality readings of one station over at most 7 days.     |
+| `law_search_acts`             | The legal acts of Georgia by title or text, type, status, and date.     |
+| `law_get_act`                 | One legal act: its versions and contents, or the text of its articles.  |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 

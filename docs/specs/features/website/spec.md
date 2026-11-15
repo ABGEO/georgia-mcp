@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-11-07
+updated: 2026-11-15
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -153,7 +153,7 @@ type Recording = {
 
 // tools/<tool name>.yaml. The file name is the tool name.
 type ToolContent = {
-  context: "rates" | "fuel" | "transit" | "offers" | "postal" | "cinema" | "stats" | "air"
+  context: "rates" | "fuel" | "transit" | "offers" | "postal" | "cinema" | "stats" | "air" | "law"
   summary: Localized
   vendors: string[] // the codes of the vendors that the tool reads, each a vendor of its context. WEBSITE-DD-018.
   // The answer is written by hand from the recording of the example. It is the chat example of the home page.
@@ -163,7 +163,7 @@ type ToolContent = {
 // contexts.yaml: an object keyed by the context name.
 type ContextContent = {
   order: number
-  hue: "butter" | "peach" | "sky" | "lilac" | "sage" | "teal" | "slate" | "iris"
+  hue: "butter" | "peach" | "sky" | "lilac" | "sage" | "teal" | "slate" | "iris" | "clay"
   icon: string // a Lucide icon name
   name: Localized
   vendors: Array<Localized & { code: string }> // code: the code of the server, "tbc"; or a short name, "nbg"
@@ -455,6 +455,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 | `cinema`  | `cavea`                                                       |
 | `stats`   | `geostat`                                                     |
 | `air`     | `nea`                                                         |
+| `law`     | `matsne`                                                      |
 
 **Rationale:** The owner chose a list by hand, checked against the server. The names in Georgian come from the site, and the refresh catches a vendor that the site lacks.
 **Alternatives:** The list from the description alone. It gives no Georgian name, and a tool with no such sentence gives no list.

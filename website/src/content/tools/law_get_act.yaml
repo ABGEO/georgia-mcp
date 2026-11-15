@@ -1,0 +1,17 @@
+context: law
+vendors: [matsne]
+summary:
+  en: One legal act of the Legislative Herald with its versions and contents, or the full text of up to 10 of its articles, in Georgian or in English.
+  ka: საკანონმდებლო მაცნის ერთი სამართლებრივი აქტი მისი ვერსიებითა და სარჩევით, ან მისი 10-მდე მუხლის სრული ტექსტი, ქართულად ან ინგლისურად.
+examples:
+  - id: income-tax-rate
+    question:
+      en: What is the income tax rate in Georgia, according to the Tax Code?
+      ka: რა არის საშემოსავლო გადასახადის განაკვეთი საგადასახადო კოდექსის მიხედვით?
+    answer:
+      en: "Under article 81 of the Tax Code, the taxable income of a natural person is taxed at 20 percent, unless the Code says otherwise. Income from renting out a home, when the person claims no deductions, and the gain from selling a home with its land or a car are taxed at 5 percent. This is version 248 of the Code, published on 28 October 2026."
+      ka: "საგადასახადო კოდექსის 81-ე მუხლით ფიზიკური პირის დასაბეგრი შემოსავალი 20 პროცენტით იბეგრება, თუ კოდექსით სხვა რამ არ არის გათვალისწინებული. საცხოვრებელი ფართობის გაქირავებით მიღებული შემოსავალი, როცა პირი გამოქვითვებს არ ახორციელებს, და საცხოვრებელი ბინის მიწით ან ავტომობილის მიწოდებით მიღებული ნამეტი შემოსავალი 5 პროცენტით იბეგრება. ეს კოდექსის 248-ე ვერსიაა, გამოქვეყნებული 2026 წლის 28 ოქტომბერს."
+    input:
+      id: "1043717"
+      articles: ["81"]
+      language: ka
