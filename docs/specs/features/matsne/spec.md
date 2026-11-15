@@ -32,7 +32,7 @@ the cache keeps, and the tool returns the table of contents or a few articles of
 | `MATSNE-FR-004`   | 4.2 `SearchActs`. `MATSNE-DD-005`                            |
 | `MATSNE-FR-005`   | 4.2 `Order`. `MATSNE-DD-004`                                 |
 | `MATSNE-FR-006`   | `spec-tools.md`, `page`, `limit`, `total`                     |
-| `MATSNE-FR-007`   | 4.2 `GetAct`, `ActSource.Status`. `MATSNE-DD-007`            |
+| `MATSNE-FR-007`   | 4.2 `GetAct`, `ActSource.Status`. `MATSNE-DD-007`, `MATSNE-DD-017`, `MATSNE-DD-018` |
 | `MATSNE-FR-008`   | 4.2 `Body.Contents`. `MATSNE-DD-002`, `MATSNE-DD-003`        |
 | `MATSNE-FR-009`   | 4.2 `ArticleNumber`, `GetAct`. `MATSNE-DD-006`               |
 | `MATSNE-FR-010`   | 4.2 `Body.Text`, `GetAct`. `MATSNE-DD-008`                   |
@@ -43,6 +43,7 @@ the cache keeps, and the tool returns the table of contents or a few articles of
 | `MATSNE-FR-015`   | 4.2 the parsers. `spec-tools.md`, errors                      |
 | `MATSNE-FR-016`   | `spec-client.md`, `ErrBlocked`. `MATSNE-DD-001`, `MATSNE-DD-011`, `MATSNE-DD-015` |
 | `MATSNE-FR-017`   | 4.3 configuration                                            |
+| `MATSNE-FR-018`   | 4.2 `ActView.Newest`. `MATSNE-DD-016`                        |
 | `MATSNE-NFR-001`  | 4.2 `GetAct`. `MATSNE-DD-008`                                |
 | `MATSNE-NFR-002`  | 4.3 cache                                                    |
 | `MATSNE-NFR-003`  | 4.3 configuration. `MATSNE-DD-012`                           |
@@ -71,6 +72,7 @@ the cache keeps, and the tool returns the table of contents or a few articles of
 | `RSL-003` to `RSL-007` | `adapter/cache`. 4.3 cache.                                                      |
 | `CFG-003`, `CFG-008`   | Each variable has the prefix `GEOMCP_LAW_MATSNE_`. The switch is on by default.  |
 | `LOG-004`              | The logger of the module carries `context=law`.                                  |
+| `LOG-013`              | A read that the answer leaves out writes `source unavailable` at `warn`.         |
 | `TST-006`              | `pkg/matsne/testdata/` holds the pages of 4.3, recorded in stage 3.              |
 
 ## 4. Design
@@ -276,7 +278,7 @@ type SearchResult struct {
     ReadAt time.Time
     Stale  bool
 }
-func NewSearchActs(source ActSource) *SearchActs
+func NewSearchActs(source ActSource, logger *slog.Logger) *SearchActs
 func (s *SearchActs) Search(ctx context.Context, query domain.SearchQuery, limit int) (SearchResult, error)
 
 // app/act.go
@@ -296,22 +298,28 @@ type ActView struct {
     Articles  []domain.Article
     Next      *domain.ArticleNumber // the first requested article that the size left out
     Truncated bool               // the one article passed the size and lost paragraphs
+    Newest    *domain.Version    // the newest version, when a read with no version trails it
+    VersionCount int             // every version; Act.Versions holds the newest MaxVersions
     Text      string
     Piece     int
     Pieces    int
     ReadAt    time.Time
     Stale     bool
 }
-func NewGetAct(source ActSource) *GetAct
+func NewGetAct(source ActSource, logger *slog.Logger) *GetAct
 func (g *GetAct) Get(ctx context.Context, query ActQuery) (ActView, error)
 ```
 
 `Get` refuses a version and a date (`ErrBothVersions`) and more than 10 articles before a
-call. It always reads the newest version first. A version number that the list of versions
-lacks gives a `*VersionError`. A date takes `VersionOn`. It then reads the selected version,
-unless it is the newest (`MATSNE-DD-009`). It reads `Status` with the registration code of
-the act, in parallel with the second read. With no article it returns the overview: the versions, the
-contents, or the piece of the text. With articles it returns them in the order of the act.
+call. It always reads the act with no version first. A version number that the list of
+versions lacks gives a `*VersionError`. A date takes `VersionOn`. It then reads the selected
+version, unless it is the version of the text it holds (`MATSNE-DD-009`). `Newest` is the
+first of `Versions` when a query with no version and no date reads an older text
+(`MATSNE-DD-016`). It reads `Status` with the registration code of the act, in parallel with
+the second read. A failed `Status` leaves the status empty. A failed read of the titles or
+of an exact match leaves it out of the search. Each writes the record `source unavailable`
+at `warn` with the error (`LOG-013`). With no article it returns the overview: the newest 20 versions
+(`MaxVersions`) with the count of every version, the contents, or the piece of the text. With articles it returns them in the order of the act.
 
 ### 4.3 Declarations
 
@@ -403,18 +411,25 @@ the false User-Agent, and stage 3 checks whether the handshake alone passes.
 **Realizes:** `MATSNE-FR-008`, `MATSNE-FR-009`, `MATSNE-INV-001`
 **Decision:** For `ka`, the adapter walks the paragraphs by class. `karixml` opens a section
 and `karisataurixml` gives its title. `tavixml` and `tavisataurixml` do the same for a
-chapter. `muxlixml` opens an article: "მუხლი {number}. {title}". Each later `abzacixml` or
-`MyPetit` paragraph, up to the next part, is a paragraph of the article, with its text
-unchanged. A paragraph before the first article is not part of an article.
+chapter. `muxlixml` opens an article: "მუხლი {number}. {title}". Each later paragraph of another
+class (`abzacixml`, `MyPetit`, `MsoNormal`), up to the next part, is a paragraph of the
+article, with its text unchanged. A paragraph before the first article is not part of an
+article. A title paragraph with no heading above it that reads "თავი X. {title}" or
+"კარი X. {title}" opens the part itself: the page leaves `tavixml` of chapter X empty. The
+adapter removes the characters that show nothing (U+200B to U+200D, U+2060, U+FEFF,
+U+00AD): the heading of article 288^3 holds a zero width space.
 **Rationale:** The page marks each part with one class (section 3 of the requirements).
-The notes of an amendment sit in `abzacixml` too, and `MATSNE-INV-001` keeps them.
+The notes of an amendment sit in `abzacixml`, `MyPetit`, and `MsoNormal`, and
+`MATSNE-INV-001` keeps them. The live page of 2026-11-15 gave 367 articles, 45 chapters,
+and 15 sections only with the empty heading and the invisible characters handled.
 **Alternatives:** Separate the amendment notes. No class marks them all.
 
 ### `MATSNE-DD-003`
 
 **Realizes:** `MATSNE-FR-008`, `MATSNE-FR-009`, `MATSNE-FR-012`
 **Decision:** For `en`, the adapter reads `MsoNormal` paragraphs. A paragraph `SECTION {roman}`
-opens a section, and the next paragraph gives its title. `Chapter {roman} – {title}` opens a
+opens a section, and the next paragraph gives its title. `SECTION X – (Deleted)` holds its
+title on the same line. `Chapter {roman} – {title}` opens a
 chapter. A bold paragraph that starts with `Article {number} – ` opens an article. Each
 other paragraph belongs to the open article. A page with no part class and no article
 heading gives a `Body` with `Text`: the paragraphs joined with a new line.
@@ -479,9 +494,9 @@ after the last new line before the limit, or at the limit when the piece holds n
 ### `MATSNE-DD-009`
 
 **Realizes:** `MATSNE-FR-011`
-**Decision:** Every read of an act reads the newest version first. A date takes `VersionOn`.
-A version number must be in the list of versions. When the selected version is the newest,
-the use case uses that text with no second read.
+**Decision:** Every read of an act reads the act with no version first. A date takes
+`VersionOn`. A version number must be in the list of versions. When the selected version is
+the version of that text, the use case uses it with no second read.
 **Rationale:** Only a page of the act lists its versions. The newest page sits in the cache
 for 1 hour. An unknown version gives the page of the filter (`MATSNE-DD-015`), so the use
 case never asks for one.
@@ -491,7 +506,9 @@ case never asks for one.
 
 **Realizes:** `MATSNE-FR-013`
 **Decision:** The adapter returns `ErrNoTranslation` when the language is `en` and the title
-of the metadata table holds a letter of the Georgian block U+10D0 to U+10FF.
+of the metadata table holds a letter of the Georgian block U+10D0 to U+10FF. It returns it
+too when the language is `en` and `#maindoc` holds no paragraph: a version whose
+translation is underway.
 **Rationale:** The source answers 200 with the Georgian text. The title of a translation is
 English: "TAX CODE OF GEORGIA".
 **Alternatives:** Compare with the `ka` page. It costs a second page of 3 MB.
@@ -502,7 +519,8 @@ English: "TAX CODE OF GEORGIA".
 **Decision:** The adapter reads the fields of a search item by position. Four fields are the
 type, the issuer, the number, and the date. Three fields lack the number. A date that does
 not parse, a total that is not a number, or an identifier that `ParseActID` refuses fails
-the answer with `kernel.ErrSourceUnavailable`.
+the answer with `kernel.ErrSourceUnavailable`. On the page of an act, a signing date that
+does not parse leaves `Signed` empty, since that page is the only source of the text.
 **Rationale:** The fields carry no label. A broken field means a change of the page.
 **Alternatives:** Leave out a broken item. The model then reads a total that does not match.
 
@@ -545,6 +563,43 @@ got every other page. The client cannot tell the two apart. A stale act exists, 
 returns it. The use case checks a version number against the list before a read.
 **Alternatives:** A second call to a known act, to test the filter. It costs a page of 3 MB.
 
+### `MATSNE-DD-016`
+
+**Realizes:** `MATSNE-FR-013`, `MATSNE-FR-018`
+**Decision:** `Act` with no version sends no `publication`. The version of the text is the
+selected option of the page, and `Versions` holds every option. In `en`, the selected
+option can be older than the first option. `GetAct` then sets `Newest`, and the tool names
+it in `newest_version` and in `notice`. A query with a version or a date asks an older text
+on purpose, so it sets no `Newest`.
+**Rationale:** On 2026-11-15 the page `/en/document/view/1043717` held version 247, and the
+page of version 248 in `en` held no text (requirements, section 3). The owner chose the
+newest translation with the newest version named (question 8).
+**Alternatives:** Read `?publication=` of the first option. It gives no English text after
+each amendment.
+
+### `MATSNE-DD-017`
+
+**Realizes:** `MATSNE-FR-007`, `MATSNE-FR-008`
+**Decision:** A page with no `#publication-switcher` holds an act with one version. The
+adapter gives it version 0, dated by the last date of the row `გამოქვეყნების წყარო,
+თარიღი` or `Source and date of publishing`. A row with no date gives the zero date.
+**Rationale:** On 2026-11-15 the page of act 6811279, an order of 12/03/2026, had no list of
+versions, and `?publication=0` returned the same text. The owner chose the publication date
+(review of 2026-11-15).
+**Alternatives:** Leave the date empty. The model then reads a version with no date.
+
+### `MATSNE-DD-018`
+
+**Realizes:** `MATSNE-FR-007`
+**Decision:** The overview holds the newest 20 versions, newest first, and `version_count`
+holds the count of every version. The selected version stays in `version`, and a
+`*VersionError` names the full range.
+**Rationale:** On 2026-11-15 the overview of the Tax Code held 249 versions, in an output of
+about 60 KB. A model reads an older version by its number or a date. The owner
+chose 20 (review of 2026-11-15).
+**Alternatives:** The versions near a requested date. It needs a second rule for the
+overview with no date.
+
 ## 6. Scenarios
 
 `spec-scenarios.md` holds the recorded pages and every `MATSNE-SC-###`.
@@ -553,13 +608,13 @@ returns it. The use case checks a version number against the list before a read.
 
 | #   | Step                                                                                  | Realizes                                       | Done |
 | --- | ------------------------------------------------------------------------------------- | ---------------------------------------------- | ---- |
-| 1   | `pkg/matsne`: transport, client, parse, recorded pages, README, example, live test.   | `MATSNE-FR-016`, `MATSNE-NFR-005`              | [ ]  |
-| 2   | `domain`: the value objects, `Act.VersionOn`, fuzz tests.                             | `MATSNE-FR-009`, `MATSNE-FR-011`, `MATSNE-FR-015` | [ ]  |
-| 3   | `app`: the port, `SearchActs`, `GetAct`, the errors.                                  | `MATSNE-FR-001` to `MATSNE-FR-011`, `MATSNE-NFR-001` | [ ]  |
-| 4   | `adapter/matsne`: the maps, the parse of `ka` and `en`, the translation check.        | `MATSNE-FR-008`, `MATSNE-FR-012`, `MATSNE-FR-013`, `MATSNE-FR-016` | [ ]  |
-| 5   | `adapter/cache`.                                                                      | `MATSNE-NFR-002`                               | [ ]  |
-| 6   | `adapter/tool`.                                                                       | `MATSNE-FR-001` to `MATSNE-FR-015`             | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.           | `MATSNE-FR-017`, `MATSNE-NFR-003`              | [ ]  |
+| 1   | `pkg/matsne`: transport, client, parse, recorded pages, README, example, live test.   | `MATSNE-FR-016`, `MATSNE-NFR-005`              | [x]  |
+| 2   | `domain`: the value objects, `Act.VersionOn`, fuzz tests.                             | `MATSNE-FR-009`, `MATSNE-FR-011`, `MATSNE-FR-015` | [x]  |
+| 3   | `app`: the port, `SearchActs`, `GetAct`, the errors.                                  | `MATSNE-FR-001` to `MATSNE-FR-011`, `MATSNE-NFR-001` | [x]  |
+| 4   | `adapter/matsne`: the maps, the parse of `ka` and `en`, the translation check.        | `MATSNE-FR-008`, `MATSNE-FR-012`, `MATSNE-FR-013`, `MATSNE-FR-016` | [x]  |
+| 5   | `adapter/cache`.                                                                      | `MATSNE-NFR-002`                               | [x]  |
+| 6   | `adapter/tool`.                                                                       | `MATSNE-FR-001` to `MATSNE-FR-015`             | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.           | `MATSNE-FR-017`, `MATSNE-NFR-003`              | [x]  |
 
 Step 1 records the pages with the client and its browser handshake. When the filter refuses
 the handshake, stop and report to the owner before step 2.

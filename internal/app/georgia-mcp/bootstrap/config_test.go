@@ -993,3 +993,28 @@ func TestLoadConfigGivesTheDefaultsOfTheNEA(t *testing.T) {
 		t.Errorf("NEA.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
 	}
 }
+
+// MATSNE-SC-030: With no variable of law, the Legislative Herald is on, at its address,
+// with a timeout of 10 seconds, 5 calls each second, and a burst of 5.
+func TestLoadConfigGivesTheDefaultsOfTheLegislativeHerald(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	matsne := cfg.Law.Matsne
+	if !matsne.Enabled {
+		t.Error("Matsne.Enabled = false, want true")
+	}
+
+	if got := matsne.BaseURL.String(); got != "https://matsne.gov.ge" {
+		t.Errorf("Matsne.BaseURL = %q, want https://matsne.gov.ge", got)
+	}
+
+	if http := matsne.HTTP; http.Timeout != 10*time.Second || http.Rate != 5 || http.Burst != 5 {
+		t.Errorf("Matsne.HTTP = %+v, want a timeout of 10s, rate 5, burst 5", http)
+	}
+}

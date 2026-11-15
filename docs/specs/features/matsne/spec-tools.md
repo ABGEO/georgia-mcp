@@ -35,11 +35,12 @@ requirements: features/matsne/requirements.md
 `law_get_act`. Title: `Get a legal act of Georgia`. Description:
 
 > Returns one legal act of the Legislative Herald (matsne.gov.ge) by its identifier from
-> law_search_acts. With no article, returns the metadata, every consolidated version with
-> its publication date, and the table of contents. With articles, returns the full text
+> law_search_acts. With no article, returns the metadata, the newest 20 consolidated
+> versions with their publication dates, the count of every version, and the table of
+> contents. With articles, returns the full text
 > of at most 10 articles, for example 82 or 133^3 (article 133 with the superscript 3).
 > Give a version number or a date to read the act as it stood then; the default is the
-> newest version. A version date is its publication date, not the date it took effect.
+> newest version, or in English the newest translated version. A version date is its publication date, not the date it took effect.
 > The Georgian text is the only official text; an English text is a translation, and
 > not every act has one. Data from the Legislative Herald of Georgia.
 
@@ -105,7 +106,9 @@ type actOutput struct {
     Status    string          `json:"status,omitempty"    jsonschema:"active, expired, or pending. Empty when the source gives none."`
     Registration string       `json:"registration_code,omitempty" jsonschema:"The registration code of the act."`
     Version   versionOutput   `json:"version"             jsonschema:"The version of this text."`
-    Versions  []versionOutput `json:"versions,omitempty"  jsonschema:"Every version, newest first. Only when no article is requested."`
+    NewestVersion *versionOutput `json:"newest_version,omitempty" jsonschema:"The newest version of the act, when it is newer than this text. A translation can trail the Georgian text."`
+    Versions  []versionOutput `json:"versions,omitempty"  jsonschema:"The newest 20 versions, newest first. Only when no article is requested."`
+    VersionCount int          `json:"version_count,omitempty" jsonschema:"The count of every version of the act. Give a version or a date to read an older one."`
     Contents  []headingOutput `json:"contents,omitempty"  jsonschema:"The sections, chapters, and articles, in order. Only when no article is requested."`
     Articles  []articleOutput `json:"articles,omitempty"  jsonschema:"The requested articles, in the order of the act."`
     Next      string          `json:"next_article,omitempty" jsonschema:"The first requested article left out by the size limit. Ask for it in a new call."`
@@ -137,6 +140,9 @@ type articleOutput struct {
 written with `time.RFC3339`. `url` is `https://matsne.gov.ge/{language}/document/view/{id}`,
 with `?publication={n}` in `actOutput`. A `limit` or a `page` of 0 asks the default.
 `SearchActs` puts the exact title matches first, then applies `limit`.
+`notice` is `This is an English translation. Only the Georgian text is official.` When
+`newest_version` is set, it adds `The newest version is 248 of 2026-10-28. Ask for language
+ka to read it.`
 
 ## Errors
 
@@ -144,20 +150,23 @@ with `?publication={n}` in `actOutput`. A `limit` or a `page` of 0 asks the defa
 | ------------------------------------------ | --------------------------------- | ------------ |
 | A language other than `ka` and `en`        | `kernel.ErrUnknownLanguage`       | `language: "ru" is not a language of this tool. Use ka or en.` |
 | An empty query, or more than 128 characters | none, the tool checks it         | `query: give 1 to 128 characters.` |
-| An unknown target or order                 | none, the tool checks it          | `target: "body" is not a target. Use title or text.` |
+| An unknown target                          | none, the tool checks it          | `target: "body" is not a target. Use title or text.` |
+| An unknown order                           | none, the tool checks it          | `order: "x" is not an order. Use newest or oldest.` |
 | An unknown document type                   | `domain.ErrUnknownDocumentType`   | `type: "statute" is not a document type. Use one of: law, parliament_resolution, ...` |
 | An unknown status                          | `domain.ErrUnknownActStatus`      | `status: "valid" is not a status. Use active, expired, or pending.` |
 | A date that does not parse                 | `kernel.ErrInvalidDate`           | `signed_from: "5 Nov" is not a date. Use YYYY-MM-DD.` |
-| A limit or a page out of range             | none, the tool checks it          | `limit: 50 is out of range. Use 1 to 20.` |
+| A limit out of range                       | none, the tool checks it          | `limit: 50 is out of range. Use 1 to 20.` |
+| A page or a piece below 1                  | none, the tool checks it          | `page: -1 is out of range. Use 1 or more.` |
 | A malformed act identifier                 | `domain.ErrInvalidActID`          | `id: "abc" is not an act identifier. Call law_search_acts to find the identifier.` |
 | An unknown act, or a refusal of the source (`MATSNE-DD-015`) | `app.ErrUnknownAct` | `id: the Legislative Herald returned no act 999999999. Check the identifier with law_search_acts, or try again in a few minutes.` |
 | A malformed article number                 | `domain.ErrInvalidArticleNumber`  | `articles: "82a" is not an article number. Use digits, with ^ and digits for an inserted article, for example 133^3.` |
 | More than 10 articles                      | `app.ErrTooManyArticles`          | `articles: 12 articles. Give at most 10.` |
 | An article that the act does not have      | `*app.ArticleError`               | `articles: the act has no article 999. Its articles run from 1 to 309.` |
+| An article of an act with no articles      | `*app.ArticleError`               | `articles: the act has no article 1. It has no articles: ask with no article to read its text.` |
 | A version and a date                       | `app.ErrBothVersions`             | `version, date: give a version or a date, not both.` |
 | An unknown version or a date before version 0 | `*app.VersionError`            | `version: the act has versions 0 (2010-10-12) to 248 (2026-10-28).` |
 | A piece out of range                       | `*app.PieceError`                 | `piece: the text has 2 pieces.` |
-| No English translation                     | `app.ErrNoTranslation`            | `The act has no English translation at the Legislative Herald. Ask for language ka.` |
+| No English translation of the act or of the version | `app.ErrNoTranslation`  | `The act has no English translation of this version at the Legislative Herald. Ask for language ka.` |
 | The source fails, with no stale value (not `app.ErrUnknownAct`) | `kernel.ErrSourceUnavailable`     | `The Legislative Herald did not answer. Try again in a few minutes.` |
 | Any other error                            | none                              | `The server failed to read the data of the Legislative Herald.` |
 

@@ -56,6 +56,9 @@ Observed behavior of the source on 2026-11-09 and on 2026-11-15:
 - The page `/en/` of an act with no translation shows the Georgian text, with no error.
 - An unknown identifier, or an unknown version, gives the "Access Denied" page, even to a
   browser that gets every other page.
+- A translation trails the Georgian versions. On 2026-11-15 the newest English text of the
+  Tax Code was version 247 (2026-10-15). The page of version 248 in `en` says that the
+  consolidation is underway and holds no text.
 
 ## 4. Out of scope
 
@@ -141,11 +144,15 @@ that the request names, with at most 20 acts on a page.
 ### `MATSNE-FR-007`
 
 The server must return the metadata of an act for an act identifier: title, document type,
-issuer, number, signing date, act status, and each version with its number and date.
+issuer, number, signing date, act status, the newest 20 versions with their numbers and
+dates, and the count of every version.
+
+**Why:** The Tax Code has 249 versions. The list of all of them fills the context window,
+and a version number or a date reads an older version.
 
 **Examples:**
 
-- Normal case: 1043717. 249 versions. The newest is 248, of 2026-10-28.
+- Normal case: 1043717. The versions 248 to 229, and the count 249. The newest is 248, of 2026-10-28.
 - Unwanted case: an unknown identifier. The server tells the model to search the acts.
 
 ### `MATSNE-FR-008`
@@ -212,6 +219,22 @@ of the Legislative Herald.
 
 The server must read the Legislative Herald with no key. The operator must be able to turn
 it off. It is on by default.
+
+### `MATSNE-FR-018`
+
+The server must return the newest version that has a translation when the request is in
+`en` and names no version and no date. It must state the newest version when that version
+is newer.
+
+**Why:** Each amendment resets the translation. A refusal leaves the Tax Code with no
+English answer for weeks.
+
+**Examples:**
+
+- Normal case: 1043717 in `en`. Version 247 of 2026-10-15, and the newest version 248 of
+  2026-10-28.
+- Unwanted case: 1043717 in `en` with the version 248. The server refuses it and tells the
+  model to ask for `ka` (`MATSNE-FR-013`).
 
 ## 7. Non-functional requirements
 
@@ -290,6 +313,7 @@ and the address of the page at the Legislative Herald.
 | 5   | `robots.txt` asks for 10 seconds between calls. Which limit? | Temuri | No wait between calls. A cap of 10 calls in each second (2026-11-15). |
 | 6   | Does `en` with no translation refuse the request, or return the Georgian text with a mark? | Temuri | It refuses and names `ka` (2026-11-15). |
 | 7   | What are the limits of one answer? | Temuri | 10 articles and 60,000 characters (2026-11-15). |
+| 8   | What does `en` return when the translation trails the newest version? | Temuri | The newest translation, with the newest version named (2026-11-15). |
 
 ## Retired identifiers
 

@@ -47,7 +47,7 @@ type SearchQuery struct {
 }
 
 type SearchPage struct {
-    Total string       // the digits after "სულ მოიძებნა:" or its English text
+    Total string       // the digits of "სულ მოიძებნა: 29 ( ... )" or "Search count: 1 ( ... )"
     Items []SearchItem
 }
 
@@ -55,7 +55,7 @@ type SearchItem struct {
     ID     string   // from the link /document/view/{id}
     Title  string
     Class  string   // "panel panel-success document-search-result-item"
-    Fields []string // the texts of the small elements of the panel body, with no "●"
+    Fields []string // the texts of the small elements of the panel body, with no "●" and no link
 }
 
 type Suggestion struct {
@@ -65,11 +65,11 @@ type Suggestion struct {
 }
 
 type Document struct {
-    Title        string        // the head cell of the metadata table
+    Title        string        // the head cell of table.table-info, the metadata table
     Meta         []MetaRow     // each row with two cells
     Publications []Publication // the options of #publication-switcher, in the order of the page
     Selected     string        // the value of the selected option
-    Paragraphs   []Paragraph   // each p of div.document, in order; no style, no script
+    Paragraphs   []Paragraph   // each p of div#maindoc, in order; no style, no script
 }
 
 type MetaRow struct{ Label, Value string }
@@ -96,8 +96,9 @@ Each method reads the title of the answer first. The title `Access Denied` gives
 | `SearchItem.Class`                    | `panel-success` active, `panel-danger` expired, `panel-warning` pending, other the zero status. |
 | `SearchItem.Fields`                   | Type, issuer, number, signing date, in this order. `MATSNE-DD-011`. |
 | `Suggestion.State`                    | `active`, `expired`, `toBeActivated` to the three statuses.   |
-| `MetaRow` by its position             | Number, issuer, signing date, type, publication, registration code. |
-| `Publication`                         | `domain.Version`. The number from `Value`, the date from `Text`. |
+| `MetaRow` by its label               | `დოკუმენტის ნომერი` or `Document number`: the number. `დოკუმენტის მიმღები` or `Document issuer`: the issuer. `მიღების თარიღი` or `Date of issuing`: the signing date. `დოკუმენტის ტიპი` or `Document type`: the type. `გამოქვეყნების წყარო, თარიღი` or `Source and date of publishing`: the date of version 0 when the page has no `Publication` (`MATSNE-DD-017`). `სარეგისტრაციო კოდი` or `Registration code`: the registration code. The adapter ignores any other row. |
+| `Paragraph` with an empty text        | Left out.                                                     |
+| `Publication`                         | `domain.Version`. The number from `Value`, the date from `Text`. No `Publication` gives one version 0 (`MATSNE-DD-017`). |
 | `Paragraphs`                          | `domain.Body`. `MATSNE-DD-002`, `MATSNE-DD-003`.               |
 | A date `dd/mm/yyyy`                   | `kernel.Date`.                                                |
 
@@ -133,7 +134,7 @@ GET https://matsne.gov.ge/ka/document/search?registration_code=200000000.05.001.
 200 text/html. One result, panel-success, 1043717.
 
 GET https://matsne.gov.ge/ka/document/view/1043717
-200 text/html (3.1 MB). Metadata table: th "საქართველოს საგადასახადო კოდექსი", then rows
+200 text/html (4.9 MB). Metadata table: th "საქართველოს საგადასახადო კოდექსი", then rows
 "დოკუმენტის ნომერი | 3591", "დოკუმენტის მიმღები | საქართველოს პარლამენტი",
 "მიღების თარიღი | 17/09/2010", "დოკუმენტის ტიპი | საქართველოს კანონი",
 "გამოქვეყნების წყარო, თარიღი | სსმ, 54, 12/10/2010",
