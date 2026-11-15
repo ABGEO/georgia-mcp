@@ -33,7 +33,7 @@ structs of the tools.
 | `NAPRPARC-FR-005`  | 4.2 `SearchAddresses`. 4.3 `parcels_search_addresses`. `NAPRPARC-DD-003` |
 | `NAPRPARC-FR-006`  | 4.2 `SearchAddresses`, `municipality`                        |
 | `NAPRPARC-FR-007`  | 4.2 `LandType`, `OwnershipType`, `DocumentKind`. `NAPRPARC-DD-005` |
-| `NAPRPARC-FR-008`  | `spec-tools.md`, descriptions and `language`. `NAPRPARC-DD-005` |
+| `NAPRPARC-FR-008`  | `spec-tools.md`, descriptions and names. `NAPRPARC-DD-005` |
 | `NAPRPARC-FR-009`  | 4.2 `Area`. 4.1 `adapter/napr`                               |
 | `NAPRPARC-FR-010`  | 4.2 `SortDocuments`                                          |
 | `NAPRPARC-FR-011`  | 4.1 `adapter/napr`. `NAPRPARC-SC-010`                        |
@@ -264,9 +264,9 @@ oldest read used. `Stale` is true when any read used is stale.
 
 | Tool                          | Input                                   | Output         | Errors | Realizes |
 | ----------------------------- | --------------------------------------- | -------------- | ------ | -------- |
-| `parcels_get_parcel`          | `code`, `language`                      | `parcelOutput` | 4.5    | `NAPRPARC-FR-001`, `NAPRPARC-FR-002`, `NAPRPARC-FR-007` to `NAPRPARC-FR-011`, `NAPRPARC-INV-002` |
-| `parcels_list_nearby_parcels` | `lat`, `lon`, `limit`, `language`       | `nearbyOutput` | 4.5    | `NAPRPARC-FR-003`, `NAPRPARC-FR-004`, `NAPRPARC-FR-008`, `NAPRPARC-FR-012` |
-| `parcels_search_addresses`    | `query`, `municipality`, `limit`, `language` | `addressesOutput` | 4.5 | `NAPRPARC-FR-005`, `NAPRPARC-FR-006`, `NAPRPARC-FR-008` |
+| `parcels_get_parcel`          | `code`                                  | `parcelOutput` | 4.5    | `NAPRPARC-FR-001`, `NAPRPARC-FR-002`, `NAPRPARC-FR-007` to `NAPRPARC-FR-011`, `NAPRPARC-INV-002` |
+| `parcels_list_nearby_parcels` | `lat`, `lon`, `limit`                   | `nearbyOutput` | 4.5    | `NAPRPARC-FR-003`, `NAPRPARC-FR-004`, `NAPRPARC-FR-008`, `NAPRPARC-FR-012` |
+| `parcels_search_addresses`    | `query`, `municipality`, `limit`        | `addressesOutput` | 4.5 | `NAPRPARC-FR-005`, `NAPRPARC-FR-006`, `NAPRPARC-FR-008` |
 
 `spec-tools.md` holds the titles, the descriptions, the structs, and the names of the codes.
 
@@ -333,7 +333,6 @@ shape calls run concurrently. A point sends 1 call.
 
 | Condition                                 | Sentinel                        | Tool message |
 | ----------------------------------------- | ------------------------------- | ------------ |
-| A language other than `ka` and `en`       | `kernel.ErrUnknownLanguage`     | `language: "ru" is not a language of this tool. Use ka or en.` |
 | A limit out of range                      | none, the tool checks it        | `limit: 50 is out of range. Use 1 to 20.` |
 | A code that is not a cadastral code       | `domain.ErrInvalidCadastralCode` | `code: "01.15.05" is not a cadastral code. Use 4 or 5 groups of digits with dots, as 01.15.05.066.020.` |
 | A code of a unit                          | `*domain.UnitCodeError`         | `code: "01.14.11.005.029.01.501" names a unit. This tool covers parcels only. Use the parcel 01.14.11.005.029.` |
@@ -382,11 +381,12 @@ carry a quotation mark that it does not escape.
 ### `NAPRPARC-DD-005`
 
 **Realizes:** `NAPRPARC-FR-007`, `NAPRPARC-FR-008`
-**Decision:** Each tool takes `language` (`MCP-007`). It names the codes. Every text of
-NAPR stays Georgian in each language.
-**Rationale:** NAPR answers in Georgian for `lang=en` too. The names of 6 codes are a
-small table. A model reads a code, a name, and the text of NAPR.
-**Alternatives:** No `language`. It breaks `MCP-007`.
+**Decision:** The tools take no `language` (`MCP-007`). Each code comes with its name in
+Georgian. `other` comes with the text of NAPR.
+**Rationale:** NAPR answers in Georgian for `lang=en` too. An input that changes the
+names of 6 codes alone misleads the model. A model reads a code and a Georgian name.
+**Alternatives:** `language` with a table of English names. Every other text stays
+Georgian, so the input changes almost nothing.
 
 ### `NAPRPARC-DD-006`
 
@@ -437,10 +437,10 @@ The recorded answers of `spec-client.md` serve the tests. The tests of the adapt
 | `NAPRPARC-SC-012`  | `NAPRPARC-FR-003` | unit | `List` of `near-freedom.json` with the limit 5 gives 5 parcels, `01.15.05.066.020` first at 0 m, `01.15.05.066.015` second at 92 m. With the limit 20 it gives 15. |
 | `NAPRPARC-SC-013`  | `NAPRPARC-FR-005`, `NAPRPARC-FR-006` | unit | `Search` of `ჭავჭავაძის გამზირი 44` with `თბილისი` and the limit 5 keeps the 5 matches of `ქალაქი თბილისი` and reads 5 centres. With no municipality it keeps 5, Gori first. `zzqxv` gives none and reads no centre. |
 | `NAPRPARC-SC-014`  | `NAPRPARC-FR-005` | unit | The WKT reader with `shape-address.json` gives a centre within the box of the multipolygon. A `POLYGON` square of 0 to 1 gives 0.5, 0.5. `POINT (1 2)` and an empty text give an error. A fuzz test holds that it never panics. |
-| `NAPRPARC-SC-015`  | `NAPRPARC-FR-001`, `NAPRPARC-FR-007`, `NAPRPARC-FR-008`, `NAPRPARC-INV-002` | integration | `parcels_get_parcel` with `01.15.05.066.020`: `source` `NAPR`, `as_of` with `+04:00`, `map_url` that holds `lbl=lr_parcels:AAArWyAATAAIs9BAAB`, `land_type` `non_agricultural` named `Non-agricultural`. With `ka` it is named `არასასოფლო-სამეურნეო`, and `address` is the same text. |
+| `NAPRPARC-SC-015`  | `NAPRPARC-FR-001`, `NAPRPARC-FR-007`, `NAPRPARC-FR-008`, `NAPRPARC-INV-002` | integration | `parcels_get_parcel` with `01.15.05.066.020`: `source` `NAPR`, `as_of` with `+04:00`, `map_url` that holds `lbl=lr_parcels:AAArWyAATAAIs9BAAB`, `land_type` `non_agricultural` named `არასასოფლო-სამეურნეო`. |
 | `NAPRPARC-SC-016`  | `NAPRPARC-FR-003` | integration | `parcels_list_nearby_parcels` at 41.6934, 44.8015 gives 5 parcels with `distance_m`. |
 | `NAPRPARC-SC-017`  | `NAPRPARC-FR-005` | integration | `parcels_search_addresses` with `ჭავჭავაძის გამზირი 44` and `თბილისი` gives addresses with `municipality` `ქალაქი თბილისი` and a `centre`. |
-| `NAPRPARC-SC-018`  | `NAPRPARC-FR-002`, `NAPRPARC-FR-004` | integration | Each input of 4.5 returns `IsError` with its message: `ru`, `limit` 50, `01.15.05`, `01.14.11.005.029.01.501`, the point 44.8015, 41.6934, an empty query, and `99.99.99.999.999`. |
+| `NAPRPARC-SC-018`  | `NAPRPARC-FR-002`, `NAPRPARC-FR-004` | integration | Each input of 4.5 returns `IsError` with its message: `limit` 50, `01.15.05`, `01.14.11.005.029.01.501`, the point 44.8015, 41.6934, an empty query, and `99.99.99.999.999`. |
 | `NAPRPARC-SC-019`  | `NAPRPARC-FR-013` | integration | The vendor answers 500, with an empty cache. Each tool returns `IsError` with `NAPR did not answer. Try again in a few minutes.` |
 | `NAPRPARC-SC-020`  | `NAPRPARC-NFR-001` | unit | In `synctest`, `Parcel` again after 59 minutes sends no load. After 1 hour it sends one. `ParcelsNear` after 23 hours 59 minutes sends none, after 24 hours one. `MatchAddresses` and `AddressCentre` after 7 days send one each. |
 | `NAPRPARC-SC-021`  | `NAPRPARC-NFR-001` | unit | In `synctest`, the source fails with `kernel.ErrSourceUnavailable` after one read. At 6 days 23 hours, `Parcel` gives the parcel with `Stale` true. At 7 days and 1 second, it gives the error. `ParcelsNear` after 24 hours gives the error. |

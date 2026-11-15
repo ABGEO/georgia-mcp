@@ -11,27 +11,15 @@ import (
 
 const pointScale = 1e6
 
-// codeNames gives the name of each code in each language. An unknown code takes the text
-// of NAPR.
-func codeNames(language kernel.Language) map[string]string {
-	if language == kernel.LanguageGeorgian {
-		return map[string]string{
-			string(domain.LandAgricultural):    "სასოფლო-სამეურნეო",
-			string(domain.LandNonAgricultural): "არასასოფლო-სამეურნეო",
-			string(domain.Ownership):           "საკუთრება",
-			string(domain.CoOwnership):         "თანასაკუთრება",
-			string(domain.RegistryExtract):     "ამონაწერი საჯარო რეესტრიდან",
-			string(domain.CadastralPlan):       "საკადასტრო გეგმა",
-		}
-	}
-
+// codeNames gives the Georgian name of each code. An unknown code takes the text of NAPR.
+func codeNames() map[string]string {
 	return map[string]string{
-		string(domain.LandAgricultural):    "Agricultural",
-		string(domain.LandNonAgricultural): "Non-agricultural",
-		string(domain.Ownership):           "Ownership",
-		string(domain.CoOwnership):         "Co-ownership",
-		string(domain.RegistryExtract):     "Registry extract",
-		string(domain.CadastralPlan):       "Cadastral plan",
+		string(domain.LandAgricultural):    "სასოფლო-სამეურნეო",
+		string(domain.LandNonAgricultural): "არასასოფლო-სამეურნეო",
+		string(domain.Ownership):           "საკუთრება",
+		string(domain.CoOwnership):         "თანასაკუთრება",
+		string(domain.RegistryExtract):     "ამონაწერი საჯარო რეესტრიდან",
+		string(domain.CadastralPlan):       "საკადასტრო გეგმა",
 	}
 }
 
@@ -44,8 +32,8 @@ func toCode[T ~string](classified domain.Classified[T], names map[string]string)
 	return codeOutput{Code: string(classified.Code), Name: name}
 }
 
-func toParcelOutput(read app.ParcelRead, language kernel.Language) parcelOutput {
-	names := codeNames(language)
+func toParcelOutput(read app.ParcelRead) parcelOutput {
+	names := codeNames()
 	parcel := read.Parcel
 
 	documents := make([]documentOutput, 0, len(parcel.Documents))

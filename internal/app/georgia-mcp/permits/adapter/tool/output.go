@@ -8,33 +8,24 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
 )
 
-// statusName gives the name of a status in the language. The ka names are those of the
-// page of TAS.
-func statusName(status domain.Status, language kernel.Language) string {
-	names := map[domain.Status][2]string{
-		domain.StatusApproved:        {"Approved", "თანხმობა"},
-		domain.StatusRefused:         {"Refused", "უარყოფა"},
-		domain.StatusDeficient:       {"Deficiency found", "შუალედური"},
-		domain.StatusConditional:     {"Approved with conditions", "პირობადადებული"},
-		domain.StatusNotReviewed:     {"Not reviewed", "განუხილველი"},
-		domain.StatusRevoked:         {"Revoked", "ძალადაკარგული"},
-		domain.StatusCompleted:       {"Completed", "დასრულებული"},
-		domain.StatusAwaitingPayment: {"Awaiting payment", "გადახდის მოლოდინში"},
-		domain.StatusInReview:        {"In review", "განხილვის პროცესში"},
+// statusName gives the name of a status on the page of TAS.
+func statusName(status domain.Status) string {
+	names := map[domain.Status]string{
+		domain.StatusApproved:        "თანხმობა",
+		domain.StatusRefused:         "უარყოფა",
+		domain.StatusDeficient:       "შუალედური",
+		domain.StatusConditional:     "პირობადადებული",
+		domain.StatusNotReviewed:     "განუხილველი",
+		domain.StatusRevoked:         "ძალადაკარგული",
+		domain.StatusCompleted:       "დასრულებული",
+		domain.StatusAwaitingPayment: "გადახდის მოლოდინში",
+		domain.StatusInReview:        "განხილვის პროცესში",
 	}
 
-	pair := names[status]
-	if language == kernel.LanguageGeorgian {
-		return pair[1]
-	}
-
-	return pair[0]
+	return names[status]
 }
 
-func toApplicationOutput(
-	application domain.Application,
-	language kernel.Language,
-) applicationOutput {
+func toApplicationOutput(application domain.Application) applicationOutput {
 	output := applicationOutput{
 		Number:     application.Number.String(),
 		URL:        application.URL,
@@ -42,7 +33,7 @@ func toApplicationOutput(
 		Registered: application.Registered.String(),
 		Status: codeOutput{
 			Code: string(application.Status),
-			Name: statusName(application.Status, language),
+			Name: statusName(application.Status),
 		},
 		Category:       application.Category,
 		ParentCategory: application.ParentCategory,
@@ -59,10 +50,10 @@ func toApplicationOutput(
 	return output
 }
 
-func toSearchOutput(list app.ApplicationList, language kernel.Language) searchOutput {
+func toSearchOutput(list app.ApplicationList) searchOutput {
 	applications := make([]applicationOutput, 0, len(list.Applications))
 	for _, application := range list.Applications {
-		applications = append(applications, toApplicationOutput(application, language))
+		applications = append(applications, toApplicationOutput(application))
 	}
 
 	return searchOutput{
@@ -74,12 +65,12 @@ func toSearchOutput(list app.ApplicationList, language kernel.Language) searchOu
 	}
 }
 
-func toGetOutput(read app.ApplicationRead, language kernel.Language) getOutput {
+func toGetOutput(read app.ApplicationRead) getOutput {
 	return getOutput{
 		Source:            source,
 		AsOf:              instant(read.ReadAt),
 		Stale:             read.Stale,
-		applicationOutput: toApplicationOutput(read.Application, language),
+		applicationOutput: toApplicationOutput(read.Application),
 		DecisionText:      read.Application.DecisionText,
 	}
 }

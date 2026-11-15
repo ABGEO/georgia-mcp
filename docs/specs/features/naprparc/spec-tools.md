@@ -40,22 +40,19 @@ The structs of `P/adapter/tool`. `spec.md` 4.3 holds the table of the tools.
 
 ```go
 type getParcelInput struct {
-    Code     string `json:"code"               jsonschema:"The cadastral code: 4 or 5 groups of digits with dots, as 01.15.05.066.020."`
-    Language string `json:"language,omitempty" jsonschema:"The language of the names of the codes: ka or en. The default is en. NAPR texts stay in Georgian."`
+    Code string `json:"code" jsonschema:"The cadastral code: 4 or 5 groups of digits with dots, as 01.15.05.066.020."`
 }
 
 type nearbyInput struct {
-    Lat      float64 `json:"lat"                jsonschema:"The latitude, in degrees, 41.0 to 43.6."`
-    Lon      float64 `json:"lon"                jsonschema:"The longitude, in degrees, 40.0 to 46.8."`
-    Limit    int     `json:"limit,omitempty"    jsonschema:"The maximum count of parcels, 1 to 20. The default is 5."`
-    Language string  `json:"language,omitempty" jsonschema:"ka or en. The default is en. NAPR texts stay in Georgian."`
+    Lat   float64 `json:"lat"             jsonschema:"The latitude, in degrees, 41.0 to 43.6."`
+    Lon   float64 `json:"lon"             jsonschema:"The longitude, in degrees, 40.0 to 46.8."`
+    Limit int     `json:"limit,omitempty" jsonschema:"The maximum count of parcels, 1 to 20. The default is 5."`
 }
 
 type addressesInput struct {
     Query        string `json:"query"                  jsonschema:"The street and the number, in Georgian or Latin letters."`
     Municipality string `json:"municipality,omitempty" jsonschema:"Only addresses whose municipality holds this text, in Georgian: თბილისი."`
     Limit        int    `json:"limit,omitempty"        jsonschema:"The maximum count of addresses, 1 to 20. The default is 5."`
-    Language     string `json:"language,omitempty"     jsonschema:"ka or en. The default is en. NAPR texts stay in Georgian."`
 }
 
 type parcelOutput struct {
@@ -76,7 +73,7 @@ type parcelOutput struct {
 
 type codeOutput struct {
     Code string `json:"code" jsonschema:"The code."`
-    Name string `json:"name" jsonschema:"The name of the code in the language. For other, the text of NAPR."`
+    Name string `json:"name" jsonschema:"The name of the code, in Georgian. For other, the text of NAPR."`
 }
 
 type documentOutput struct {
@@ -121,16 +118,17 @@ type addressOutput struct {
 `source` is `NAPR`. `as_of` is `ReadAt` in `kernel.TbilisiZone()`, written with
 `time.RFC3339`. A `limit` of 0 asks the default. A point rounds to 6 decimals.
 `map_url` is `ParcelRead.MapURL`.
-`NAPRPARC-SC-025` checks it in a browser. The names of the codes in `en`:
+`NAPRPARC-SC-025` checks it in a browser. The tools take no `language`: NAPR publishes
+Georgian only (`MCP-007`). The names of the codes:
 
-| Code               | `en`                 | `ka`                             |
-| ------------------ | -------------------- | -------------------------------- |
-| `agricultural`     | Agricultural         | სასოფლო-სამეურნეო               |
-| `non_agricultural` | Non-agricultural     | არასასოფლო-სამეურნეო            |
-| `ownership`        | Ownership            | საკუთრება                        |
-| `co_ownership`     | Co-ownership         | თანასაკუთრება                    |
-| `registry_extract` | Registry extract     | ამონაწერი საჯარო რეესტრიდან      |
-| `cadastral_plan`   | Cadastral plan       | საკადასტრო გეგმა                 |
+| Code               | Name                             |
+| ------------------ | -------------------------------- |
+| `agricultural`     | სასოფლო-სამეურნეო                |
+| `non_agricultural` | არასასოფლო-სამეურნეო             |
+| `ownership`        | საკუთრება                        |
+| `co_ownership`     | თანასაკუთრება                    |
+| `registry_extract` | ამონაწერი საჯარო რეესტრიდან      |
+| `cadastral_plan`   | საკადასტრო გეგმა                 |
 
 ## Retired identifiers
 

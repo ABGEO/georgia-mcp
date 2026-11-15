@@ -28,17 +28,16 @@ import (
 )
 
 const (
-	testdata    = "../../../../../../pkg/tas/testdata/"
-	search      = "permits_search_applications"
-	get         = "permits_get_application"
-	parcelCode  = "01.18.04.020.005"
-	approvedNo  = "AR11168188"
-	keyCode     = "code"
-	keyFrom     = "from"
-	keyTo       = "to"
-	keyLimit    = "limit"
-	keyNumber   = "number"
-	keyLanguage = "language"
+	testdata   = "../../../../../../pkg/tas/testdata/"
+	search     = "permits_search_applications"
+	get        = "permits_get_application"
+	parcelCode = "01.18.04.020.005"
+	approvedNo = "AR11168188"
+	keyCode    = "code"
+	keyFrom    = "from"
+	keyTo      = "to"
+	keyLimit   = "limit"
+	keyNumber  = "number"
 )
 
 func clock() time.Time {
@@ -245,12 +244,12 @@ func TestSearchApplications(t *testing.T) {
 	}
 }
 
-// TASPERM-SC-014: In ka, a status takes the name of the page of TAS.
-func TestSearchApplicationsInGeorgian(t *testing.T) {
+// TASPERM-SC-014: A status takes the name of the page of TAS.
+func TestStatusNames(t *testing.T) {
 	t.Parallel()
 
 	got := decode[searchResult](t, call(t, connect(t, &vendor{}), search,
-		map[string]any{keyCode: parcelCode, keyLanguage: "ka"}))
+		map[string]any{keyCode: parcelCode}))
 
 	names := map[string]string{}
 	for _, item := range got.Applications {
@@ -271,7 +270,7 @@ func TestGetApplication(t *testing.T) {
 		call(t, connect(t, &vendor{}), get, map[string]any{keyNumber: "1168188"}),
 	)
 
-	want := code{Code: "approved", Name: "Approved"}
+	want := code{Code: "approved", Name: "თანხმობა"}
 	if got.Source != "TAS" || got.Number != approvedNo || got.Status != want ||
 		got.URL != "https://tas.ge/?p=publicpage&documentId=1168188" || got.DecisionText == "" {
 		t.Errorf("get = %+v", got)
@@ -299,11 +298,6 @@ type inputCase struct {
 
 func inputCases() []inputCase {
 	return []inputCase{
-		{
-			search,
-			map[string]any{keyCode: parcelCode, keyLanguage: "ru"},
-			`language: "ru" is not a language of this tool. Use ka or en.`,
-		},
 		{
 			search,
 			map[string]any{keyCode: parcelCode, keyLimit: 60},

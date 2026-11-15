@@ -168,8 +168,7 @@ An unknown value from the source comes as `other`, with the text of the source.
 ### `NAPRPARC-FR-008`
 
 The server must give each address, owner, and municipality as NAPR publishes it, in
-Georgian, in every language of the request. It must state that NAPR publishes no
-translation.
+Georgian. It must state that NAPR publishes no translation. The tools take no language.
 
 ### `NAPRPARC-FR-009`
 
@@ -262,7 +261,7 @@ Every answer of a parcel names its cadastral code and the address of the NAPR ma
 | `DOM-001`            | Domain        | The context is `parcels`.                                         |
 | `MCP-002`            | MCP tools     | Each tool name starts with `parcels_`.                            |
 | `MCP-005`            | MCP tools     | Each answer carries `source` and `as_of`.                         |
-| `MCP-007`, `MCP-008` | MCP tools     | The tools take `language`. The point and address searches take `limit`. |
+| `MCP-007`, `MCP-008` | MCP tools     | The tools take no `language`. The point and address searches take `limit`. |
 | `CLT-007`            | Clients       | An answer that is not valid JSON fails, except `NAPRPARC-FR-012`. |
 | `CFG-008`            | Configuration | The switch of NAPR is on by default.                              |
 | `RSL-004`, `RSL-006` | Resilience    | The times to live and the stale period of `NAPRPARC-NFR-001`.     |

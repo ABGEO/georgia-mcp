@@ -174,8 +174,11 @@ count of all matches.
 
 ### `TASPERM-FR-009`
 
-The server must name each status code in the `language` of the request, `en` or `ka`.
-Every text of TAS stays in Georgian.
+The server must give each status as a code in English and the name that TAS publishes,
+in Georgian. Every text of TAS stays in Georgian. The tools take no language.
+
+**Why:** TAS publishes Georgian only. An input that changes the names alone misleads the
+model.
 
 ### `TASPERM-FR-010`
 
@@ -235,7 +238,7 @@ publishes, with no change of words. The decision text loses only its HTML.
 | `DOM-001`            | Domain        | The context is `permits`.                                      |
 | `MCP-002`            | MCP tools     | Each tool name starts with `permits_`.                         |
 | `MCP-005`            | MCP tools     | Each answer carries `source` and `as_of`.                      |
-| `MCP-007`, `MCP-008` | MCP tools     | The tools take `language`. The search takes `limit`.           |
+| `MCP-007`, `MCP-008` | MCP tools     | The tools take no `language`. The search takes `limit`.        |
 | `CLT-007`            | Clients       | The answer is not JSON. The client parses the reply of DWR.    |
 | `CFG-008`            | Configuration | The switch of TAS is on by default.                            |
 | `RSL-004`, `RSL-006` | Resilience    | The time to live and the stale period of `TASPERM-NFR-001`.    |

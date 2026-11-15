@@ -1,22 +1,19 @@
 package tool
 
 type getParcelInput struct {
-	Code     string `json:"code"               jsonschema:"The cadastral code: 4 or 5 groups of digits with dots, as 01.15.05.066.020."`
-	Language string `json:"language,omitempty" jsonschema:"The language of the names of the codes: ka or en. The default is en. NAPR texts stay in Georgian."`
+	Code string `json:"code" jsonschema:"The cadastral code: 4 or 5 groups of digits with dots, as 01.15.05.066.020."`
 }
 
 type nearbyInput struct {
-	Lat      float64 `json:"lat"                jsonschema:"The latitude, in degrees, 41.0 to 43.6."`
-	Lon      float64 `json:"lon"                jsonschema:"The longitude, in degrees, 40.0 to 46.8."`
-	Limit    int     `json:"limit,omitempty"    jsonschema:"The maximum count of parcels, 1 to 20. The default is 5."`
-	Language string  `json:"language,omitempty" jsonschema:"ka or en. The default is en. NAPR texts stay in Georgian."`
+	Lat   float64 `json:"lat"             jsonschema:"The latitude, in degrees, 41.0 to 43.6."`
+	Lon   float64 `json:"lon"             jsonschema:"The longitude, in degrees, 40.0 to 46.8."`
+	Limit int     `json:"limit,omitempty" jsonschema:"The maximum count of parcels, 1 to 20. The default is 5."`
 }
 
 type addressesInput struct {
 	Query        string `json:"query"                  jsonschema:"The street and the number, in Georgian or Latin letters."`
 	Municipality string `json:"municipality,omitempty" jsonschema:"Only addresses whose municipality holds this text, in Georgian: თბილისი."`
 	Limit        int    `json:"limit,omitempty"        jsonschema:"The maximum count of addresses, 1 to 20. The default is 5."`
-	Language     string `json:"language,omitempty"     jsonschema:"ka or en. The default is en. NAPR texts stay in Georgian."`
 }
 
 type parcelOutput struct {
@@ -37,7 +34,7 @@ type parcelOutput struct {
 
 type codeOutput struct {
 	Code string `json:"code" jsonschema:"The code."`
-	Name string `json:"name" jsonschema:"The name of the code in the language. For other, the text of NAPR."`
+	Name string `json:"name" jsonschema:"The name of the code, in Georgian. For other, the text of NAPR."`
 }
 
 type documentOutput struct {
