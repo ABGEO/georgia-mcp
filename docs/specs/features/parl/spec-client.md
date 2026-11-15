@@ -143,7 +143,7 @@ type MPQuestion struct {
 ```
 
 The body limit stays the default 1 MiB. The largest answer is a page of 50 bills (193 KB)
-or the choices of 151 members (about 200 KB).
+or the choices of 151 members (about 270 KB): each choice repeats the whole vote.
 
 ## 2. The recorded answers
 
