@@ -1395,6 +1395,119 @@
       "meaning": "benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students."
     }
   },
+  "parcels_get_parcel.freedom-square": {
+    "tool": "parcels_get_parcel",
+    "example": "freedom-square",
+    "recordedAt": "2026-11-15T18:03:33.566Z",
+    "output": {
+      "address": "ქალაქი თბილისი , მოედანი თავისუფლება , (ნაკვეთი 66/020)",
+      "area": "618",
+      "area_unit": "m2",
+      "as_of": "2026-11-15T22:03:33+04:00",
+      "centre": {
+        "lat": 41.693392,
+        "lon": 44.801494
+      },
+      "code": "01.15.05.066.020",
+      "documents": [
+        {
+          "date": "2009-08-14",
+          "kind": {
+            "code": "registry_extract",
+            "name": "Registry extract"
+          },
+          "registration_number": "882009244097",
+          "url": "https://bs.napr.gov.ge/GetBlob?pid=101&bid=boVlyOwlsX3qmYsntmLmFFjxrN8WiL2qY8hVoi5Sirpl7Dhpgt4ilh57K51h1XXK"
+        },
+        {
+          "date": "2009-08-13",
+          "kind": {
+            "code": "cadastral_plan",
+            "name": "Cadastral plan"
+          },
+          "registration_number": "882009244097",
+          "url": "https://bs.napr.gov.ge/GetBlob?pid=101&bid=boVlyOwlsX3qmYsntmLmFM0sdxzVF3sTa2pQdDnI[r8S7y9h7s]MKrCunItMpQw6"
+        }
+      ],
+      "land_type": {
+        "code": "non_agricultural",
+        "name": "Non-agricultural"
+      },
+      "map_url": "https://maps.gov.ge/map/portal/#search/result/getinfo?lbl=lr_parcels:AAArWyAATAAIs9BAAB",
+      "owners": [
+        "ქალაქ თბილისის თვითმმართველი ერთეული"
+      ],
+      "ownership_type": {
+        "code": "ownership",
+        "name": "Ownership"
+      },
+      "source": "NAPR",
+      "stale": false
+    }
+  },
+  "parcels_list_nearby_parcels.freedom-square": {
+    "tool": "parcels_list_nearby_parcels",
+    "example": "freedom-square",
+    "recordedAt": "2026-11-15T18:03:33.883Z",
+    "output": {
+      "as_of": "2026-11-15T22:03:33+04:00",
+      "parcels": [
+        {
+          "address": "ქალაქი თბილისი , მოედანი თავისუფლება , (ნაკვეთი 66/020)",
+          "code": "01.15.05.066.020",
+          "distance_m": 0
+        },
+        {
+          "address": "ქალაქი თბილისი , მოედანი თავისუფლება , მიწისქვეშა გასასვლელი",
+          "code": "01.15.05.066.015",
+          "distance_m": 92
+        },
+        {
+          "address": "ქალაქი თბილისი , პუშკინის სკვერი",
+          "code": "01.15.04.028.015",
+          "distance_m": 101
+        }
+      ],
+      "source": "NAPR",
+      "stale": false
+    }
+  },
+  "parcels_search_addresses.chavchavadze-44": {
+    "tool": "parcels_search_addresses",
+    "example": "chavchavadze-44",
+    "recordedAt": "2026-11-15T18:03:35.930Z",
+    "output": {
+      "addresses": [
+        {
+          "address": "ილია ჭავჭავაძის გამზირი, N 44",
+          "centre": {
+            "lat": 41.709532,
+            "lon": 44.766125
+          },
+          "municipality": "ქალაქი თბილისი"
+        },
+        {
+          "address": "ილია ჭავჭავაძის გამზირი, N 44, თავშესაფარი UN872843",
+          "centre": {
+            "lat": 41.709682,
+            "lon": 44.766109
+          },
+          "municipality": "ქალაქი თბილისი"
+        },
+        {
+          "address": "ილია ჭავჭავაძის გამზირი, N 44, თავშესაფარი UN872895",
+          "centre": {
+            "lat": 41.709646,
+            "lon": 44.766449
+          },
+          "municipality": "ქალაქი თბილისი"
+        }
+      ],
+      "as_of": "2026-11-15T22:03:35+04:00",
+      "source": "NAPR",
+      "stale": false
+    }
+  },
   "postal_search_codes.rustavi": {
     "tool": "postal_search_codes",
     "example": "rustavi",

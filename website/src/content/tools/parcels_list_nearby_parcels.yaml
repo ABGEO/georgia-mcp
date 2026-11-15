@@ -1,0 +1,17 @@
+context: parcels
+vendors: [napr]
+summary:
+  en: The land parcels nearest a point in Georgia, nearest first, with the cadastral code, the address, and the distance in metres.
+  ka: საქართველოში წერტილთან უახლოესი მიწის ნაკვეთები, ჯერ უახლოესი, საკადასტრო კოდით, მისამართითა და მანძილით მეტრებში.
+examples:
+  - id: freedom-square
+    question:
+      en: Which land parcel is at 41.6934, 44.8015 in Tbilisi?
+      ka: რომელი მიწის ნაკვეთია 41.6934, 44.8015 წერტილზე თბილისში?
+    answer:
+      en: "The point is on the parcel 01.15.05.066.020, Freedom Square. The next parcels are the underpass of the square, 01.15.05.066.015, at 92 m, and Pushkin Square, 01.15.04.028.015, at 101 m."
+      ka: "წერტილი ნაკვეთზეა 01.15.05.066.020, თავისუფლების მოედანი. შემდეგი ნაკვეთებია მოედნის მიწისქვეშა გასასვლელი, 01.15.05.066.015, 92 მეტრში, და პუშკინის სკვერი, 01.15.04.028.015, 101 მეტრში."
+    input:
+      lat: 41.6934
+      lon: 44.8015
+      limit: 3

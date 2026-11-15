@@ -1,0 +1,15 @@
+context: parcels
+vendors: [napr]
+summary:
+  en: One land parcel of the public registry by its cadastral code, with the address, the area, the land type, the owners, and the registry documents.
+  ka: საჯარო რეესტრის ერთი მიწის ნაკვეთი საკადასტრო კოდით, მისამართით, ფართობით, მიწის კატეგორიით, მესაკუთრეებითა და რეესტრის დოკუმენტებით.
+examples:
+  - id: freedom-square
+    question:
+      en: Who owns the land parcel 01.15.05.066.020 in Tbilisi?
+      ka: ვის ეკუთვნის მიწის ნაკვეთი 01.15.05.066.020 თბილისში?
+    answer:
+      en: "The parcel 01.15.05.066.020 is on Freedom Square in Tbilisi. The Self-Governing City of Tbilisi owns it. It covers 618 m2 of non-agricultural land. The registry holds an extract of 14 August 2009 and a cadastral plan of 13 August 2009."
+      ka: "ნაკვეთი 01.15.05.066.020 თბილისში, თავისუფლების მოედანზეა. ის ქალაქ თბილისის თვითმმართველ ერთეულს ეკუთვნის. ფართობი 618 კვ.მ.-ია, მიწა არასასოფლო-სამეურნეოა. რეესტრში არის 2009 წლის 14 აგვისტოს ამონაწერი და 2009 წლის 13 აგვისტოს საკადასტრო გეგმა."
+    input:
+      code: "01.15.05.066.020"
