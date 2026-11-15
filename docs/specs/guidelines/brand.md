@@ -96,6 +96,7 @@ Each hue has a pastel fill and a deep tone for text. Wine is the brand hue.
 | `slate`  | `#D8DEE8`  | `#3B4A60`  | `#252B35` | `#B9C5D8` | The stats subject.          |
 | `iris`   | `#DCDDF4`  | `#40418A`  | `#2B2C48` | `#C2C4F0` | The air subject.            |
 | `clay`   | `#EADBCB`  | `#6B4526`  | `#3D2E22` | `#E2C4A6` | The law subject.            |
+| `olive`  | `#E4E6C6`  | `#575B1C`  | `#33361E` | `#D3D79E` | The holidays subject.       |
 
 - A fill is a background. Never write text in a fill color.
 - On a fill, write in `ink` or in the text tone of the same hue.

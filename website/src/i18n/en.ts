@@ -334,10 +334,12 @@ export const en = {
       "developer-api": "Documented developer API",
       "unofficial-api": "Unofficial API",
       "web-page": "Web page",
+      "community-api": "Community open API",
     },
     notes: {
       "unofficial-api": "The vendor does not publish this API for reuse. It can change without notice.",
       "web-page": "The server reads a page that the vendor writes for people. It can change without notice.",
+      "community-api": "An open source project publishes this API. It is not the official record of the data.",
     },
     visit: "Visit the source",
     tools: "Tools",

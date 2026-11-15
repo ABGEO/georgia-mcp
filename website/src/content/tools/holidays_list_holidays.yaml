@@ -1,0 +1,16 @@
+context: holidays
+vendors: [nager]
+summary:
+  en: The public holidays of Georgia in one year, or the next holidays from a date, with the weekday and the name in Georgian or English.
+  ka: საქართველოს დასვენების დღეები ერთ წელიწადში, ან შემდეგი დასვენების დღეები თარიღიდან, კვირის დღით და სახელით ქართულად ან ინგლისურად.
+examples:
+  - id: easter-2027
+    question:
+      en: Which days off does Easter bring in Georgia in 2027?
+      ka: რომელ დასვენების დღეებს მოიტანს აღდგომა საქართველოში 2027 წელს?
+    answer:
+      en: "Orthodox Easter gives Georgia four days off in a row in 2027: Good Friday on 30 April, Holy Saturday on 1 May, Easter Sunday on 2 May, and Easter Monday on 3 May. With the weekend inside them, the break runs from Friday to Monday."
+      ka: "მართლმადიდებლური აღდგომა 2027 წელს საქართველოში ზედიზედ ოთხ დასვენების დღეს იძლევა: ძველი პარასკევი 30 აპრილს, დიდი შაბათი 1 მაისს, აღდგომის კვირა 2 მაისს და აღდგომის ორშაბათი 3 მაისს. შაბათ-კვირა ამ დღეებს შორისაა, ასე რომ დასვენება პარასკევიდან ორშაბათამდე გრძელდება."
+    input:
+      from: "2027-04-25"
+      limit: 4

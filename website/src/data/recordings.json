@@ -1000,6 +1000,52 @@
       ]
     }
   },
+  "holidays_get_day.independence-day": {
+    "tool": "holidays_get_day",
+    "example": "independence-day",
+    "recordedAt": "2026-11-15T14:26:30.167Z",
+    "output": {
+      "as_of": "2026-11-15T18:26:30+04:00",
+      "date": "2027-05-26",
+      "holiday": true,
+      "name": "დამოუკიდებლობის დღე",
+      "source": "Nager.Date",
+      "stale": false,
+      "weekday": "wednesday"
+    }
+  },
+  "holidays_list_holidays.easter-2027": {
+    "tool": "holidays_list_holidays",
+    "example": "easter-2027",
+    "recordedAt": "2026-11-15T14:26:30.168Z",
+    "output": {
+      "as_of": "2026-11-15T18:26:30+04:00",
+      "holidays": [
+        {
+          "date": "2027-04-30",
+          "name": "Good Friday",
+          "weekday": "friday"
+        },
+        {
+          "date": "2027-05-01",
+          "name": "Holy Saturday",
+          "weekday": "saturday"
+        },
+        {
+          "date": "2027-05-02",
+          "name": "Easter Sunday",
+          "weekday": "sunday"
+        },
+        {
+          "date": "2027-05-03",
+          "name": "Easter Monday",
+          "weekday": "monday"
+        }
+      ],
+      "source": "Nager.Date",
+      "stale": false
+    }
+  },
   "law_get_act.income-tax-rate": {
     "tool": "law_get_act",
     "example": "income-tax-rate",

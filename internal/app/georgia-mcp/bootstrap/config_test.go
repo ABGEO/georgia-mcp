@@ -1018,3 +1018,28 @@ func TestLoadConfigGivesTheDefaultsOfTheLegislativeHerald(t *testing.T) {
 		t.Errorf("Matsne.HTTP = %+v, want a timeout of 10s, rate 5, burst 5", http)
 	}
 }
+
+// HOLIDAY-SC-018: With no variable of holidays, Nager.Date is on, at its address, with a
+// timeout of 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfNager(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	nager := cfg.Holidays.Nager
+	if !nager.Enabled {
+		t.Error("Nager.Enabled = false, want true")
+	}
+
+	if got := nager.BaseURL.String(); got != "https://date.nager.at" {
+		t.Errorf("Nager.BaseURL = %q, want https://date.nager.at", got)
+	}
+
+	if http := nager.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("Nager.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}

@@ -1244,6 +1244,160 @@
       "openWorldHint": true
     }
   },
+  "holidays_get_day": {
+    "name": "holidays_get_day",
+    "title": "Check a date for a public holiday in Georgia",
+    "description": "Tells whether one date is a public holiday in Georgia, with its weekday and the holiday name in Georgian or English. The default date is today in Georgia. It supports the years from 2025 to the next year. A one-off day off that the government declares by decree is not in the data: a false answer does not rule one out. Data from Nager.Date.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "The date, YYYY-MM-DD. The default is today in Georgia."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the holiday name: ka or en. The default is en."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Nager.Date."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the holidays, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Nager.Date did not answer and the server returns holidays it read before."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date, YYYY-MM-DD."
+        },
+        "weekday": {
+          "type": "string",
+          "description": "The day of the week: monday to sunday."
+        },
+        "holiday": {
+          "type": "boolean",
+          "description": "True when the date is a public holiday."
+        },
+        "name": {
+          "type": "string",
+          "description": "The holiday name. Empty when the date is not a public holiday."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "date",
+        "weekday",
+        "holiday"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "holidays_list_holidays": {
+    "name": "holidays_list_holidays",
+    "title": "List the public holidays of Georgia",
+    "description": "Returns the public holidays of Georgia: every holiday of one year, or the next holidays on or after a date. Each holiday gives its date (YYYY-MM-DD), its weekday, and its name in Georgian or English. With no input, it returns every holiday of the current year in Georgia. It supports the years from 2025 to the next year. The list holds no one-off day off that the government declares by decree. Data from Nager.Date.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "year": {
+          "type": "integer",
+          "description": "The year, from 2025 to the next year. The default is the current year. Give a year or from, not both."
+        },
+        "from": {
+          "type": "string",
+          "description": "A date, YYYY-MM-DD. The tool returns the next holidays on or after it, up to limit."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of holidays with from, 1 to 20. The default is 1. A year returns every holiday."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the holiday names: ka or en. The default is en."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Nager.Date."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the holidays, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when Nager.Date did not answer and the server returns holidays it read before."
+        },
+        "holidays": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "description": "The date of the holiday, YYYY-MM-DD."
+              },
+              "weekday": {
+                "type": "string",
+                "description": "The day of the week: monday to sunday."
+              },
+              "name": {
+                "type": "string",
+                "description": "The holiday name."
+              }
+            },
+            "required": [
+              "date",
+              "weekday",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The public holidays, in date order."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "holidays"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "law_get_act": {
     "name": "law_get_act",
     "title": "Get a legal act of Georgia",

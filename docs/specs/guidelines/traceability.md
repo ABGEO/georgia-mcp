@@ -208,6 +208,7 @@ Add a row before you create the file or the directory.
 | `JSONLD`   | `features/jsonld/`   | `website`  | The structured data of the home pages.                          | Approved |
 | `SOURCES`  | `features/sources/`  | `website`  | The sources page: the kind and the link of each source.         | Approved |
 | `MATSNE`   | `features/matsne/`   | `law`      | The legal acts of the Legislative Herald: search, versions, and articles. | Approved |
+| `HOLIDAY`  | `features/holiday/`  | `holidays` | The public holidays of Georgia: a year, a date, and the next holiday. | Approved |
 
 ## Retired identifiers
 
