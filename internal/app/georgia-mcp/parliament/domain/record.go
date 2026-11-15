@@ -21,6 +21,8 @@ type Bill struct {
 	NewestStage        string
 	// NewestReading is empty when the newest stage is not a reading.
 	NewestReading Reading
+	// URL is the page of the bill at the Parliament.
+	URL string
 }
 
 // Stage is one review stage of a bill. Reading is empty for a committee stage. Yes and No
@@ -48,6 +50,8 @@ type Vote struct {
 	Outcome            Coded[Outcome]
 	Quorum             *int
 	Yes, No, Absent    int
+	// URL is the page of the bill of the vote: a vote has no page of its own.
+	URL string
 }
 
 // MemberChoice is what one member did in a vote. Faction is empty for a member of no
@@ -70,6 +74,8 @@ type Question struct {
 	Addressee          string
 	Deadline           *kernel.Date
 	Responded          *kernel.Date
+	// URL is the page of the question, with the files of the question and the answer.
+	URL string
 }
 
 // FactionTally is the members of one faction in a vote and the count of each choice.

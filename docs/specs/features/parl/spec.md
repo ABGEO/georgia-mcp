@@ -157,6 +157,7 @@ type Bill struct {
     Registered         kernel.Date
     NewestStage        string
     NewestReading      Reading // "" when the newest stage is not a reading
+    URL                string  // the page of the bill
 }
 
 type Stage struct {
@@ -179,6 +180,7 @@ type Vote struct {
     Outcome            Coded[Outcome]
     Quorum             *int
     Yes, No, Absent    int
+    URL                string // the page of the bill of the vote
 }
 
 type MemberChoice struct {
@@ -197,6 +199,7 @@ type Question struct {
     Addressee          string
     Deadline           *kernel.Date
     Responded          *kernel.Date
+    URL                string // the page of the question
 }
 
 // FactionTally is the members of one faction in a vote and the count of each choice.
@@ -517,7 +520,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | 1   | `pkg/parliament`: client, types, recorded answers, README, example, live test. | `PARL-FR-012`, `PARL-NFR-004`            | [x]  |
 | 2   | `domain`: the values, the codes, `QuestionStatusOn`, `Tally`, the fuzz test.  | `PARL-FR-005`, `PARL-FR-007`, `PARL-FR-009` to `PARL-FR-011` | [x]  |
 | 3   | `app`: the ports, the filters, the five use cases, the errors.                | `PARL-FR-001` to `PARL-FR-011`             | [x]  |
-| 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [ ]  |
+| 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [x]  |
 | 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [ ]  |
 | 6   | `adapter/tool`.                                                               | `PARL-FR-001` to `PARL-FR-011`, `PARL-INV-002` | [ ]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `PARL-FR-013`, `PARL-NFR-002`              | [ ]  |
