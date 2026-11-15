@@ -2317,10 +2317,6 @@
         "code": {
           "type": "string",
           "description": "The cadastral code: 4 or 5 groups of digits with dots, as 01.15.05.066.020."
-        },
-        "language": {
-          "type": "string",
-          "description": "The language of the names of the codes: ka or en. The default is en. NAPR texts stay in Georgian."
         }
       },
       "required": [
@@ -2372,7 +2368,7 @@
             },
             "name": {
               "type": "string",
-              "description": "The name of the code in the language. For other, the text of NAPR."
+              "description": "The name of the code, in Georgian. For other, the text of NAPR."
             }
           },
           "description": "agricultural, non_agricultural, or other.",
@@ -2391,7 +2387,7 @@
             },
             "name": {
               "type": "string",
-              "description": "The name of the code in the language. For other, the text of NAPR."
+              "description": "The name of the code, in Georgian. For other, the text of NAPR."
             }
           },
           "description": "ownership, co_ownership, or other.",
@@ -2428,7 +2424,7 @@
                   },
                   "name": {
                     "type": "string",
-                    "description": "The name of the code in the language. For other, the text of NAPR."
+                    "description": "The name of the code, in Georgian. For other, the text of NAPR."
                   }
                 },
                 "description": "registry_extract, cadastral_plan, or other.",
@@ -2522,10 +2518,6 @@
         "limit": {
           "type": "integer",
           "description": "The maximum count of parcels, 1 to 20. The default is 5."
-        },
-        "language": {
-          "type": "string",
-          "description": "ka or en. The default is en. NAPR texts stay in Georgian."
         }
       },
       "required": [
@@ -2613,10 +2605,6 @@
         "limit": {
           "type": "integer",
           "description": "The maximum count of addresses, 1 to 20. The default is 5."
-        },
-        "language": {
-          "type": "string",
-          "description": "ka or en. The default is en. NAPR texts stay in Georgian."
         }
       },
       "required": [
@@ -3568,10 +3556,6 @@
         "number": {
           "type": "string",
           "description": "The application number, as AR11168188."
-        },
-        "language": {
-          "type": "string",
-          "description": "ka or en. The default is en. TAS texts stay in Georgian."
         }
       },
       "required": [
@@ -3611,7 +3595,7 @@
             },
             "name": {
               "type": "string",
-              "description": "The name of the code in the language."
+              "description": "The name of the code at TAS, in Georgian."
             }
           },
           "description": "approved, refused, deficient, conditional, not_reviewed, revoked, completed, awaiting_payment, or in_review.",
@@ -3708,10 +3692,6 @@
         "limit": {
           "type": "integer",
           "description": "The maximum count of applications, 1 to 50. The default is 10."
-        },
-        "language": {
-          "type": "string",
-          "description": "The language of the names of the statuses: ka or en. The default is en. TAS texts stay in Georgian."
         }
       },
       "additionalProperties": false
@@ -3772,7 +3752,7 @@
                   },
                   "name": {
                     "type": "string",
-                    "description": "The name of the code in the language."
+                    "description": "The name of the code at TAS, in Georgian."
                   }
                 },
                 "description": "approved, refused, deficient, conditional, not_reviewed, revoked, completed, awaiting_payment, or in_review.",
