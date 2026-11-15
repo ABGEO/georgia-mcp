@@ -119,6 +119,7 @@ starts with `/ar/mg/getinfo`. `Details.Type` is `address` for a parcel too. `Nam
 
 `AddressCentre(ref)`: `client.AddressShape(ref)`, then the WKT reader.
 
+`MapURL` is `https://maps.gov.ge/map/portal/#search/result/getinfo?lbl=<label>`.
 `ReadAt` is `now()` in `kernel.TbilisiZone()` after the last call. `NAPRPARC-DD-006`
 gives each failure.
 
@@ -223,7 +224,7 @@ type AddressMatch struct {
     Ref                AddressRef
 }
 
-type ParcelRead struct { Parcel domain.Parcel; ReadAt time.Time; Stale bool }
+type ParcelRead struct { Parcel domain.Parcel; MapURL string; ReadAt time.Time; Stale bool }
 type NearbyRead struct { Parcels []domain.NearbyParcel; ReadAt time.Time; Stale bool }
 type MatchRead  struct { Matches []AddressMatch; ReadAt time.Time; Stale bool }
 type CentreRead struct { Centre domain.Point; ReadAt time.Time; Stale bool }
@@ -454,14 +455,14 @@ The recorded answers of `spec-client.md` serve the tests. The tests of the adapt
 
 | #   | Step                                                                          | Realizes                                     | Done |
 | --- | ----------------------------------------------------------------------------- | -------------------------------------------- | ---- |
-| 1   | `pkg/vendorhttp`: `RawQuery`.                                                  | `NAPRPARC-FR-001`                            | [ ]  |
-| 2   | `pkg/napr`: client, types, repair, recorded answers, README, example, live test. | `NAPRPARC-FR-012`, `NAPRPARC-NFR-005`     | [ ]  |
-| 3   | `domain`: the types of 4.2, the fuzz tests.                                    | `NAPRPARC-FR-002`, `NAPRPARC-FR-004`, `NAPRPARC-FR-007`, `NAPRPARC-FR-009`, `NAPRPARC-FR-010` | [ ]  |
-| 4   | `app`: the port, the three use cases, the errors.                              | `NAPRPARC-FR-003`, `NAPRPARC-FR-005`, `NAPRPARC-FR-006` | [ ]  |
-| 5   | `adapter/napr`, the WKT reader.                                                | `NAPRPARC-FR-001`, `NAPRPARC-FR-011`, `NAPRPARC-FR-013`, `NAPRPARC-INV-001` | [ ]  |
-| 6   | `adapter/cache`.                                                               | `NAPRPARC-NFR-001`                           | [ ]  |
-| 7   | `adapter/tool`.                                                                | `NAPRPARC-FR-001` to `NAPRPARC-FR-008`, `NAPRPARC-INV-002` | [ ]  |
-| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `NAPRPARC-FR-014`, `NAPRPARC-NFR-003`        | [ ]  |
+| 1   | `pkg/vendorhttp`: `RawQuery`.                                                  | `NAPRPARC-FR-001`                            | [x]  |
+| 2   | `pkg/napr`: client, types, repair, recorded answers, README, example, live test. | `NAPRPARC-FR-012`, `NAPRPARC-NFR-005`     | [x]  |
+| 3   | `domain`: the types of 4.2, the fuzz tests.                                    | `NAPRPARC-FR-002`, `NAPRPARC-FR-004`, `NAPRPARC-FR-007`, `NAPRPARC-FR-009`, `NAPRPARC-FR-010` | [x]  |
+| 4   | `app`: the port, the three use cases, the errors.                              | `NAPRPARC-FR-003`, `NAPRPARC-FR-005`, `NAPRPARC-FR-006` | [x]  |
+| 5   | `adapter/napr`, the WKT reader.                                                | `NAPRPARC-FR-001`, `NAPRPARC-FR-011`, `NAPRPARC-FR-013`, `NAPRPARC-INV-001` | [x]  |
+| 6   | `adapter/cache`.                                                               | `NAPRPARC-NFR-001`                           | [x]  |
+| 7   | `adapter/tool`.                                                                | `NAPRPARC-FR-001` to `NAPRPARC-FR-008`, `NAPRPARC-INV-002` | [x]  |
+| 8   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `NAPRPARC-FR-014`, `NAPRPARC-NFR-003`        | [x]  |
 
 ## 8. Out of scope for this specification
 

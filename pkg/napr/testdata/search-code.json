@@ -1,0 +1,26 @@
+{
+"status":true,
+"result":[
+{
+"id": 1285613,
+"name": "01.15.05.066.020",
+"descript": "ქალაქი თბილისი , მოედანი თავისუფლება ,   (ნაკვეთი 66\/020)",
+"resulttext" :"ქალაქი თბილისი , მოედანი თავისუფლება ,   (ნაკვეთი 66\/020)",
+"resultlink" :"/map/portal/getbylbl?lbl=lr_parcels:AAArWyAATAAIs9BAAB",
+"details": {
+        "type": "address",
+        "mode": "absolute",
+        "info_link": "/lr/bo/mg/getinfo.alpha?lbl=lr_parcels:AAArWyAATAAIs9BAAB",
+        "geometry_link": "/lr/bo/mg/getinfo.alpha?lbl=lr_parcels:AAArWyAATAAIs9BAAB&res=shp"
+},
+
+"geo_coords": "",
+"layers": [],
+"sdo_gtype": "2003",
+"dist": "0",
+"rank": "0",
+"sdo_srid": "4326",
+"shape_wkt": "",
+"env": "alpha"
+}]
+}

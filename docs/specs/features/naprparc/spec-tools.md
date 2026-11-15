@@ -120,7 +120,7 @@ type addressOutput struct {
 
 `source` is `NAPR`. `as_of` is `ReadAt` in `kernel.TbilisiZone()`, written with
 `time.RFC3339`. A `limit` of 0 asks the default. A point rounds to 6 decimals.
-`map_url` is `https://maps.gov.ge/map/portal/#search/result/getinfo?lbl=<label>`.
+`map_url` is `ParcelRead.MapURL`.
 `NAPRPARC-SC-025` checks it in a browser. The names of the codes in `en`:
 
 | Code               | `en`                 | `ka`                             |
