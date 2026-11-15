@@ -239,6 +239,21 @@ define it. The identifier of a term is `GLO-<term>`.
 | address | In `parcels`, the text of NAPR that names a settlement, a street, and a number. |
 | municipality | The unit under which NAPR groups an address: `ქალაქი თბილისი`, `გორის მუნიციპალიტეტი`. |
 
+## Permits
+
+| Term | Meaning |
+| ---- | ------- |
+| TAS | The Tbilisi Architecture Service of the Tbilisi City Hall. Vendor code `tas`. |
+| application | One request to TAS with a number, `AR11168188`, and a status. |
+| application number | The number of an application: `AR1` and digits. |
+| date of registration | The day on which TAS received the application, in Tbilisi. |
+| status | In `permits`, the state of an application: `approved`, `refused`, `deficient`, `conditional`, `not_reviewed`, `revoked`, `completed`, `awaiting_payment`, or `in_review`. |
+| category | The kind of object or work of an application: `მრავალბინიანი საცხოვრებელი სახლი`. |
+| class | The class of risk of a construction, `I` to `IV`. |
+| stage | A step of a construction that an application covers: project approval, construction permit. |
+| decision text | The text with which TAS answers an application. |
+| executor | The employee of TAS who handles an application. |
+
 ## The website
 
 | Term               | Meaning                                                                                               |
