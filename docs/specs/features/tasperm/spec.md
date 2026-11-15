@@ -268,8 +268,8 @@ func (u *GetApplication) Get(ctx context.Context, number domain.ApplicationNumbe
 
 | Tool                          | Input                                   | Output         | Errors | Realizes |
 | ----------------------------- | --------------------------------------- | -------------- | ------ | -------- |
-| `permits_search_applications` | `code`, `from`, `to`, `limit`, `language` | `searchOutput` | 4.5  | `TASPERM-FR-001` to `TASPERM-FR-005`, `TASPERM-FR-007` to `TASPERM-FR-010` |
-| `permits_get_application`     | `number`, `language`                    | `getOutput`    | 4.5    | `TASPERM-FR-005` to `TASPERM-FR-007`, `TASPERM-FR-009`, `TASPERM-FR-010` |
+| `permits_search_applications` | `code`, `from`, `to`, `limit`           | `searchOutput` | 4.5  | `TASPERM-FR-001` to `TASPERM-FR-005`, `TASPERM-FR-007` to `TASPERM-FR-010` |
+| `permits_get_application`     | `number`                                | `getOutput`    | 4.5    | `TASPERM-FR-005` to `TASPERM-FR-007`, `TASPERM-FR-009`, `TASPERM-FR-010` |
 
 `spec-tools.md` holds the titles, the descriptions, the structs, and the names of the
 statuses. `from` alone gives a period of 7 days from it. `to` alone gives 7 days up to it.
@@ -330,7 +330,6 @@ on 2026-11-15.
 
 | Condition                                 | Sentinel                          | Tool message |
 | ----------------------------------------- | --------------------------------- | ------------ |
-| A language other than `ka` and `en`       | `kernel.ErrUnknownLanguage`       | `language: "ru" is not a language of this tool. Use ka or en.` |
 | A limit out of range                      | none, the tool checks it          | `limit: 60 is out of range. Use 1 to 50.` |
 | A code that is not a cadastral code       | `domain.ErrInvalidCadastralCode`  | `code: "01.18" is not a cadastral code. Use 4 or 5 groups of digits with dots, as 01.18.04.020.005.` |
 | A date that is not `YYYY-MM-DD`           | `kernel.ErrInvalidDate`           | `from: "4 Nov" is not a date. Use YYYY-MM-DD.` |
@@ -419,9 +418,9 @@ The recorded answers of `spec-client.md` serve the tests. The tests of the adapt
 | `TASPERM-SC-011`  | `TASPERM-FR-005` | unit | Each TAS code of the table gives its status. The code 8 gives an error that wraps `kernel.ErrSourceUnavailable`. |
 | `TASPERM-SC-012`  | `TASPERM-FR-001`, `TASPERM-FR-008` | unit | `Search` of `search-code.js` with the limit 3 gives the 3 newest by registration, `Total` 5. `SortApplications` puts `AR11168188` before `AR1506582` on one day. |
 | `TASPERM-SC-013`  | `TASPERM-FR-003`, `TASPERM-FR-004` | unit | `Search` with no filter gives `ErrNoFilter` and reads nothing. A source with `Total` 2128 gives a `*TooManyMatchesError` with 2128. `Total` 500 succeeds. |
-| `TASPERM-SC-014`  | `TASPERM-FR-001`, `TASPERM-FR-009` | integration | `permits_search_applications` with `01.18.04.020.005`: `source` `TAS`, `as_of` with `+04:00`, `total` 5, applications newest first, no `decision_text`. With `ka`, a status `approved` is named `თანხმობა`. |
-| `TASPERM-SC-015`  | `TASPERM-FR-006` | integration | `permits_get_application` with `1168188`: the number `AR11168188`, `status` `approved` named `Approved`, `url`, and a `decision_text`. |
-| `TASPERM-SC-016`  | `TASPERM-FR-002`, `TASPERM-FR-003`, `TASPERM-FR-004`, `TASPERM-FR-006` | integration | Each input of 4.5 returns `IsError` with its message: `ru`, `limit` 60, `01.18`, `from` `4 Nov`, 2026-11-10 to 2026-11-04, 2026-01-01 to 2026-03-01, no filter, a period of 2128, `AR1116818X`, and `AR19999999`. |
+| `TASPERM-SC-014`  | `TASPERM-FR-001`, `TASPERM-FR-009` | integration | `permits_search_applications` with `01.18.04.020.005`: `source` `TAS`, `as_of` with `+04:00`, `total` 5, applications newest first, no `decision_text`. A status `approved` is named `თანხმობა`. |
+| `TASPERM-SC-015`  | `TASPERM-FR-006` | integration | `permits_get_application` with `1168188`: the number `AR11168188`, `status` `approved` named `თანხმობა`, `url`, and a `decision_text`. |
+| `TASPERM-SC-016`  | `TASPERM-FR-002`, `TASPERM-FR-003`, `TASPERM-FR-004`, `TASPERM-FR-006` | integration | Each input of 4.5 returns `IsError` with its message: `limit` 60, `01.18`, `from` `4 Nov`, 2026-11-10 to 2026-11-04, 2026-01-01 to 2026-03-01, no filter, a period of 2128, `AR1116818X`, and `AR19999999`. |
 | `TASPERM-SC-017`  | `TASPERM-FR-010` | integration | The vendor answers 500, with an empty cache. Each tool returns `IsError` with `TAS did not answer. Try again in a few minutes.` |
 | `TASPERM-SC-018`  | `TASPERM-NFR-001` | unit | In `synctest`, `Match` and `Application` again after 59 minutes send no load. After 1 hour each sends one. |
 | `TASPERM-SC-019`  | `TASPERM-NFR-001` | unit | In `synctest`, the source fails with `kernel.ErrSourceUnavailable` after one read. At 23 hours 59 minutes, each method gives its value with `Stale` true. At 24 hours and 1 second, each gives the error. |

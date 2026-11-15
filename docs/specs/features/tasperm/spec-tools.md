@@ -35,16 +35,14 @@ The structs of `P/adapter/tool`. `spec.md` 4.3 holds the table of the tools.
 
 ```go
 type searchInput struct {
-    Code     string `json:"code,omitempty"     jsonschema:"The cadastral code of the parcel: 4 or 5 groups of digits with dots, as 01.18.04.020.005."`
-    From     string `json:"from,omitempty"     jsonschema:"The first date of registration, YYYY-MM-DD. Without to, the period is 7 days."`
-    To       string `json:"to,omitempty"       jsonschema:"The last date of registration, YYYY-MM-DD. Without from, the period is 7 days."`
-    Limit    int    `json:"limit,omitempty"    jsonschema:"The maximum count of applications, 1 to 50. The default is 10."`
-    Language string `json:"language,omitempty" jsonschema:"The language of the names of the statuses: ka or en. The default is en. TAS texts stay in Georgian."`
+    Code  string `json:"code,omitempty"  jsonschema:"The cadastral code of the parcel: 4 or 5 groups of digits with dots, as 01.18.04.020.005."`
+    From  string `json:"from,omitempty"  jsonschema:"The first date of registration, YYYY-MM-DD. Without to, the period is 7 days."`
+    To    string `json:"to,omitempty"    jsonschema:"The last date of registration, YYYY-MM-DD. Without from, the period is 7 days."`
+    Limit int    `json:"limit,omitempty" jsonschema:"The maximum count of applications, 1 to 50. The default is 10."`
 }
 
 type getInput struct {
-    Number   string `json:"number"             jsonschema:"The application number, as AR11168188."`
-    Language string `json:"language,omitempty" jsonschema:"ka or en. The default is en. TAS texts stay in Georgian."`
+    Number string `json:"number" jsonschema:"The application number, as AR11168188."`
 }
 
 type searchOutput struct {
@@ -81,27 +79,28 @@ type applicationOutput struct {
 
 type codeOutput struct {
     Code string `json:"code" jsonschema:"The code."`
-    Name string `json:"name" jsonschema:"The name of the code in the language."`
+    Name string `json:"name" jsonschema:"The name of the code at TAS, in Georgian."`
 }
 ```
 
 `source` is `TAS`. `as_of` is `ReadAt` in `kernel.TbilisiZone()`, written with
 `time.RFC3339`. A `limit` of 0 asks the default. `Class` is `I` to `IV`: the adapter keeps
-the first word of `className`. The names of the statuses:
+the first word of `className`. The tools take no `language`: TAS publishes Georgian only
+(`MCP-007`). The names of the statuses:
 
-| Code               | `en`                     | `ka`                    |
-| ------------------ | ------------------------ | ----------------------- |
-| `approved`         | Approved                 | თანხმობა               |
-| `refused`          | Refused                  | უარყოფა                |
-| `deficient`        | Deficiency found         | შუალედური              |
-| `conditional`      | Approved with conditions | პირობადადებული         |
-| `not_reviewed`     | Not reviewed             | განუხილველი            |
-| `revoked`          | Revoked                  | ძალადაკარგული          |
-| `completed`        | Completed                | დასრულებული            |
-| `awaiting_payment` | Awaiting payment         | გადახდის მოლოდინში     |
-| `in_review`        | In review                | განხილვის პროცესში     |
+| Code               | Name                    |
+| ------------------ | ----------------------- |
+| `approved`         | თანხმობა                |
+| `refused`          | უარყოფა                 |
+| `deficient`        | შუალედური               |
+| `conditional`      | პირობადადებული          |
+| `not_reviewed`     | განუხილველი             |
+| `revoked`          | ძალადაკარგული           |
+| `completed`        | დასრულებული             |
+| `awaiting_payment` | გადახდის მოლოდინში      |
+| `in_review`        | განხილვის პროცესში      |
 
-The `ka` names are the names of the page of TAS.
+The names are those of the page of TAS.
 
 ## Retired identifiers
 
