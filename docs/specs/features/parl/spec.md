@@ -511,7 +511,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | `PARL-SC-019`   | `PARL-NFR-001` | unit | In `synctest`, the source fails with `kernel.ErrSourceUnavailable` after one read. At 23 hours 59 minutes, each method returns the value with `Stale` true. After 24 hours and 1 second, it returns the error. |
 | `PARL-SC-020`   | `PARL-NFR-002` | unit | In `bootstrap`, `LoadConfig` with no variable of the parliament gives the Parliament on, at `https://info.parliament.ge`, with a timeout of 10 seconds, the rate 5, and the burst 5. |
 | `PARL-SC-021`   | `PARL-FR-013` | unit | `parliament.New` with `Enabled` false registers no tool. With `Enabled` true it registers the five tools. |
-| `PARL-SC-022`   | `PARL-FR-010`, `PARL-FR-011` | integration | `parliament_search_bills` with `budget` and `empty-list.json` gives `total` 0 and the `notice`. With `zzqxv` it gives no `notice`. Each input of 4.5 returns `IsError` with its message. The vendor answers 500 with an empty cache: `IsError` with the message of an outage. |
+| `PARL-SC-022`   | `PARL-FR-010`, `PARL-FR-011` | integration | `parliament_search_bills` with `budget` and `empty-list.json` gives `total` 0 and the `notice`. With `zzqxვ`, a text with a Georgian letter, it gives no `notice`. Each input of 4.5 returns `IsError` with its message. The vendor answers 500 with an empty cache: `IsError` with the message of an outage. |
 | `PARL-SC-023`   | `PARL-NFR-003` | integration | In `synctest`, a transport of the test serves the recorded answers of bill 32449 with three stages that carry a vote, each call after 2.9 seconds. `parliament_get_bill` answers in less than 10 seconds of the fake clock. No network. |
 | `PARL-SC-024`   | `PARL-FR-001`, `PARL-FR-005` | live | Against `info.parliament.ge`: `Bills` with `ბიუჯეტ` gives more than 1000. `Votings` of 31507 gives 101 choices with the three names of `PARL-DD-007`. `Bills` with `limit` 50 gives 50. |
 
@@ -524,7 +524,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | 3   | `app`: the ports, the filters, the five use cases, the errors.                | `PARL-FR-001` to `PARL-FR-011`             | [x]  |
 | 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [x]  |
 | 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [x]  |
-| 6   | `adapter/tool`.                                                               | `PARL-FR-001` to `PARL-FR-011`, `PARL-INV-002` | [ ]  |
+| 6   | `adapter/tool`.                                                               | `PARL-FR-001` to `PARL-FR-011`, `PARL-INV-002` | [x]  |
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.   | `PARL-FR-013`, `PARL-NFR-002`              | [ ]  |
 
 ## 8. Out of scope for this specification
