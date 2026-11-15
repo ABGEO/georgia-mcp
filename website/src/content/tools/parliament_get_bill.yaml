@@ -1,0 +1,15 @@
+context: parliament
+vendors: [parliament]
+summary:
+  en: One bill of the Parliament by its identifier, with its description, its package, and every review stage in order, with the counts and the votes of each reading.
+  ka: პარლამენტის ერთი კანონპროექტი იდენტიფიკატორით, აღწერით, პაკეტითა და განხილვის ყველა ეტაპით თანმიმდევრობით, თითოეული მოსმენის ხმებითა და კენჭისყრებით.
+examples:
+  - id: bill-32449
+    question:
+      en: Where does the bill 32449 on the Budget Code of Georgia stand?
+      ka: სად არის საბიუჯეტო კოდექსის შესახებ კანონპროექტი 32449?
+    answer:
+      en: "The Government submitted the bill on 30 September 2026 with the state budget of 2027. The Ministry of Finance drafted it. It sets how state enterprises open bank accounts, and it extends to 2030 the move of the municipalities to a share of the value added tax. Fifteen committees reviewed it from 5 to 12 October 2026. The plenary adopted it in the first reading on 11 November 2026, 77 to 0, in the vote 31510."
+      ka: "კანონპროექტი მთავრობამ 2026 წლის 30 სექტემბერს წარადგინა 2027 წლის სახელმწიფო ბიუჯეტთან ერთად, ავტორი ფინანსთა სამინისტროა. ის აზუსტებს სახელმწიფო საწარმოების მიერ ბანკებში ანგარიშების გახსნის წესს და 2030 წლის ჩათვლით აგრძელებს დამატებული ღირებულების გადასახადის განაწილების სისტემაზე მუნიციპალიტეტების გადასვლის გარდამავალ პერიოდს. თხუთმეტმა კომიტეტმა ის 2026 წლის 5-დან 12 ოქტომბრამდე განიხილა. პლენარულმა სხდომამ 2026 წლის 11 ნოემბერს პირველი მოსმენით მიიღო, 77 ხმით 0-ის წინააღმდეგ, კენჭისყრა 31510."
+    input:
+      id: 32449

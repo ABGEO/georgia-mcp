@@ -269,3 +269,16 @@ permits:
       ka: თბილისის არქიტექტურის სამსახური
       kind: unofficial-api
       url: https://tas.ge/
+parliament:
+  order: 13
+  hue: plum
+  icon: vote
+  name:
+    en: Parliament
+    ka: პარლამენტი
+  vendors:
+    - code: parliament
+      en: Parliament of Georgia
+      ka: საქართველოს პარლამენტი
+      kind: open-api
+      url: https://info.parliament.ge/

@@ -1,0 +1,16 @@
+context: parliament
+vendors: [parliament]
+summary:
+  en: The bills of the Parliament of Georgia by a text of the title, a registration number, or a period, newest first, with the initiator and the newest review stage.
+  ka: საქართველოს პარლამენტის კანონპროექტები სათაურის ტექსტით, სარეგისტრაციო ნომრით ან პერიოდით, ჯერ უახლესი, ინიციატორითა და განხილვის უახლესი ეტაპით.
+examples:
+  - id: budget-code
+    question:
+      en: Which bills change the Budget Code of Georgia?
+      ka: რომელი კანონპროექტები ცვლის საქართველოს საბიუჯეტო კოდექსს?
+    answer:
+      en: "The Parliament has 118 bills whose title names the Budget Code. The newest, 372/2-XIმპ, came from the Government on 30 September 2026 and passed its first reading. Before it, on 4 September 2026, the Parliamentary Secretary of the Government asked to withdraw the package 360/2-XIმპ of 7 August 2026. Its Budget Code bill never went past the initiated version."
+      ka: "პარლამენტში 118 კანონპროექტია, რომლის სათაურშიც საბიუჯეტო კოდექსი იხსენიება. უახლესი, 372/2-XIმპ, მთავრობამ 2026 წლის 30 სექტემბერს წარადგინა და პირველი მოსმენით მიღებულია. მანამდე, 2026 წლის 4 სექტემბერს, მთავრობის საპარლამენტო მდივანმა 2026 წლის 7 აგვისტოს პაკეტის, 360/2-XIმპ, გამოთხოვა მოითხოვა. ამ პაკეტის საბიუჯეტო კოდექსის კანონპროექტი ინიციირებულ ვარიანტს არ გასცდენია."
+    input:
+      query: საბიუჯეტო კოდექს
+      limit: 3
