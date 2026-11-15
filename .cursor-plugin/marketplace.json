@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "The Cursor plugin of Georgia MCP.",
-    "version": "1.1.2"
+    "version": "1.2.0"
   },
   "plugins": [
     {
