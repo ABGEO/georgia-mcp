@@ -96,11 +96,6 @@ func (h handler) getParcel(
 	_ *mcp.CallToolRequest,
 	in getParcelInput,
 ) (*mcp.CallToolResult, parcelOutput, error) {
-	language, err := parseLanguage(in.Language)
-	if err != nil {
-		return nil, parcelOutput{}, err
-	}
-
 	code, err := parseCode(in.Code)
 	if err != nil {
 		return nil, parcelOutput{}, err
@@ -111,7 +106,7 @@ func (h handler) getParcel(
 		return nil, parcelOutput{}, toolError(err, code)
 	}
 
-	return nil, toParcelOutput(read, language), nil
+	return nil, toParcelOutput(read), nil
 }
 
 func (h handler) listNearby(
@@ -119,10 +114,6 @@ func (h handler) listNearby(
 	_ *mcp.CallToolRequest,
 	in nearbyInput,
 ) (*mcp.CallToolResult, nearbyOutput, error) {
-	if _, err := parseLanguage(in.Language); err != nil {
-		return nil, nearbyOutput{}, err
-	}
-
 	limit, err := withinRange("limit", in.Limit, defaultLimit, maxLimit)
 	if err != nil {
 		return nil, nearbyOutput{}, err
@@ -146,10 +137,6 @@ func (h handler) searchAddresses(
 	_ *mcp.CallToolRequest,
 	in addressesInput,
 ) (*mcp.CallToolResult, addressesOutput, error) {
-	if _, err := parseLanguage(in.Language); err != nil {
-		return nil, addressesOutput{}, err
-	}
-
 	limit, err := withinRange("limit", in.Limit, defaultLimit, maxLimit)
 	if err != nil {
 		return nil, addressesOutput{}, err

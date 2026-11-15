@@ -37,7 +37,6 @@ const (
 	keyCode      = "code"
 	keyLimit     = "limit"
 	keyQuery     = "query"
-	keyLanguage  = "language"
 	keyLat       = "lat"
 	keyLon       = "lon"
 )
@@ -221,63 +220,52 @@ type parcel struct {
 	} `json:"centre"`
 }
 
-// NAPRPARC-SC-015: A parcel carries its source, its map page, and the names of its codes
-// in the language. The texts of NAPR stay Georgian.
+// NAPRPARC-SC-015: A parcel carries its source, its map page, and the Georgian names of
+// its codes.
 func TestGetParcel(t *testing.T) {
 	t.Parallel()
 
 	session := connect(t, &vendor{})
 
-	english := decode[parcel](t, call(t, session, getParcel, map[string]any{keyCode: freedomCode}))
+	got := decode[parcel](t, call(t, session, getParcel, map[string]any{keyCode: freedomCode}))
 
-	if english.Source != "NAPR" || !strings.HasSuffix(english.AsOf, "+04:00") ||
-		!strings.Contains(english.MapURL, "lbl=lr_parcels:AAArWyAATAAIs9BAAB") {
+	if got.Source != "NAPR" || !strings.HasSuffix(got.AsOf, "+04:00") ||
+		!strings.Contains(got.MapURL, "lbl=lr_parcels:AAArWyAATAAIs9BAAB") {
 		t.Errorf(
 			"source, as_of, map_url = %q, %q, %q",
-			english.Source,
-			english.AsOf,
-			english.MapURL,
+			got.Source,
+			got.AsOf,
+			got.MapURL,
 		)
 	}
 
-	want := code{Code: "non_agricultural", Name: "Non-agricultural"}
-	if english.LandType != want || english.Area != "618" || english.AreaUnit != "m2" {
+	want := code{Code: "non_agricultural", Name: "არასასოფლო-სამეურნეო"}
+	if got.LandType != want || got.Area != "618" || got.AreaUnit != "m2" {
 		t.Errorf(
 			"land_type, area = %+v, %s %s, want %+v, 618 m2",
-			english.LandType,
-			english.Area,
-			english.AreaUnit,
+			got.LandType,
+			got.Area,
+			got.AreaUnit,
 			want,
 		)
 	}
 
-	if len(english.Documents) != 2 || english.Documents[0].Date != "2009-08-14" ||
-		english.Documents[0].Kind.Name != "Registry extract" {
-		t.Errorf("documents = %+v, want the extract of 2009-08-14 first", english.Documents)
+	if len(got.Documents) != 2 || got.Documents[0].Date != "2009-08-14" ||
+		got.Documents[0].Kind.Name != "ამონაწერი საჯარო რეესტრიდან" {
+		t.Errorf("documents = %+v, want the extract of 2009-08-14 first", got.Documents)
 	}
 }
 
-// NAPRPARC-SC-015: In ka, the codes take their Georgian names, and the texts of NAPR do
-// not change.
-func TestGetParcelInGeorgian(t *testing.T) {
+// NAPRPARC-SC-015: The owners come as NAPR publishes them, in Georgian.
+func TestGetParcelOwners(t *testing.T) {
 	t.Parallel()
 
-	session := connect(t, &vendor{})
-
-	english := decode[parcel](t, call(t, session, getParcel, map[string]any{keyCode: freedomCode}))
-	georgian := decode[parcel](
+	got := decode[parcel](
 		t,
-		call(t, session, getParcel, map[string]any{keyCode: freedomCode, keyLanguage: "ka"}),
+		call(t, connect(t, &vendor{}), getParcel, map[string]any{keyCode: freedomCode}),
 	)
 
-	if georgian.LandType.Name != "არასასოფლო-სამეურნეო" || georgian.Address != english.Address {
-		t.Errorf("ka land_type, address = %+v, %q", georgian.LandType, georgian.Address)
-	}
-
-	if diff := cmp.Diff(
-		[]string{"ქალაქ თბილისის თვითმმართველი ერთეული"},
-		georgian.Owners,
-	); diff != "" {
+	if diff := cmp.Diff([]string{"ქალაქ თბილისის თვითმმართველი ერთეული"}, got.Owners); diff != "" {
 		t.Errorf("owners (-want +got):\n%s", diff)
 	}
 }
@@ -346,11 +334,6 @@ type badInput struct {
 
 func badInputs() []badInput {
 	return []badInput{
-		{
-			getParcel,
-			map[string]any{keyCode: freedomCode, keyLanguage: "ru"},
-			`language: "ru" is not a language of this tool. Use ka or en.`,
-		},
 		{
 			listNearby,
 			map[string]any{keyLat: 41.6934, keyLon: 44.8015, keyLimit: 50},
