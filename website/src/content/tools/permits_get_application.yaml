@@ -1,0 +1,15 @@
+context: permits
+vendors: [tas]
+summary:
+  en: One application to the Tbilisi Architecture Service by its number, with the status, the deadline, the executor, the text of the decision, and the link to its page.
+  ka: თბილისის არქიტექტურის სამსახურში შეტანილი ერთი განცხადება ნომრით, სტატუსით, ვადით, შემსრულებლით, გადაწყვეტილების ტექსტითა და მისი გვერდის ბმულით.
+examples:
+  - id: ar11163969
+    question:
+      en: What did the Tbilisi Architecture Service decide on the application AR11163969?
+      ka: რა გადაწყვიტა თბილისის არქიტექტურის სამსახურმა განცხადებაზე AR11163969?
+    answer:
+      en: "AR11163969 asks for the conditions to build an object of class III on Teleti Street. It is in review, with a deadline of 16 November 2026. The heritage council gave it a positive assessment on 20 October 2026, but TAS found three deficiencies: the topographic plan, the photos of the parcels, and a geological survey, since the land is in a zone of high geological hazard. The applicant has 15 working days to correct them."
+      ka: "AR11163969 თელეთის ქუჩაზე III კლასის ობიექტის მშენებლობის პირობებს ითხოვს. განცხადება განხილვის პროცესშია, ვადა 2026 წლის 16 ნოემბერია. კულტურული მემკვიდრეობის დაცვის საბჭომ 2026 წლის 20 ოქტომბერს დადებითი შეფასება მისცა, თუმცა სამსახურმა სამი ხარვეზი აღმოაჩინა: ტოპოგრაფიული გეგმა, ნაკვეთების ფოტოები და საინჟინრო-გეოლოგიური კვლევა, რადგან ნაკვეთი გეოსაშიშროების მაღალი კატეგორიის ზონაშია. ხარვეზების გამოსასწორებლად 15 სამუშაო დღეა."
+    input:
+      number: AR11163969

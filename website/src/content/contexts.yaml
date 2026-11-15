@@ -256,3 +256,16 @@ parcels:
       ka: საჯარო რეესტრის ეროვნული სააგენტო
       kind: unofficial-api
       url: https://maps.gov.ge/
+permits:
+  order: 12
+  hue: lime
+  icon: construction
+  name:
+    en: Building permits
+    ka: სამშენებლო ნებართვები
+  vendors:
+    - code: tas
+      en: Tbilisi Architecture Service
+      ka: თბილისის არქიტექტურის სამსახური
+      kind: unofficial-api
+      url: https://tas.ge/

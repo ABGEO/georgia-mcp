@@ -28,6 +28,8 @@
   --olive: #575b1c;
   --rose-fill: #f6d3df;
   --rose: #8a2f55;
+  --lime-fill: #dcedc1;
+  --lime: #3f6214;
   color-scheme: light;
 }
 
@@ -62,6 +64,8 @@
   --olive: #d3d79e;
   --rose-fill: #48223a;
   --rose: #f0aecb;
+  --lime-fill: #2c3a1b;
+  --lime: #c3e09a;
     color-scheme: dark;
   }
 }
@@ -96,6 +100,8 @@
   --olive: #d3d79e;
   --rose-fill: #48223a;
   --rose: #f0aecb;
+  --lime-fill: #2c3a1b;
+  --lime: #c3e09a;
   color-scheme: dark;
 }
 
@@ -111,3 +117,4 @@
 [data-hue="clay"] { --hue-fill: var(--clay-fill); --hue: var(--clay); }
 [data-hue="olive"] { --hue-fill: var(--olive-fill); --hue: var(--olive); }
 [data-hue="rose"] { --hue-fill: var(--rose-fill); --hue: var(--rose); }
+[data-hue="lime"] { --hue-fill: var(--lime-fill); --hue: var(--lime); }
