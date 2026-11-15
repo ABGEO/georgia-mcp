@@ -56,10 +56,11 @@ type searchOutput struct {
 }
 
 type getOutput struct {
-    Source       string `json:"source"        jsonschema:"The source of the data: TAS."`
-    AsOf         string `json:"as_of"         jsonschema:"The instant at which the server read the application, RFC 3339."`
-    Stale        bool   `json:"stale"         jsonschema:"True when TAS did not answer and the server returns an application it read before."`
     applicationOutput
+
+    Source       string `json:"source"                  jsonschema:"The source of the data: TAS."`
+    AsOf         string `json:"as_of"                   jsonschema:"The instant at which the server read the application, RFC 3339."`
+    Stale        bool   `json:"stale"                   jsonschema:"True when TAS did not answer and the server returns an application it read before."`
     DecisionText string `json:"decision_text,omitempty" jsonschema:"The text of the decision of TAS, in Georgian, with no HTML. Empty before a decision."`
 }
 

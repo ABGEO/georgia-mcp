@@ -435,13 +435,13 @@ The recorded answers of `spec-client.md` serve the tests. The tests of the adapt
 
 | #   | Step                                                                          | Realizes                                     | Done |
 | --- | ----------------------------------------------------------------------------- | -------------------------------------------- | ---- |
-| 1   | `pkg/tas`: client, scanner, types, recorded answers, README, example, live test. | `TASPERM-FR-010`, `TASPERM-NFR-005`, `TASPERM-INV-001` | [ ]  |
-| 2   | `domain`: the types of 4.2, the fuzz tests.                                    | `TASPERM-FR-002`, `TASPERM-FR-006`, `TASPERM-FR-008` | [ ]  |
-| 3   | `app`: the port, the two use cases, the errors.                                | `TASPERM-FR-001`, `TASPERM-FR-003`, `TASPERM-FR-004` | [ ]  |
-| 4   | `adapter/tas`, the HTML reader.                                                | `TASPERM-FR-005`, `TASPERM-FR-007`, `TASPERM-INV-002` | [ ]  |
-| 5   | `adapter/cache`.                                                               | `TASPERM-NFR-001`                            | [ ]  |
-| 6   | `adapter/tool`.                                                                | `TASPERM-FR-001` to `TASPERM-FR-010`         | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `TASPERM-FR-011`, `TASPERM-NFR-003`          | [ ]  |
+| 1   | `pkg/tas`: client, scanner, types, recorded answers, README, example, live test. | `TASPERM-FR-010`, `TASPERM-NFR-005`, `TASPERM-INV-001` | [x]  |
+| 2   | `domain`: the types of 4.2, the fuzz tests.                                    | `TASPERM-FR-002`, `TASPERM-FR-006`, `TASPERM-FR-008` | [x]  |
+| 3   | `app`: the port, the two use cases, the errors.                                | `TASPERM-FR-001`, `TASPERM-FR-003`, `TASPERM-FR-004` | [x]  |
+| 4   | `adapter/tas`, the HTML reader.                                                | `TASPERM-FR-005`, `TASPERM-FR-007`, `TASPERM-INV-002` | [x]  |
+| 5   | `adapter/cache`.                                                               | `TASPERM-NFR-001`                            | [x]  |
+| 6   | `adapter/tool`.                                                                | `TASPERM-FR-001` to `TASPERM-FR-010`         | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `TASPERM-FR-011`, `TASPERM-NFR-003`          | [x]  |
 
 ## 8. Out of scope for this specification
 

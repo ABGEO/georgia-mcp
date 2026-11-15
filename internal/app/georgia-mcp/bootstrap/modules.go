@@ -12,6 +12,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/law"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/parcels"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/permits"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/rates"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/stats"
@@ -52,6 +53,7 @@ func modules(cfg Config, logger *slog.Logger) ([]mcpserver.Module, error) {
 		contextOf("law", law.New, cfg.Law, logger),
 		contextOf("holidays", holidays.New, cfg.Holidays, logger),
 		contextOf("parcels", parcels.New, cfg.Parcels, logger),
+		contextOf("permits", permits.New, cfg.Permits, logger),
 	}
 
 	built := make([]mcpserver.Module, 0, len(builders))

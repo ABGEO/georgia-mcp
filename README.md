@@ -218,6 +218,8 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `parcels_get_parcel`          | One land parcel by its cadastral code: area, land type, and owners.     |
 | `parcels_list_nearby_parcels` | The land parcels nearest a point in Georgia, with the distance.         |
 | `parcels_search_addresses`    | The addresses of Georgia by street and number, with a centre point.     |
+| `permits_search_applications` | The building applications of Tbilisi for a parcel or a period.          |
+| `permits_get_application`     | One building application of Tbilisi, with the text of its decision.     |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
