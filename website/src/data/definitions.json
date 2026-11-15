@@ -2700,6 +2700,288 @@
       "openWorldHint": true
     }
   },
+  "permits_get_application": {
+    "name": "permits_get_application",
+    "title": "Get a building application of Tbilisi",
+    "description": "Returns one application to the Tbilisi Architecture Service by its number (AR11168188): the address, the status, the category, the class, the stages, the deadline, the executor, the text of the decision, and the link to its page. Find a number with permits_search_applications. Texts are in Georgian. Data from TAS.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "description": "The application number, as AR11168188."
+        },
+        "language": {
+          "type": "string",
+          "description": "ka or en. The default is en. TAS texts stay in Georgian."
+        }
+      },
+      "required": [
+        "number"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "description": "The application number."
+        },
+        "url": {
+          "type": "string",
+          "description": "The page of the application on tas.ge."
+        },
+        "address": {
+          "type": "string",
+          "description": "The address, in Georgian, as TAS publishes it."
+        },
+        "registered": {
+          "type": "string",
+          "description": "The date of registration, YYYY-MM-DD."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "The date by which TAS must answer, YYYY-MM-DD."
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code."
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the code in the language."
+            }
+          },
+          "description": "approved, refused, deficient, conditional, not_reviewed, revoked, completed, awaiting_payment, or in_review.",
+          "required": [
+            "code",
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "category": {
+          "type": "string",
+          "description": "The kind of object or work, in Georgian."
+        },
+        "parent_category": {
+          "type": "string",
+          "description": "The group of the category, in Georgian."
+        },
+        "class": {
+          "type": "string",
+          "description": "The class of risk, I to IV."
+        },
+        "stages": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The stages that the application covers, in Georgian."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action, in Georgian, as a change of an approved project."
+        },
+        "executor": {
+          "type": "string",
+          "description": "The employee of TAS who handles the application."
+        },
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TAS."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the application, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when TAS did not answer and the server returns an application it read before."
+        },
+        "decision_text": {
+          "type": "string",
+          "description": "The text of the decision of TAS, in Georgian, with no HTML. Empty before a decision."
+        }
+      },
+      "required": [
+        "number",
+        "url",
+        "registered",
+        "status",
+        "source",
+        "as_of",
+        "stale"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "permits_search_applications": {
+    "name": "permits_search_applications",
+    "title": "Search the building applications of Tbilisi",
+    "description": "Returns the applications to the Tbilisi Architecture Service for a parcel or a period, newest first: building permits, project approvals, signs, fences, and requests for public information. Give a cadastral code (01.18.04.020.005), a period of at most 31 days, or both. A period of more than 500 applications fails, and Tbilisi registers about 70 each working day, so ask for a week at most. Each application has its number, address, status, category, class, and stages. Read the decision with permits_get_application. Tbilisi only. Texts are in Georgian. Data from TAS.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The cadastral code of the parcel: 4 or 5 groups of digits with dots, as 01.18.04.020.005."
+        },
+        "from": {
+          "type": "string",
+          "description": "The first date of registration, YYYY-MM-DD. Without to, the period is 7 days."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last date of registration, YYYY-MM-DD. Without from, the period is 7 days."
+        },
+        "limit": {
+          "type": "integer",
+          "description": "The maximum count of applications, 1 to 50. The default is 10."
+        },
+        "language": {
+          "type": "string",
+          "description": "The language of the names of the statuses: ka or en. The default is en. TAS texts stay in Georgian."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: TAS."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the applications, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when TAS did not answer and the server returns applications it read before."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The count of all the applications that match."
+        },
+        "applications": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "number": {
+                "type": "string",
+                "description": "The application number."
+              },
+              "url": {
+                "type": "string",
+                "description": "The page of the application on tas.ge."
+              },
+              "address": {
+                "type": "string",
+                "description": "The address, in Georgian, as TAS publishes it."
+              },
+              "registered": {
+                "type": "string",
+                "description": "The date of registration, YYYY-MM-DD."
+              },
+              "deadline": {
+                "type": "string",
+                "description": "The date by which TAS must answer, YYYY-MM-DD."
+              },
+              "status": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "The code."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the code in the language."
+                  }
+                },
+                "description": "approved, refused, deficient, conditional, not_reviewed, revoked, completed, awaiting_payment, or in_review.",
+                "required": [
+                  "code",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "category": {
+                "type": "string",
+                "description": "The kind of object or work, in Georgian."
+              },
+              "parent_category": {
+                "type": "string",
+                "description": "The group of the category, in Georgian."
+              },
+              "class": {
+                "type": "string",
+                "description": "The class of risk, I to IV."
+              },
+              "stages": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "string"
+                },
+                "description": "The stages that the application covers, in Georgian."
+              },
+              "action": {
+                "type": "string",
+                "description": "The action, in Georgian, as a change of an approved project."
+              },
+              "executor": {
+                "type": "string",
+                "description": "The employee of TAS who handles the application."
+              }
+            },
+            "required": [
+              "number",
+              "url",
+              "registered",
+              "status"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The applications, newest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "total",
+        "applications"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "postal_search_codes": {
     "name": "postal_search_codes",
     "title": "Search the postal codes of Georgia",

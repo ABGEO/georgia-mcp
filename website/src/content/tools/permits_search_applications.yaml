@@ -1,0 +1,16 @@
+context: permits
+vendors: [tas]
+summary:
+  en: The applications to the Tbilisi Architecture Service for a land parcel or a period, newest first, with the number, the address, the status, the category, and the class.
+  ka: თბილისის არქიტექტურის სამსახურში შეტანილი განცხადებები მიწის ნაკვეთის ან პერიოდის მიხედვით, ჯერ უახლესი, ნომრით, მისამართით, სტატუსით, კატეგორიითა და კლასით.
+examples:
+  - id: teleti-street
+    question:
+      en: Which building applications does the parcel 01.18.04.020.005 in Tbilisi have?
+      ka: რა სამშენებლო განცხადებები აქვს ნაკვეთს 01.18.04.020.005 თბილისში?
+    answer:
+      en: "TAS has 5 applications for the parcel on Teleti Street. The newest, AR11168188 of 4 November 2026, is a request for public information, approved. AR11163969 of 7 October 2026 asks for the conditions to build an object of class III and is in review. AR11158278 of 26 August 2026, another request for information, was refused."
+      ka: "TAS-ში თელეთის ქუჩის ამ ნაკვეთზე 5 განცხადებაა. უახლესი, AR11168188, 2026 წლის 4 ნოემბრის, საჯარო ინფორმაციის გამოთხოვაა და დაკმაყოფილებულია. AR11163969, 2026 წლის 7 ოქტომბრის, III კლასის ობიექტისთვის მიწის ნაკვეთის სამშენებლოდ გამოყენების პირობებს ითხოვს და განხილვის პროცესშია. AR11158278, 2026 წლის 26 აგვისტოს, ინფორმაციის კიდევ ერთი გამოთხოვა, უარყოფილია."
+    input:
+      code: "01.18.04.020.005"
+      limit: 3

@@ -1068,3 +1068,28 @@ func TestLoadConfigGivesTheDefaultsOfNAPR(t *testing.T) {
 		t.Errorf("NAPR.HTTP = %+v, want a timeout of 10s, rate 5, burst 5", http)
 	}
 }
+
+// TASPERM-SC-021: With no variable of permits, TAS is on, at its address, with a timeout
+// of 10 seconds, 1 call each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfTAS(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	tas := cfg.Permits.TAS
+	if !tas.Enabled {
+		t.Error("TAS.Enabled = false, want true")
+	}
+
+	if got := tas.BaseURL.String(); got != "https://docs.tbilisi.gov.ge" {
+		t.Errorf("TAS.BaseURL = %q, want https://docs.tbilisi.gov.ge", got)
+	}
+
+	if http := tas.HTTP; http.Timeout != 10*time.Second || http.Rate != 1 || http.Burst != 1 {
+		t.Errorf("TAS.HTTP = %+v, want a timeout of 10s, rate 1, burst 1", http)
+	}
+}

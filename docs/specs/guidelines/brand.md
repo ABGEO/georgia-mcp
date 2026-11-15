@@ -98,6 +98,7 @@ Each hue has a pastel fill and a deep tone for text. Wine is the brand hue.
 | `clay`   | `#EADBCB`  | `#6B4526`  | `#3D2E22` | `#E2C4A6` | The law subject.            |
 | `olive`  | `#E4E6C6`  | `#575B1C`  | `#33361E` | `#D3D79E` | The holidays subject.       |
 | `rose`   | `#F6D3DF`  | `#8A2F55`  | `#48223A` | `#F0AECB` | The parcels subject.        |
+| `lime`   | `#DCEDC1`  | `#3F6214`  | `#2C3A1B` | `#C3E09A` | The permits subject.        |
 
 - A fill is a background. Never write text in a fill color.
 - On a fill, write in `ink` or in the text tone of the same hue.
