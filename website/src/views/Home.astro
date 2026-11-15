@@ -182,9 +182,36 @@ const catalog = await getCatalog()
   }
 
   .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    gap: calc(var(--u) * 4);
+    --columns: 1;
+    --gap: calc(var(--u) * 4);
+    container-type: inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap);
+  }
+
+  .cards > :global(.card) {
+    flex: 0 0 calc((100% - (var(--columns) - 1) * var(--gap)) / var(--columns));
+  }
+
+  /* The thresholds keep the columns of 240 px at least of the old grid. */
+  @container (min-width: 496px) {
+    .cards > :global(.card) {
+      --columns: 2;
+    }
+  }
+
+  @container (min-width: 752px) {
+    .cards > :global(.card) {
+      --columns: 3;
+    }
+  }
+
+  @container (min-width: 1008px) {
+    .cards > :global(.card) {
+      --columns: 4;
+    }
   }
 
 

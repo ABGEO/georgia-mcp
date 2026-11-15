@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-11-15
+updated: 2026-11-16
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -28,7 +28,7 @@ from the server.
 | `WEBSITE-FR-001`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-001`           |
 | `WEBSITE-FR-002`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-002`           |
 | `WEBSITE-FR-003`  | `WEBSITE-DD-001`, `WEBSITE-SC-003`                      |
-| `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-SC-005`, `WEBSITE-SC-046` |
+| `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-DD-027`, `WEBSITE-SC-005`, `WEBSITE-SC-046`, `WEBSITE-SC-056` |
 | `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`  |
 | `WEBSITE-FR-008`  | 4.4, `WEBSITE-DD-008`, `WEBSITE-SC-008`, `WEBSITE-SC-009` |
 | `WEBSITE-FR-009`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
@@ -555,6 +555,13 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 **Rationale:** The formats come from the documentation of Cursor (cursor.com/docs/mcp/install-links) and from the handler of VS Code (`mcpWorkbenchService.ts`, `parseMcpInstallUriPayload`, in microsoft/vscode). The payload of VS Code reads the name from the JSON, and `type` `http` marks a remote server. Percent encoding keeps a `+`, a `/`, or a `=` of base64 intact in the query. The owner chose the buttons of the site, the scheme of each client, and the remote guides only.
 **Alternatives:** The badge images of Cursor and of shields.io. Each page view would send a request to a third party. The redirect `https://vscode.dev/redirect/mcp/install`. It answers 302 to the same `vscode:` link, with one more host. The web link `https://cursor.com/install-mcp`. It opens a sign-in page of Cursor. A link for the Docker guide. The address answers only after the reader starts the container.
 
+### `WEBSITE-DD-027`
+
+**Realizes:** `WEBSITE-FR-005`
+**Decision:** The cards of `#contexts` sit in a row that wraps, with each row centered. The list `.cards` is a container of inline size. A card takes a quarter of the row from 1008 px of the list, a third from 752 px, a half from 496 px, and the whole row below. The gap is `calc(var(--u) * 4)`. A full row fills the list. A row with fewer cards sits in the middle.
+**Rationale:** The thresholds are those of the old grid: columns of 240 px at least, with a gap of 16 px. A full row looks the same. The owner asked for a short last row in the middle: 13 contexts leave one card alone at the left. A container query reads the width of the list, not of the window.
+**Alternatives:** The grid with `auto-fit`. A grid cannot center a short last row. A last card that spans the row. It breaks the equal size of the cards.
+
 ## 6. Scenarios
 
 ### `WEBSITE-SC-001`
@@ -1037,6 +1044,15 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 **When** the test reads the panels of the install guides.
 **Then** the panel of Cursor holds one install link equal to `cursorInstallUrl("georgia-mcp", SERVER_URL)`, the panel of VS Code holds one equal to `vscodeInstallUrl("georgia-mcp", SERVER_URL)`, both panels still hold their configuration, and no other panel holds an install link.
 
+### `WEBSITE-SC-056`
+
+**Verifies:** `WEBSITE-FR-005`
+**Layer:** browser
+
+**Given** the English home page, at a width of 1280 px, 900 px, 600 px, and 375 px.
+**When** the test reads the boxes of the cards of `#contexts`.
+**Then** the cards have four, three, two, and one in each full row, every card has the same width, a full row spans the list, and the cards of the last row sit in the middle of the list, within 1 px.
+
 ## 7. Build plan
 
 | #   | Step                                                                                       | Realizes                       | Done |
@@ -1068,6 +1084,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 | 25  | Add the key of Credo Bank to the local guides. Add `halyk`, `basisbank`, `credo`, and `scapp` to `contexts.yaml` and the tool file of the commercial rates. Run the refresh. Rewrite each answer of the commercial rates from its new recording. | `WEBSITE-FR-009`, `FR-018`, `DD-018` | [x] |
 | 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [x] |
 | 27  | Write the tests of the install links. Write `src/lib/install.ts`, the `add` copy of both dictionaries, and the button in `InstallGuides`. | `WEBSITE-DD-026`, `SC-054`, `SC-055` | [x] |
+| 28  | Write the test of the rows of the contexts. Make `.cards` a container that wraps and centers each row. | `WEBSITE-DD-027`, `SC-056` | [x] |
 
 ## 8. Out of scope for this specification
 
