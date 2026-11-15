@@ -216,6 +216,14 @@ define it. The identifier of a term is `GLO-<term>`.
 | article number         | The number of an article, with its superscript: `82`, `133^3`. |
 | table of contents      | The ordered sections, chapters, and articles of an act, with their titles. |
 
+## Holidays
+
+| Term | Meaning |
+| ---- | ------- |
+| Nager.Date | An open source project that computes the public holidays of many countries. Vendor code `nager`. |
+| public holiday | A day that the law of Georgia names as a day off for every employee. |
+| holiday name | The name of a public holiday, in `ka` and in `en`. |
+
 ## The website
 
 | Term               | Meaning                                                                                               |
