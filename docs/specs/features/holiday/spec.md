@@ -489,13 +489,13 @@ The tests of the use cases and the tools take `now` as 2026-11-15T12:00:00+04:00
 
 | #   | Step                                                                        | Realizes                                     | Done |
 | --- | --------------------------------------------------------------------------- | -------------------------------------------- | ---- |
-| 1   | `pkg/nager`: client, types, recorded answers, README, example, live test.    | `HOLIDAY-FR-011`, `HOLIDAY-NFR-004`          | [ ]  |
-| 2   | `domain`: `HolidayName`, `Holiday`, the fuzz test.                           | `HOLIDAY-FR-008`, `HOLIDAY-FR-009`           | [ ]  |
-| 3   | `app`: the port, `SupportedYears`, `ListHolidays`, `GetDay`, the errors.     | `HOLIDAY-FR-001` to `HOLIDAY-FR-007`, `HOLIDAY-FR-010` | [ ]  |
-| 4   | `adapter/nager`.                                                             | `HOLIDAY-FR-011`, `HOLIDAY-INV-003`          | [ ]  |
-| 5   | `adapter/cache`.                                                             | `HOLIDAY-NFR-001`, `HOLIDAY-NFR-002`         | [ ]  |
-| 6   | `adapter/tool`.                                                              | `HOLIDAY-FR-001` to `HOLIDAY-FR-010`, `HOLIDAY-FR-013` | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.  | `HOLIDAY-FR-012`, `HOLIDAY-NFR-003`          | [ ]  |
+| 1   | `pkg/nager`: client, types, recorded answers, README, example, live test.    | `HOLIDAY-FR-011`, `HOLIDAY-NFR-004`          | [x]  |
+| 2   | `domain`: `HolidayName`, `Holiday`, the fuzz test.                           | `HOLIDAY-FR-008`, `HOLIDAY-FR-009`           | [x]  |
+| 3   | `app`: the port, `SupportedYears`, `ListHolidays`, `GetDay`, the errors.     | `HOLIDAY-FR-001` to `HOLIDAY-FR-007`, `HOLIDAY-FR-010` | [x]  |
+| 4   | `adapter/nager`.                                                             | `HOLIDAY-FR-011`, `HOLIDAY-INV-003`          | [x]  |
+| 5   | `adapter/cache`.                                                             | `HOLIDAY-NFR-001`, `HOLIDAY-NFR-002`         | [x]  |
+| 6   | `adapter/tool`.                                                              | `HOLIDAY-FR-001` to `HOLIDAY-FR-010`, `HOLIDAY-FR-013` | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.  | `HOLIDAY-FR-012`, `HOLIDAY-NFR-003`          | [x]  |
 
 ## 8. Out of scope for this specification
 

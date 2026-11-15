@@ -4,6 +4,7 @@ import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/air"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/holidays"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/law"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/offers"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/postal"
@@ -17,17 +18,18 @@ import (
 
 // Config is the configuration of the process. A context adds its own struct here.
 type Config struct {
-	Log     logger.Config     `envPrefix:"LOG_"`
-	HTTP    httpserver.Config `envPrefix:"HTTP_"`
-	Rates   rates.Config      `envPrefix:"RATES_"`
-	Fuel    fuel.Config       `envPrefix:"FUEL_"`
-	Transit transit.Config    `envPrefix:"TRANSIT_"`
-	Offers  offers.Config     `envPrefix:"OFFERS_"`
-	Postal  postal.Config     `envPrefix:"POSTAL_"`
-	Cinema  cinema.Config     `envPrefix:"CINEMA_"`
-	Stats   stats.Config      `envPrefix:"STATS_"`
-	Air     air.Config        `envPrefix:"AIR_"`
-	Law     law.Config        `envPrefix:"LAW_"`
+	Log      logger.Config     `envPrefix:"LOG_"`
+	HTTP     httpserver.Config `envPrefix:"HTTP_"`
+	Rates    rates.Config      `envPrefix:"RATES_"`
+	Fuel     fuel.Config       `envPrefix:"FUEL_"`
+	Transit  transit.Config    `envPrefix:"TRANSIT_"`
+	Offers   offers.Config     `envPrefix:"OFFERS_"`
+	Postal   postal.Config     `envPrefix:"POSTAL_"`
+	Cinema   cinema.Config     `envPrefix:"CINEMA_"`
+	Stats    stats.Config      `envPrefix:"STATS_"`
+	Air      air.Config        `envPrefix:"AIR_"`
+	Law      law.Config        `envPrefix:"LAW_"`
+	Holidays holidays.Config   `envPrefix:"HOLIDAYS_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -38,14 +40,15 @@ func LoadConfig() (Config, error) {
 // Defaults returns the configuration of the process with no variable set.
 func Defaults() Config {
 	return Config{
-		Rates:   rates.Defaults(),
-		Fuel:    fuel.Defaults(),
-		Transit: transit.Defaults(),
-		Offers:  offers.Defaults(),
-		Postal:  postal.Defaults(),
-		Cinema:  cinema.Defaults(),
-		Stats:   stats.Defaults(),
-		Air:     air.Defaults(),
-		Law:     law.Defaults(),
+		Rates:    rates.Defaults(),
+		Fuel:     fuel.Defaults(),
+		Transit:  transit.Defaults(),
+		Offers:   offers.Defaults(),
+		Postal:   postal.Defaults(),
+		Cinema:   cinema.Defaults(),
+		Stats:    stats.Defaults(),
+		Air:      air.Defaults(),
+		Law:      law.Defaults(),
+		Holidays: holidays.Defaults(),
 	}
 }
