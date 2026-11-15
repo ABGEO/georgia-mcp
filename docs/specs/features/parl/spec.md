@@ -515,7 +515,7 @@ private person in a question replaced. The tests of the use cases and the tools 
 | #   | Step                                                                         | Realizes                                   | Done |
 | --- | ---------------------------------------------------------------------------- | ------------------------------------------ | ---- |
 | 1   | `pkg/parliament`: client, types, recorded answers, README, example, live test. | `PARL-FR-012`, `PARL-NFR-004`            | [x]  |
-| 2   | `domain`: the values, the codes, `QuestionStatusOn`, `Tally`, the fuzz test.  | `PARL-FR-005`, `PARL-FR-007`, `PARL-FR-009` to `PARL-FR-011` | [ ]  |
+| 2   | `domain`: the values, the codes, `QuestionStatusOn`, `Tally`, the fuzz test.  | `PARL-FR-005`, `PARL-FR-007`, `PARL-FR-009` to `PARL-FR-011` | [x]  |
 | 3   | `app`: the ports, the filters, the five use cases, the errors.                | `PARL-FR-001` to `PARL-FR-011`             | [ ]  |
 | 4   | `adapter/parliament`.                                                         | `PARL-FR-001` to `PARL-FR-006`, `PARL-FR-012`, `PARL-INV-001` | [ ]  |
 | 5   | `adapter/cache`.                                                              | `PARL-NFR-001`                             | [ ]  |
