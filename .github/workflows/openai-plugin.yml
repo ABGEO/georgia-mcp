@@ -27,8 +27,9 @@ jobs:
             echo "build/openai-plugin/plugin.json holds $manifest, the tag is $TAG. Merge the pull request of BLD-018 before the release."
             exit 1
           fi
-          (cd build/openai-plugin && zip -r -X "$RUNNER_TEMP/georgia-public-data-$version.zip" .)
-          echo "ZIP=$RUNNER_TEMP/georgia-public-data-$version.zip" >> "$GITHUB_ENV"
+          archive="$RUNNER_TEMP/georgia-public-data-openai-plugin-$version.zip"
+          (cd build/openai-plugin && zip -r -X "$archive" .)
+          echo "ZIP=$archive" >> "$GITHUB_ENV"
 
       - name: Upload
         env:
