@@ -4,7 +4,7 @@ title: Glossary
 type: glossary
 status: active
 created: 2026-10-17
-updated: 2026-11-15
+updated: 2026-11-17
 ---
 
 # Glossary
@@ -199,6 +199,18 @@ define it. The identifier of a term is `GLO-<term>`.
 | air quality level | One of five bands: `good`, `fair`, `moderate`, `poor`, `very_poor`. |
 | band limits | The concentrations that the NEA gives as the bounds of each level of a pollutant. |
 | station level | The worst air quality level of the newest readings of a station. |
+
+## Energy
+
+| Term | Meaning |
+| ---- | ------- |
+| GSE | Georgian State Electrosystem, the operator of the transmission grid of Georgia. Vendor code `gse`. |
+| grid slot | One period of 3 minutes for which GSE publishes the grid. Its time is a multiple of 3 minutes. |
+| grid state | The values of one grid slot: generation by type, total generation, consumption, and flows. |
+| flow | The power on the lines between Georgia and one country, in MW. A positive flow is an import. |
+| net import | The sum of every flow of a grid slot. A negative net import is an export. |
+| quality code | The code that GSE gives a value: `ACT`, `SUB`, `NRE`, or `BLS`. |
+| frequency | The frequency of the grid in Hz. Its nominal value is 50. |
 
 ## Law
 
