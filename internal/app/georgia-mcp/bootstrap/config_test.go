@@ -994,6 +994,31 @@ func TestLoadConfigGivesTheDefaultsOfTheNEA(t *testing.T) {
 	}
 }
 
+// GSEGRID-SC-017: With no variable of energy, GSE is on, at its address, with a timeout of
+// 10 seconds, 3 calls each second, and a burst of 2.
+func TestLoadConfigGivesTheDefaultsOfGSE(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	gse := cfg.Energy.GSE
+	if !gse.Enabled {
+		t.Error("GSE.Enabled = false, want true")
+	}
+
+	if got := gse.BaseURL.String(); got != "https://admin.gse.com.ge" {
+		t.Errorf("GSE.BaseURL = %q, want https://admin.gse.com.ge", got)
+	}
+
+	if http := gse.HTTP; http.Timeout != 10*time.Second || http.Rate != 3 || http.Burst != 2 {
+		t.Errorf("GSE.HTTP = %+v, want a timeout of 10s, rate 3, burst 2", http)
+	}
+}
+
 // MATSNE-SC-030: With no variable of law, the Legislative Herald is on, at its address,
 // with a timeout of 10 seconds, 5 calls each second, and a burst of 5.
 func TestLoadConfigGivesTheDefaultsOfTheLegislativeHerald(t *testing.T) {

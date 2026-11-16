@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/air"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/cinema"
+	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/energy"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/fuel"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/holidays"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/law"
@@ -36,6 +37,7 @@ type Config struct {
 	Parcels    parcels.Config    `envPrefix:"PARCELS_"`
 	Permits    permits.Config    `envPrefix:"PERMITS_"`
 	Parliament parliament.Config `envPrefix:"PARLIAMENT_"`
+	Energy     energy.Config     `envPrefix:"ENERGY_"`
 }
 
 // LoadConfig reads and validates the configuration.
@@ -59,5 +61,6 @@ func Defaults() Config {
 		Parcels:    parcels.Defaults(),
 		Permits:    permits.Defaults(),
 		Parliament: parliament.Defaults(),
+		Energy:     energy.Defaults(),
 	}
 }

@@ -629,13 +629,13 @@ scenario gives another.
 
 | #   | Step                                                                          | Realizes                                   | Done |
 | --- | ----------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/gse`: client, types, recorded answers, README, example, live test.        | `GSEGRID-FR-013`, `GSEGRID-NFR-004`        | [ ]  |
-| 2   | `domain`: `SlotOf`, `ParseMoment`, the value objects, the grid state, fuzz test. | `GSEGRID-FR-002`, `GSEGRID-FR-003`, `GSEGRID-FR-006` to `GSEGRID-FR-011`, `GSEGRID-INV-001` | [ ]  |
-| 3   | `app`: the port, `GetGrid`, the errors.                                        | `GSEGRID-FR-001`, `GSEGRID-FR-002`, `GSEGRID-FR-004` | [ ]  |
-| 4   | `adapter/gse`: the mapping, the search, the frequency.                         | `GSEGRID-FR-004`, `GSEGRID-FR-012`, `GSEGRID-FR-013`, `GSEGRID-INV-002` | [ ]  |
-| 5   | `adapter/cache`.                                                               | `GSEGRID-NFR-001`, `GSEGRID-NFR-002`       | [ ]  |
-| 6   | `adapter/tool`.                                                                | `GSEGRID-FR-001` to `GSEGRID-FR-013`, `GSEGRID-INV-003` | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `GSEGRID-FR-014`, `GSEGRID-NFR-003`        | [ ]  |
+| 1   | `pkg/gse`: client, types, recorded answers, README, example, live test.        | `GSEGRID-FR-013`, `GSEGRID-NFR-004`        | [x]  |
+| 2   | `domain`: `SlotOf`, `ParseMoment`, the value objects, the grid state, fuzz test. | `GSEGRID-FR-002`, `GSEGRID-FR-003`, `GSEGRID-FR-006` to `GSEGRID-FR-011`, `GSEGRID-INV-001` | [x]  |
+| 3   | `app`: the port, `GetGrid`, the errors.                                        | `GSEGRID-FR-001`, `GSEGRID-FR-002`, `GSEGRID-FR-004` | [x]  |
+| 4   | `adapter/gse`: the mapping, the search, the frequency.                         | `GSEGRID-FR-004`, `GSEGRID-FR-012`, `GSEGRID-FR-013`, `GSEGRID-INV-002` | [x]  |
+| 5   | `adapter/cache`.                                                               | `GSEGRID-NFR-001`, `GSEGRID-NFR-002`       | [x]  |
+| 6   | `adapter/tool`.                                                                | `GSEGRID-FR-001` to `GSEGRID-FR-013`, `GSEGRID-INV-003` | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `GSEGRID-FR-014`, `GSEGRID-NFR-003`        | [x]  |
 
 ## 8. Out of scope for this specification
 
