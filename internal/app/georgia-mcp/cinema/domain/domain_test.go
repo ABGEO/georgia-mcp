@@ -77,6 +77,11 @@ func FuzzParseSessionCode(f *testing.F) {
 	})
 }
 
+const (
+	cinemaAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789_"
+	movieAlphabet  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
+)
+
 // CAVCINE-SC-010: No input panics, and every accepted cinema code or movie code holds only
 // the characters of its form and writes back to its text.
 func FuzzParseCodes(f *testing.F) {
@@ -87,14 +92,14 @@ func FuzzParseCodes(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input string) {
 		if code, err := domain.ParseCinemaCode(input); err == nil {
 			if code.String() != input ||
-				strings.Trim(input, "abcdefghijklmnopqrstuvwxyz0123456789_") != "" {
+				strings.Trim(input, cinemaAlphabet) != "" {
 				t.Errorf("ParseCinemaCode(%q) = %q, want a refusal", input, code)
 			}
 		}
 
 		if code, err := domain.ParseMovieCode(input); err == nil {
 			if code.String() != input ||
-				strings.Trim(input, "abcdefghijklmnopqrstuvwxyz0123456789-") != "" {
+				strings.Trim(input, movieAlphabet) != "" {
 				t.Errorf("ParseMovieCode(%q) = %q, want a refusal", input, code)
 			}
 		}
@@ -124,6 +129,40 @@ func TestValuesThatFailAnAnswer(t *testing.T) {
 
 	if _, err := domain.ParseAudioLanguage("ru"); !errors.Is(err, domain.ErrUnknownAudioLanguage) {
 		t.Errorf("ParseAudioLanguage(ru) error = %v, want ErrUnknownAudioLanguage", err)
+	}
+}
+
+// CAVCINE-SC-031: A movie code keeps its case, and Equal ignores the case.
+func TestMovieCodeKeepsTheCase(t *testing.T) {
+	t.Parallel()
+
+	code, err := domain.ParseMovieCode("ramayana-rise-of-a-Legend")
+	if err != nil {
+		t.Fatalf("ParseMovieCode() error = %v", err)
+	}
+
+	if code.String() != "ramayana-rise-of-a-Legend" {
+		t.Errorf("String() = %q, want ramayana-rise-of-a-Legend", code)
+	}
+
+	tests := []struct {
+		text string
+		want bool
+	}{
+		{text: "ramayana-rise-of-a-legend", want: true},
+		{text: "RAMAYANA-RISE-OF-A-LEGEND", want: true},
+		{text: "ramayana-rise-of-a-legen", want: false},
+	}
+
+	for _, tt := range tests {
+		other, err := domain.ParseMovieCode(tt.text)
+		if err != nil {
+			t.Fatalf("ParseMovieCode(%q) error = %v", tt.text, err)
+		}
+
+		if got := code.Equal(other); got != tt.want {
+			t.Errorf("Equal(%q) = %t, want %t", tt.text, got, tt.want)
+		}
 	}
 }
 

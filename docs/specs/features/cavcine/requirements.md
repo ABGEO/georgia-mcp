@@ -4,7 +4,7 @@ title: The cinemas, movies, sessions, and seats of Cavea
 type: requirements
 status: approved
 created: 2026-10-25
-updated: 2026-11-04
+updated: 2026-11-16
 context: cinema
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -241,17 +241,24 @@ such session must not fail the whole answer.
 
 ### `CAVCINE-FR-015`
 
-The server must leave out a movie whose code it cannot read, and the sessions of that
-movie. The other movies stay. The server must log each movie that it leaves out.
+The server must keep the code of a movie as Cavea writes it, with its capital letters.
+It must find a movie by its code in any case. It must leave out a movie whose code it
+cannot read, and the sessions of that movie. The other movies stay. The server must log
+each movie that it leaves out.
 
-**Why:** Cavea can give a movie a code with a capital letter. One such movie must not
-fail every list of movies and every list of sessions.
+**Why:** Cavea gives a movie a code with a capital letter, for example
+`ramayana-rise-of-a-Legend`. The page of the movie answers only to the code in its case.
+A model can write a code in lowercase. One movie with a bad code must not fail every list
+of movies and every list of sessions.
 
 **Examples:**
 
-- Normal case: 10 movies coming soon, each with a code of `[a-z0-9-]`. The answer holds 10.
-- Unwanted case: 10 movies coming soon, one with the code `ramayana-rise-of-a-Legend`.
-  The answer holds 9, and the log holds one warning that names the code.
+- Normal case: 10 movies coming soon, one with the code `ramayana-rise-of-a-Legend`. The
+  answer holds 10, and the address of that movie ends with `ramayana-rise-of-a-Legend`.
+- Normal case: a list of sessions with the movie `ramayana-rise-of-a-legend` gives the
+  sessions of `ramayana-rise-of-a-Legend`.
+- Unwanted case: 10 movies coming soon, one with the code `ramayana rise`. The answer
+  holds 9, and the log holds one warning that names the code.
 - Unwanted case: a session of the left out movie is not in a list of sessions.
 
 ## 7. Non-functional requirements

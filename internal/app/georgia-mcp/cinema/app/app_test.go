@@ -324,6 +324,35 @@ func TestListSessionsWithNoMovieReadsEveryMovie(t *testing.T) {
 	}
 }
 
+// CAVCINE-SC-032: A movie of a request in another case finds the sessions of the movie.
+func TestListSessionsIgnoresTheCaseOfTheMovie(t *testing.T) {
+	t.Parallel()
+
+	audio := domain.AudioEnglish
+	date, _ := kernel.ParseDate("2026-10-27")
+	read := func(text string) []string {
+		movie := mustMovieCode(t, text)
+		list := app.NewListSessions(fakeCinemas{t}, &fakeMovies{t: t},
+			&fakeSessions{sessions: streetFighterSessions(t)}, &fakeSeats{},
+			func() time.Time { return at(t, 20) }, slog.New(slog.DiscardHandler))
+
+		got, err := list.List(
+			t.Context(),
+			app.SessionQuery{Movie: &movie, Date: date, Audio: &audio, Limit: 30},
+		)
+		if err != nil {
+			t.Fatalf("List(%s) error = %v", text, err)
+		}
+
+		return codes(got.Sessions)
+	}
+
+	want := read("street-fighter")
+	if got := read("Street-Fighter"); len(want) == 0 || !reflect.DeepEqual(got, want) {
+		t.Errorf("List(Street-Fighter) = %v, want %v", got, want)
+	}
+}
+
 // CAVCINE-SC-016: An unknown movie or cinema is refused before the read of the sessions.
 func TestListSessionsRefusesAnUnknownCode(t *testing.T) {
 	t.Parallel()

@@ -4,7 +4,7 @@ title: The cinemas, movies, sessions, and seats of Cavea
 type: spec
 status: approved
 created: 2026-10-25
-updated: 2026-11-04
+updated: 2026-11-16
 context: cinema
 approved_by: Temuri
 approved_on: 2026-10-25
@@ -38,7 +38,7 @@ its pages. [spec-tools.md](./spec-tools.md) holds the tools.
 | `CAVCINE-FR-012`   | 4.1 `adapter/cavea`. `CAVCINE-DD-012`. `CAVCINE-SC-027` |
 | `CAVCINE-FR-013`   | 4.3 configuration                                              |
 | `CAVCINE-FR-014`   | `CAVCINE-DD-012`. `CAVCINE-SC-014`                             |
-| `CAVCINE-FR-015`   | `CAVCINE-DD-012`. `CAVCINE-SC-030`                             |
+| `CAVCINE-FR-015`   | `CAVCINE-DD-012`, `CAVCINE-DD-015`. `CAVCINE-SC-030` to `CAVCINE-SC-032` |
 | `CAVCINE-NFR-001`  | 4.3 cache. `CAVCINE-SC-020`                                    |
 | `CAVCINE-NFR-002`  | 4.3 cache. `CAVCINE-SC-021`                                    |
 | `CAVCINE-NFR-003`  | 4.3 cache, `SeatSource`. `CAVCINE-SC-022`                      |
@@ -216,7 +216,7 @@ type TextList struct{ Georgian, English []string } // each language split on its
 func (l TextList) In(language kernel.Language) []string // empty when Cavea gives none
 
 type CinemaCode struct{ code string }   // ParseCinemaCode: 1 to 40 of [a-z0-9_]
-type MovieCode struct{ code string }    // ParseMovieCode: 1 to 100 of [a-z0-9-]
+type MovieCode struct{ code string }    // ParseMovieCode: 1 to 100 of [A-Za-z0-9-]. Equal ignores the case.
 type SessionCode struct {               // ParseSessionCode: "<hall key>/DD-MM-YYYY/HH:MM"
     code    string
     hallKey string                      // "cag_5"
@@ -572,6 +572,18 @@ premiere.
 **Alternatives:** The status of Cavea as it is. A model then looks for sessions of a
 movie that Cavea does not show yet.
 
+### `CAVCINE-DD-015`
+
+**Realizes:** `CAVCINE-FR-015`
+**Decision:** `ParseMovieCode` accepts `A` to `Z` and keeps the case of the text.
+`MovieCode.Equal` compares two codes with no regard to the case. `ListSessions` finds the
+movie of a request, and keeps its sessions, with `Equal`.
+**Rationale:** On 2026-11-16, `https://cavea.ge/movie/ramayana-rise-of-a-Legend`
+answered 200, and the same code in lowercase answered 404. The `url` of a movie needs
+the case of Cavea. A model can write the code of a request in lowercase.
+**Alternatives:** A code in lowercase. The `url` of the movie then fails. The movie left
+out, as before: the movie is missing from every tool while Cavea shows it.
+
 ## 6. Scenarios
 
 `pkg/cavea/testdata/` holds the answers of 2026-10-25: `theaters.json`, `hall-map.json`,
@@ -611,7 +623,9 @@ files from `httptest`.
 | `CAVCINE-SC-027` | `CAVCINE-FR-010`, `CAVCINE-FR-012` | integration | Each condition of tools 2 gives its message, as a tool result with `IsError`. A failure of Cavea with no stale list gives `Cavea did not answer. Try again in a few minutes.` and no text of Cavea. |
 | `CAVCINE-SC-028` | `CAVCINE-FR-002`, `CAVCINE-FR-003`, `CAVCINE-DD-014` | unit | At 2026-10-25 14:00, a movie now showing with the premiere `2026-10-26` is in the list of `coming_soon` after the movies of Cavea coming soon, and not in the list of `now_showing`. The premiere `2026-10-25` and the premiere `2026` keep `now_showing`. `SearchMovies` gives the found movie with the premiere `2026-10-26` the status `coming_soon`. |
 | `CAVCINE-SC-029` | `CAVCINE-FR-002`, `CAVCINE-FR-011` | integration | With the recorded answers at 2026-10-25 14:00, `cinema_list_movies` in `en` gives 20 movies, `street-fighter` with 4 actors, `moana-01` with no description, and `beri-gabrieli` with no genre. `coming_soon` gives 15 movies, the last 5 the documentaries. |
-| `CAVCINE-SC-030` | `CAVCINE-FR-015`, `CAVCINE-DD-012` | unit | `Movies(true)` with one of 10 slugs changed to `ramayana-rise-of-a-Legend` gives 9 movies and no error, and one record at warn level that holds the slug. `Search` with one slug changed to the empty text gives the other movies. |
+| `CAVCINE-SC-030` | `CAVCINE-FR-015`, `CAVCINE-DD-012` | unit | `Movies(true)` with one of 10 slugs changed to `ramayana rise` gives 9 movies and no error, and one record at warn level that holds the slug. `Search` with one slug changed to the empty text gives the other movies. |
+| `CAVCINE-SC-031` | `CAVCINE-FR-015`, `CAVCINE-DD-015` | unit | `ParseMovieCode("ramayana-rise-of-a-Legend")` writes back `ramayana-rise-of-a-Legend`. It is `Equal` to `ramayana-rise-of-a-legend`, and not to `ramayana-rise-of-a-legen`. `Movies(true)` with one of 10 slugs changed to `ramayana-rise-of-a-Legend` gives 10 movies, and that movie keeps the code. |
+| `CAVCINE-SC-032` | `CAVCINE-FR-015`, `CAVCINE-DD-015` | unit | `ListSessions` at 2026-10-27 20:00 with `Street-Fighter` and `en` gives the sessions of `street-fighter` of `CAVCINE-SC-015`. |
 | `CAVCINE-SC-025` | `CAVCINE-FR-001`, `CAVCINE-FR-009` | live | Against `cavea.ge`: `Theaters` holds East Point. `Sessions` holds a session. `SeatMap` of the first session of tomorrow gives one seat or more. |
 
 ## 7. Build plan
@@ -627,6 +641,7 @@ files from `httptest`.
 | 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`. | `CAVCINE-FR-013`, `CAVCINE-NFR-005`     | [x]  |
 | 8   | Move the terms of section 5 of the requirements to the glossary, in a section Cinema. | `DOM-002`                     | [x]  |
 | 9   | `adapter/cavea`: leave out a movie with a code that the domain refuses.  | `CAVCINE-FR-015`                           | [x]  |
+| 10  | The tests of a code with a capital letter. `ParseMovieCode` accepts `A` to `Z`, and `MovieCode.Equal` ignores the case. | `CAVCINE-DD-015`, `CAVCINE-SC-031`, `CAVCINE-SC-032` | [x]  |
 
 ## 8. Out of scope for this specification
 
