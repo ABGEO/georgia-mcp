@@ -16,10 +16,10 @@
     "og": "astro build && node --experimental-strip-types scripts/og.ts"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/sitemap": "3.7.5",
     "@lucide/astro": "1.72.0",
     "ajv": "8.20.0",
-    "astro": "7.4.11"
+    "astro": "7.4.12"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
