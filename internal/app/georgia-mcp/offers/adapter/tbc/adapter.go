@@ -323,7 +323,7 @@ func (a *Adapter) tiersOf(ctx context.Context, segments []tbcoffers.Segment) []d
 			continue
 		}
 
-		if !slices.Contains(tiers, tier) {
+		if tier != noTier && !slices.Contains(tiers, tier) {
 			tiers = append(tiers, tier)
 		}
 	}

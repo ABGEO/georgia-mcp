@@ -4,7 +4,7 @@ title: The card offers of TBC Bank
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-10-20
+updated: 2026-11-16
 context: offers
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -52,6 +52,14 @@ Observed behavior of the source on 2026-10-20:
 | `6WK1EC8bbUzUG02i51urvP` | Expats        | 227, always with a second segment |
 | `6gyl5FRPnrS66J79o230lD`, `5FSNwGngwsxY6Giq6U8Ani` | Emigrants, Installment | 1 each, alone |
 
+On 2026-11-16 the list held 519 offers, 5 of Emigrants alone, and a new segment:
+
+| Segment id               | Label (en)       | Offers   |
+| ------------------------ | ---------------- | -------- |
+| `6gyl5FRPnrS66J79o230lD` | Emigrants        | 5, alone |
+| `4QFNANlkPnt4tuCYva9nN9` | Concept Partners | 1, alone |
+| `5FSNwGngwsxY6Giq6U8Ani` | Installment      | 1, alone |
+
 - `GET /filters?type=offer&segment=<code>` gives the filters of the segments `Concept`,
   `ForEveryone`, and `ForYouth`, with a code and a name in the locale: the groups
   `Category`, `ProductType`, `OfferType`, and `CardType`. With no segment, it fails.
@@ -66,7 +74,7 @@ Observed behavior of the source on 2026-10-20:
 ## 4. Out of scope
 
 - The segment Expats. Every offer of Expats has a second segment.
-- An offer with no segment of 5.1 of `BOGOFFER`: Emigrants and Installment.
+- The segment Installment. Its offer is a loan, not an offer at a partner.
 - A subcategory of Travel: airport services, car rental, hotels, roaming.
 
 ## 5. Definitions
@@ -91,12 +99,18 @@ has its title, its partner, its description as the benefit text, and its offer p
 
 ### `TBCOFFER-FR-002`
 
-The server must give each offer of TBC its tiers by the segment: For Everyone is
-`standard`, Concept is `premium`, For Youth is `youth`.
+The server must give each offer of TBC its tiers by the segment: For Everyone and
+Emigrants are `standard`, Concept and Concept Partners are `premium`, For Youth is
+`youth`. Expats and Installment give no tier, and the server does not report them as new.
+
+**Why:** Emigrants are customers of the bank who live abroad. Concept Partners are
+partners of the premium package.
 
 **Examples:**
 
 - Normal case: an offer of Concept and Expats has the tiers `[premium]`.
+- Normal case: an offer of Emigrants only has the tiers `[standard]`.
+- Normal case: an offer of Concept Partners only has the tiers `[premium]`.
 - Unwanted case: an offer of Installment only. The server leaves it out.
 
 ### `TBCOFFER-FR-003`
