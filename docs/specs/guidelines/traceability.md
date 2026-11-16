@@ -4,7 +4,7 @@ title: Traceability
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-04
+updated: 2026-11-17
 scope: [docs/specs/, tests]
 related: [LNG, PRC, GIT, SPC]
 ---
@@ -212,6 +212,7 @@ Add a row before you create the file or the directory.
 | `NAPRPARC` | `features/naprparc/` | `parcels`  | The land parcels of the NAPR cadastral map: by code, near a point, and by address. | Approved |
 | `TASPERM`  | `features/tasperm/`  | `permits`  | The applications of the Tbilisi Architecture Service: by parcel, by number, and by period. | Approved |
 | `PARL`     | `features/parl/`     | `parliament` | The bills, votes, and questions of the members of the Parliament of Georgia. | Approved |
+| `GSEGRID`  | `features/gsegrid/`  | `energy`   | The electricity grid of GSE: generation, consumption, flows, and frequency, now or in the last 31 days. | Approved |
 
 ## Retired identifiers
 

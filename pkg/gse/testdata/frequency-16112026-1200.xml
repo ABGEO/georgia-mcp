@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type='text/xsl' href='GSE_V1.XSL'?>
+<!DOCTYPE GSE SYSTEM 'GSE_V1.DTD'>
+<GSE DTD_Version='1'>
+<Export Time='16.11.2026 12:00:00' Period='01M' Type='Real Time Data'/>
+<BLOCKS>
+<BLOCK_AREA Name='FREQUENCY                                   '>
+<TA B1='GSE' B2=' ' B3=' ' EL='Area   V' IN='F' VALUE='49.990002' QUALITY='ACT'/>
+</BLOCK_AREA>
+</BLOCKS>
+</GSE>

@@ -32,6 +32,8 @@
   --lime: #3f6214;
   --plum-fill: #f1d0ea;
   --plum: #6a1f5e;
+  --amber-fill: #fad9a6;
+  --amber: #80470a;
   color-scheme: light;
 }
 
@@ -70,6 +72,8 @@
   --lime: #c3e09a;
   --plum-fill: #3d1d38;
   --plum: #eab0de;
+  --amber-fill: #4a3418;
+  --amber: #f5c27c;
     color-scheme: dark;
   }
 }
@@ -108,6 +112,8 @@
   --lime: #c3e09a;
   --plum-fill: #3d1d38;
   --plum: #eab0de;
+  --amber-fill: #4a3418;
+  --amber: #f5c27c;
   color-scheme: dark;
 }
 
@@ -125,3 +131,4 @@
 [data-hue="rose"] { --hue-fill: var(--rose-fill); --hue: var(--rose); }
 [data-hue="lime"] { --hue-fill: var(--lime-fill); --hue: var(--lime); }
 [data-hue="plum"] { --hue-fill: var(--plum-fill); --hue: var(--plum); }
+[data-hue="amber"] { --hue-fill: var(--amber-fill); --hue: var(--amber); }

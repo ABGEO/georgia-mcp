@@ -1075,6 +1075,361 @@
       "openWorldHint": true
     }
   },
+  "energy_get_grid": {
+    "name": "energy_get_grid",
+    "title": "Get the electricity grid of Georgia",
+    "description": "Returns the state of the electricity grid of Georgia from Georgian State Electrosystem (GSE), the operator of the transmission grid: the generation of the hydro, thermal, wind, and solar power plants, the total generation, the consumption, and the flow on the lines to each neighbor country, in MW, with the frequency in Hz. Each value is the average of 3 minutes. A positive flow is an import, a negative flow an export. Each value carries the quality code of GSE: only ACT is a measurement. Give a moment to read the grid at a time in the last 31 days. The names are in English. Data from GSE.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "moment": {
+          "type": "string",
+          "description": "A moment in the last 31 days: 2026-11-16T13:00 for a time of Tbilisi, or RFC 3339 with an offset, for example 2026-11-16T09:00:00Z. Leave it empty for the newest grid state."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Georgian State Electrosystem (GSE)."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which the server read the grid state, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when GSE did not answer and the server returns a grid state it read before."
+        },
+        "time": {
+          "type": "string",
+          "description": "The time of the grid slot as GSE stamps it, RFC 3339 with +04:00. It can be before the moment of the request when GSE published no newer slot."
+        },
+        "average_minutes": {
+          "type": "integer",
+          "description": "The length of the average of each power value, in minutes: 3."
+        },
+        "generation": {
+          "type": "object",
+          "properties": {
+            "hydro": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The power in MW as a decimal string, as GSE publishes it."
+                },
+                "quality": {
+                  "type": "string",
+                  "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+                },
+                "meaning": {
+                  "type": "string",
+                  "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+                }
+              },
+              "description": "The hydro power plants.",
+              "required": [
+                "value",
+                "quality",
+                "meaning"
+              ],
+              "additionalProperties": false
+            },
+            "thermal": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The power in MW as a decimal string, as GSE publishes it."
+                },
+                "quality": {
+                  "type": "string",
+                  "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+                },
+                "meaning": {
+                  "type": "string",
+                  "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+                }
+              },
+              "description": "The thermal power plants.",
+              "required": [
+                "value",
+                "quality",
+                "meaning"
+              ],
+              "additionalProperties": false
+            },
+            "wind": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The power in MW as a decimal string, as GSE publishes it."
+                },
+                "quality": {
+                  "type": "string",
+                  "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+                },
+                "meaning": {
+                  "type": "string",
+                  "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+                }
+              },
+              "description": "The wind power plants.",
+              "required": [
+                "value",
+                "quality",
+                "meaning"
+              ],
+              "additionalProperties": false
+            },
+            "solar": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The power in MW as a decimal string, as GSE publishes it."
+                },
+                "quality": {
+                  "type": "string",
+                  "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+                },
+                "meaning": {
+                  "type": "string",
+                  "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+                }
+              },
+              "description": "The solar power plants.",
+              "required": [
+                "value",
+                "quality",
+                "meaning"
+              ],
+              "additionalProperties": false
+            },
+            "total": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "description": "The power in MW as a decimal string, as GSE publishes it."
+                },
+                "quality": {
+                  "type": "string",
+                  "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+                },
+                "meaning": {
+                  "type": "string",
+                  "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+                }
+              },
+              "description": "The total generation, as GSE publishes it.",
+              "required": [
+                "value",
+                "quality",
+                "meaning"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "description": "The generation by type of power plant, in MW.",
+          "required": [
+            "hydro",
+            "thermal",
+            "wind",
+            "solar",
+            "total"
+          ],
+          "additionalProperties": false
+        },
+        "consumption": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "The power in MW as a decimal string, as GSE publishes it."
+            },
+            "quality": {
+              "type": "string",
+              "description": "The quality code of GSE: ACT, SUB, NRE, BLS, or another code."
+            },
+            "meaning": {
+              "type": "string",
+              "description": "The meaning of the code: measured, substituted by the operator, not received, not documented by GSE, or unknown."
+            }
+          },
+          "description": "The consumption of Georgia, in MW.",
+          "required": [
+            "value",
+            "quality",
+            "meaning"
+          ],
+          "additionalProperties": false
+        },
+        "flows": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "country": {
+                "type": "string",
+                "description": "The country at the other end of the lines, as GSE names it."
+              },
+              "value": {
+                "type": "string",
+                "description": "The flow in MW as a decimal string. The sum of the lines when the country has more than one."
+              },
+              "direction": {
+                "type": "string",
+                "description": "import, export, or none."
+              },
+              "quality": {
+                "type": "string",
+                "description": "The quality code of a country with one line. Absent for a sum."
+              },
+              "meaning": {
+                "type": "string",
+                "description": "The meaning of the quality code. Absent for a sum."
+              },
+              "lines": {
+                "type": [
+                  "null",
+                  "array"
+                ],
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the line at GSE, for example Salkhino."
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "The flow in MW as a decimal string, as GSE publishes it."
+                    },
+                    "direction": {
+                      "type": "string",
+                      "description": "import, export, or none."
+                    },
+                    "quality": {
+                      "type": "string",
+                      "description": "The quality code of GSE."
+                    },
+                    "meaning": {
+                      "type": "string",
+                      "description": "The meaning of the quality code."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "value",
+                    "direction",
+                    "quality",
+                    "meaning"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Each line of a country with more than one, as GSE names it."
+              }
+            },
+            "required": [
+              "country",
+              "value",
+              "direction"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The flow on the lines to each country, in MW. A positive flow is an import."
+        },
+        "net_import": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "The net import in MW as a decimal string."
+            },
+            "direction": {
+              "type": "string",
+              "description": "import, export, or none."
+            }
+          },
+          "description": "The sum of every flow, in MW. A negative net import is an export.",
+          "required": [
+            "value",
+            "direction"
+          ],
+          "additionalProperties": false
+        },
+        "measured": {
+          "type": "integer",
+          "description": "The count of the values with the quality code ACT."
+        },
+        "values": {
+          "type": "integer",
+          "description": "The count of the values that GSE published for the slot."
+        },
+        "frequency": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "The frequency in Hz as a decimal string, as GSE publishes it. The nominal value is 50."
+            },
+            "time": {
+              "type": "string",
+              "description": "The minute of the frequency, RFC 3339 with +04:00."
+            },
+            "quality": {
+              "type": "string",
+              "description": "The quality code of GSE."
+            },
+            "meaning": {
+              "type": "string",
+              "description": "The meaning of the quality code."
+            }
+          },
+          "description": "The frequency of the grid at the minute of the slot. Absent when GSE published none.",
+          "required": [
+            "value",
+            "time",
+            "quality",
+            "meaning"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "time",
+        "average_minutes",
+        "generation",
+        "consumption",
+        "flows",
+        "net_import",
+        "measured",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "fuel_get_prices": {
     "name": "fuel_get_prices",
     "title": "Fuel prices of Georgian fuel companies",

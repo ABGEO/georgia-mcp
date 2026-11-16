@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type='text/xsl' href='GSE_V1.XSL'?>
+<!DOCTYPE GSE SYSTEM 'GSE_V1.DTD'>
+<GSE DTD_Version='1'>
+<Export Time='16.11.2026 12:00:00' Period='03M' Type='Real Time Data'/>
+<BLOCKS>
+<BLOCK_AREA Name='TOTAL HYDRO STATIONS                        '>
+<TA B1='AllGeorg' B2='HydroPP' B3='AllHPP' EL='P' IN='MvAvr03m' VALUE='1331.362305' QUALITY='SUB'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL TERMAL STATIONS                       '>
+<TA B1='AllGeorg' B2='ThermoPP' B3=' ' EL='P' IN='MvAvr03m' VALUE='170.777710' QUALITY='SUB'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL WIND PLANTS                           '>
+<TA B1='AllGeorg' B2='WindPP' B3=' ' EL='P' IN='MvAvr03m' VALUE='-0.036000' QUALITY='NRE'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL SUN PLANTS                            '>
+<TA B1='AllGeorg' B2='SPP' B3=' ' EL='P' IN='MvAvr03m' VALUE='6.000000' QUALITY='SUB'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL GENERATION (HYDRO+TERMAL+WIND+SU      '>
+<TA B1='AllGeorg' B2=' ' B3=' ' EL='P' IN='MvAvr03m' VALUE='1511.088379' QUALITY='NRE'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL AZERBAIJAN TIE LINES                  '>
+<TA B1='AllGeorg' B2='IntchSum' B3='Azerbaij' EL='P' IN='MvAvr03m' VALUE='20.631090' QUALITY='ACT'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL ARMENIA TIE LINES                     '>
+<TA B1='AllGeorg' B2='IntchSum' B3='Armenia' EL='P' IN='MvAvr03m' VALUE='0.000000' QUALITY='SUB'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL RUSSIA TIE LINES                      '>
+<TA B1='AllGeorg' B2='IntchSum' B3='Russia' EL='P' IN='MvAvr03m' VALUE='0.000000' QUALITY='ACT'/>
+<TA B1='AllGeorg' B2='Intercha' B3='Salkhino' EL='P' IN='MvAvr03m' VALUE='-0.000000' QUALITY='ACT'/>
+<TA B1='AllGeorg' B2='Intercha' B3='Java' EL='P' IN='MvAvr03m' VALUE='18.299999' QUALITY='BLS'/>
+<TA B1='AllGeorg' B2='Intercha' B3='Nakaduli' EL='P' IN='MvAvr03m' VALUE='14.191387' QUALITY='ACT'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL TURKEY TIE LINES                      '>
+<TA B1='AllGeorg' B2='IntchSum' B3='Turkey' EL='P' IN='MvAvr03m' VALUE='279.235687' QUALITY='ACT'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL CONSUMPTION                           '>
+<TA B1='AllGeorg' B2='Moxmareb' B3=' ' EL='P' IN='MvAvr03m' VALUE='1843.806030' QUALITY='NRE'/>
+</BLOCK_AREA>
+<BLOCK_AREA Name='TOTAL IMPORT                                '>
+<TA B1='AllGeorg' B2='Import' B3=' ' EL='P' IN='MvAvr03m' VALUE='12.000000' QUALITY='ACT'/>
+</BLOCK_AREA>
+</BLOCKS>
+</GSE>

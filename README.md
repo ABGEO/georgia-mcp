@@ -55,6 +55,8 @@ model, so you can ask one question and get one answer.
 > When does the next bus reach my stop?
 >
 > Which TBC Bank card offers give a discount at restaurants?
+>
+> Is Georgia importing electricity right now?
 
 | Subject                | Sources                                                                                  |
 | ---------------------- | ---------------------------------------------------------------------------------------- |
@@ -71,6 +73,7 @@ model, so you can ask one question and get one answer.
 | Land parcels and addresses | National Agency of Public Registry                                                   |
 | Building permits of Tbilisi | Tbilisi Architecture Service                                                        |
 | Parliament             | Parliament of Georgia                                                                    |
+| Electricity grid       | Georgian State Electrosystem                                                             |
 
 ## Install
 
@@ -269,6 +272,7 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `parliament_list_votes`       | The plenary votes of the Parliament in a period or on a bill.           |
 | `parliament_get_vote`         | One plenary vote, with the choice of each member by faction.            |
 | `parliament_search_questions` | The written questions of the members, with their status.                |
+| `energy_get_grid`             | The generation, consumption, and border flows of the grid, now or past. |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 
