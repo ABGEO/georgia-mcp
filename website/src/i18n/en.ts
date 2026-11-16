@@ -84,7 +84,14 @@ export const en = {
         ],
       },
       cursor: { name: "Cursor", add: "Add to Cursor", steps: ["Or add this to ~/.cursor/mcp.json."] },
-      vscode: { name: "VS Code", add: "Add to VS Code", steps: ["Or add this to .vscode/mcp.json in your project."] },
+      vscode: {
+        name: "VS Code",
+        steps: [
+          "Open Georgia MCP in the GitHub MCP Registry.",
+          "Select Install MCP server, then Install in VS Code. The same menu installs it in VS Code Insiders and the GitHub Copilot app.",
+          "Or add this to .vscode/mcp.json in your project.",
+        ],
+      },
       binary: {
         name: "Binary",
         steps: [
@@ -103,7 +110,7 @@ export const en = {
       credo: "Credo Bank is off by default in the commercial rates. To turn it on, set GEOMCP_RATES_CREDO_ENABLED=true and a Credo API key in GEOMCP_RATES_CREDO_API_KEY.",
     },
     download: "Latest release",
-    directory: { claude: "the Claude directory", chatgpt: "the ChatGPT plugin directory" },
+    directory: { claude: "the Claude directory", chatgpt: "the ChatGPT plugin directory", github: "the GitHub MCP Registry" },
   },
   how: {
     heading: "How it works",

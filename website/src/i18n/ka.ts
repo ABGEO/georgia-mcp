@@ -80,7 +80,14 @@ export const ka: Dictionary = {
         ],
       },
       cursor: { name: "Cursor", add: "დაამატე Cursor-ში", steps: ["ან დაამატე ეს ფაილში ~/.cursor/mcp.json."] },
-      vscode: { name: "VS Code", add: "დაამატე VS Code-ში", steps: ["ან დაამატე ეს შენი პროექტის ფაილში .vscode/mcp.json."] },
+      vscode: {
+        name: "VS Code",
+        steps: [
+          "გახსენი Georgia MCP GitHub-ის MCP რეესტრში.",
+          "აირჩიე Install MCP server, შემდეგ Install in VS Code. იმავე მენიუთი ის დაემატება VS Code Insiders-სა და GitHub Copilot-ის აპში.",
+          "ან დაამატე ეს შენი პროექტის ფაილში .vscode/mcp.json.",
+        ],
+      },
       binary: {
         name: "ბინარი",
         steps: [
@@ -99,7 +106,7 @@ export const ka: Dictionary = {
       credo: "კრედო ბანკი კომერციულ კურსებში ნაგულისხმევად გამორთულია. ჩასართავად მიუთითე GEOMCP_RATES_CREDO_ENABLED=true და Credo-ს API გასაღები GEOMCP_RATES_CREDO_API_KEY-ში.",
     },
     download: "ბოლო რელიზი",
-    directory: { claude: "Claude-ის კატალოგში", chatgpt: "ChatGPT-ის პლაგინების კატალოგში" },
+    directory: { claude: "Claude-ის კატალოგში", chatgpt: "ChatGPT-ის პლაგინების კატალოგში", github: "GitHub-ის MCP რეესტრში" },
   },
   how: {
     heading: "როგორ მუშაობს",

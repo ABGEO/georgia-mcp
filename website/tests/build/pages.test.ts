@@ -3,8 +3,16 @@ import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
 
-import { cursorInstallUrl, vscodeInstallUrl } from "../../src/lib/install"
-import { AUTHOR_URL, CHATGPT_DIRECTORY_URL, CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
+import { cursorInstallUrl } from "../../src/lib/install"
+import {
+  AUTHOR_URL,
+  CHATGPT_DIRECTORY_URL,
+  CLAUDE_DIRECTORY_URL,
+  GITHUB_REGISTRY_URL,
+  REPO_URL,
+  SERVER_URL,
+  SITE_URL,
+} from "../../src/site"
 import { definitions, dist, page, pagePaths, pair, text } from "./helpers"
 
 const paths = pagePaths()
@@ -121,13 +129,27 @@ describe("the home page", () => {
     expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
   })
 
-  // WEBSITE-SC-055: Only the guides of Cursor and VS Code hold an install link, and both keep the configuration.
+  // WEBSITE-SC-058: The guide of VS Code links to the GitHub MCP Registry in a new tab, names the other clients of its menu, and keeps the configuration and the address.
+  test.each(homes)("%s links the guide of VS Code to the GitHub MCP Registry", (path) => {
+    const lang = path === "/" ? "en" : "ka"
+    const panel = page(path).querySelector(`#guide-${lang}-vscode`)
+
+    const link = panel?.querySelector(`a[href="${GITHUB_REGISTRY_URL}"]`)
+    expect(link?.getAttribute("target")).toBe("_blank")
+    expect(link?.getAttribute("rel")).toBe("noopener noreferrer")
+    expect(text(panel)).toContain("VS Code Insiders")
+    expect(text(panel)).toContain("GitHub Copilot")
+    expect(text(panel)).toContain(".vscode/mcp.json")
+    expect(text(panel?.querySelector("pre") ?? null)).toContain(SERVER_URL)
+    expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
+  })
+
+  // WEBSITE-SC-055: Only the guide of Cursor holds an install link, and it keeps the configuration.
   test.each(homes)("%s offers the install links", (path) => {
     const lang = path === "/" ? "en" : "ka"
     const html = page(path)
     const want: Record<string, string> = {
       [`guide-${lang}-cursor`]: cursorInstallUrl("georgia-mcp", SERVER_URL),
-      [`guide-${lang}-vscode`]: vscodeInstallUrl("georgia-mcp", SERVER_URL),
     }
 
     for (const panel of html.querySelectorAll("[data-panel]")) {

@@ -4,7 +4,7 @@ title: The website
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-11-16
+updated: 2026-11-17
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -29,7 +29,7 @@ from the server.
 | `WEBSITE-FR-002`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-002`           |
 | `WEBSITE-FR-003`  | `WEBSITE-DD-001`, `WEBSITE-SC-003`                      |
 | `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-DD-027`, `WEBSITE-SC-005`, `WEBSITE-SC-046`, `WEBSITE-SC-056` |
-| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`  |
+| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`, `SC-057`, `SC-058` |
 | `WEBSITE-FR-008`  | 4.4, `WEBSITE-DD-008`, `WEBSITE-SC-008`, `WEBSITE-SC-009` |
 | `WEBSITE-FR-009`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
 | `WEBSITE-FR-010`  | 4.3 Pages, `WEBSITE-SC-010`                             |
@@ -107,7 +107,7 @@ Every path is under `website/`. Every file is new.
 | Inputs       | `src/lib/inputs.ts`                      | `inputRows`. `WEBSITE-DD-005`.                                |
 | Tabs         | `src/lib/tabs.ts`                        | `enhanceTabs`. `WEBSITE-DD-021`.                              |
 | Language     | `src/i18n/index.ts`, `src/i18n/en.ts`, `src/i18n/ka.ts` | `Lang`, `Dictionary`, `t`, `localize`, `alternate`. |
-| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`, `CLAUDE_DIRECTORY_URL`, `CHATGPT_DIRECTORY_URL`. |
+| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`, `CLAUDE_DIRECTORY_URL`, `CHATGPT_DIRECTORY_URL`, `GITHUB_REGISTRY_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
 | Views        | `src/views/Home.astro`, `src/views/Tool.astro`, `src/views/Legal.astro` | One view for both languages. A page passes `lang`. |
 | Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
@@ -126,6 +126,7 @@ export const REPO_URL = "https://github.com/abgeo/georgia-mcp"
 export const AUTHOR_URL = "https://www.abgeo.dev"
 export const CLAUDE_DIRECTORY_URL = "https://claude.ai/directory/georgia-mcp"
 export const CHATGPT_DIRECTORY_URL = "https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b"
+export const GITHUB_REGISTRY_URL = "https://github.com/mcp/ABGEO/georgia-mcp"
 ```
 
 ### 4.2 Data model
@@ -250,7 +251,7 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | The connector of claude.ai appears in Claude Code under the same account, listed in `/mcp` as `claude.ai Georgia MCP`. To add it yourself: `claude mcp add --transport http georgia-mcp {url}` | `WEBSITE-FR-007` |
 | Cursor         | An install link, "Add to Cursor". Then `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
-| VS Code        | An install link, "Add to VS Code". Then `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
+| VS Code        | Open `GITHUB_REGISTRY_URL`, select Install MCP server, then Install in VS Code. The first step links to `GITHUB_REGISTRY_URL` in a new tab. The same menu installs it in VS Code Insiders and the GitHub Copilot app. Or `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}` | `WEBSITE-FR-007` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
 | Docker         | `docker run -p 8080:8080 ghcr.io/abgeo/georgia-mcp`. Address `http://localhost:8080/mcp`, with a `CopyField`. | `WEBSITE-FR-009` |
 
@@ -531,30 +532,26 @@ It says that the server keeps no input of a tool call (`LOG-008`) and no body of
 ### `WEBSITE-DD-026`
 
 **Realizes:** `WEBSITE-FR-040`
-**Decision:** `src/lib/install.ts` exports two functions. The build calls them, so the page ships no script for them.
+**Decision:** `src/lib/install.ts` exports one function. The build calls it, so the page ships no script for it.
 
 ```ts
 /** The install link of Cursor for a remote server. */
 export function cursorInstallUrl(name: string, url: string): string
-/** The install link of VS Code for a remote server. */
-export function vscodeInstallUrl(name: string, url: string): string
 ```
 
 | Client  | Link                                                                                   | Payload                                       |
 | ------- | -------------------------------------------------------------------------------------- | --------------------------------------------- |
 | Cursor  | `cursor://anysphere.cursor-deeplink/mcp/install?name=<name>&config=<config>`           | `config` is the base64 of `{"url":"<url>"}`, then percent encoded. |
-| VS Code | `vscode:mcp/install?<payload>`                                                         | `payload` is `{"name":"<name>","type":"http","url":"<url>"}`, percent encoded. |
 
-`InstallGuides` gives the guides of Cursor and VS Code a field `install` with the link, for `georgia-mcp` and `SERVER_URL`. The panel shows the link as a button, with the icon `Plug` of Lucide and the label of the dictionary, before the steps. The steps and the configuration stay. A local guide has no `install`. The dictionary adds `add` to `install.guides.cursor` and `install.guides.vscode`:
+`InstallGuides` gives the guide of Cursor a field `install` with the link, for `georgia-mcp` and `SERVER_URL`. The panel shows the link as a button, with the icon `Plug` of Lucide and the label of the dictionary, before the steps. The steps and the configuration stay. No other guide has `install`. The dictionary adds `add` to `install.guides.cursor`:
 
 | Key      | English          | Georgian             |
 | -------- | ---------------- | -------------------- |
 | `cursor.add` | Add to Cursor  | დაამატე Cursor-ში    |
-| `vscode.add` | Add to VS Code | დაამატე VS Code-ში   |
 
 The button reads the tokens of `BRD-007`, so it needs no image from another host.
-**Rationale:** The formats come from the documentation of Cursor (cursor.com/docs/mcp/install-links) and from the handler of VS Code (`mcpWorkbenchService.ts`, `parseMcpInstallUriPayload`, in microsoft/vscode). The payload of VS Code reads the name from the JSON, and `type` `http` marks a remote server. Percent encoding keeps a `+`, a `/`, or a `=` of base64 intact in the query. The owner chose the buttons of the site, the scheme of each client, and the remote guides only.
-**Alternatives:** The badge images of Cursor and of shields.io. Each page view would send a request to a third party. The redirect `https://vscode.dev/redirect/mcp/install`. It answers 302 to the same `vscode:` link, with one more host. The web link `https://cursor.com/install-mcp`. It opens a sign-in page of Cursor. A link for the Docker guide. The address answers only after the reader starts the container.
+**Rationale:** The format comes from the documentation of Cursor (cursor.com/docs/mcp/install-links). Percent encoding keeps a `+`, a `/`, or a `=` of base64 intact in the query. The owner chose the buttons of the site, the scheme of each client, and the remote guides only. On 2026-11-17 the owner replaced the link of VS Code with the page of the GitHub MCP Registry. Its menu installs the server in VS Code, VS Code Insiders, and the GitHub Copilot app.
+**Alternatives:** The badge images of Cursor and of shields.io. Each page view would send a request to a third party. The web link `https://cursor.com/install-mcp`. It opens a sign-in page of Cursor. A link for the Docker guide. The address answers only after the reader starts the container. The link `vscode:mcp/install?<payload>` beside the registry. It installs in VS Code only, and two buttons for one client ask the reader to choose.
 
 ### `WEBSITE-DD-027`
 
@@ -1018,6 +1015,15 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 **When** the test reads the panel of ChatGPT.
 **Then** it links to `CHATGPT_DIRECTORY_URL` in a new tab, names Georgia Public Data, and holds a `CopyField` with `SERVER_URL`.
 
+### `WEBSITE-SC-058`
+
+**Verifies:** `WEBSITE-FR-007`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads the panel of VS Code.
+**Then** it links to `GITHUB_REGISTRY_URL` in a new tab, names VS Code Insiders and the GitHub Copilot app, holds the configuration of `.vscode/mcp.json`, and holds a `CopyField` with `SERVER_URL`.
+
 ### `WEBSITE-SC-052`
 
 **Verifies:** `WEBSITE-FR-039`
@@ -1043,7 +1049,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 
 **Given** the name `georgia-mcp` and the address `https://geo-mcp.abgeo.cloud/mcp`.
 **When** the test builds the link of each client and decodes its payload.
-**Then** the link of Cursor starts with `cursor://anysphere.cursor-deeplink/mcp/install?name=georgia-mcp&config=`, and its `config` decodes to `{"url":"https://geo-mcp.abgeo.cloud/mcp"}`. The link of VS Code starts with `vscode:mcp/install?`, and its payload decodes to `{"name":"georgia-mcp","type":"http","url":"https://geo-mcp.abgeo.cloud/mcp"}`.
+**Then** the link of Cursor starts with `cursor://anysphere.cursor-deeplink/mcp/install?name=georgia-mcp&config=`, and its `config` decodes to `{"url":"https://geo-mcp.abgeo.cloud/mcp"}`.
 
 ### `WEBSITE-SC-055`
 
@@ -1052,7 +1058,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 
 **Given** both home pages.
 **When** the test reads the panels of the install guides.
-**Then** the panel of Cursor holds one install link equal to `cursorInstallUrl("georgia-mcp", SERVER_URL)`, the panel of VS Code holds one equal to `vscodeInstallUrl("georgia-mcp", SERVER_URL)`, both panels still hold their configuration, and no other panel holds an install link.
+**Then** the panel of Cursor holds one install link equal to `cursorInstallUrl("georgia-mcp", SERVER_URL)` and still holds its configuration, and no other panel holds an install link.
 
 ### `WEBSITE-SC-056`
 
@@ -1096,6 +1102,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 | 27  | Write the tests of the install links. Write `src/lib/install.ts`, the `add` copy of both dictionaries, and the button in `InstallGuides`. | `WEBSITE-DD-026`, `SC-054`, `SC-055` | [x] |
 | 28  | Write the test of the rows of the contexts. Make `.cards` a container that wraps and centers each row. | `WEBSITE-DD-027`, `SC-056` | [x] |
 | 29  | Write the test of the guide of ChatGPT. Add `CHATGPT_DIRECTORY_URL`, the link of the plugin directory, and its copy. | `WEBSITE-FR-007`, `SC-057` | [x] |
+| 30  | Write the test of the guide of VS Code. Add `GITHUB_REGISTRY_URL`, the link of the registry, and its copy. Remove `vscodeInstallUrl` and the copy `vscode.add`. | `WEBSITE-FR-007`, `FR-040`, `DD-026`, `SC-054`, `SC-055`, `SC-058` | [x] |
 
 ## 8. Out of scope for this specification
 
