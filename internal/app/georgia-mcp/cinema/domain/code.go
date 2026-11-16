@@ -22,7 +22,7 @@ type CinemaCode struct {
 
 // ParseCinemaCode returns the cinema code of a text of 1 to 40 of a to z, 0 to 9, and _.
 func ParseCinemaCode(text string) (CinemaCode, error) {
-	if !isCode(text, maxCinemaCode, '_') {
+	if !isCode(text, maxCinemaCode, isCinemaRune) {
 		return CinemaCode{}, fmt.Errorf("%w: %q", ErrInvalidCinemaCode, text)
 	}
 
@@ -39,9 +39,10 @@ type MovieCode struct {
 	code string
 }
 
-// ParseMovieCode returns the movie code of a text of 1 to 100 of a to z, 0 to 9, and -.
+// ParseMovieCode returns the movie code of a text of 1 to 100 of a to z, A to Z, 0 to 9,
+// and -. It keeps the case: the page of a movie on Cavea answers only to the code in its case.
 func ParseMovieCode(text string) (MovieCode, error) {
-	if !isCode(text, maxMovieCode, '-') {
+	if !isCode(text, maxMovieCode, isMovieRune) {
 		return MovieCode{}, fmt.Errorf("%w: %q", ErrInvalidMovieCode, text)
 	}
 
@@ -53,18 +54,35 @@ func (c MovieCode) String() string {
 	return c.code
 }
 
-func isCode(text string, maximum int, separator rune) bool {
+// Equal reports whether two codes name one movie, with no regard to the case.
+func (c MovieCode) Equal(other MovieCode) bool {
+	return strings.EqualFold(c.code, other.code)
+}
+
+func isCode(text string, maximum int, allowed func(rune) bool) bool {
 	if text == "" || len(text) > maximum {
 		return false
 	}
 
 	for _, r := range text {
-		if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != separator {
+		if !allowed(r) {
 			return false
 		}
 	}
 
 	return true
+}
+
+func isCinemaRune(r rune) bool {
+	return isLowerOrDigit(r) || r == '_'
+}
+
+func isMovieRune(r rune) bool {
+	return isLowerOrDigit(r) || (r >= 'A' && r <= 'Z') || r == '-'
+}
+
+func isLowerOrDigit(r rune) bool {
+	return (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
 }
 
 // SessionCode is the code of Cavea for a session: "cag_5/27-10-2026/22:15". It names

@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strings"
 	"sync"
 	"testing"
@@ -442,10 +443,10 @@ func TestMoviesLeavesOutABadCode(t *testing.T) {
 		wantLog string
 	}{
 		{
-			name:    "capital letter",
-			replace: [2]string{`"slug":"guria-01"`, `"slug":"ramayana-rise-of-a-Legend"`},
+			name:    "space",
+			replace: [2]string{`"slug":"guria-01"`, `"slug":"ramayana rise"`},
 			want:    9,
-			wantLog: "code=ramayana-rise-of-a-Legend",
+			wantLog: `code="ramayana rise"`,
 		},
 		{
 			name:    "empty slug",
@@ -491,6 +492,37 @@ func TestMoviesLeavesOutABadCode(t *testing.T) {
 				t.Errorf("the log = %s, want 1 warning with %s", log, tt.wantLog)
 			}
 		})
+	}
+}
+
+// CAVCINE-SC-031: A movie with a capital letter in its code stays, with the code of Cavea.
+func TestMoviesKeepsACapitalLetter(t *testing.T) {
+	t.Parallel()
+
+	fake := newVendor(t)
+	replaceBody(
+		t,
+		fake,
+		"/movies?coming-soon",
+		[2]string{`"slug":"guria-01"`, `"slug":"ramayana-rise-of-a-Legend"`},
+	)
+
+	list, err := adapterOf(t, fake).Movies(t.Context(), domain.ComingSoon)
+	if err != nil {
+		t.Fatalf("Movies() error = %v", err)
+	}
+
+	if len(list.Movies) != 10 {
+		t.Errorf("Movies() gives %d movies, want 10", len(list.Movies))
+	}
+
+	codes := make([]string, 0, len(list.Movies))
+	for _, movie := range list.Movies {
+		codes = append(codes, movie.Code.String())
+	}
+
+	if !slices.Contains(codes, "ramayana-rise-of-a-Legend") {
+		t.Errorf("Movies() codes = %v, want ramayana-rise-of-a-Legend", codes)
 	}
 }
 

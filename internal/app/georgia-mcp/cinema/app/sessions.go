@@ -92,7 +92,7 @@ func (c catalog) schedule(session domain.Session) (ScheduledSession, bool) {
 
 func (c catalog) movie(code domain.MovieCode) (domain.Movie, bool) {
 	for _, movie := range c.movies {
-		if movie.Code == code {
+		if movie.Code.Equal(code) {
 			return movie, true
 		}
 	}
@@ -283,7 +283,7 @@ func match(
 
 func matches(item ScheduledSession, query SessionQuery) bool {
 	switch {
-	case query.Movie != nil && item.Movie.Code != *query.Movie:
+	case query.Movie != nil && !item.Movie.Code.Equal(*query.Movie):
 		return false
 	case query.Cinema != nil && item.Cinema.Code != *query.Cinema:
 		return false
