@@ -86,7 +86,7 @@ The home page must show each context with its name, its count of tools, and the 
 
 ### `WEBSITE-FR-007`
 
-The site must give an install guide for each of these clients: Claude on the web and on the desktop, Claude Code, ChatGPT, Cursor, and Visual Studio Code.
+The site must give an install guide for each of these clients: Claude on the web and on the desktop, Claude Code, ChatGPT, Gemini, Cursor, and Visual Studio Code.
 
 **Why:** These are the clients that the owner and the readers use.
 
@@ -98,6 +98,7 @@ The site must give an install guide for each of these clients: Claude on the web
 - Limit case: the reader wants a custom connector. The guide of claude.ai still gives the address of the server.
 - Limit case: the reader wants a custom MCP server in ChatGPT. The guide of ChatGPT still gives the address of the server.
 - Limit case: the reader wants to edit the configuration of VS Code. The guide of Visual Studio Code still gives it.
+- Normal case: the guide of Gemini gives the address of the server and the steps to add it in the Developer Mode of gemini.google.com.
 
 ### `WEBSITE-FR-008`
 

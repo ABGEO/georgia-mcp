@@ -83,6 +83,14 @@ export const en = {
           "To add it as a custom MCP server instead, open Plugins, select Add, then Add custom MCP server. Paste the address below and set the authentication to None. A custom server needs a paid plan.",
         ],
       },
+      gemini: {
+        name: "Gemini",
+        steps: [
+          "On gemini.google.com, open Settings at the bottom left, then Developer Mode.",
+          "Select Create new. Paste the address below as the MCP Server URL, leave the additional settings empty, and select Next.",
+          "In a chat, type `@` and pick the app.",
+        ],
+      },
       cursor: { name: "Cursor", add: "Add to Cursor", steps: ["Or add this to ~/.cursor/mcp.json."] },
       vscode: {
         name: "VS Code",

@@ -98,6 +98,13 @@ for example when you sign in with an API key, run:
 claude mcp add --transport http georgia-mcp https://geo-mcp.abgeo.cloud/mcp
 ```
 
+### Gemini
+
+On [gemini.google.com](https://gemini.google.com), open **Settings** at the bottom left,
+then **Developer Mode**. Select **Create new**, paste the address above as the
+**MCP Server URL**, leave the additional settings empty, and select **Next**. In a chat,
+type `@` and pick the app.
+
 ### Cursor
 
 Add this to `~/.cursor/mcp.json`:

@@ -79,6 +79,14 @@ export const ka: Dictionary = {
           "საკუთარ MCP სერვერად დასამატებლად გახსენი Plugins, აირჩიე Add, შემდეგ Add custom MCP server. ჩასვი ქვემოთ მოცემული მისამართი და ავთენტიფიკაციად აირჩიე None. საკუთარ სერვერს ფასიანი პაკეტი სჭირდება.",
         ],
       },
+      gemini: {
+        name: "Gemini",
+        steps: [
+          "gemini.google.com-ზე გახსენი Settings ქვედა მარცხენა კუთხეში, შემდეგ Developer Mode.",
+          "აირჩიე Create new. ჩასვი ქვემოთ მოცემული მისამართი ველში MCP Server URL, დამატებითი პარამეტრები დატოვე ცარიელი და აირჩიე Next.",
+          "ჩატში აკრიფე `@` და აირჩიე აპი.",
+        ],
+      },
       cursor: { name: "Cursor", add: "დაამატე Cursor-ში", steps: ["ან დაამატე ეს ფაილში ~/.cursor/mcp.json."] },
       vscode: {
         name: "VS Code",

@@ -29,7 +29,7 @@ from the server.
 | `WEBSITE-FR-002`  | 4.3 Pages, `WEBSITE-DD-001`, `WEBSITE-SC-002`           |
 | `WEBSITE-FR-003`  | `WEBSITE-DD-001`, `WEBSITE-SC-003`                      |
 | `WEBSITE-FR-005`  | 4.3 Data files, `WEBSITE-DD-020`, `WEBSITE-DD-027`, `WEBSITE-SC-005`, `WEBSITE-SC-046`, `WEBSITE-SC-056` |
-| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`, `SC-057`, `SC-058` |
+| `WEBSITE-FR-007`  | 4.4 Install guides, `WEBSITE-SC-007`, `WEBSITE-SC-051`, `SC-057` to `SC-059` |
 | `WEBSITE-FR-008`  | 4.4, `WEBSITE-DD-008`, `WEBSITE-SC-008`, `WEBSITE-SC-009` |
 | `WEBSITE-FR-009`  | 4.4 Install guides, `WEBSITE-SC-007`                    |
 | `WEBSITE-FR-010`  | 4.3 Pages, `WEBSITE-SC-010`                             |
@@ -250,6 +250,7 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 | claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. The first step links to `CLAUDE_DIRECTORY_URL` in a new tab. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | The connector of claude.ai appears in Claude Code under the same account, listed in `/mcp` as `claude.ai Georgia MCP`. To add it yourself: `claude mcp add --transport http georgia-mcp {url}` | `WEBSITE-FR-007` |
+| Gemini         | On gemini.google.com, Settings, Developer Mode, Create new. The `CopyField` gives the MCP Server URL. The additional settings stay empty, then Next. In a chat, type `@` and pick the app. | `WEBSITE-FR-007` |
 | Cursor         | An install link, "Add to Cursor". Then `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
 | VS Code        | Open `GITHUB_REGISTRY_URL`, select Install MCP server, then Install in VS Code. The first step links to `GITHUB_REGISTRY_URL` in a new tab. The same menu installs it in VS Code Insiders and the GitHub Copilot app. Or `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}` | `WEBSITE-FR-007` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
@@ -614,7 +615,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 
 **Given** both home pages.
 **When** the test reads the panels of `#install`.
-**Then** there are eight panels in the order of 4.4, and the Docker panel holds `GEOMCP_TRANSIT_TTC_ENABLED` and `GEOMCP_RATES_TBC_ENABLED`.
+**Then** there are nine panels in the order of 4.4, and the Docker panel holds `GEOMCP_TRANSIT_TTC_ENABLED` and `GEOMCP_RATES_TBC_ENABLED`.
 
 ### `WEBSITE-SC-008`
 
@@ -1024,6 +1025,15 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 **When** the test reads the panel of VS Code.
 **Then** it links to `GITHUB_REGISTRY_URL` in a new tab, names VS Code Insiders and the GitHub Copilot app, holds the configuration of `.vscode/mcp.json`, and holds a `CopyField` with `SERVER_URL`.
 
+### `WEBSITE-SC-059`
+
+**Verifies:** `WEBSITE-FR-007`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads the panel of Gemini.
+**Then** it names gemini.google.com and Developer Mode, holds a `CopyField` with `SERVER_URL`, and holds no install link.
+
 ### `WEBSITE-SC-052`
 
 **Verifies:** `WEBSITE-FR-039`
@@ -1103,11 +1113,13 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 | 28  | Write the test of the rows of the contexts. Make `.cards` a container that wraps and centers each row. | `WEBSITE-DD-027`, `SC-056` | [x] |
 | 29  | Write the test of the guide of ChatGPT. Add `CHATGPT_DIRECTORY_URL`, the link of the plugin directory, and its copy. | `WEBSITE-FR-007`, `SC-057` | [x] |
 | 30  | Write the test of the guide of VS Code. Add `GITHUB_REGISTRY_URL`, the link of the registry, and its copy. Remove `vscodeInstallUrl` and the copy `vscode.add`. | `WEBSITE-FR-007`, `FR-040`, `DD-026`, `SC-054`, `SC-055`, `SC-058` | [x] |
+| 31  | Write the tests of the guide of Gemini. Add the guide after Claude Code, and its copy. | `WEBSITE-FR-007`, `SC-007`, `SC-059` | [x] |
 
 ## 8. Out of scope for this specification
 
 - The deployment, and the route of `/mcp` to the server. The owner decides them outside this feature.
 - The release of the binary. Until it exists, the binary guide names an address that does not answer. `BLD-008` publishes `ghcr.io/abgeo/georgia-mcp`.
+- The listing of Gemini in the Connected Apps Platform of Google. It waits for the review of Google. Once Google lists it, the guide of Gemini links to the listing, as the guide of ChatGPT does.
 - A check that `definitions.json` equals the server. `WEBSITE-FR-023` accepts a stale file until the next refresh.
 
 ## Retired identifiers
