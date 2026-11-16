@@ -50,6 +50,7 @@ jobs:
         name: Test
         env:
           EXCLUDED: |
+            github.com/abgeo/georgia-mcp/pkg/parliament
             github.com/abgeo/georgia-mcp/pkg/wissol
           GEOMCP_TRANSIT_TTC_API_KEY: ${{ secrets.GEOMCP_TRANSIT_TTC_API_KEY }}
           GEOMCP_RATES_TBC_API_KEY: ${{ secrets.GEOMCP_RATES_TBC_API_KEY }}

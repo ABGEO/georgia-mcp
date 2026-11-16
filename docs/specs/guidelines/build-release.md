@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-14
+updated: 2026-11-16
 scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, build/agent-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -165,9 +165,10 @@ task reads the keys of the sources from `.env`. A test whose key is empty skips.
 manual run, without the packages of this table. The tests of such a package stay in the
 repository, and `task test:live` still runs them.
 
-| Package      | Reason                                                                  |
-| ------------ | ----------------------------------------------------------------------- |
-| `pkg/wissol` | `api.wissol.ge` does not answer a GitHub runner. The hosted server reaches it. |
+| Package          | Reason                                                                                  |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| `pkg/parliament` | `info.parliament.ge` answers 403 to a request from outside Georgia since 2026-11-16.    |
+| `pkg/wissol`     | `api.wissol.ge` does not answer a GitHub runner. The hosted server reaches it.          |
 
 The keys come from the repository secrets
 `GEOMCP_TRANSIT_TTC_API_KEY`, `GEOMCP_RATES_TBC_API_KEY`, and
