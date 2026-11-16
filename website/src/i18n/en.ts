@@ -83,8 +83,23 @@ export const en = {
           "To add it as a custom MCP server instead, open Plugins, select Add, then Add custom MCP server. Paste the address below and set the authentication to None. A custom server needs a paid plan.",
         ],
       },
+      gemini: {
+        name: "Gemini",
+        steps: [
+          "On gemini.google.com, open Settings at the bottom left, then Developer Mode.",
+          "Select Create new. Paste the address below as the MCP Server URL, leave the additional settings empty, and select Next.",
+          "In a chat, type `@` and pick the app.",
+        ],
+      },
       cursor: { name: "Cursor", add: "Add to Cursor", steps: ["Or add this to ~/.cursor/mcp.json."] },
-      vscode: { name: "VS Code", add: "Add to VS Code", steps: ["Or add this to .vscode/mcp.json in your project."] },
+      vscode: {
+        name: "VS Code",
+        steps: [
+          "Open Georgia MCP in the GitHub MCP Registry.",
+          "Select Install MCP server, then Install in VS Code. The same menu installs it in VS Code Insiders and the GitHub Copilot app.",
+          "Or add this to .vscode/mcp.json in your project.",
+        ],
+      },
       binary: {
         name: "Binary",
         steps: [
@@ -103,7 +118,7 @@ export const en = {
       credo: "Credo Bank is off by default in the commercial rates. To turn it on, set GEOMCP_RATES_CREDO_ENABLED=true and a Credo API key in GEOMCP_RATES_CREDO_API_KEY.",
     },
     download: "Latest release",
-    directory: { claude: "the Claude directory", chatgpt: "the ChatGPT plugin directory" },
+    directory: { claude: "the Claude directory", chatgpt: "the ChatGPT plugin directory", github: "the GitHub MCP Registry" },
   },
   how: {
     heading: "How it works",

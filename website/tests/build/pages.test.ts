@@ -3,8 +3,16 @@ import { join } from "node:path"
 
 import { describe, expect, test } from "vitest"
 
-import { cursorInstallUrl, vscodeInstallUrl } from "../../src/lib/install"
-import { AUTHOR_URL, CHATGPT_DIRECTORY_URL, CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL, SITE_URL } from "../../src/site"
+import { cursorInstallUrl } from "../../src/lib/install"
+import {
+  AUTHOR_URL,
+  CHATGPT_DIRECTORY_URL,
+  CLAUDE_DIRECTORY_URL,
+  GITHUB_REGISTRY_URL,
+  REPO_URL,
+  SERVER_URL,
+  SITE_URL,
+} from "../../src/site"
 import { definitions, dist, page, pagePaths, pair, text } from "./helpers"
 
 const paths = pagePaths()
@@ -85,16 +93,16 @@ describe("the home page", () => {
     expect(ids).toEqual(["intro", "examples", "contexts", "install", "tools"])
   })
 
-  // WEBSITE-SC-007: Eight install guides in the order of the specification.
-  test.each(homes)("%s holds eight install guides", (path) => {
+  // WEBSITE-SC-007: Nine install guides in the order of the specification.
+  test.each(homes)("%s holds nine install guides", (path) => {
     const panels = page(path).querySelectorAll("#install [data-panel]")
     const lang = path === "/" ? "en" : "ka"
 
     expect(panels.map((panel) => panel.id)).toEqual(
-      ["chatgpt", "claude", "claudeApps", "claudeCode", "cursor", "vscode", "binary", "docker"].map((key) => `guide-${lang}-${key}`),
+      ["chatgpt", "claude", "claudeApps", "claudeCode", "gemini", "cursor", "vscode", "binary", "docker"].map((key) => `guide-${lang}-${key}`),
     )
-    expect(text(panels[7])).toContain("GEOMCP_TRANSIT_TTC_ENABLED")
-    expect(text(panels[7])).toContain("GEOMCP_RATES_TBC_ENABLED")
+    expect(text(panels[8])).toContain("GEOMCP_TRANSIT_TTC_ENABLED")
+    expect(text(panels[8])).toContain("GEOMCP_RATES_TBC_ENABLED")
   })
 
   // WEBSITE-SC-051: The guide of claude.ai links to the directory in a new tab, keeps the address, and names no limit of the Free plan.
@@ -121,13 +129,38 @@ describe("the home page", () => {
     expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
   })
 
-  // WEBSITE-SC-055: Only the guides of Cursor and VS Code hold an install link, and both keep the configuration.
+  // WEBSITE-SC-058: The guide of VS Code links to the GitHub MCP Registry in a new tab, names the other clients of its menu, and keeps the configuration and the address.
+  test.each(homes)("%s links the guide of VS Code to the GitHub MCP Registry", (path) => {
+    const lang = path === "/" ? "en" : "ka"
+    const panel = page(path).querySelector(`#guide-${lang}-vscode`)
+
+    const link = panel?.querySelector(`a[href="${GITHUB_REGISTRY_URL}"]`)
+    expect(link?.getAttribute("target")).toBe("_blank")
+    expect(link?.getAttribute("rel")).toBe("noopener noreferrer")
+    expect(text(panel)).toContain("VS Code Insiders")
+    expect(text(panel)).toContain("GitHub Copilot")
+    expect(text(panel)).toContain(".vscode/mcp.json")
+    expect(text(panel?.querySelector("pre") ?? null)).toContain(SERVER_URL)
+    expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
+  })
+
+  // WEBSITE-SC-059: The guide of Gemini gives the steps of Developer Mode and the address, with no install link.
+  test.each(homes)("%s gives the steps of a custom app in Gemini", (path) => {
+    const lang = path === "/" ? "en" : "ka"
+    const panel = page(path).querySelector(`#guide-${lang}-gemini`)
+
+    expect(text(panel)).toContain("gemini.google.com")
+    expect(text(panel)).toContain("Developer Mode")
+    expect(panel?.querySelector("input")?.getAttribute("value")).toBe(SERVER_URL)
+    expect(panel?.querySelector("a.install")).toBeNull()
+  })
+
+  // WEBSITE-SC-055: Only the guide of Cursor holds an install link, and it keeps the configuration.
   test.each(homes)("%s offers the install links", (path) => {
     const lang = path === "/" ? "en" : "ka"
     const html = page(path)
     const want: Record<string, string> = {
       [`guide-${lang}-cursor`]: cursorInstallUrl("georgia-mcp", SERVER_URL),
-      [`guide-${lang}-vscode`]: vscodeInstallUrl("georgia-mcp", SERVER_URL),
     }
 
     for (const panel of html.querySelectorAll("[data-panel]")) {

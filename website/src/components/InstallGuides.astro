@@ -1,10 +1,10 @@
 ---
 import { Plug } from "@lucide/astro"
 
-import { cursorInstallUrl, vscodeInstallUrl } from "../lib/install"
+import { cursorInstallUrl } from "../lib/install"
 import type { Lang } from "../lib/schemas"
 import { t } from "../i18n"
-import { CHATGPT_DIRECTORY_URL, CLAUDE_DIRECTORY_URL, REPO_URL, SERVER_URL } from "../site"
+import { CHATGPT_DIRECTORY_URL, CLAUDE_DIRECTORY_URL, GITHUB_REGISTRY_URL, REPO_URL, SERVER_URL } from "../site"
 import CopyField from "./CopyField.astro"
 
 interface Props {
@@ -31,6 +31,7 @@ const guides: Guide[] = [
   { key: "claude", group: "remote", address: SERVER_URL, directory: { href: CLAUDE_DIRECTORY_URL, label: copy.directory.claude } },
   { key: "claudeApps", group: "remote" },
   { key: "claudeCode", group: "remote", address: SERVER_URL, code: `claude mcp add --transport http georgia-mcp ${SERVER_URL}` },
+  { key: "gemini", group: "remote", address: SERVER_URL },
   {
     key: "cursor",
     group: "remote",
@@ -42,7 +43,7 @@ const guides: Guide[] = [
     key: "vscode",
     group: "remote",
     address: SERVER_URL,
-    install: { href: vscodeInstallUrl("georgia-mcp", SERVER_URL), label: copy.guides.vscode.add },
+    directory: { href: GITHUB_REGISTRY_URL, label: copy.directory.github },
     code: JSON.stringify({ servers: { "georgia-mcp": { type: "http", url: SERVER_URL } } }, null, 2),
   },
   {

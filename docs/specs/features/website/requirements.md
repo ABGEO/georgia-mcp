@@ -4,7 +4,7 @@ title: The website
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-11-16
+updated: 2026-11-17
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -86,7 +86,7 @@ The home page must show each context with its name, its count of tools, and the 
 
 ### `WEBSITE-FR-007`
 
-The site must give an install guide for each of these clients: Claude on the web and on the desktop, Claude Code, ChatGPT, Cursor, and Visual Studio Code.
+The site must give an install guide for each of these clients: Claude on the web and on the desktop, Claude Code, ChatGPT, Gemini, Cursor, and Visual Studio Code.
 
 **Why:** These are the clients that the owner and the readers use.
 
@@ -94,8 +94,11 @@ The site must give an install guide for each of these clients: Claude on the web
 
 - Normal case: the guide of claude.ai links to the page of Georgia MCP in the directory of Claude, where the reader connects it in one step.
 - Normal case: the guide of ChatGPT links to the page of Georgia Public Data in the plugin directory of ChatGPT, where the reader installs it in one step.
+- Normal case: the guide of Visual Studio Code links to the page of Georgia MCP in the GitHub MCP Registry, where the reader installs it in VS Code, VS Code Insiders, or the GitHub Copilot app.
 - Limit case: the reader wants a custom connector. The guide of claude.ai still gives the address of the server.
 - Limit case: the reader wants a custom MCP server in ChatGPT. The guide of ChatGPT still gives the address of the server.
+- Limit case: the reader wants to edit the configuration of VS Code. The guide of Visual Studio Code still gives it.
+- Normal case: the guide of Gemini gives the address of the server and the steps to add it in the Developer Mode of gemini.google.com.
 
 ### `WEBSITE-FR-008`
 
@@ -317,14 +320,14 @@ The footer of each page must show the site version and link to its release on Gi
 
 ### `WEBSITE-FR-040`
 
-The install guide of Cursor and the install guide of Visual Studio Code must each offer an install link for the server at `SERVER_URL`. Each guide must still show the configuration to add by hand.
+The install guide of Cursor must offer an install link for the server at `SERVER_URL`. The guide must still show the configuration to add by hand.
 
-**Why:** A reader with the client on the computer connects in one step, without editing a file. A reader without it still has the configuration.
+**Why:** A reader with the client on the computer connects in one step, without editing a file. A reader without it still has the configuration. Visual Studio Code installs from the GitHub MCP Registry, so its guide links there instead (`WEBSITE-FR-007`).
 
 **Examples:**
 
 - Normal case: the reader has Cursor and presses "Add to Cursor". Cursor opens and asks to add `georgia-mcp` with the address `https://geo-mcp.abgeo.cloud/mcp`.
-- Limit case: the reader does not have VS Code. The link does nothing, and the configuration under it still works.
+- Limit case: the reader does not have Cursor. The link does nothing, and the configuration under it still works.
 - Unwanted case: the reader runs the server in a container. The local guides offer no install link, because the address answers only after the reader starts the container.
 
 ## 7. Non-functional requirements

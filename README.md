@@ -26,6 +26,7 @@ Ask Claude, ChatGPT, or any MCP client in your own words.
 [Website](https://geo-mcp.abgeo.cloud) ·
 [ChatGPT plugin](https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b) ·
 [Claude directory](https://claude.ai/directory/georgia-mcp) ·
+[GitHub MCP Registry](https://github.com/mcp/ABGEO/georgia-mcp) ·
 [Install](#install) ·
 [Tools](#tools) ·
 [Report a bug](https://github.com/abgeo/georgia-mcp/issues)
@@ -97,6 +98,13 @@ for example when you sign in with an API key, run:
 claude mcp add --transport http georgia-mcp https://geo-mcp.abgeo.cloud/mcp
 ```
 
+### Gemini
+
+On [gemini.google.com](https://gemini.google.com), open **Settings** at the bottom left,
+then **Developer Mode**. Select **Create new**, paste the address above as the
+**MCP Server URL**, leave the additional settings empty, and select **Next**. In a chat,
+type `@` and pick the app.
+
 ### Cursor
 
 Add this to `~/.cursor/mcp.json`:
@@ -111,7 +119,11 @@ Add this to `~/.cursor/mcp.json`:
 
 ### VS Code
 
-Add this to `.vscode/mcp.json` in your project:
+Open [Georgia MCP in the GitHub MCP Registry](https://github.com/mcp/ABGEO/georgia-mcp),
+select **Install MCP server**, then **Install in VS Code**. The same menu installs it in
+VS Code Insiders and the GitHub Copilot app.
+
+To add it by hand, add this to `.vscode/mcp.json` in your project:
 
 ```json
 {
