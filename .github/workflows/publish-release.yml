@@ -1,0 +1,69 @@
+name: publish-release
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ main ]
+
+permissions: { }
+
+jobs:
+  publish:
+    name: Publish
+    if: >-
+      github.event.pull_request.merged
+      && startsWith(github.event.pull_request.head.ref, 'release/v')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+    concurrency:
+      group: publish-release-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: false
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+
+      - name: Wait for release-drafter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          for _ in $(seq 60); do
+            state="$(gh run list --workflow release-drafter.yml --event push --commit "$COMMIT" --json status \
+              --jq 'if length == 0 then "none" elif all(.status == "completed") then "done" else "running" end')"
+            if [ "$state" = done ]; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "The run of release-drafter for $COMMIT did not end in 10 minutes."
+          exit 1
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          tag="${BRANCH#release/}"
+          if ! printf '%s' "$tag" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "The branch names no version vx.y.z: '$BRANCH'."
+            exit 1
+          fi
+          id="$(gh api "repos/$GH_REPO/releases" --jq "[.[] | select(.draft and .tag_name == \"$tag\")][0].id // empty")"
+          if [ -z "$id" ]; then
+            echo "No draft release has the tag $tag."
+            exit 1
+          fi
+          gh api --method PATCH "repos/$GH_REPO/releases/$id" \
+            -F draft=false -f target_commitish="$COMMIT" -f make_latest=true \
+            --jq '"Published \(.tag_name) at \(.target_commitish): \(.html_url)"'
