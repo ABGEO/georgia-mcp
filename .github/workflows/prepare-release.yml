@@ -115,17 +115,36 @@ jobs:
           mv "$RUNNER_TEMP/plugin.json" build/openai-plugin/plugin.json
           git diff --stat -- build/openai-plugin
 
+      - name: Close older pull requests
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          gh pr list --base main --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("release/v")) | select(.headRefName != "release/v" + env.VERSION) | .number' |
+            while read -r number; do
+              gh pr close "$number" --delete-branch --comment "The draft release is now v$VERSION."
+            done
+
+      - name: Body
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          {
+            echo "Merging this pull request publishes the release v$VERSION with these notes."
+            echo
+            tr -d '\r' < "$RUNNER_TEMP/body.md"
+          } > "$RUNNER_TEMP/pull-request.md"
+
       - uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ steps.app.outputs.token }}
           sign-commits: true
           base: main
-          branch: release/prepare
+          branch: release/v${{ steps.version.outputs.value }}
           delete-branch: true
           commit-message: "build: prepare the release v${{ steps.version.outputs.value }}"
           title: "build: prepare the release v${{ steps.version.outputs.value }}"
           labels: skip-changelog
-          body: |
-            Writes the version ${{ steps.version.outputs.value }} of the draft release into the files of `BLD-018`.
-
-            Merge this pull request, then publish the draft release.
+          body-path: ${{ runner.temp }}/pull-request.md

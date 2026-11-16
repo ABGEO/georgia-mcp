@@ -4,7 +4,7 @@ title: Build and release
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-16
+updated: 2026-11-17
 scope: [., pkg/, website/, build/package/, build/cursor-plugin/, .cursor-plugin/, build/agent-plugin/, deployments/, Taskfile.yml, website/Taskfile.yml, .goreleaser.yaml, .github/labels.yml, .github/release-drafter.yml, .github/workflows/]
 related: [ARC, CLT, GO, TST]
 ---
@@ -247,7 +247,7 @@ are `-s -w` only, so the version comes from `BLD-004`. Each archive holds the bi
 | `checksums.txt.sigstore.json`          | The keyless `cosign` signature of `checksums.txt`        |
 | `georgia-mcp_<x.y.z>.intoto.jsonl`     | The build provenance of each file of `checksums.txt`     |
 
-release-drafter writes the notes of the release. The owner publishes the draft, which
+release-drafter writes the notes of the release. `BLD-019` publishes the draft, which
 creates the tag. Before GoReleaser, the job runs `govulncheck -format openvex` and sets the
 author and the product (`pkg:golang/github.com/abgeo/georgia-mcp@v<x.y.z>`) of the
 statement. GoReleaser finds the release of the tag, keeps its notes, and attaches
@@ -375,9 +375,11 @@ of the draft release, then writes the version into each file of this table:
 | `build/openai-plugin/plugin.json`                | `version`, and `extensions["com.openai"].publication.release_notes` |
 
 When a file differs, `peter-evans/create-pull-request` writes the branch
-`release/prepare` from the head of `main` with one commit, and opens or updates the pull
-request `build: prepare the release v<x.y.z>`, with the label `skip-changelog`. When no
-file differs and no pull request is open, it deletes the branch.
+`release/v<x.y.z>` from the head of `main` with one commit, and opens or updates the pull
+request `build: prepare the release v<x.y.z>`, with the label `skip-changelog`. Its body
+is the body of the draft release. When no file differs and no pull request is open, it
+deletes the branch. Before that, the job closes each open pull request from another
+branch `release/v*`, with a comment that names the new version, and deletes its branch.
 
 The job acts as the GitHub App of the owner, with a token from
 `actions/create-github-app-token`. The App holds `contents: write` and
@@ -390,7 +392,7 @@ The release notes of the OpenAI plugin keep the entries of the sections "Breakin
 changes", "Features", and "Bug fixes" of the draft, with no number of a pull request. A
 draft with none of them gives "This version has no change that a user can see."
 
-The owner merges the pull request, then publishes the draft release. On the release,
+The owner merges the pull request, and `BLD-019` publishes the draft release. On the release,
 `.github/workflows/openai-plugin.yml` fails when the version of
 `build/openai-plugin/plugin.json` differs from the tag. Otherwise it zips the directory as
 it is and uploads the archive to the release. A file that a release must prepare joins
@@ -399,7 +401,36 @@ the table.
 **Why:** The marketplace of `BLD-017` checks the version at the tag, so the version must
 be on `main` before the tag. A pull request from the built-in token starts no workflow,
 so the required checks `CI` and `Images` never run. A pull request from the App starts
-them. The ruleset demands a signed commit, and a push from a runner is not signed.
+them. The ruleset demands a signed commit, and a push from a runner is not signed. The
+version in the branch lets `BLD-019` find the release, and a new version opens a new pull
+request, so the job closes the old one. The body shows the owner the notes before the
+merge.
+
+## BLD-019
+
+`.github/workflows/publish-release.yml` publishes the draft release when the pull request
+of `BLD-018` merges.
+
+It runs on a closed pull request into `main`. The job runs only when the pull request
+merged and its branch is `release/v<x.y.z>` in this repository.
+
+The job takes a token of the GitHub App of `BLD-018` with `contents: write` only. It
+finds the draft release with the tag `v<x.y.z>` and fails when none exists. It publishes the draft with the
+target of the merge commit and marks it as the latest release. The release creates the
+tag, which starts `.github/workflows/release.yml` (`BLD-013`) and
+`.github/workflows/openai-plugin.yml` (`BLD-018`).
+
+Before it publishes, the job waits until the run of `.github/workflows/release-drafter.yml`
+for the push of the merge commit ends, and fails after 10 minutes. It reads the runs with
+the built-in token and `actions: read`.
+
+**Why:** The merge is the approval of the owner, so the release needs no second step. A
+release that the built-in token publishes starts no workflow, so the tag would build
+nothing. The token of the App starts them. The target pins the tag to the commit that
+holds the version, even when another pull request merges after it. A run of release-drafter
+that reads the draft before the release writes it back as a draft after it. A shared
+concurrency group does not stop this: a newer pending job in the group cancels the
+publication.
 
 ## Retired identifiers
 
