@@ -885,6 +885,120 @@
       "total": 1
     }
   },
+  "energy_get_grid.now": {
+    "tool": "energy_get_grid",
+    "example": "now",
+    "recordedAt": "2026-11-16T21:56:52.874Z",
+    "output": {
+      "as_of": "2026-11-17T01:56:52+04:00",
+      "average_minutes": 3,
+      "consumption": {
+        "meaning": "substituted by the operator",
+        "quality": "SUB",
+        "value": "1556.885620"
+      },
+      "flows": [
+        {
+          "country": "Azerbaijan",
+          "direction": "import",
+          "meaning": "measured",
+          "quality": "ACT",
+          "value": "21.261808"
+        },
+        {
+          "country": "Armenia",
+          "direction": "none",
+          "meaning": "substituted by the operator",
+          "quality": "SUB",
+          "value": "0.000000"
+        },
+        {
+          "country": "Russia",
+          "direction": "import",
+          "lines": [
+            {
+              "direction": "none",
+              "meaning": "measured",
+              "name": "Russia",
+              "quality": "ACT",
+              "value": "0.000000"
+            },
+            {
+              "direction": "none",
+              "meaning": "measured",
+              "name": "Salkhino",
+              "quality": "ACT",
+              "value": "0.000000"
+            },
+            {
+              "direction": "import",
+              "meaning": "not documented by GSE",
+              "name": "Java",
+              "quality": "BLS",
+              "value": "18.299999"
+            },
+            {
+              "direction": "import",
+              "meaning": "measured",
+              "name": "Nakaduli",
+              "quality": "ACT",
+              "value": "0.000480"
+            }
+          ],
+          "value": "18.300479"
+        },
+        {
+          "country": "Turkey",
+          "direction": "none",
+          "meaning": "measured",
+          "quality": "ACT",
+          "value": "0.000000"
+        }
+      ],
+      "frequency": {
+        "meaning": "measured",
+        "quality": "ACT",
+        "time": "2026-11-17T01:51:00+04:00",
+        "value": "49.990002"
+      },
+      "generation": {
+        "hydro": {
+          "meaning": "substituted by the operator",
+          "quality": "SUB",
+          "value": "1085.996094"
+        },
+        "solar": {
+          "meaning": "substituted by the operator",
+          "quality": "SUB",
+          "value": "0.000000"
+        },
+        "thermal": {
+          "meaning": "substituted by the operator",
+          "quality": "SUB",
+          "value": "314.180603"
+        },
+        "total": {
+          "meaning": "substituted by the operator",
+          "quality": "SUB",
+          "value": "1517.323242"
+        },
+        "wind": {
+          "meaning": "measured",
+          "quality": "ACT",
+          "value": "117.146759"
+        }
+      },
+      "measured": 6,
+      "net_import": {
+        "direction": "import",
+        "value": "39.562287"
+      },
+      "source": "Georgian State Electrosystem (GSE)",
+      "stale": false,
+      "time": "2026-11-17T01:51:00+04:00",
+      "values": 13
+    }
+  },
   "fuel_get_prices.premium": {
     "tool": "fuel_get_prices",
     "example": "premium",

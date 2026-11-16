@@ -36,7 +36,7 @@ export const recordingSchema = z.object({
 /** One recorded output. */
 export type Recording = z.infer<typeof recordingSchema>
 
-export const contextKeys = ["rates", "fuel", "transit", "offers", "postal", "cinema", "stats", "air", "law", "holidays", "parcels", "permits", "parliament"] as const
+export const contextKeys = ["rates", "fuel", "transit", "offers", "postal", "cinema", "stats", "air", "law", "holidays", "parcels", "permits", "parliament", "energy"] as const
 
 /** The name of a context. */
 export type ContextKey = (typeof contextKeys)[number]
@@ -79,7 +79,7 @@ export type Vendor = z.infer<typeof vendor>
 /** The hand-written content of one context. */
 export const contextContentSchema = z.object({
   order: z.number().int(),
-  hue: z.enum(["butter", "peach", "sky", "lilac", "sage", "teal", "slate", "iris", "clay", "olive", "rose", "lime", "plum"]),
+  hue: z.enum(["butter", "peach", "sky", "lilac", "sage", "teal", "slate", "iris", "clay", "olive", "rose", "lime", "plum", "amber"]),
   icon: z.string(),
   name: localized,
   vendors: z.array(vendor).min(1),

@@ -1,0 +1,14 @@
+context: energy
+vendors: [gse]
+summary:
+  en: "The newest state of the electricity grid of Georgia, or the state at a moment in the last 31 days, with the generation by type, the consumption, the flow across each border, and the frequency."
+  ka: "საქართველოს ელექტროსისტემის უახლესი მდგომარეობა ან მდგომარეობა ბოლო 31 დღის რომელიმე მომენტში: გენერაცია ტიპების მიხედვით, მოხმარება, ნაკადი თითოეულ საზღვარზე და სიხშირე."
+examples:
+  - id: now
+    question:
+      en: Is Georgia importing electricity right now?
+      ka: ახლა საქართველო ელექტროენერგიას იმპორტს უკეთებს?
+    answer:
+      en: "Yes, a little. At 01:51 on 17 November, Georgia imported 39.6 MW net, while it consumed 1,556.9 MW. 21.3 MW came from Azerbaijan and 18.3 MW on the lines to Russia; the lines to Armenia and Turkey carried nothing. The power plants generated 1,517.3 MW: 1,086.0 MW hydro, 314.2 MW thermal, and 117.1 MW wind. GSE marks most of these values as substituted by the operator, not measured. The wind, the flow from Azerbaijan, and the frequency of 49.99 Hz are measured."
+      ka: "დიახ, მცირედით. 17 ნოემბრის 01:51-ზე საქართველოს წმინდა იმპორტი 39,6 მგვტ იყო, მოხმარება კი 1 556,9 მგვტ. აზერბაიჯანიდან 21,3 მგვტ შემოვიდა, რუსეთის ხაზებით 18,3 მგვტ; სომხეთისა და თურქეთის ხაზებზე ნაკადი არ ყოფილა. ელექტროსადგურებმა 1 517,3 მგვტ გამოიმუშავეს: ჰიდროსადგურებმა 1 086,0 მგვტ, თბოსადგურებმა 314,2 მგვტ, ქარის სადგურებმა 117,1 მგვტ. ამ მნიშვნელობების უმეტესობას GSE ოპერატორის მიერ ჩანაცვლებულად აღნიშნავს და არა გაზომილად. ქარი, აზერბაიჯანიდან ნაკადი და სიხშირე, 49,99 ჰც, გაზომილია."
+    input: {}

@@ -282,3 +282,16 @@ parliament:
       ka: საქართველოს პარლამენტი
       kind: open-api
       url: https://info.parliament.ge/
+energy:
+  order: 14
+  hue: amber
+  icon: zap
+  name:
+    en: Electricity grid
+    ka: ელექტროსისტემა
+  vendors:
+    - code: gse
+      en: Georgian State Electrosystem
+      ka: საქართველოს სახელმწიფო ელექტროსისტემა
+      kind: unofficial-api
+      url: https://gse.com.ge/

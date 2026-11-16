@@ -55,6 +55,8 @@ model, so you can ask one question and get one answer.
 > When does the next bus reach my stop?
 >
 > Which TBC Bank card offers give a discount at restaurants?
+>
+> Is Georgia importing electricity right now?
 
 | Subject                | Sources                                                                                  |
 | ---------------------- | ---------------------------------------------------------------------------------------- |
