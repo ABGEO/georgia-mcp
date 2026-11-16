@@ -80,7 +80,8 @@ The hosted server runs at:
 https://geo-mcp.abgeo.cloud/mcp
 ```
 
-### ChatGPT
+<details>
+<summary><a id="chatgpt"></a><b>ChatGPT</b></summary>
 
 Open [Georgia Public Data in the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b) and select
 **Install plugin**. In a chat, mention `@Georgia Public Data`, or pick it from the **+** menu.
@@ -89,12 +90,18 @@ To add it as a custom MCP server instead, open **Plugins**, select **Add**, then
 **Add custom MCP server**. Paste the address above and set the authentication to **None**.
 A custom server needs a paid plan.
 
-### Claude
+</details>
+
+<details>
+<summary><a id="claude"></a><b>Claude</b></summary>
 
 Open [Georgia MCP in the Claude directory](https://claude.ai/directory/georgia-mcp) and
 select **Connect**. It then works on claude.ai, Claude Desktop, and the Claude mobile apps.
 
-### Claude Code
+</details>
+
+<details>
+<summary><a id="claude-code"></a><b>Claude Code</b></summary>
 
 If you added Georgia MCP on claude.ai, it is already in Claude Code under the same
 account. Run `/mcp` to check: it is listed as `claude.ai Georgia MCP`. To add it yourself,
@@ -104,14 +111,20 @@ for example when you sign in with an API key, run:
 claude mcp add --transport http georgia-mcp https://geo-mcp.abgeo.cloud/mcp
 ```
 
-### Gemini
+</details>
+
+<details>
+<summary><a id="gemini"></a><b>Gemini</b></summary>
 
 On [gemini.google.com](https://gemini.google.com), open **Settings** at the bottom left,
 then **Developer Mode**. Select **Create new**, paste the address above as the
 **MCP Server URL**, leave the additional settings empty, and select **Next**. In a chat,
 type `@` and pick the app.
 
-### Cursor
+</details>
+
+<details>
+<summary><a id="cursor"></a><b>Cursor</b></summary>
 
 Add this to `~/.cursor/mcp.json`:
 
@@ -123,7 +136,10 @@ Add this to `~/.cursor/mcp.json`:
 }
 ```
 
-### VS Code
+</details>
+
+<details>
+<summary><a id="vs-code"></a><b>VS Code</b></summary>
 
 Open [Georgia MCP in the GitHub MCP Registry](https://github.com/mcp/ABGEO/georgia-mcp),
 select **Install MCP server**, then **Install in VS Code**. The same menu installs it in
@@ -139,7 +155,10 @@ To add it by hand, add this to `.vscode/mcp.json` in your project:
 }
 ```
 
-### Run it yourself
+</details>
+
+<details>
+<summary><a id="run-it-yourself"></a><b>Run it yourself</b></summary>
 
 With Docker:
 
@@ -203,6 +222,8 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | Credo Bank rates API      | `GEOMCP_RATES_CREDO_ENABLED` | `GEOMCP_RATES_CREDO_API_KEY` |
 
 [`configs/.env.example`](configs/.env.example) lists every setting.
+
+</details>
 
 ## Tools
 
