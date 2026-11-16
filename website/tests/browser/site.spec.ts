@@ -33,12 +33,12 @@ test.describe("copy field", () => {
       })
     })
     await page.goto("/")
-    await page.locator("#guide-en-claude").getByRole("button", { name: "Copy" }).click()
+    await page.locator("#guide-en-chatgpt").getByRole("button", { name: "Copy" }).click()
 
-    const input = page.locator("#address-en-claude")
+    const input = page.locator("#address-en-chatgpt")
     const selection = await input.evaluate((el: HTMLInputElement) => [el.selectionStart, el.selectionEnd, el.value.length])
     expect(selection).toEqual([0, selection[2], selection[2]])
-    await expect(page.locator("#guide-en-claude .status")).toHaveText("Press Ctrl+C to copy")
+    await expect(page.locator("#guide-en-chatgpt .status")).toHaveText("Press Ctrl+C to copy")
   })
 })
 
@@ -163,6 +163,8 @@ test("works from the keyboard alone", async ({ page, context }) => {
 
   const tab = await tabUntil((f) => f.role === "tab")
   expect(tab.outline).not.toBe("none")
+  await page.keyboard.press("ArrowRight")
+  expect((await focused()).id).toBe("tab-en-claude")
   await page.keyboard.press("ArrowRight")
   expect((await focused()).id).toBe("tab-en-claudeApps")
   await page.keyboard.press("ArrowRight")

@@ -24,6 +24,7 @@ Ask Claude, ChatGPT, or any MCP client in your own words.
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/abgeo/georgia-mcp)
 
 [Website](https://geo-mcp.abgeo.cloud) ·
+[ChatGPT plugin](https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b) ·
 [Claude directory](https://claude.ai/directory/georgia-mcp) ·
 [Install](#install) ·
 [Tools](#tools) ·
@@ -72,6 +73,15 @@ The hosted server runs at:
 https://geo-mcp.abgeo.cloud/mcp
 ```
 
+### ChatGPT
+
+Open [Georgia Public Data in the ChatGPT plugin directory](https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b) and select
+**Install plugin**. In a chat, mention `@Georgia Public Data`, or pick it from the **+** menu.
+
+To add it as a custom MCP server instead, open **Plugins**, select **Add**, then
+**Add custom MCP server**. Paste the address above and set the authentication to **None**.
+A custom server needs a paid plan.
+
 ### Claude
 
 Open [Georgia MCP in the Claude directory](https://claude.ai/directory/georgia-mcp) and
@@ -86,11 +96,6 @@ for example when you sign in with an API key, run:
 ```sh
 claude mcp add --transport http georgia-mcp https://geo-mcp.abgeo.cloud/mcp
 ```
-
-### ChatGPT
-
-Open **Plugins**, select **+**, then **Add custom MCP server**. Paste the address above
-and set the authentication to **None**. A custom server needs a paid plan.
 
 ### Cursor
 

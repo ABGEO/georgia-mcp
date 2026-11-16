@@ -77,9 +77,10 @@ export const en = {
       chatgpt: {
         name: "ChatGPT",
         steps: [
-          "On chatgpt.com, open Plugins and select the + button.",
-          "Choose Add custom MCP server.",
-          "Name it Georgia MCP, paste the address below, set the authentication to None, and accept the warning. It needs a paid plan.",
+          "Open Georgia Public Data in the ChatGPT plugin directory.",
+          "Select Install plugin.",
+          "In a chat, mention `@Georgia Public Data`, or pick it from the + menu.",
+          "To add it as a custom MCP server instead, open Plugins, select Add, then Add custom MCP server. Paste the address below and set the authentication to None. A custom server needs a paid plan.",
         ],
       },
       cursor: { name: "Cursor", add: "Add to Cursor", steps: ["Or add this to ~/.cursor/mcp.json."] },
@@ -102,7 +103,7 @@ export const en = {
       credo: "Credo Bank is off by default in the commercial rates. To turn it on, set GEOMCP_RATES_CREDO_ENABLED=true and a Credo API key in GEOMCP_RATES_CREDO_API_KEY.",
     },
     download: "Latest release",
-    directory: "the Claude directory",
+    directory: { claude: "the Claude directory", chatgpt: "the ChatGPT plugin directory" },
   },
   how: {
     heading: "How it works",

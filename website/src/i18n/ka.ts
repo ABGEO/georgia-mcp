@@ -73,9 +73,10 @@ export const ka: Dictionary = {
       chatgpt: {
         name: "ChatGPT",
         steps: [
-          "chatgpt.com-ზე გახსენი Plugins და აირჩიე + ღილაკი.",
-          "აირჩიე Add custom MCP server.",
-          "დაარქვი Georgia MCP, ჩასვი ქვემოთ მოცემული მისამართი, ავთენტიფიკაციად აირჩიე None და დაეთანხმე გაფრთხილებას. საჭიროა ფასიანი პაკეტი.",
+          "გახსენი Georgia Public Data ChatGPT-ის პლაგინების კატალოგში.",
+          "აირჩიე Install plugin.",
+          "ჩატში მოიხსენიე `@Georgia Public Data`, ან აირჩიე ის + მენიუდან.",
+          "საკუთარ MCP სერვერად დასამატებლად გახსენი Plugins, აირჩიე Add, შემდეგ Add custom MCP server. ჩასვი ქვემოთ მოცემული მისამართი და ავთენტიფიკაციად აირჩიე None. საკუთარ სერვერს ფასიანი პაკეტი სჭირდება.",
         ],
       },
       cursor: { name: "Cursor", add: "დაამატე Cursor-ში", steps: ["ან დაამატე ეს ფაილში ~/.cursor/mcp.json."] },
@@ -98,7 +99,7 @@ export const ka: Dictionary = {
       credo: "კრედო ბანკი კომერციულ კურსებში ნაგულისხმევად გამორთულია. ჩასართავად მიუთითე GEOMCP_RATES_CREDO_ENABLED=true და Credo-ს API გასაღები GEOMCP_RATES_CREDO_API_KEY-ში.",
     },
     download: "ბოლო რელიზი",
-    directory: "Claude-ის კატალოგში",
+    directory: { claude: "Claude-ის კატალოგში", chatgpt: "ChatGPT-ის პლაგინების კატალოგში" },
   },
   how: {
     heading: "როგორ მუშაობს",

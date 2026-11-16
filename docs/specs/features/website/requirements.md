@@ -4,7 +4,7 @@ title: The website
 type: requirements
 status: approved
 created: 2026-10-20
-updated: 2026-11-07
+updated: 2026-11-16
 context: website
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -93,7 +93,9 @@ The site must give an install guide for each of these clients: Claude on the web
 **Examples:**
 
 - Normal case: the guide of claude.ai links to the page of Georgia MCP in the directory of Claude, where the reader connects it in one step.
+- Normal case: the guide of ChatGPT links to the page of Georgia Public Data in the plugin directory of ChatGPT, where the reader installs it in one step.
 - Limit case: the reader wants a custom connector. The guide of claude.ai still gives the address of the server.
+- Limit case: the reader wants a custom MCP server in ChatGPT. The guide of ChatGPT still gives the address of the server.
 
 ### `WEBSITE-FR-008`
 
