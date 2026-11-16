@@ -65,6 +65,12 @@ model, so you can ask one question and get one answer.
 | Postal codes           | Georgian Post                                                                            |
 | Cinemas                | Cavea                                                                                    |
 | Statistics and inflation | Geostat                                                                                |
+| Air quality            | National Environmental Agency                                                            |
+| Legal acts             | Legislative Herald of Georgia                                                            |
+| Public holidays        | Nager.Date                                                                               |
+| Land parcels and addresses | National Agency of Public Registry                                                   |
+| Building permits of Tbilisi | Tbilisi Architecture Service                                                        |
+| Parliament             | Parliament of Georgia                                                                    |
 
 ## Install
 
