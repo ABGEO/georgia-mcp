@@ -107,7 +107,7 @@ Every path is under `website/`. Every file is new.
 | Inputs       | `src/lib/inputs.ts`                      | `inputRows`. `WEBSITE-DD-005`.                                |
 | Tabs         | `src/lib/tabs.ts`                        | `enhanceTabs`. `WEBSITE-DD-021`.                              |
 | Language     | `src/i18n/index.ts`, `src/i18n/en.ts`, `src/i18n/ka.ts` | `Lang`, `Dictionary`, `t`, `localize`, `alternate`. |
-| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`, `CLAUDE_DIRECTORY_URL`. |
+| Constants    | `src/site.ts`                            | `SITE_NAME`, `SITE_URL`, `SERVER_URL`, `REPO_URL`, `AUTHOR_URL`, `CLAUDE_DIRECTORY_URL`, `CHATGPT_DIRECTORY_URL`. |
 | Layout       | `src/layouts/Base.astro`                 | The head, the theme script, the header, the footer.          |
 | Views        | `src/views/Home.astro`, `src/views/Tool.astro`, `src/views/Legal.astro` | One view for both languages. A page passes `lang`. |
 | Components   | `src/components/*.astro`                 | `Mark`, `Band`, `Stamp`, `Ticket`, `ChatPlayer`, `HowItWorks`, `ContextIcon`, `ContextCard`, `ToolList`, `InputTable`, `InstallGuides`, `CopyField`, `ThemeToggle`, `LangSwitch`. |
@@ -125,6 +125,7 @@ export const SERVER_URL = "https://geo-mcp.abgeo.cloud/mcp"
 export const REPO_URL = "https://github.com/abgeo/georgia-mcp"
 export const AUTHOR_URL = "https://www.abgeo.dev"
 export const CLAUDE_DIRECTORY_URL = "https://claude.ai/directory/georgia-mcp"
+export const CHATGPT_DIRECTORY_URL = "https://chatgpt.com/plugins/plugin_asdk_app_6adcd00818a48191ac6b3d8e7082037b"
 ```
 
 ### 4.2 Data model
@@ -244,10 +245,10 @@ Each panel of a remote server holds a `CopyField` with `{url}`, except the panel
 
 | Guide          | Steps                                                                                       | Realizes         |
 | -------------- | ------------------------------------------------------------------------------------------- | ---------------- |
-| claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. The first step links to `CLAUDE_DIRECTORY_URL`. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
+| ChatGPT        | Open `CHATGPT_DIRECTORY_URL`, select Install plugin. The first step links to `CHATGPT_DIRECTORY_URL` in a new tab and names the listing, Georgia Public Data. In a chat, mention `@Georgia Public Data`, or pick it from the plus menu. The `CopyField` adds it as a custom MCP server instead: Plugins, Add, Add custom MCP server, authentication None. A custom server needs a paid plan. | `WEBSITE-FR-007` |
+| claude.ai      | Open `CLAUDE_DIRECTORY_URL`, select Connect. The first step links to `CLAUDE_DIRECTORY_URL` in a new tab. The `CopyField` adds it as a custom connector instead. | `WEBSITE-FR-007` |
 | Claude Desktop and mobile | No steps. The connector of claude.ai appears in the desktop and mobile apps of the same account. Points to the local guides. | `WEBSITE-FR-007` |
 | Claude Code    | The connector of claude.ai appears in Claude Code under the same account, listed in `/mcp` as `claude.ai Georgia MCP`. To add it yourself: `claude mcp add --transport http georgia-mcp {url}` | `WEBSITE-FR-007` |
-| ChatGPT        | Plugins, the plus button, Add custom MCP server. Name `Georgia MCP`, URL `{url}`, authentication None, accept the warning. A paid plan. | `WEBSITE-FR-007` |
 | Cursor         | An install link, "Add to Cursor". Then `~/.cursor/mcp.json`: `{"mcpServers": {"georgia-mcp": {"url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
 | VS Code        | An install link, "Add to VS Code". Then `.vscode/mcp.json`: `{"servers": {"georgia-mcp": {"type": "http", "url": "{url}"}}}` | `WEBSITE-FR-007`, `FR-040` |
 | Binary         | Download from `{REPO_URL}/releases/latest`, or `go install github.com/abgeo/georgia-mcp/cmd/georgia-mcp@latest`. Then `claude mcp add georgia-mcp -- georgia-mcp stdio`. | `WEBSITE-FR-009` |
@@ -1006,7 +1007,16 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 
 **Given** both home pages.
 **When** the test reads the panel of claude.ai.
-**Then** it links to `CLAUDE_DIRECTORY_URL`, holds a `CopyField` with `SERVER_URL`, and does not name the limit of the Free plan.
+**Then** it links to `CLAUDE_DIRECTORY_URL` in a new tab, holds a `CopyField` with `SERVER_URL`, and does not name the limit of the Free plan.
+
+### `WEBSITE-SC-057`
+
+**Verifies:** `WEBSITE-FR-007`
+**Layer:** build
+
+**Given** both home pages.
+**When** the test reads the panel of ChatGPT.
+**Then** it links to `CHATGPT_DIRECTORY_URL` in a new tab, names Georgia Public Data, and holds a `CopyField` with `SERVER_URL`.
 
 ### `WEBSITE-SC-052`
 
@@ -1085,6 +1095,7 @@ The button reads the tokens of `BRD-007`, so it needs no image from another host
 | 26  | Write the tests of the site version. Move the link of the site version to `src/lib/release.ts`. Declare `PUBLIC_VERSION`, add it to the footer, and pass `VERSION` to the build stage of the image. | `WEBSITE-DD-025`, `SC-052`, `SC-053` | [x] |
 | 27  | Write the tests of the install links. Write `src/lib/install.ts`, the `add` copy of both dictionaries, and the button in `InstallGuides`. | `WEBSITE-DD-026`, `SC-054`, `SC-055` | [x] |
 | 28  | Write the test of the rows of the contexts. Make `.cards` a container that wraps and centers each row. | `WEBSITE-DD-027`, `SC-056` | [x] |
+| 29  | Write the test of the guide of ChatGPT. Add `CHATGPT_DIRECTORY_URL`, the link of the plugin directory, and its copy. | `WEBSITE-FR-007`, `SC-057` | [x] |
 
 ## 8. Out of scope for this specification
 
