@@ -4,7 +4,7 @@ title: The public transport of Tbilisi
 type: spec
 status: approved
 created: 2026-10-19
-updated: 2026-11-06
+updated: 2026-11-16
 context: transit
 approved_by: Temuri
 approved_on: 2026-10-19
@@ -35,7 +35,7 @@ search, a nearby query, and the resolution of a stop or a route send no call.
 | `TTCTRANS-FR-007`  | 4.2 `ArrivalRequest.Route`. `TTCTRANS-DD-006`                         |
 | `TTCTRANS-FR-008`  | 4.2 `SearchRoutes`. Tools, `transit_search_routes`                    |
 | `TTCTRANS-FR-009`  | `TTCTRANS-DD-004`                                                     |
-| `TTCTRANS-FR-010`  | 4.2 `GetRoute`, `resolveRoute`. 4.5                                   |
+| `TTCTRANS-FR-010`  | 4.2 `GetRoute`, `resolveRoute`. 4.5. `TTCTRANS-DD-014`               |
 | `TTCTRANS-FR-011`  | 4.2 `GetTimetable`. `TTCTRANS-DD-007`, `TTCTRANS-DD-008`              |
 | `TTCTRANS-FR-012`  | 4.2 `DateOutsideTimetableError`. 4.5                                  |
 | `TTCTRANS-FR-013`  | 4.2 `PlanTrip`. `TTCTRANS-DD-010`                                     |
@@ -213,7 +213,7 @@ field. A status other than 200 returns an `*APIError` that wraps `ErrUnexpectedS
 | ------------ | ----------------------------------------------------------------- | ---------- |
 | `Stops`      | `Stops` with `ka`, then with `en`                                 | Join by `id` into `Name{Georgian, English}`. A stop in one list only keeps the one name. Mode `BUS` gives `bus`, `SUBWAY` gives `metro`, `GONDOLA` gives `cable_car`. An unknown mode fails the answer. |
 | `Routes`     | `Routes` with `ka`, then with `en`                                | As `Stops`. `TTCTRANS-DD-004` gives the kind. |
-| `Directions` | `Route` with `ka` and `en`, then `PatternStops` with `en` for each pattern | One `Direction` for each pattern: `ID` is `directionId`, `Headsign` joins both languages, `Stops` is the ordered list of stop identifiers. |
+| `Directions` | `Route` with `ka` and `en` at once, then `PatternStops` with `en` for each pattern at once. `TTCTRANS-DD-014`. | One `Direction` for each pattern: `ID` is `directionId`, `Headsign` joins both languages, `Stops` is the ordered list of stop identifiers. |
 | `Timetable`  | `Route` with `en`, then `Schedule` with `en` for the pattern of the direction | `TTCTRANS-DD-007`, `TTCTRANS-DD-008`. An unknown direction returns `app.ErrUnknownDirection`. |
 | `Arrivals`   | `ArrivalTimes` with the stop, the route, and the maximum          | `TTCTRANS-DD-005`. |
 | `Plan`       | `Plan`                                                            | `TTCTRANS-DD-009`, `TTCTRANS-DD-010`. |
@@ -659,9 +659,23 @@ first draft gave 5 and 5: 10 calls in one second. `TTCTRANS-SC-043` failed with 
 **Alternatives:** 3 each second with a burst of 2. A cold read of a route sends 4 calls,
 and the burst of 2 saves no time on 4 calls in a row.
 
+### `TTCTRANS-DD-014`
+
+**Realizes:** `TTCTRANS-FR-010`
+**Decision:** `Directions` sends the 2 calls of `Route` at once, then the calls of
+`PatternStops` at once. The calls of one step do not depend on each other. The first
+failure cancels the other calls of its step.
+**Rationale:** The TTC answered the hosted server in about 1.7 s for each call on
+2026-11-16. 4 calls in a row took 6.9 s for a cold read of a route of 2 patterns. 2 steps
+take about 2 calls. The limit of `TTCTRANS-DD-013` sits in the transport, so it still
+holds.
+**Alternatives:** One step for all the calls. `PatternStops` needs the patterns of
+`Route`. A cache of the answer of `Route` for `Timetable`. It adds a store, and
+`Timetable` sends 2 calls only.
+
 ## 6. Scenarios
 
-`spec-scenarios.md` holds `TTCTRANS-SC-001` to `TTCTRANS-SC-044`.
+`spec-scenarios.md` holds `TTCTRANS-SC-001` to `TTCTRANS-SC-045`.
 
 ## 7. Build plan
 
@@ -674,6 +688,7 @@ and the burst of 2 saves no time on 4 calls in a row.
 | 5   | `adapter/cache`.                                                          | `TTCTRANS-NFR-001` to `TTCTRANS-NFR-003`   | [x]  |
 | 6   | `adapter/tool`: the eight tools.                                          | `TTCTRANS-INV-001` to `TTCTRANS-INV-003`   | [x]  |
 | 7   | `config.go`, `module.go`, `bootstrap`, `.env.example`, the tests that load the configuration. | `TTCTRANS-FR-021`, `TTCTRANS-FR-022`, `TTCTRANS-NFR-004` | [x]  |
+| 8   | The test of the calls at once. `Directions` sends each step at once.      | `TTCTRANS-DD-014`, `TTCTRANS-SC-045`       | [x]  |
 
 ## 8. Out of scope for this specification
 
