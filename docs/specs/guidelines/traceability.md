@@ -213,6 +213,7 @@ Add a row before you create the file or the directory.
 | `TASPERM`  | `features/tasperm/`  | `permits`  | The applications of the Tbilisi Architecture Service: by parcel, by number, and by period. | Approved |
 | `PARL`     | `features/parl/`     | `parliament` | The bills, votes, and questions of the members of the Parliament of Georgia. | Approved |
 | `GSEGRID`  | `features/gsegrid/`  | `energy`   | The electricity grid of GSE: generation, consumption, flows, and frequency, now or in the last 31 days. | Approved |
+| `GNERCMON` | `features/gnercmon/` | `energy`   | The monthly electricity balance and prices of GNERC.            | Approved |
 
 ## Retired identifiers
 

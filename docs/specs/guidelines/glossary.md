@@ -211,6 +211,18 @@ define it. The identifier of a term is `GLO-<term>`.
 | net import | The sum of every flow of a grid slot. A negative net import is an export. |
 | quality code | The code that GSE gives a value: `ACT`, `SUB`, `NRE`, or `BLS`. |
 | frequency | The frequency of the grid in Hz. Its nominal value is 50. |
+| GNERC | The Georgian National Energy and Water Supply Regulatory Commission. Vendor code `gnerc`. |
+| balance | The electricity of Georgia in one month or one year: generation, import, supply, consumption, export, losses, and transit, in million kWh. |
+| balance item | One row of the balance: `hydro generation`, `import from Turkey`. |
+| published month | A month for which GNERC gives a total generation above zero, or a price. |
+| station own use | The electricity that power stations use or lose before the grid. |
+| supply | The total generation less the station own use, plus the import. |
+| domestic consumption | The total generation plus the import, less the export. |
+| transit | The electricity that crosses Georgia from one country to another. |
+| balancing electricity price | The average price, weighted by quantity, of the balancing electricity sold in a month. |
+| guaranteed capacity fee | The fee for the capacity of the guaranteed stations, for each kWh. |
+| deregulated station price | The price of the electricity that the market operator bought from deregulated stations to set the balancing electricity price. |
+| tetri | One hundredth of a lari. |
 
 ## Law
 
