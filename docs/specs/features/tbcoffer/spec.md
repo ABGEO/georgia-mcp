@@ -4,7 +4,7 @@ title: The card offers of TBC Bank
 type: spec
 status: approved
 created: 2026-10-20
-updated: 2026-10-22
+updated: 2026-11-16
 context: offers
 approved_by: Temuri
 approved_on: 2026-10-20
@@ -26,7 +26,7 @@ one list for each filter of TBC.
 | Requirement        | Where this specification realizes it            |
 | ------------------ | ----------------------------------------------- |
 | `TBCOFFER-FR-001`  | 4.1 `adapter/tbc`. `TBCOFFER-DD-001`            |
-| `TBCOFFER-FR-002`  | `TBCOFFER-DD-002`                               |
+| `TBCOFFER-FR-002`  | `TBCOFFER-DD-002`. `TBCOFFER-SC-011`            |
 | `TBCOFFER-FR-003`  | `TBCOFFER-DD-001`, `TBCOFFER-DD-002`            |
 | `TBCOFFER-FR-004`  | `TBCOFFER-DD-001`, `TBCOFFER-DD-002`            |
 | `TBCOFFER-FR-005`  | `TBCOFFER-DD-001`, `TBCOFFER-DD-002`            |
@@ -235,12 +235,16 @@ about 40 calls on 2026-10-20. One detail call for each offer costs 518.
 **Decision:** Fixed tables. A code that is not in a table gives the value of the last
 row, and a warning one time for each code.
 
-| Segment id               | Tier       |
-| ------------------------ | ---------- |
-| `64mvOqr0aBsBrvFAbtHoz9` | `standard` |
-| `5I27EbKG2HykRaU760nvck` | `premium`  |
-| `1opQpNUWlkhEPLDyVjeGm5` | `youth`    |
-| other                    | none       |
+| Segment id               | Label            | Tier       |
+| ------------------------ | ---------------- | ---------- |
+| `64mvOqr0aBsBrvFAbtHoz9` | For Everyone     | `standard` |
+| `6gyl5FRPnrS66J79o230lD` | Emigrants        | `standard` |
+| `5I27EbKG2HykRaU760nvck` | Concept          | `premium`  |
+| `4QFNANlkPnt4tuCYva9nN9` | Concept Partners | `premium`  |
+| `1opQpNUWlkhEPLDyVjeGm5` | For Youth        | `youth`    |
+| `6WK1EC8bbUzUG02i51urvP` | Expats           | none, with no warning |
+| `5FSNwGngwsxY6Giq6U8Ani` | Installment      | none, with no warning |
+| other                    |                  | none       |
 
 | `Category` code                                                       | Category        |
 | --------------------------------------------------------------------- | --------------- |
@@ -274,6 +278,7 @@ row, and a warning one time for each code.
 | `ProductType:PayLater`       | `pay_later`    | Pay Later          |
 | `ProductType:Installment`    | `installment`  | Installment        |
 | `ProductType:Crypto`         | `crypto`       | Crypto             |
+| `ProductType:Investments`    | `investments`  | Investments        |
 | `ProductType:Pupil'sCard`    | `pupil_card`   | Pupil's Card       |
 | `CardType:CreditCard`        | `visa`         | Visa               |
 | `CardType:MasterCard`        | `mastercard`   | Mastercard         |
@@ -347,7 +352,8 @@ list for every other filter.
 **When** `Search` runs with `tbc` and no other filter on 2026-10-20.
 **Then** "Oktopus" has the tiers `[premium]`, the partner "Oktopus Fitness Club", the
 period 2026-10-20 to 2026-10-21, and an address on `tbcconcept.ge/en/offers/`. No offer
-ends before 2026-10-20. The two offers of Emigrants and Installment are absent.
+ends before 2026-10-20. The offer of Installment is absent. The offer of Emigrants has
+the tiers `[standard]`.
 
 ### `TBCOFFER-SC-005`
 
@@ -408,6 +414,18 @@ blank line.
 **When** a client calls the search with `banks: ["tbc"]`.
 **Then** the tool returns `IsError` with `banks: "tbc" is not a bank of this server. Use one of: bog.`
 
+### `TBCOFFER-SC-011`
+
+**Verifies:** `TBCOFFER-FR-002`
+**Layer:** unit
+
+**Given** 4 entries: one of Emigrants only, one of Concept Partners only, one of
+Installment only, and one of Concept and Expats.
+**When** the adapter reads the offers.
+**Then** the first has the tiers `[standard]`. The second has the tiers `[premium]` and an
+address on `tbcconcept.ge`. The third is absent. The fourth has the tiers `[premium]`.
+The log holds no warning of a segment.
+
 ## 7. Build plan
 
 | #   | Step                                                                  | Realizes                                | Done |
@@ -416,6 +434,7 @@ blank line.
 | 2   | `adapter/tbc`: the read of `TBCOFFER-DD-001`, the tables, the terms.  | `TBCOFFER-FR-001` to `TBCOFFER-FR-007`  | [x]  |
 | 3   | `config.go`, `module.go`, `configs/.env.example`.                     | `TBCOFFER-FR-008`, `TBCOFFER-NFR-001`   | [x]  |
 | 4   | Move the terms of requirements 5 to the glossary.                     | `DOM-002`                               | [x]  |
+| 5   | The test of the segments of 2026-11-16. Emigrants, Concept Partners, Expats, Installment, and Investments in the tables. | `TBCOFFER-FR-002`, `TBCOFFER-SC-011` | [x]  |
 
 ## 8. Out of scope for this specification
 

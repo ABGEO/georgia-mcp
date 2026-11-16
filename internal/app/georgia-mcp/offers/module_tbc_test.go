@@ -171,19 +171,40 @@ func TestSearchOfTBC(t *testing.T) {
 		t.Errorf("Oktopus = %+v, want %+v", got, want)
 	}
 
-	tierless := []string{
-		"A Special Offer for Emigrants from TBC Bank and Metropol",
-		"12-Month Interest-Free Installment Plan, Effective 4.3%",
-	}
+	checkTheTiersOfTBC(t, collected)
+}
+
+// checkTheTiersOfTBC checks that no offer ended before 2026-10-20, that the offer of
+// Installment is absent, and that the offer of Emigrants has the tier standard.
+func checkTheTiersOfTBC(t *testing.T, collected []offerJSON) {
+	t.Helper()
+
+	const (
+		installment = "12-Month Interest-Free Installment Plan, Effective 4.3%"
+		emigrants   = "A Special Offer for Emigrants from TBC Bank and Metropol"
+	)
+
+	foundEmigrants := false
 
 	for _, offer := range collected {
 		if offer.EndDate != "" && offer.EndDate < "2026-10-20" {
 			t.Errorf("offer %s ended on %s", offer.ID, offer.EndDate)
 		}
 
-		if slices.Contains(tierless, offer.Title) {
+		switch offer.Title {
+		case installment:
 			t.Errorf("the answer holds %q", offer.Title)
+		case emigrants:
+			foundEmigrants = true
+
+			if !slices.Equal(offer.Tiers, []string{"standard"}) {
+				t.Errorf("the offer of Emigrants has the tiers %v, want [standard]", offer.Tiers)
+			}
 		}
+	}
+
+	if !foundEmigrants {
+		t.Errorf("the answer holds no %q", emigrants)
 	}
 }
 

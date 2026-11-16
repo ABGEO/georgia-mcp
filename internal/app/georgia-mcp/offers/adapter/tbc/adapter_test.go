@@ -203,9 +203,9 @@ func TestOffersJoinTheFilters(t *testing.T) {
 		t.Fatalf("Offers() error = %v", err)
 	}
 
-	if len(catalog.Offers) != 516 || !catalog.ReadAt.Equal(readAt()) {
+	if len(catalog.Offers) != 517 || !catalog.ReadAt.Equal(readAt()) {
 		t.Errorf(
-			"catalog = %d offers at %v; want 516 at %v",
+			"catalog = %d offers at %v; want 517 at %v",
 			len(catalog.Offers),
 			catalog.ReadAt,
 			readAt(),
@@ -317,20 +317,42 @@ func TestOffersMapAnEntry(t *testing.T) {
 		t.Errorf("benefit = %q, terms = %q", got.Benefit, got.Terms)
 	}
 
-	tierless := []string{
-		"A Special Offer for Emigrants from TBC Bank and Metropol",
-		"12-Month Interest-Free Installment Plan, Effective 4.3%",
-	}
+	checkTheRecordedTiers(t, catalog)
+}
+
+// checkTheRecordedTiers checks that the offer of Installment is absent, that the offer
+// of Emigrants has the tier standard, and that an offer with no premium tier has its
+// address on tbcbank.ge.
+func checkTheRecordedTiers(t *testing.T, catalog app.Catalog) {
+	t.Helper()
+
+	const (
+		installment = "12-Month Interest-Free Installment Plan, Effective 4.3%"
+		emigrants   = "A Special Offer for Emigrants from TBC Bank and Metropol"
+	)
+
+	foundEmigrants := false
 
 	for _, offer := range catalog.Offers {
-		if slices.Contains(tierless, offer.Title) {
+		switch offer.Title {
+		case installment:
 			t.Errorf("the catalog holds %q, an offer with no tier", offer.Title)
+		case emigrants:
+			foundEmigrants = true
+
+			if !slices.Equal(offer.Tiers, []domain.Tier{domain.TierStandard}) {
+				t.Errorf("the offer of Emigrants has the tiers %v, want [standard]", offer.Tiers)
+			}
 		}
 
 		if !slices.Contains(offer.Tiers, domain.TierPremium) &&
 			!strings.HasPrefix(offer.URL, "https://tbcbank.ge/en/offers/all-offers/") {
 			t.Errorf("offer %s has the address %s", offer.ID, offer.URL)
 		}
+	}
+
+	if !foundEmigrants {
+		t.Errorf("the catalog holds no %q", emigrants)
 	}
 }
 
@@ -399,6 +421,84 @@ func TestOffersMapTheUnknownCodes(t *testing.T) {
 	}
 }
 
+// entryOf returns an entry whose id, title, and slug are id, with the segments.
+func entryOf(id string, segments ...string) tbcoffers.Entry {
+	list := make([]tbcoffers.Segment, 0, len(segments))
+	for _, segment := range segments {
+		list = append(list, tbcoffers.Segment{ID: segment})
+	}
+
+	return tbcoffers.Entry{ID: id, Title: id, Slug: id, Segments: list}
+}
+
+// addEntries adds the entries to the recorded list of every offer.
+func addEntries(t *testing.T, fake *fakeTBC, entries ...tbcoffers.Entry) {
+	t.Helper()
+
+	var page tbcoffers.OffersPage
+	if err := json.Unmarshal(fake.bodies["list/"], &page); err != nil {
+		t.Fatal(err)
+	}
+
+	page.List = append(page.List, entries...)
+	fake.bodies["list/"] = mustMarshal(t, page)
+}
+
+// TBCOFFER-SC-011: Emigrants is standard, Concept Partners is premium, and Expats and
+// Installment give no tier with no warning.
+func TestOffersMapTheSegments(t *testing.T) {
+	t.Parallel()
+
+	const (
+		emigrants       = "6gyl5FRPnrS66J79o230lD"
+		conceptPartners = "4QFNANlkPnt4tuCYva9nN9"
+		installment     = "5FSNwGngwsxY6Giq6U8Ani"
+		concept         = "5I27EbKG2HykRaU760nvck"
+		expats          = "6WK1EC8bbUzUG02i51urvP"
+	)
+
+	fake := recorded(t)
+	addEntries(t, fake,
+		entryOf("emigrants", emigrants),
+		entryOf("partners", conceptPartners),
+		entryOf("installment", installment),
+		entryOf("conceptExpats", concept, expats),
+	)
+
+	sink := &syncBuffer{}
+
+	catalog, err := fake.adapter(t, sink).Offers(t.Context(), kernel.LanguageEnglish)
+	if err != nil {
+		t.Fatalf("Offers() error = %v", err)
+	}
+
+	want := map[string][]domain.Tier{
+		"emigrants":     {domain.TierStandard},
+		"partners":      {domain.TierPremium},
+		"conceptExpats": {domain.TierPremium},
+	}
+	for id, tiers := range want {
+		if got := find(t, catalog, id).Tiers; !slices.Equal(got, tiers) {
+			t.Errorf("%s tiers = %v, want %v", id, got, tiers)
+		}
+	}
+
+	if address := find(t, catalog, "partners").URL; !strings.Contains(address, "tbcconcept.ge") {
+		t.Errorf("partners URL = %s, want an address on tbcconcept.ge", address)
+	}
+
+	if slices.ContainsFunc(
+		catalog.Offers,
+		func(offer domain.Offer) bool { return offer.ID == "installment" },
+	) {
+		t.Error("the catalog holds the offer of Installment")
+	}
+
+	if log := sink.String(); strings.Contains(log, "field=segment") {
+		t.Errorf("the log warns of a segment:\n%s", log)
+	}
+}
+
 // TBCOFFER-SC-008: A failed filter list fails the read.
 func TestOffersFailOnAFilter(t *testing.T) {
 	t.Parallel()
@@ -461,11 +561,11 @@ func TestBankAndCards(t *testing.T) {
 	}
 
 	cards := adapter.Cards()
-	if len(cards) != 10 ||
+	if len(cards) != 11 ||
 		!slices.IsSortedFunc(
 			cards,
 			func(a, b domain.Card) int { return strings.Compare(string(a.Code), string(b.Code)) },
 		) {
-		t.Errorf("Cards() = %v, want 10 sorted by code", cards)
+		t.Errorf("Cards() = %v, want 11 sorted by code", cards)
 	}
 }
