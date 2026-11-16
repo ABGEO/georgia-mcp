@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/sync/errgroup"
+
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit/app"
 	"github.com/abgeo/georgia-mcp/internal/app/georgia-mcp/transit/domain"
 	"github.com/abgeo/georgia-mcp/internal/pkg/kernel"
@@ -133,12 +135,7 @@ func (a *Adapter) Routes(ctx context.Context) (app.RouteList, error) {
 func (a *Adapter) Directions(ctx context.Context, route domain.RouteID) (app.DirectionList, error) {
 	action := "reading the directions of " + string(route)
 
-	georgian, err := a.client.Route(ctx, string(route), string(kernel.LanguageGeorgian))
-	if err != nil {
-		return app.DirectionList{}, a.fail(ctx, action, err)
-	}
-
-	english, err := a.client.Route(ctx, string(route), string(kernel.LanguageEnglish))
+	georgian, english, err := a.routeDetails(ctx, string(route))
 	if err != nil {
 		return app.DirectionList{}, a.fail(ctx, action, err)
 	}
@@ -148,21 +145,16 @@ func (a *Adapter) Directions(ctx context.Context, route domain.RouteID) (app.Dir
 		headsigns[pattern.PatternSuffix] = pattern.Headsign
 	}
 
+	stops, err := a.patternStops(ctx, string(route), english.Patterns)
+	if err != nil {
+		return app.DirectionList{}, a.fail(ctx, action, err)
+	}
+
 	directions := make([]domain.Direction, 0, len(english.Patterns))
 
-	for _, pattern := range english.Patterns {
-		stops, err := a.client.PatternStops(
-			ctx,
-			string(route),
-			pattern.PatternSuffix,
-			string(kernel.LanguageEnglish),
-		)
-		if err != nil {
-			return app.DirectionList{}, a.fail(ctx, action, err)
-		}
-
-		ids := make([]domain.StopID, 0, len(stops))
-		for _, stop := range stops {
+	for i, pattern := range english.Patterns {
+		ids := make([]domain.StopID, 0, len(stops[i]))
+		for _, stop := range stops[i] {
 			ids = append(ids, domain.StopID(stop.ID))
 		}
 
@@ -351,6 +343,70 @@ func (a *Adapter) fail(ctx context.Context, action string, err error) error {
 	}
 
 	return fmt.Errorf("%s: %w: %w", action, kernel.ErrSourceUnavailable, err)
+}
+
+// routeDetails reads the route in Georgian and in English at once.
+func (a *Adapter) routeDetails(
+	ctx context.Context,
+	route string,
+) (ttcclient.RouteDetail, ttcclient.RouteDetail, error) {
+	var georgian, english ttcclient.RouteDetail
+
+	group, groupCtx := errgroup.WithContext(ctx)
+	group.Go(func() error {
+		var err error
+
+		georgian, err = a.client.Route(groupCtx, route, string(kernel.LanguageGeorgian))
+
+		return err
+	})
+	group.Go(func() error {
+		var err error
+
+		english, err = a.client.Route(groupCtx, route, string(kernel.LanguageEnglish))
+
+		return err
+	})
+
+	if err := group.Wait(); err != nil {
+		return ttcclient.RouteDetail{}, ttcclient.RouteDetail{}, fmt.Errorf(
+			"reading the route: %w",
+			err,
+		)
+	}
+
+	return georgian, english, nil
+}
+
+// patternStops reads the stops of each pattern at once, in the order of the patterns.
+func (a *Adapter) patternStops(
+	ctx context.Context,
+	route string,
+	patterns []ttcclient.Pattern,
+) ([][]ttcclient.Stop, error) {
+	stops := make([][]ttcclient.Stop, len(patterns))
+
+	group, groupCtx := errgroup.WithContext(ctx)
+	for i, pattern := range patterns {
+		group.Go(func() error {
+			var err error
+
+			stops[i], err = a.client.PatternStops(
+				groupCtx,
+				route,
+				pattern.PatternSuffix,
+				string(kernel.LanguageEnglish),
+			)
+
+			return err
+		})
+	}
+
+	if err := group.Wait(); err != nil {
+		return nil, fmt.Errorf("reading the stops of the patterns: %w", err)
+	}
+
+	return stops, nil
 }
 
 func toStop(stop ttcclient.Stop, georgian string) (domain.Stop, error) {

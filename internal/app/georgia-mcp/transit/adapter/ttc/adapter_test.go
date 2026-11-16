@@ -106,7 +106,17 @@ func selector(r *http.Request) string {
 func fakeTTC(t *testing.T, overrides map[string]reply) *httptest.Server {
 	t.Helper()
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(ttcHandler(t, overrides))
+	t.Cleanup(server.Close)
+
+	return server
+}
+
+// ttcHandler answers as the TTC, from the recorded answers and the overrides.
+func ttcHandler(t *testing.T, overrides map[string]reply) http.Handler {
+	t.Helper()
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("X-Api-Key") != testKey {
 			w.WriteHeader(http.StatusUnauthorized)
 			_, _ = w.Write([]byte("Unauthorized"))
@@ -129,10 +139,7 @@ func fakeTTC(t *testing.T, overrides map[string]reply) *httptest.Server {
 		}
 
 		_, _ = w.Write(recorded(t, name))
-	}))
-	t.Cleanup(server.Close)
-
-	return server
+	})
 }
 
 func recorded(t *testing.T, name string) []byte {
@@ -378,6 +385,64 @@ func TestDirectionsOfALoop(t *testing.T) {
 	stops := loop.Directions[0].Stops
 	if len(stops) != 22 || stops[0] != "1:1001" || stops[21] != "1:1001" {
 		t.Errorf("stops = %v, want 22 from and to 1:1001", stops)
+	}
+}
+
+// pairs holds each call of a path until a second call of the same path arrives. A call
+// that waits longer than patience gets a 504.
+func pairs(next http.Handler, patience time.Duration) http.Handler {
+	var (
+		mu      sync.Mutex
+		counts  = map[string]int{}
+		arrived = map[string]chan struct{}{}
+	)
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+
+		both, found := arrived[r.URL.Path]
+		if !found {
+			both = make(chan struct{})
+			arrived[r.URL.Path] = both
+		}
+
+		counts[r.URL.Path]++
+		if counts[r.URL.Path] == 2 {
+			close(both)
+		}
+
+		mu.Unlock()
+
+		select {
+		case <-both:
+			next.ServeHTTP(w, r)
+		case <-time.After(patience):
+			w.WriteHeader(http.StatusGatewayTimeout)
+		}
+	})
+}
+
+// TTCTRANS-SC-045: The 2 calls of Route and the 2 calls of PatternStops each arrive
+// together.
+func TestDirectionsSendsEachStepAtOnce(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(pairs(ttcHandler(t, nil), 2*time.Second))
+	t.Cleanup(server.Close)
+
+	adapter := ttc.NewAdapter(
+		ttcclient.New(vendorhttp.WithBaseURL(server.URL), ttcclient.WithAPIKey(testKey)),
+		readAt,
+		slog.New(slog.NewJSONHandler(&syncBuffer{}, nil)),
+	)
+
+	metro, err := adapter.Directions(t.Context(), metroLine1)
+	if err != nil {
+		t.Fatalf("Directions(metro) error = %v", err)
+	}
+
+	if len(metro.Directions) != 2 {
+		t.Errorf("Directions(metro) gives %d directions, want 2", len(metro.Directions))
 	}
 }
 
