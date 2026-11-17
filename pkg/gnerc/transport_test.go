@@ -44,6 +44,11 @@ func TestTransportTrustsTheIntermediate(t *testing.T) {
 
 	transport := gnerc.NewTransport()
 	if transport.TLSClientConfig == nil || transport.TLSClientConfig.RootCAs == nil {
-		t.Error("NewTransport() has no roots")
+		t.Fatal("NewTransport() has no roots")
+	}
+
+	_, err = cert.Verify(x509.VerifyOptions{Roots: transport.TLSClientConfig.RootCAs})
+	if err != nil {
+		t.Errorf("Verify() over the roots of NewTransport() error = %v, want it trusted", err)
 	}
 }

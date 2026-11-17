@@ -32,9 +32,9 @@ const (
 )
 
 var (
-	errNoLink   = errors.New("no link of the workbook")
-	errTwoLinks = errors.New("more than one link of the workbook")
-	errBadValue = errors.New("a value that is not a number")
+	errNoLink   = errors.New("workbook: no link")
+	errTwoLinks = errors.New("workbook: more than one link")
+	errBadValue = errors.New("cell: not a number")
 )
 
 // Adapter implements app.BalanceSource and app.PriceSource over the GNERC client.

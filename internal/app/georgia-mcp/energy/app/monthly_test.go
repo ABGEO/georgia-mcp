@@ -139,8 +139,12 @@ func TestGetBalanceRefusesThePeriod(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		_, err := app.NewGetBalance(&fakeBalance{}).Get(t.Context(), tt.query)
-		checkPeriodError(t, err, tt.field, tt.value, month(2022, time.January))
+		t.Run(tt.value, func(t *testing.T) {
+			t.Parallel()
+
+			_, err := app.NewGetBalance(&fakeBalance{}).Get(t.Context(), tt.query)
+			checkPeriodError(t, err, tt.field, tt.value, month(2022, time.January))
+		})
 	}
 }
 
@@ -202,6 +206,12 @@ func TestListPricesGivesThePeriod(t *testing.T) {
 
 	checkMonths(t, listPrices(t, app.PriceQuery{To: month(2025, time.December)}),
 		month(2025, time.January), month(2025, time.December), 12)
+
+	checkMonths(t, listPrices(t, app.PriceQuery{To: month(2027, time.December)}),
+		month(2025, time.October), newest(), 12)
+
+	checkMonths(t, listPrices(t, app.PriceQuery{To: month(2015, time.June)}),
+		month(2015, time.January), month(2015, time.June), 6)
 }
 
 // GNERCMON-SC-017: A start out of range, a reversed period, and a period of more than 60
@@ -228,6 +238,14 @@ func TestListPricesRefusesThePeriod(t *testing.T) {
 		list(app.PriceQuery{From: month(2026, time.October)}),
 		"from",
 		"2026-10",
+		first,
+	)
+
+	checkPeriodError(
+		t,
+		list(app.PriceQuery{To: month(2014, time.December)}),
+		"to",
+		"2014-12",
 		first,
 	)
 

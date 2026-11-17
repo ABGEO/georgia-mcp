@@ -2,6 +2,7 @@ package gnerc
 
 import (
 	"fmt"
+	"maps"
 	"slices"
 	"strconv"
 	"strings"
@@ -72,19 +73,17 @@ func pricesOf(book gnercclient.Workbook) (map[domain.Month]decimal.Decimal, erro
 // joinPrices returns each month from domain.FirstPriceYear with a price in a series, in
 // order.
 func joinPrices(series [priceSeries]map[domain.Month]decimal.Decimal) []domain.MonthPrices {
-	var months []domain.Month
+	published := map[domain.Month]bool{}
 
 	for _, prices := range series {
-		for m := range prices {
-			if m.Year >= domain.FirstPriceYear && !slices.Contains(months, m) {
-				months = append(months, m)
+		for month := range prices {
+			if month.Year >= domain.FirstPriceYear {
+				published[month] = true
 			}
 		}
 	}
 
-	slices.SortFunc(months, func(a, b domain.Month) int {
-		return a.MonthsFrom(b) - 1
-	})
+	months := slices.SortedFunc(maps.Keys(published), domain.Month.Compare)
 
 	joined := make([]domain.MonthPrices, 0, len(months))
 

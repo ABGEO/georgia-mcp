@@ -55,6 +55,7 @@ period from 2015.
 | ---------------------- | ------------------------------------------------------------------------------ |
 | `ARC-004`, `CLT-001`   | `pkg/gnerc` is a package of the server module.                                 |
 | `ARC-008`              | `energy` imports no other context.                                             |
+| `PKG-003`              | GSE and GNERC serve different ports. `module.go` builds each with its own switch (`ADR-0007`). |
 | `ARC-009`, `CFG-004`   | `bootstrap` builds the module of `energy` from `Config.Energy`, which gains `GNERC`. |
 | `CLT-002`              | Standard library, `pkg/vendorhttp`, and `golang.org/x/net/html` for the home page: the client reads a web page. `archive/zip` and `encoding/xml` read a workbook. `embed` and `crypto/x509` hold the certificate. |
 | `CLT-003`              | The client returns each link as the page gives it, and each cell as its text in the workbook. It picks no file and parses no number. |
@@ -67,7 +68,7 @@ period from 2015.
 | `DOM-006`, `MCP-009`   | Each value is a `decimal.Decimal`. The tool writes it as a string with 3 decimals. |
 | `DOM-007`              | `as_of` is in `kernel.TbilisiZone()`.                                          |
 | `DOM-009`, `DOM-010`   | Two ports with one method each. Two use cases with one method each.            |
-| `MCP-002` to `MCP-009` | 4.3 tools. `GNERCMON-DD-008`. No `language`: the output holds no text of GNERC. No `limit`: a balance is one record, and the prices hold at most 60 months, as `NBGRATE` bounds its history. |
+| `MCP-002` to `MCP-009` | 4.3 tools. `GNERCMON-DD-008`. No `language`: the output holds no text of GNERC. No `limit`: a balance is one record, and the prices take a period of at most 60 months (`MCP-008`, `ADR-0008`). |
 | `RSL-001`, `RSL-008`   | `vendors.Config.ClientOptions` gives the timeout and the limit.                |
 | `RSL-003` to `RSL-006` | `adapter/cache`. 4.3 cache.                                                    |
 | `CFG-003`, `CFG-008`   | Each variable has the prefix `GEOMCP_ENERGY_GNERC_`. The switch is on by default. |
@@ -118,6 +119,7 @@ func ParseMonth(text string) (Month, error)
 func (m Month) String() string        // "2026-03"
 func (m Month) AddMonths(n int) Month // 2026-01 plus -1 is 2025-12
 func (m Month) Before(o Month) bool
+func (m Month) Compare(o Month) int  // -1, 0, or +1, for slices.SortFunc
 func (m Month) IsZero() bool
 // MonthsFrom returns the count of months from from to m, both included: 2025-01 to 2025-12 is 12.
 func (m Month) MonthsFrom(from Month) int
@@ -243,11 +245,12 @@ a year with no such published month, gives a `*PeriodError`. A year before 2022 
 the year of the newest month gives a `*PeriodError`. A year gives its `Total`, and
 `Months` is the count of its published months.
 
-`List` reads `Prices`. `To` defaults to the newest month. `From` defaults to `To` minus 11
-months. It refuses a `From` before 2015-01, or after the newest month, with a
-`*PeriodError`. It refuses a `To` before `From` with `ErrReversedPeriod`, and more than 60
-months from `From` to `To` with a `*SpanError`. Then it ends the period at the newest month,
-and returns each published month of the period.
+`List` reads `Prices`. A `To` that is zero or after the newest month becomes the newest
+month. A `To` before 2015-01 with no `From` gives a `*PeriodError` of `to`. `From` defaults
+to `To` minus 11 months, and to 2015-01 at the earliest. It refuses a `From` before
+2015-01, or after the newest month, with a `*PeriodError`. It refuses a `To` before `From`
+with `ErrReversedPeriod`, and more than 60 months from `From` to `To` with a `*SpanError`.
+Then it returns each published month of the period.
 
 ### 4.3 Declarations
 
@@ -319,6 +322,7 @@ sequenceDiagram
 | A month of the balance out of range        | `*app.PeriodError`            | `month: 2021-12 is outside the balance of GNERC. Give a month from 2022-01 to 2026-09.` |
 | A year of the balance out of range         | `*app.PeriodError`            | `year: 2021 is outside the balance of GNERC. Give a year from 2022 to 2026.` |
 | A `from` out of range                      | `*app.PeriodError`            | `from: 2014-12 is outside the prices of GNERC. Give a month from 2015-01 to 2026-09.` |
+| A `to` out of range, with no `from`        | `*app.PeriodError`            | `to: 2014-12 is outside the prices of GNERC. Give a month from 2015-01 to 2026-09.` |
 | A `to` before `from`                       | `app.ErrReversedPeriod`       | `to: 2025-01 is before from, 2025-06. Give a period that ends on or after its start.` |
 | More than 60 months                        | `*app.SpanError`              | `from and to: the period holds 72 months. Give at most 60.` |
 | GNERC fails, with no stale value           | `kernel.ErrSourceUnavailable` | `GNERC did not answer. Try again in a few minutes.` |
@@ -460,7 +464,7 @@ The newest month of the balance is 2026-09. `Modified` is 2026-10-21T13:45:18+04
 | `GNERCMON-SC-004`  | `GNERCMON-FR-012` | unit | A 404 and a 500 give an `*APIError` with the status. `errors.Is(err, ErrUnexpectedStatus)` holds. `not-zip.xlsx` gives `ErrNotWorkbook`. |
 | `GNERCMON-SC-005`  | `GNERCMON-FR-013` | unit | The embedded certificate parses with the subject `Go Daddy Secure Certificate Authority - G2` and the SHA-256 of `GNERCMON-DD-002`. The `RootCAs` of `NewTransport` holds it. |
 | `GNERCMON-SC-006`  | `GNERCMON-FR-001`, `GNERCMON-INV-002` | unit | `ParseMonth`: `2026-03` gives March 2026. `2026-3`, `2026-13`, `March`, `2026-03-01`, and the empty text give `ErrInvalidMonth`. `String` gives `2026-03`. A fuzz test holds that a result parses back from its `String`. |
-| `GNERCMON-SC-007`  | `GNERCMON-FR-009` | unit | `AddMonths`: 2026-01 plus -1 is 2025-12, plus 11 is 2026-12. `MonthsFrom`: 2025-01 to 2025-12 is 12, 2020-01 to 2025-12 is 72. `Before` orders by year, then month. |
+| `GNERCMON-SC-007`  | `GNERCMON-FR-009` | unit | `AddMonths`: 2026-01 plus -1 is 2025-12, plus 11 is 2026-12. `MonthsFrom`: 2025-01 to 2025-12 is 12, 2020-01 to 2025-12 is 72. `Before` orders by year, then month. `Compare` gives -1, 0, and +1. |
 | `GNERCMON-SC-008`  | `GNERCMON-INV-001` | unit | `Round`: `388.95957600000003` gives `388.960`, `1.0005` gives `1.001`, `-1.0005` gives `-1.001`, `0` gives `0.000` with `StringFixed(3)`. |
 | `GNERCMON-SC-009`  | `GNERCMON-FR-005`, `GNERCMON-FR-006`, `GNERCMON-FR-011` | unit | The adapter with the recorded links and workbooks gives the years 2022 to 2026, with 12, 12, 12, 12, and 9 months, and the values of the table above. 2022-03 has no key `generation_solar` and no key `consumption_free_market`. 2025-03 has `generation_solar` `0.000`. `Modified` is the time of `Last-Modified` in Tbilisi. |
 | `GNERCMON-SC-010`  | `GNERCMON-FR-012` | unit | `balance-no-import.xlsx`, `balance-bad-value.xlsx`, `not-zip.xlsx`, a home page with no link of the balance, and a 500 for the workbook each give an error that wraps `kernel.ErrSourceUnavailable`. |
@@ -469,15 +473,15 @@ The newest month of the balance is 2026-09. `Modified` is 2026-10-21T13:45:18+04
 | `GNERCMON-SC-013`  | `GNERCMON-FR-001`, `GNERCMON-FR-002` | unit | `Get` with 2026-03 gives its figures. `Get` with the year 2026 gives the year total and `Months` 9. With 2025, `Months` 12. |
 | `GNERCMON-SC-014`  | `GNERCMON-FR-004` | unit | A month with a year gives `ErrMonthAndYear` and calls no source. 2021-12, 2026-10, the year 2021, and the year 2027 each give a `*PeriodError` with `First` 2022-01 and `Newest` 2026-09. |
 | `GNERCMON-SC-015`  | `GNERCMON-FR-008` | unit | `List` with no period gives 2025-10 to 2026-09: 12 months. |
-| `GNERCMON-SC-016`  | `GNERCMON-FR-009` | unit | 2025-01 to 2025-12 gives 12 months. 2026-01 to 2026-12 gives 9 months, to 2026-09. Only `from` 2026-01 gives 2026-01 to 2026-09. Only `to` 2025-12 gives 2025-01 to 2025-12. |
-| `GNERCMON-SC-017`  | `GNERCMON-FR-009` | unit | `from` 2014-12 and `from` 2026-10 each give a `*PeriodError`. 2025-06 to 2025-01 gives `ErrReversedPeriod`. 2020-01 to 2025-12 gives a `*SpanError` with 72. Only `from` 2015-01 gives a `*SpanError` with 141. |
+| `GNERCMON-SC-016`  | `GNERCMON-FR-009` | unit | 2025-01 to 2025-12 gives 12 months. 2026-01 to 2026-12 gives 9 months, to 2026-09. Only `from` 2026-01 gives 2026-01 to 2026-09. Only `to` 2025-12 gives 2025-01 to 2025-12. Only `to` 2027-12 gives 2025-10 to 2026-09. Only `to` 2015-06 gives 2015-01 to 2015-06. |
+| `GNERCMON-SC-017`  | `GNERCMON-FR-009` | unit | `from` 2014-12 and `from` 2026-10 each give a `*PeriodError` of `from`. Only `to` 2014-12 gives a `*PeriodError` of `to`. 2025-06 to 2025-01 gives `ErrReversedPeriod`. 2020-01 to 2025-12 gives a `*SpanError` with 72. Only `from` 2015-01 gives a `*SpanError` with 141. |
 | `GNERCMON-SC-018`  | `GNERCMON-NFR-001` | unit | In `synctest`, `Balance`, then `Balance` after 5 hours 59 minutes, sends one load. After 6 hours, a second. `Prices` does the same. |
 | `GNERCMON-SC-019`  | `GNERCMON-NFR-002` | unit | In `synctest`, the source fails with `kernel.ErrSourceUnavailable` after one load. At 6 days 23 hours 59 minutes, `Balance` and `Prices` return the book with `Stale` true. At 7 days and 1 minute, they return the error. |
 | `GNERCMON-SC-020`  | `GNERCMON-NFR-003` | unit | In `bootstrap`, `LoadConfig` with no variable of energy gives GNERC on, at `https://data.gnerc.org`, with a timeout of 10 seconds, the rate 2, and the burst 1. |
 | `GNERCMON-SC-021`  | `GNERCMON-FR-013` | unit | `energy.New` with GNERC off and GSE on registers `energy_get_grid` only. With GNERC on and GSE off, it registers `energy_get_balance` and `energy_list_prices` only. |
 | `GNERCMON-SC-022`  | `GNERCMON-FR-001` to `GNERCMON-FR-006`, `GNERCMON-INV-001` to `GNERCMON-INV-003` | integration | `energy_get_balance` with `month` `2026-03`: `source` names GNERC, `as_of` is `2026-10-21T13:45:18+04:00`, `period` `2026-03`, `months` 1, `newest_month` `2026-09`, `unit` `million kWh`. `generation.total` `1102.668`, `generation.solar` `1.314`, `import.russia` `155.484`, `export.turkey` `0.000`, `domestic_consumption` `1326.633`. With `year` 2026: `months` 9, `generation.total` `10308.382`. With `month` `2022-03`: no `generation.solar`, no `consumption.suppliers.free_market`. |
 | `GNERCMON-SC-023`  | `GNERCMON-FR-007` to `GNERCMON-FR-011` | integration | `energy_list_prices` with `from` `2026-07`, `to` `2026-12`: `unit` `tetri per kWh`, `newest_month` `2026-09`, 3 months, the last `2026-09` with `16.068`, `1.607`, `11.655`. |
-| `GNERCMON-SC-024`  | `GNERCMON-FR-004`, `GNERCMON-FR-009` | integration | Each input of 4.5 returns `IsError` with its message: `March`, `month` with `year`, `2021-12`, `year` 2021, `from` `2014-12`, `2025-06` to `2025-01`, and `2020-01` to `2025-12`. |
+| `GNERCMON-SC-024`  | `GNERCMON-FR-004`, `GNERCMON-FR-009` | integration | Each input of 4.5 returns `IsError` with its message: `March`, `month` with `year`, `2021-12`, `year` 2021, `from` `2014-12`, only `to` `2014-12`, `2025-06` to `2025-01`, and `2020-01` to `2025-12`. |
 | `GNERCMON-SC-025`  | `GNERCMON-FR-012` | integration | The vendor answers 500, with an empty cache. Each tool returns `IsError` with `GNERC did not answer. Try again in a few minutes.` |
 | `GNERCMON-SC-026`  | `GNERCMON-NFR-001` | integration | Two calls of `energy_get_balance` and two of `energy_list_prices` send 1 call of the home page and 1 of the workbook for the balance, and 1 of the home page and 3 of the workbooks for the prices. |
 | `GNERCMON-SC-027`  | `GNERCMON-FR-001`, `GNERCMON-FR-013` | live | With the default client, `Links` against `data.gnerc.org` gives a link that holds `ფაქტიური ბალანსი`, and `Workbook` of its base name gives a sheet `<this year or the last> GEO`. |

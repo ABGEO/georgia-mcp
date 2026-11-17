@@ -367,6 +367,11 @@ func TestTheToolsRefuseABadPeriod(t *testing.T) {
 		},
 		{
 			listPrices,
+			map[string]any{keyTo: "2014-12"},
+			"to: 2014-12 is outside the prices of GNERC. Give a month from 2015-01 to 2026-09.",
+		},
+		{
+			listPrices,
 			map[string]any{keyFrom: "2025-06", keyTo: "2025-01"},
 			"to: 2025-01 is before from, 2025-06. Give a period that ends on or after its start.",
 		},
@@ -378,9 +383,13 @@ func TestTheToolsRefuseABadPeriod(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		if got := toolErrorText(t, session, tt.tool, tt.args); got != tt.want {
-			t.Errorf("%s(%v) = %q, want %q", tt.tool, tt.args, got, tt.want)
-		}
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
+
+			if got := toolErrorText(t, session, tt.tool, tt.args); got != tt.want {
+				t.Errorf("%s(%v) = %q, want %q", tt.tool, tt.args, got, tt.want)
+			}
+		})
 	}
 }
 

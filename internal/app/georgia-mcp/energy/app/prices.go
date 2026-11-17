@@ -76,18 +76,30 @@ func (l *ListPrices) List(ctx context.Context, query PriceQuery) (PriceAnswer, e
 }
 
 // period fills the missing ends of query and checks the period against the prices up to
-// newest.
+// newest. A To after newest becomes newest.
 func period(query PriceQuery, newest domain.Month) (domain.Month, domain.Month, error) {
 	first := domain.Month{Year: domain.FirstPriceYear, Month: time.January}
 
 	to := query.To
-	if to.IsZero() {
+	if to.IsZero() || newest.Before(to) {
 		to = newest
 	}
 
 	from := query.From
 	if from.IsZero() {
+		if to.Before(first) {
+			return from, to, &PeriodError{
+				Field:  "to",
+				Value:  to.String(),
+				First:  first,
+				Newest: newest,
+			}
+		}
+
 		from = to.AddMonths(1 - domain.DefaultPriceMonths)
+		if from.Before(first) {
+			from = first
+		}
 	}
 
 	switch {

@@ -24,9 +24,13 @@ func TestParseMonth(t *testing.T) {
 	}
 
 	for _, text := range []string{"2026-3", "2026-13", "March", "2026-03-01", "", "2026-00", "0000-01"} {
-		if _, err := domain.ParseMonth(text); !errors.Is(err, domain.ErrInvalidMonth) {
-			t.Errorf("ParseMonth(%q) error = %v, want ErrInvalidMonth", text, err)
-		}
+		t.Run(text, func(t *testing.T) {
+			t.Parallel()
+
+			if _, err := domain.ParseMonth(text); !errors.Is(err, domain.ErrInvalidMonth) {
+				t.Errorf("ParseMonth(%q) error = %v, want ErrInvalidMonth", text, err)
+			}
+		})
 	}
 }
 
@@ -71,7 +75,8 @@ func TestMonthArithmetic(t *testing.T) {
 	}
 }
 
-// GNERCMON-SC-007: Before orders by year, then by month. IsZero holds for the zero month.
+// GNERCMON-SC-007: Before and Compare order by year, then by month. IsZero holds for the
+// zero month.
 func TestMonthOrder(t *testing.T) {
 	t.Parallel()
 
@@ -84,6 +89,19 @@ func TestMonthOrder(t *testing.T) {
 
 	if !(domain.Month{}).IsZero() || january.IsZero() {
 		t.Error("IsZero holds for the zero month only")
+	}
+
+	for _, tt := range []struct {
+		a, b domain.Month
+		want int
+	}{
+		{month(2025, time.December), january, -1},
+		{january, january, 0},
+		{month(2026, time.February), january, 1},
+	} {
+		if got := tt.a.Compare(tt.b); got != tt.want {
+			t.Errorf("%s.Compare(%s) = %d, want %d", tt.a, tt.b, got, tt.want)
+		}
 	}
 }
 

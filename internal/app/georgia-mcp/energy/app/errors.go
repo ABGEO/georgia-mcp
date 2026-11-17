@@ -57,7 +57,7 @@ var (
 	// ErrPeriodTooLong tells that a period holds more than domain.MaxPriceMonths.
 	ErrPeriodTooLong = errors.New("period: too long")
 	// errNoData tells that a book holds no published month.
-	errNoData = errors.New("no published month")
+	errNoData = errors.New("book: no published month")
 )
 
 // PeriodError tells that a month or a year is outside the data, from First to Newest.

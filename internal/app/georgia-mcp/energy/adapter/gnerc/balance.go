@@ -23,10 +23,10 @@ const (
 )
 
 var (
-	errNoHeader     = errors.New("no header row")
-	errNoColumn     = errors.New("no column")
-	errTwice        = errors.New("an item twice")
-	errNoItem       = errors.New("no required item")
+	errNoHeader     = errors.New("sheet: no header row")
+	errNoColumn     = errors.New("sheet: no column")
+	errTwice        = errors.New("sheet: an item twice")
+	errNoItem       = errors.New("sheet: no required item")
 	footnotePattern = regexp.MustCompile(`\s*\(\*+\)$`)
 )
 

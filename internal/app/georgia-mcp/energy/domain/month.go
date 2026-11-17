@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"cmp"
 	"fmt"
 	"time"
 
@@ -55,6 +56,11 @@ func (m Month) AddMonths(n int) Month {
 // Before tells whether m comes before o.
 func (m Month) Before(o Month) bool {
 	return m.index() < o.index()
+}
+
+// Compare returns -1 when m comes before o, 0 when they are the same, and +1 after.
+func (m Month) Compare(o Month) int {
+	return cmp.Compare(m.index(), o.index())
 }
 
 // IsZero tells whether m is no month.
