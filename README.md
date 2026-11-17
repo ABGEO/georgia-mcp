@@ -73,7 +73,7 @@ model, so you can ask one question and get one answer.
 | Land parcels and addresses | National Agency of Public Registry                                                   |
 | Building permits of Tbilisi | Tbilisi Architecture Service                                                        |
 | Parliament             | Parliament of Georgia                                                                    |
-| Electricity grid       | Georgian State Electrosystem                                                             |
+| Electricity            | Georgian State Electrosystem, Georgian National Energy and Water Supply Regulatory Commission |
 
 ## Install
 
@@ -273,6 +273,8 @@ Three sources need a key, so they are off by default. To turn one on, set its sw
 | `parliament_get_vote`         | One plenary vote, with the choice of each member by faction.            |
 | `parliament_search_questions` | The written questions of the members, with their status.                |
 | `energy_get_grid`             | The generation, consumption, and border flows of the grid, now or past. |
+| `energy_get_balance`          | The monthly or yearly electricity balance: generation, trade, use.      |
+| `energy_list_prices`          | The monthly balancing, capacity fee, and deregulated plant prices.      |
 
 The [website](https://geo-mcp.abgeo.cloud) shows the input and a real output of each tool.
 

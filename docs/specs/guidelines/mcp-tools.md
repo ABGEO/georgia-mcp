@@ -4,7 +4,7 @@ title: The MCP server and its tools
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-11-15
+updated: 2026-11-17
 scope: [internal/pkg/mcpserver/, internal/app/georgia-mcp/*/adapter/tool/]
 related: [ARC, DOM, API, LOG, RSL]
 ---
@@ -99,6 +99,10 @@ Its description names that language. Its closed sets are codes in English.
 
 A tool that returns a collection takes the optional input `limit`.
 The specification gives the default and the maximum. The maximum is 100 or less.
+
+A tool that returns one item for each step of a period takes no `limit` when the
+specification gives the maximum length of the period, at 100 steps or less. The tool
+refuses a longer period, and its message names the maximum (`ADR-0008`).
 
 **Why:** A large answer fills the context window of the model.
 

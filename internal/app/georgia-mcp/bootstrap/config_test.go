@@ -1019,6 +1019,31 @@ func TestLoadConfigGivesTheDefaultsOfGSE(t *testing.T) {
 	}
 }
 
+// GNERCMON-SC-020: With no variable of energy, GNERC is on, at its address, with a timeout
+// of 10 seconds, 2 calls each second, and a burst of 1.
+func TestLoadConfigGivesTheDefaultsOfGNERC(t *testing.T) {
+	t.Chdir(t.TempDir())
+	setKeys(t)
+
+	cfg, err := bootstrap.LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig() error = %v", err)
+	}
+
+	gnerc := cfg.Energy.GNERC
+	if !gnerc.Enabled {
+		t.Error("GNERC.Enabled = false, want true")
+	}
+
+	if got := gnerc.BaseURL.String(); got != "https://data.gnerc.org" {
+		t.Errorf("GNERC.BaseURL = %q, want https://data.gnerc.org", got)
+	}
+
+	if http := gnerc.HTTP; http.Timeout != 10*time.Second || http.Rate != 2 || http.Burst != 1 {
+		t.Errorf("GNERC.HTTP = %+v, want a timeout of 10s, rate 2, burst 1", http)
+	}
+}
+
 // MATSNE-SC-030: With no variable of law, the Legislative Herald is on, at its address,
 // with a timeout of 10 seconds, 5 calls each second, and a burst of 5.
 func TestLoadConfigGivesTheDefaultsOfTheLegislativeHerald(t *testing.T) {

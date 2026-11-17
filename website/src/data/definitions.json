@@ -1075,6 +1075,289 @@
       "openWorldHint": true
     }
   },
+  "energy_get_balance": {
+    "name": "energy_get_balance",
+    "title": "Get the electricity balance of Georgia",
+    "description": "Returns the monthly electricity balance of Georgia from the Georgian National Energy and Water Supply Regulatory Commission (GNERC): the generation by type of power plant, the import and the export by country, the supply, the consumption by group, the losses, the domestic consumption, and the transit, in million kWh, for one month from 2022-01, or the total of one year from 2022. GNERC publishes a month about three weeks after it ends. With no input, it returns the newest published month. A year that is not over holds only its published months: see months. Data from GNERC.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string",
+          "description": "A month from 2022-01, as YYYY-MM, for example 2026-03. Leave month and year empty for the newest published month."
+        },
+        "year": {
+          "type": "integer",
+          "description": "A year from 2022, for the total of the year. Do not give it with month."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Georgian National Energy and Water Supply Regulatory Commission (GNERC)."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which GNERC last changed the workbook, or at which the server read it, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when GNERC did not answer and the server returns data it read before."
+        },
+        "period": {
+          "type": "string",
+          "description": "The month, YYYY-MM, or the year, YYYY, of the balance."
+        },
+        "months": {
+          "type": "integer",
+          "description": "The count of published months that the period holds: 1 for a month, up to 12 for a year."
+        },
+        "newest_month": {
+          "type": "string",
+          "description": "The newest month that GNERC published, YYYY-MM."
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit of each value: million kWh."
+        },
+        "generation": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "The total generation."
+            },
+            "thermal": {
+              "type": "string",
+              "description": "The thermal power plants."
+            },
+            "wind": {
+              "type": "string",
+              "description": "The wind power plants."
+            },
+            "solar": {
+              "type": "string",
+              "description": "The solar power plants. Absent before 2025."
+            },
+            "hydro": {
+              "type": "string",
+              "description": "The hydro power plants."
+            }
+          },
+          "description": "The generation of the power plants.",
+          "required": [
+            "total"
+          ],
+          "additionalProperties": false
+        },
+        "station_own_use": {
+          "type": "string",
+          "description": "The electricity that the power plants use or lose before the grid."
+        },
+        "import": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "The total."
+            },
+            "russia": {
+              "type": "string",
+              "description": "Russia."
+            },
+            "turkey": {
+              "type": "string",
+              "description": "Turkey."
+            },
+            "azerbaijan": {
+              "type": "string",
+              "description": "Azerbaijan."
+            },
+            "armenia": {
+              "type": "string",
+              "description": "Armenia."
+            },
+            "into_abkhazia": {
+              "type": "string",
+              "description": "The part of the import that went into Abkhazia. Import only."
+            }
+          },
+          "description": "The import, by country of origin.",
+          "required": [
+            "total"
+          ],
+          "additionalProperties": false
+        },
+        "supply": {
+          "type": "string",
+          "description": "The generation less the station own use, plus the import."
+        },
+        "consumption": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "The total consumption."
+            },
+            "abkhazia": {
+              "type": "string",
+              "description": "Abkhazia."
+            },
+            "suppliers": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "total": {
+                  "type": "string",
+                  "description": "Every supplier."
+                },
+                "universal_service": {
+                  "type": "string",
+                  "description": "The suppliers of the universal service."
+                },
+                "public_service": {
+                  "type": "string",
+                  "description": "The suppliers of the public service."
+                },
+                "free_market": {
+                  "type": "string",
+                  "description": "The suppliers of the free market. Absent before 2024."
+                }
+              },
+              "description": "The suppliers of electricity.",
+              "additionalProperties": false
+            },
+            "direct": {
+              "type": "string",
+              "description": "The consumers connected to the transmission grid."
+            },
+            "stopped_stations": {
+              "type": "string",
+              "description": "The own use of the power plants while they stood still."
+            }
+          },
+          "description": "The consumption, which GNERC counts with the export and the losses. It equals the supply.",
+          "required": [
+            "total"
+          ],
+          "additionalProperties": false
+        },
+        "export": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "The total."
+            },
+            "russia": {
+              "type": "string",
+              "description": "Russia."
+            },
+            "turkey": {
+              "type": "string",
+              "description": "Turkey."
+            },
+            "azerbaijan": {
+              "type": "string",
+              "description": "Azerbaijan."
+            },
+            "armenia": {
+              "type": "string",
+              "description": "Armenia."
+            },
+            "into_abkhazia": {
+              "type": "string",
+              "description": "The part of the import that went into Abkhazia. Import only."
+            }
+          },
+          "description": "The export, by country of destination.",
+          "required": [
+            "total"
+          ],
+          "additionalProperties": false
+        },
+        "losses": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "Every grid."
+            },
+            "transmission": {
+              "type": "string",
+              "description": "The transmission grid."
+            },
+            "distribution": {
+              "type": "string",
+              "description": "The distribution grids."
+            }
+          },
+          "description": "The electricity that the grid operators bought to cover the losses of their grids.",
+          "additionalProperties": false
+        },
+        "domestic_consumption": {
+          "type": "string",
+          "description": "The generation plus the import, less the export."
+        },
+        "transit": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "total": {
+              "type": "string",
+              "description": "Every route."
+            },
+            "azerbaijan_to_turkey": {
+              "type": "string",
+              "description": "From Azerbaijan to Turkey."
+            },
+            "russia_to_turkey": {
+              "type": "string",
+              "description": "From Russia to Turkey."
+            },
+            "armenia_to_turkey": {
+              "type": "string",
+              "description": "From Armenia to Turkey."
+            }
+          },
+          "description": "The electricity that crossed Georgia to Turkey.",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "period",
+        "months",
+        "newest_month",
+        "unit",
+        "generation",
+        "import",
+        "supply",
+        "consumption",
+        "export"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
   "energy_get_grid": {
     "name": "energy_get_grid",
     "title": "Get the electricity grid of Georgia",
@@ -1420,6 +1703,97 @@
         "net_import",
         "measured",
         "values"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": true
+    }
+  },
+  "energy_list_prices": {
+    "name": "energy_list_prices",
+    "title": "List the electricity prices of Georgia",
+    "description": "Returns three monthly electricity prices of Georgia from the Georgian National Energy and Water Supply Regulatory Commission (GNERC), in tetri per kWh: the weighted average price of balancing electricity, the guaranteed capacity fee, and the price of the deregulated power plants. Give a period of at most 60 months from 2015-01. With no input, it returns the last 12 published months. Data from GNERC.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The first month, YYYY-MM, from 2015-01. Leave it empty for 11 months before to."
+        },
+        "to": {
+          "type": "string",
+          "description": "The last month, YYYY-MM. Leave it empty for the newest published month."
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the data: Georgian National Energy and Water Supply Regulatory Commission (GNERC)."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "The instant at which GNERC last changed a price workbook, or at which the server read them, RFC 3339."
+        },
+        "stale": {
+          "type": "boolean",
+          "description": "True when GNERC did not answer and the server returns data it read before."
+        },
+        "newest_month": {
+          "type": "string",
+          "description": "The newest month that GNERC published, YYYY-MM."
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit of each price: tetri per kWh. 100 tetri are 1 lari."
+        },
+        "months": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": {
+                "type": "string",
+                "description": "The month, YYYY-MM."
+              },
+              "balancing": {
+                "type": "string",
+                "description": "The weighted average price of the balancing electricity sold in the month."
+              },
+              "capacity_fee": {
+                "type": "string",
+                "description": "The guaranteed capacity fee for each kWh."
+              },
+              "deregulated": {
+                "type": "string",
+                "description": "The price of the electricity bought from deregulated power plants to set the balancing price."
+              }
+            },
+            "required": [
+              "month"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Each published month of the period, the oldest first."
+        }
+      },
+      "required": [
+        "source",
+        "as_of",
+        "stale",
+        "newest_month",
+        "unit",
+        "months"
       ],
       "additionalProperties": false
     },
@@ -2370,7 +2744,7 @@
   "offers_search_offers": {
     "name": "offers_search_offers",
     "title": "Card offers of Georgian banks",
-    "description": "Finds the current offers that Georgian banks give to card holders at partners: discounts, cashback, and points. Filters by bank, customer tier, category, benefit kind, card, and period. For \"this month\", give the first and the last date of the month. When a bank has a next_offset, call again with that offset to read more. The benefit is the text of the bank. Compare the banks by reading it. Give the person the url of each offer that you name. benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students. The banks of this server: bog (Bank of Georgia), liberty (Liberty Bank), tbc (TBC Bank). The card codes of each bank: bog: amex (Amex), mastercard (Mastercard), mastercard_world_elite (Mastercard World Elite), plus (PLUS), scool_card (sCool Card), solo (SOLO), student_card (Student Card), super_plus (Super PLUS), teacher_card (Teacher Card), visa (Visa), visa_infinite (Visa Infinite), visa_platinum (Visa Platinum), visa_signature (Visa Signature); liberty: mastercard (Mastercard), top_card_black (Top|Card Black Edition), visa (Visa); tbc: concept_card (TBC Concept Card), credit_card (Credit Card), crypto (Crypto), installment (Installment), mastercard (Mastercard), pay_later (Pay Later), pupil_card (Pupil's Card), tbc_card (TBC Card), travel_card (Travel Card), visa (Visa).",
+    "description": "Finds the current offers that Georgian banks give to card holders at partners: discounts, cashback, and points. Filters by bank, customer tier, category, benefit kind, card, and period. For \"this month\", give the first and the last date of the month. When a bank has a next_offset, call again with that offset to read more. The benefit is the text of the bank. Compare the banks by reading it. Give the person the url of each offer that you name. benefit is the text of the bank. The server reads no number from it: read the percent, the cap, and the conditions from the text. kinds come from a field of the bank, and other means that the bank states none. tiers: standard is every customer, premium the premium package (SOLO at BOG), private the private banking (Wealth Management at BOG), youth the pupils and the students. The banks of this server: bog (Bank of Georgia), liberty (Liberty Bank), tbc (TBC Bank). The card codes of each bank: bog: amex (Amex), mastercard (Mastercard), mastercard_world_elite (Mastercard World Elite), plus (PLUS), scool_card (sCool Card), solo (SOLO), student_card (Student Card), super_plus (Super PLUS), teacher_card (Teacher Card), visa (Visa), visa_infinite (Visa Infinite), visa_platinum (Visa Platinum), visa_signature (Visa Signature); liberty: mastercard (Mastercard), top_card_black (Top|Card Black Edition), visa (Visa); tbc: concept_card (TBC Concept Card), credit_card (Credit Card), crypto (Crypto), installment (Installment), investments (Investments), mastercard (Mastercard), pay_later (Pay Later), pupil_card (Pupil's Card), tbc_card (TBC Card), travel_card (Travel Card), visa (Visa).",
     "inputSchema": {
       "type": "object",
       "properties": {

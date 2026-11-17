@@ -1,0 +1,16 @@
+context: energy
+vendors: [gnerc]
+summary:
+  en: "Three monthly electricity prices of Georgia from 2015, in tetri per kWh: the weighted average price of balancing electricity, the guaranteed capacity fee, and the price of the deregulated power plants."
+  ka: "საქართველოს ელექტროენერგიის სამი თვიური ფასი 2015 წლიდან, თეთრებში კვტ.სთ-ზე: საბალანსო ელექტროენერგიის საშუალო შეწონილი ფასი, გარანტირებული სიმძლავრის საფასური და დერეგულირებული სადგურების ფასი."
+examples:
+  - id: summer
+    question:
+      en: What did balancing electricity cost this summer?
+      ka: რა ღირდა საბალანსო ელექტროენერგია ამ ზაფხულს?
+    answer:
+      en: "The weighted average price of balancing electricity was 14.099 tetri per kWh in June 2026, 11.210 in July, and 16.899 in August. The guaranteed capacity fee rose from 0.650 to 1.348 tetri per kWh over the summer, and the deregulated power plants stayed at 4.021. GNERC has published the prices up to September 2026."
+      ka: "საბალანსო ელექტროენერგიის საშუალო შეწონილი ფასი 2026 წლის ივნისში 14,099 თეთრი იყო კვტ.სთ-ზე, ივლისში 11,210, აგვისტოში კი 16,899. გარანტირებული სიმძლავრის საფასური ზაფხულში 0,650-დან 1,348 თეთრამდე გაიზარდა კვტ.სთ-ზე, დერეგულირებული სადგურების ფასი კი 4,021 დარჩა. სემეკმა ფასები 2026 წლის სექტემბრის ჩათვლით გამოაქვეყნა."
+    input:
+      from: "2026-06"
+      to: "2026-08"

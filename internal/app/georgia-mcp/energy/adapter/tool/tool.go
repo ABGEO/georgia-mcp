@@ -15,9 +15,21 @@ type GridGetter interface {
 	Get(ctx context.Context, query app.GridQuery) (app.GridRead, error)
 }
 
-// UseCases holds the use case of each tool.
+// BalanceGetter gives the balance of a month or a year.
+type BalanceGetter interface {
+	Get(ctx context.Context, query app.BalanceQuery) (app.BalanceAnswer, error)
+}
+
+// PriceLister gives the prices of a period.
+type PriceLister interface {
+	List(ctx context.Context, query app.PriceQuery) (app.PriceAnswer, error)
+}
+
+// UseCases holds the use case of each tool. A nil use case adds no tool: its vendor is off.
 type UseCases struct {
-	GetGrid GridGetter
+	GetGrid    GridGetter
+	GetBalance BalanceGetter
+	ListPrices PriceLister
 }
 
 const (
@@ -33,15 +45,35 @@ const (
 		"The names are in English. Data from GSE."
 )
 
-// Register adds the tools of the context.
+// Register adds the tool of each use case that UseCases holds.
 func Register(registry *mcpserver.Registry, uses UseCases) error {
 	handlers := handler{uses: uses}
 
-	if err := mcpserver.AddTool(registry, &mcp.Tool{
-		Name: "energy_get_grid", Title: "Get the electricity grid of Georgia",
-		Description: getGridDescription,
-	}, handlers.getGrid); err != nil {
-		return fmt.Errorf("registering the energy tools: %w", err)
+	if uses.GetGrid != nil {
+		if err := mcpserver.AddTool(registry, &mcp.Tool{
+			Name: "energy_get_grid", Title: "Get the electricity grid of Georgia",
+			Description: getGridDescription,
+		}, handlers.getGrid); err != nil {
+			return fmt.Errorf("registering the energy tools: %w", err)
+		}
+	}
+
+	if uses.GetBalance != nil {
+		if err := mcpserver.AddTool(registry, &mcp.Tool{
+			Name: "energy_get_balance", Title: "Get the electricity balance of Georgia",
+			Description: getBalanceDescription,
+		}, handlers.getBalance); err != nil {
+			return fmt.Errorf("registering the energy tools: %w", err)
+		}
+	}
+
+	if uses.ListPrices != nil {
+		if err := mcpserver.AddTool(registry, &mcp.Tool{
+			Name: "energy_list_prices", Title: "List the electricity prices of Georgia",
+			Description: listPricesDescription,
+		}, handlers.listPrices); err != nil {
+			return fmt.Errorf("registering the energy tools: %w", err)
+		}
 	}
 
 	return nil

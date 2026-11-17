@@ -1,0 +1,15 @@
+context: energy
+vendors: [gnerc]
+summary:
+  en: "The monthly electricity balance of Georgia for a month from 2022 or a whole year: the generation by type of power plant, the import and export by country, the consumption by group, the losses, and the transit, in million kWh."
+  ka: "საქართველოს ელექტროენერგიის თვიური ბალანსი 2022 წლიდან ერთი თვის ან მთელი წლისთვის: გენერაცია სადგურის ტიპების მიხედვით, იმპორტი და ექსპორტი ქვეყნების მიხედვით, მოხმარება ჯგუფების მიხედვით, დანაკარგები და ტრანზიტი, მილიონ კვტ.სთ-ში."
+examples:
+  - id: year
+    question:
+      en: How much of Georgia's electricity came from hydro power plants in 2025?
+      ka: 2025 წელს საქართველოს ელექტროენერგიის რა ნაწილი გამოიმუშავეს ჰიდროსადგურებმა?
+    answer:
+      en: "About 79%. In 2025 the power plants of Georgia generated 13,837.6 million kWh, and the hydro power plants gave 10,986.6 million kWh of it. The thermal power plants gave 2,767.1 million kWh, the wind power plants 79.4, and the solar power plants 4.6. Georgia also imported 1,557.5 million kWh, most from Russia and Azerbaijan, and exported 511.2 million kWh, most to Turkey."
+      ka: "დაახლოებით 79%. 2025 წელს საქართველოს ელექტროსადგურებმა 13 837,6 მილიონი კვტ.სთ გამოიმუშავეს, აქედან ჰიდროსადგურებმა 10 986,6 მილიონი კვტ.სთ. თბოსადგურებმა 2 767,1 მილიონი კვტ.სთ გამოიმუშავეს, ქარის სადგურებმა 79,4, მზის სადგურებმა კი 4,6. საქართველომ ასევე 1 557,5 მილიონი კვტ.სთ შემოიტანა, ძირითადად რუსეთიდან და აზერბაიჯანიდან, და 511,2 მილიონი კვტ.სთ გაიტანა, ძირითადად თურქეთში."
+    input:
+      year: 2025

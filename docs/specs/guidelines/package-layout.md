@@ -4,7 +4,7 @@ title: Package layout
 type: guideline
 status: active
 created: 2026-10-17
-updated: 2026-10-25
+updated: 2026-11-17
 scope: [., cmd/, internal/, pkg/, build/, deployments/, configs/, test/]
 related: [ARC, DOM, CLT, GO]
 ---
@@ -71,8 +71,11 @@ func (m *Module) Register(registry *mcpserver.Registry) error
 ```
 
 `New` builds the adapters, wraps each driven adapter in the cache, and builds the
-use cases. A context with more than one vendor adds each one to a `vendors.Registry`,
-with its switch of `CFG-008`. The registry builds the vendors that are on. `Register` adds every tool of the context with `mcpserver.AddTool`, and
+use cases. A context with more than one vendor of one port adds each one to a
+`vendors.Registry`, with its switch of `CFG-008`. The registry builds the vendors that are
+on. A context whose vendors give different ports builds each vendor with its own switch,
+and logs `<vendor> is off` with the variable as the registry does (`ADR-0007`).
+`Register` adds every tool of the context with `mcpserver.AddTool`, and
 returns the error of a duplicate name. `module.go` holds no domain
 logic.
 
