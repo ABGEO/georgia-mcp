@@ -40,3 +40,5 @@ The file name holds the slug only. See `TRC-008`.
 | `ADR-0004` | A vendor in two contexts                     | `a-vendor-in-two-contexts.md`             | accepted | 2026-10-20 | `DOM-001`, `CLT-001` |
 | `ADR-0005` | A brand and a static website                 | `a-brand-and-a-static-website.md`         | accepted | 2026-10-20 | Founds `BRD`. `GIT-004`, `BLD-001`, `SPC-002` |
 | `ADR-0006` | A shared module of the vendor clients        | `a-shared-module-of-the-vendor-clients.md` | accepted | 2026-10-22 | `CLT-002`, `CLT-004`, `CLT-005`, `CLT-007` |
+| `ADR-0007` | Vendors of one context behind different ports | `vendors-behind-different-ports.md`      | accepted | 2026-11-17 | `PKG-003` |
+| `ADR-0008` | A period with a maximum in place of a limit  | `a-period-with-a-maximum.md`              | accepted | 2026-11-17 | `MCP-008` |
