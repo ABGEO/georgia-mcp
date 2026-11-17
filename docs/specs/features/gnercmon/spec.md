@@ -437,6 +437,7 @@ GNERC publishes. A sum of rounded months can differ from it by 0.001 for each mo
 | `balance-no-import.xlsx`  | A copy of the balance with no row `ელექტროენერგიის ჯამური იმპორტი` in 2026. |
 | `balance-bad-value.xlsx`  | A copy of the balance. The cell `C4` of 2026 holds the string `n/a`.        |
 | `not-zip.xlsx`            | The bytes of `home.html`.                                                   |
+| `balancing-empty-cell.xlsx` | A copy of `balancing.xlsx`. The cell of 2026-09 holds no value.          |
 
 Values of the recorded workbooks, for the tests:
 
@@ -485,13 +486,13 @@ The newest month of the balance is 2026-09. `Modified` is 2026-10-21T13:45:18+04
 
 | #   | Step                                                                          | Realizes                                   | Done |
 | --- | ----------------------------------------------------------------------------- | ------------------------------------------ | ---- |
-| 1   | `pkg/gnerc`: client, transport, certificate, workbook reader, recorded answers, README, example, live test. | `GNERCMON-FR-012`, `GNERCMON-FR-013`, `GNERCMON-NFR-004` | [ ]  |
-| 2   | `domain`: `Month`, `ParseMonth`, `Round`, `Item`, the figures, the prices, fuzz test. | `GNERCMON-FR-005`, `GNERCMON-FR-006`, `GNERCMON-INV-001`, `GNERCMON-INV-002` | [ ]  |
-| 3   | `app`: the ports, `GetBalance`, `ListPrices`, the errors.                      | `GNERCMON-FR-001` to `GNERCMON-FR-004`, `GNERCMON-FR-007` to `GNERCMON-FR-009` | [ ]  |
-| 4   | `adapter/gnerc`: the links, the labels, the prices.                            | `GNERCMON-FR-005`, `GNERCMON-FR-006`, `GNERCMON-FR-010` to `GNERCMON-FR-012` | [ ]  |
-| 5   | `adapter/cache`: `BookCache`.                                                  | `GNERCMON-NFR-001`, `GNERCMON-NFR-002`     | [ ]  |
-| 6   | `adapter/tool`: the two tools.                                                 | `GNERCMON-FR-001` to `GNERCMON-FR-012`, `GNERCMON-INV-003` | [ ]  |
-| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `GNERCMON-FR-013`, `GNERCMON-NFR-003`      | [ ]  |
+| 1   | `pkg/gnerc`: client, transport, certificate, workbook reader, recorded answers, README, example, live test. | `GNERCMON-FR-012`, `GNERCMON-FR-013`, `GNERCMON-NFR-004` | [x]  |
+| 2   | `domain`: `Month`, `ParseMonth`, `Round`, `Item`, the figures, the prices, fuzz test. | `GNERCMON-FR-005`, `GNERCMON-FR-006`, `GNERCMON-INV-001`, `GNERCMON-INV-002` | [x]  |
+| 3   | `app`: the ports, `GetBalance`, `ListPrices`, the errors.                      | `GNERCMON-FR-001` to `GNERCMON-FR-004`, `GNERCMON-FR-007` to `GNERCMON-FR-009` | [x]  |
+| 4   | `adapter/gnerc`: the links, the labels, the prices.                            | `GNERCMON-FR-005`, `GNERCMON-FR-006`, `GNERCMON-FR-010` to `GNERCMON-FR-012` | [x]  |
+| 5   | `adapter/cache`: `BookCache`.                                                  | `GNERCMON-NFR-001`, `GNERCMON-NFR-002`     | [x]  |
+| 6   | `adapter/tool`: the two tools.                                                 | `GNERCMON-FR-001` to `GNERCMON-FR-012`, `GNERCMON-INV-003` | [x]  |
+| 7   | `module.go`, `config.go`, `bootstrap`, `configs/.env.example`, `README.md`.    | `GNERCMON-FR-013`, `GNERCMON-NFR-003`      | [x]  |
 
 ## 8. Out of scope for this specification
 

@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TX65TVB80P"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TX65TVB80P');
+</script>
+
+ <!-- end Google -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Electricity, gas and water supply statistics in Georgia" />
+    <meta name="keywords" content="ელექტროენერგია, მიწოდება-მოხმარება, ფაქტობრივი ბალანსები, საბალანსო, ელექტროენერგიის ფასი,დერეგულირებული, ელექტროსადგურები,   გარანტირებული სიმძლავრის საფასური, ნეტო, ნეტო აღრიცხვა, საცალო მომხმარებლები, მიწოდება" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google-site-verification" content="zLhjwUWUzt-V4YfiLT3tcQ-UX98kPICFgxPLo7QjVwg" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="ენერგეტიკული მონაცემები საქართველოში" />
+    <meta property="og:url" content="https://data.gnerc.org" />
+    <meta property="og:site_name" content="DATA Gnerc" />
+    <meta property="og:image" content="https://data.gnerc.org/img/logo.png" />
+    <meta property="og:image:alt" content="GNERC LOGO" />
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="j03mr8y92gekot2KLHKaNfwp32YJS4YaYl7L7u3k">
+
+
+    <title>DATA | GNERC</title>
+    <link rel="shortcut icon" href="https://data.gnerc.org/img/favicon.ico" />
+
+        <!-- Bootstrap core JavaScript-->
+        <script
+        src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+        crossorigin="anonymous"></script>
+
+
+    <!-- Core plugin JavaScript-->
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- animation -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+  <link href="https://data.gnerc.org/css/home.css" rel="stylesheet">
+
+  <style>
+    .table{
+        font-size:12px
+    }
+    .table td {
+        padding: .7rem!important;
+    }
+    </style>
+</head>
+<body  id="page-top">
+    <div class="bg">
+        <header class="cover">
+            <div class="cover-pattern">
+                <a href="http://gnerc.org"><img src="https://data.gnerc.org/img/logo_ge_w.png" class="logo" /></a>
+                <div class="text-center mt-5"><h1 class="app-name">ენერგეტიკული მონაცემები საქართველოში</h1></div>
+            </div>
+        </header>
+        <main >
+            <div class="container" >
+                <div class="accordion mt-4" id="accordionExample">
+                    <div class="card animate__animated animate__slideInLeft"  >
+                        <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            ელექტროენერგიის მიწოდება-მოხმარების ფაქტობრივი ბალანსები
+                            </button>
+                        </h2>
+                        </div>
+
+                        <div id="collapseOne" class="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body">
+                                <table class="table table-striped font-nino-caps text-center">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th scope="col" class='col-4 text-left text-nowrap'>ელექტროენერგიის მიწოდება, მლნ კვტ.სთ</th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2015
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2016
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2017
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2018
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2019
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2020
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2021
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2022
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2023
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2024
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+                                            
+                                                                                                    (9 თვე)
+                                                 
+                                           
+                                                
+                                            </th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">1</td>
+                                        <td scope="row" class="text-left">ელექტროენერგიის ჯამური გამომუშავება</td>
+                                        <td scope='col' class="text-nowrap">10 832.6</td>
+                                        <td scope='col' class="text-nowrap">11 573.6</td>
+                                        <td scope='col' class="text-nowrap">11 530.4</td>
+                                        <td scope='col' class="text-nowrap">12 135.2</td>
+                                        <td scope='col' class="text-nowrap">11 856.8</td>
+                                        <td scope='col' class="text-nowrap">11 159.8</td>
+                                        <td scope='col' class="text-nowrap">12 645.0</td>
+                                        <td scope='col' class="text-nowrap">14 246.6</td>
+                                        <td scope='col' class="text-nowrap">14 395.8</td>
+                                        <td scope='col' class="text-nowrap">14 234.1</td>
+                                        <td scope='col' class="text-nowrap">13 837.7</td>
+                                         <td scope='col' class="text-nowrap">10 308.4</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">1.1</td>
+                                        <td scope="row" class="text-left">თბოსადგურების ჯამური გამომუშავება</td>
+                                        <td scope='col' class="text-nowrap">2 378.7</td>
+                                        <td scope='col' class="text-nowrap">2 235.5</td>
+                                        <td scope='col' class="text-nowrap">2 233.0</td>
+                                        <td scope='col' class="text-nowrap">2 114.9</td>
+                                        <td scope='col' class="text-nowrap">2 840.4</td>
+                                        <td scope='col' class="text-nowrap">2 820.8</td>
+                                        <td scope='col' class="text-nowrap">2 379.6</td>
+                                        <td scope='col' class="text-nowrap">3 387.7</td>
+                                        <td scope='col' class="text-nowrap">3 446.5</td>
+                                        <td scope='col' class="text-nowrap">2 812.2</td>
+                                        <td scope='col' class="text-nowrap">2 767.1</td>
+                                         <td scope='col' class="text-nowrap">1 783.5</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">1.2</td>
+                                        <td scope="row" class="text-left">ქარის ელექტროსადგურების ჯამური გამომუშავება</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">9.0</td>
+                                        <td scope='col' class="text-nowrap">87.8</td>
+                                        <td scope='col' class="text-nowrap">84.3</td>
+                                        <td scope='col' class="text-nowrap">84.7</td>
+                                        <td scope='col' class="text-nowrap">90.8</td>
+                                        <td scope='col' class="text-nowrap">83.4</td>
+                                        <td scope='col' class="text-nowrap">87.5</td>
+                                        <td scope='col' class="text-nowrap">86.1</td>
+                                        <td scope='col' class="text-nowrap">77.6</td>
+                                        <td scope='col' class="text-nowrap">79.4</td>
+                                         <td scope='col' class="text-nowrap">88.3</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">1.3</td>
+                                        <td scope="row" class="text-left">მზის ელექტროსადგურების ჯამური გამომუშავება</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">4.6</td>
+                                         <td scope='col' class="text-nowrap">14.1</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">1.4</td>
+                                        <td scope="row" class="text-left">ჰიდროელექტროსადგურების ჯამური გამომუშავება</td>
+                                        <td scope='col' class="text-nowrap">8 453.8</td>
+                                        <td scope='col' class="text-nowrap">9 329.2</td>
+                                        <td scope='col' class="text-nowrap">9 209.6</td>
+                                        <td scope='col' class="text-nowrap">9 936.0</td>
+                                        <td scope='col' class="text-nowrap">8 931.7</td>
+                                        <td scope='col' class="text-nowrap">8 248.2</td>
+                                        <td scope='col' class="text-nowrap">10 182.1</td>
+                                        <td scope='col' class="text-nowrap">10 771.4</td>
+                                        <td scope='col' class="text-nowrap">10 863.2</td>
+                                        <td scope='col' class="text-nowrap">11 344.3</td>
+                                        <td scope='col' class="text-nowrap">10 986.6</td>
+                                         <td scope='col' class="text-nowrap">8 422.5</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">2</td>
+                                        <td scope="row" class="text-left">ელექტროენერგიის ჯამური იმპორტი</td>
+                                        <td scope='col' class="text-nowrap">699.2</td>
+                                        <td scope='col' class="text-nowrap">478.9</td>
+                                        <td scope='col' class="text-nowrap">1 497.2</td>
+                                        <td scope='col' class="text-nowrap">1 508.8</td>
+                                        <td scope='col' class="text-nowrap">1 626.5</td>
+                                        <td scope='col' class="text-nowrap">1 610.1</td>
+                                        <td scope='col' class="text-nowrap">2 006.2</td>
+                                        <td scope='col' class="text-nowrap">1 533.2</td>
+                                        <td scope='col' class="text-nowrap">789.8</td>
+                                        <td scope='col' class="text-nowrap">1 227.5</td>
+                                        <td scope='col' class="text-nowrap">1 557.5</td>
+                                         <td scope='col' class="text-nowrap">1 186.5</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">3</td>
+                                        <td scope="row" class="text-left">ელექტროენერგიის საერთო სასადგურო დანახარჯი</td>
+                                        <td scope='col' class="text-nowrap">240.1</td>
+                                        <td scope='col' class="text-nowrap">209.0</td>
+                                        <td scope='col' class="text-nowrap">215.3</td>
+                                        <td scope='col' class="text-nowrap">212.7</td>
+                                        <td scope='col' class="text-nowrap">236.5</td>
+                                        <td scope='col' class="text-nowrap">216.0</td>
+                                        <td scope='col' class="text-nowrap">213.7</td>
+                                        <td scope='col' class="text-nowrap">258.6</td>
+                                        <td scope='col' class="text-nowrap">268.5</td>
+                                        <td scope='col' class="text-nowrap">251.9</td>
+                                        <td scope='col' class="text-nowrap">269.9</td>
+                                         <td scope='col' class="text-nowrap">193.2</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">4</td>
+                                        <td scope="row" class="text-left">ელექტროენერგიის ჯამური მიწოდება</td>
+                                        <td scope='col' class="text-nowrap">11 291.7</td>
+                                        <td scope='col' class="text-nowrap">11 843.6</td>
+                                        <td scope='col' class="text-nowrap">12 812.3</td>
+                                        <td scope='col' class="text-nowrap">13 431.2</td>
+                                        <td scope='col' class="text-nowrap">13 246.9</td>
+                                        <td scope='col' class="text-nowrap">12 553.9</td>
+                                        <td scope='col' class="text-nowrap">14 437.6</td>
+                                        <td scope='col' class="text-nowrap">15 521.2</td>
+                                        <td scope='col' class="text-nowrap">14 917.1</td>
+                                        <td scope='col' class="text-nowrap">15 209.7</td>
+                                        <td scope='col' class="text-nowrap">15 125.3</td>
+                                         <td scope='col' class="text-nowrap">11 301.7</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <table class="table table-striped font-nino-caps mt-5 text-center">
+                                    <thead>
+                                    <tr>
+                                    <th></th>
+                                    <th scope="col" class='col-4 text-left text-nowrap'>ელექტროენერგიის მოხმარება, მლნ კვტ.სთ</th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2015
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2016
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2017
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2018
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2019
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2020
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2021
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2022
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2023
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2024
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+
+                                                                                                    (9 თვე)
+                                                 
+                                            </th>
+                                    
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">1</td>
+                                    <td scope="row" class="text-left">ელექტროენერგიის ჯამური მოხმარება</td>
+                                    <td scope='col' class="text-nowrap">11 291.7</td>
+                                    <td scope='col' class="text-nowrap">11 843.6</td>
+                                    <td scope='col' class="text-nowrap">12 812.3</td>
+                                    <td scope='col' class="text-nowrap">13 431.2</td>
+                                    <td scope='col' class="text-nowrap">13 246.9</td>
+                                    <td scope='col' class="text-nowrap">12 553.9</td>
+                                    <td scope='col' class="text-nowrap">14 437.6</td>
+                                    <td scope='col' class="text-nowrap">15 521.2</td>
+                                    <td scope='col' class="text-nowrap">14 917.1</td>
+                                    <td scope='col' class="text-nowrap">15 209.7</td>
+                                    <td scope='col' class="text-nowrap">15 125.3</td>
+                                    <td scope='col' class="text-nowrap">11 301.7</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">1.1</td>
+                                    <td scope="row" class="text-left">სადისტრიბუციო კომპანიების და აფხაზეთის ჯამური მოხმარება</td>
+                                    <td scope='col' class="text-nowrap">9 143.4</td>
+                                    <td scope='col' class="text-nowrap">9 798.5</td>
+                                    <td scope='col' class="text-nowrap">10 428.6</td>
+                                    <td scope='col' class="text-nowrap">10 772.1</td>
+                                    <td scope='col' class="text-nowrap">9 888.9</td>
+                                    <td scope='col' class="text-nowrap">9 698.3</td>
+                                    <td scope='col' class="text-nowrap">10 175.4</td>
+                                    <td scope='col' class="text-nowrap">10 439.6</td>
+                                    <td scope='col' class="text-nowrap">10 274.8</td>
+                                    <td scope='col' class="text-nowrap">10 692.2</td>
+                                    <td scope='col' class="text-nowrap">10 887.2</td>
+                                    <td scope='col' class="text-nowrap">8 275.7</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">1.2</td>
+                                    <td scope="row" class="text-left">პირდაპირი მომხმარებლების ჯამური მოხმარება</td>
+                                    <td scope='col' class="text-nowrap">1 221.7</td>
+                                    <td scope='col' class="text-nowrap">1 208.9</td>
+                                    <td scope='col' class="text-nowrap">1 427.5</td>
+                                    <td scope='col' class="text-nowrap">1 794.1</td>
+                                    <td scope='col' class="text-nowrap">2 863.5</td>
+                                    <td scope='col' class="text-nowrap">2 438.1</td>
+                                    <td scope='col' class="text-nowrap">3 554.5</td>
+                                    <td scope='col' class="text-nowrap">3 725.9</td>
+                                    <td scope='col' class="text-nowrap">2 778.6</td>
+                                    <td scope='col' class="text-nowrap">3 142.1</td>
+                                    <td scope='col' class="text-nowrap">3 429.8</td>
+                                    <td scope='col' class="text-nowrap">2 583.2</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">2</td>
+                                    <td scope="row" class="text-left">გაჩერებული ელექტროსადგურების საკუთარი მოხამარება</td>
+                                    <td scope='col' class="text-nowrap">16.6</td>
+                                    <td scope='col' class="text-nowrap">19.2</td>
+                                    <td scope='col' class="text-nowrap">19.2</td>
+                                    <td scope='col' class="text-nowrap">18.3</td>
+                                    <td scope='col' class="text-nowrap">15.2</td>
+                                    <td scope='col' class="text-nowrap">20.7</td>
+                                    <td scope='col' class="text-nowrap">23.2</td>
+                                    <td scope='col' class="text-nowrap">16.0</td>
+                                    <td scope='col' class="text-nowrap">16.7</td>
+                                    <td scope='col' class="text-nowrap">18.3</td>
+                                    <td scope='col' class="text-nowrap">19.3</td>
+                                    <td scope='col' class="text-nowrap">14.8</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">3</td>
+                                    <td scope="row" class="text-left">ელექტროენერგიის ჯამური ექსპორტი</td>
+                                    <td scope='col' class="text-nowrap">659.9</td>
+                                    <td scope='col' class="text-nowrap">559.0</td>
+                                    <td scope='col' class="text-nowrap">685.7</td>
+                                    <td scope='col' class="text-nowrap">588.6</td>
+                                    <td scope='col' class="text-nowrap">243.4</td>
+                                    <td scope='col' class="text-nowrap">153.8</td>
+                                    <td scope='col' class="text-nowrap">391.0</td>
+                                    <td scope='col' class="text-nowrap">971.1</td>
+                                    <td scope='col' class="text-nowrap">1 468.4</td>
+                                    <td scope='col' class="text-nowrap">1 047.4</td>
+                                    <td scope='col' class="text-nowrap">511.2</td>
+                                    <td scope='col' class="text-nowrap">250.0</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">4</td>
+                                    <td scope="row" class="text-left">გადამცემი სისტემის ოპერატორის ქსელში ჯამური დანაკარგები</td>
+                                    <td scope='col' class="text-nowrap">250.0</td>
+                                    <td scope='col' class="text-nowrap">258.0</td>
+                                    <td scope='col' class="text-nowrap">251.3</td>
+                                    <td scope='col' class="text-nowrap">258.1</td>
+                                    <td scope='col' class="text-nowrap">235.8</td>
+                                    <td scope='col' class="text-nowrap">243.1</td>
+                                    <td scope='col' class="text-nowrap">293.5</td>
+                                    <td scope='col' class="text-nowrap">368.7</td>
+                                    <td scope='col' class="text-nowrap">378.6</td>
+                                    <td scope='col' class="text-nowrap">309.7</td>
+                                    <td scope='col' class="text-nowrap">277.9</td>
+                                    <td scope='col' class="text-nowrap">177.9</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+
+                                <table class="table table-striped font-nino-caps mt-5 text-center">
+                                    <thead>
+                                    <tr>
+                                    <th scope="col" class='col-4 text-left'></th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2015
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2016
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2017
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2018
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2019
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2020
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2021
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2022
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2023
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2024
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2025
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2026
+
+                                                                                                    (9 თვე)
+                                                  
+                                            </th>
+                                    
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                    <td scope="row" class="text-left font-weight-bold">საქართველოს შიდა მოხმარება
+,მლნ კვტ.სთ</td>
+                                    <td scope='col' class="text-nowrap">10 871.9</td>
+                                    <td scope='col' class="text-nowrap">11 493.6</td>
+                                    <td scope='col' class="text-nowrap">12 341.9</td>
+                                    <td scope='col' class="text-nowrap">13 055.3</td>
+                                    <td scope='col' class="text-nowrap">13 239.9</td>
+                                    <td scope='col' class="text-nowrap">12 616.1</td>
+                                    <td scope='col' class="text-nowrap">14 260.3</td>
+                                    <td scope='col' class="text-nowrap">14 808.7</td>
+                                    <td scope='col' class="text-nowrap">13 717.3</td>
+                                    <td scope='col' class="text-nowrap">14 414.2</td>
+                                    <td scope='col' class="text-nowrap">14 884.0</td>
+                                    <td scope='col' class="text-nowrap">11 244.9</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+
+                                <table class="table table-striped font-nino-caps mt-5 text-center">
+                                    <thead>
+                                    <tr>
+                                    <th scope="col" class='col-4 text-left'></th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2015
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2016
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2017
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2018
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2019
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2020
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2021
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2022
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2023
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2024
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2025
+
+                                                  
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap '>2026
+
+                                                                                                    (9 თვე)
+                                                  
+                                            </th>
+                                                                       
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                    <td scope="row" class="text-left font-weight-bold">ტრანზიტი, მლნ კვტ.სთ</td>
+                                    <td scope='col' class="text-nowrap">0.0</td>
+                                    <td scope='col' class="text-nowrap">849.6</td>
+                                    <td scope='col' class="text-nowrap">254.0</td>
+                                    <td scope='col' class="text-nowrap">13.4</td>
+                                    <td scope='col' class="text-nowrap">136.2</td>
+                                    <td scope='col' class="text-nowrap">101.8</td>
+                                    <td scope='col' class="text-nowrap">1 183.7</td>
+                                    <td scope='col' class="text-nowrap">3 160.3</td>
+                                    <td scope='col' class="text-nowrap">3 444.5</td>
+                                    <td scope='col' class="text-nowrap">1 074.3</td>
+                                    <td scope='col' class="text-nowrap">870.2</td>
+                                     <td scope='col' class="text-nowrap">0.0</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <a href="https://data.gnerc.org/excel/2015 - 2026 ფაქტიური ბალანსი.xlsx" download class="btn btn-secondary my-3 font-nino-caps">დეტალური მონაცემების გადმოწერა</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card animate__animated animate__slideInRight">
+                        <div class="card-header" id="headingTwo">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            საბალანსო ელექტროენერგიის ფასი
+                            </button>
+                        </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-striped font-nino-caps text-center">
+                            <thead>
+                                <tr>
+                                <th scope="col" class="text-left">თეთრი/კვტ.სთ</th>
+                                                                        <th scope="col">2015</th>
+                                                                        <th scope="col">2016</th>
+                                                                        <th scope="col">2017</th>
+                                                                        <th scope="col">2018</th>
+                                                                        <th scope="col">2019</th>
+                                                                        <th scope="col">2020</th>
+                                                                        <th scope="col">2021</th>
+                                                                        <th scope="col">2022</th>
+                                                                        <th scope="col">2023</th>
+                                                                        <th scope="col">2024</th>
+                                                                        <th scope="col">2025</th>
+                                                                        <th scope="col">2026</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                                        <tr>
+                                <td scope="row" class="text-left">იანვარი</td>
+                                <td scope='col'>13.365</td>
+                                <td scope='col'>13.427</td>
+                                <td scope='col'>13.649</td>
+                                <td scope='col'>12.803</td>
+                                <td scope='col'>13.525</td>
+                                <td scope='col'>14.587</td>
+                                <td scope='col'>15.624</td>
+                                <td scope='col'> 18.380 </td>
+                                <td scope='col'> 14.516 </td>
+                                <td scope='col'> 15.522 </td>
+                                <td scope='col'> 16.619 </td>
+                                <td scope='col'> 16.760 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">თებერვალი</td>
+                                <td scope='col'>15.325</td>
+                                <td scope='col'>13.610</td>
+                                <td scope='col'>13.532</td>
+                                <td scope='col'>13.102</td>
+                                <td scope='col'>13.654</td>
+                                <td scope='col'>13.884</td>
+                                <td scope='col'>15.637</td>
+                                <td scope='col'> 19.578 </td>
+                                <td scope='col'> 14.455 </td>
+                                <td scope='col'> 15.737 </td>
+                                <td scope='col'> 16.790 </td>
+                                <td scope='col'> 14.894 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მარტი</td>
+                                <td scope='col'>14.880</td>
+                                <td scope='col'>8.213</td>
+                                <td scope='col'>12.637</td>
+                                <td scope='col'>12.215</td>
+                                <td scope='col'>13.444</td>
+                                <td scope='col'>18.466</td>
+                                <td scope='col'>16.710</td>
+                                <td scope='col'> 18.321 </td>
+                                <td scope='col'> 13.884 </td>
+                                <td scope='col'> 15.612 </td>
+                                <td scope='col'> 16.720 </td>
+                                <td scope='col'> 15.425 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აპრილი</td>
+                                <td scope='col'>13.635</td>
+                                <td scope='col'>10.570</td>
+                                <td scope='col'>11.356</td>
+                                <td scope='col'>12.118</td>
+                                <td scope='col'>12.993</td>
+                                <td scope='col'>16.089</td>
+                                <td scope='col'>16.953</td>
+                                <td scope='col'> 16.803 </td>
+                                <td scope='col'> 13.738 </td>
+                                <td scope='col'> 15.311 </td>
+                                <td scope='col'> 16.732 </td>
+                                <td scope='col'> 15.561 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მაისი</td>
+                                <td scope='col'>7.935</td>
+                                <td scope='col'>10.252</td>
+                                <td scope='col'>9.428</td>
+                                <td scope='col'>13.260</td>
+                                <td scope='col'>7.363</td>
+                                <td scope='col'>13.208</td>
+                                <td scope='col'>12.755</td>
+                                <td scope='col'> 13.757 </td>
+                                <td scope='col'> 8.520 </td>
+                                <td scope='col'> 12.413 </td>
+                                <td scope='col'> 13.630 </td>
+                                <td scope='col'> 13.786 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივნისი</td>
+                                <td scope='col'>8.027</td>
+                                <td scope='col'>10.625</td>
+                                <td scope='col'>12.187</td>
+                                <td scope='col'>12.645</td>
+                                <td scope='col'>7.228</td>
+                                <td scope='col'>13.174</td>
+                                <td scope='col'>13.905</td>
+                                <td scope='col'> 14.376 </td>
+                                <td scope='col'> 12.141 </td>
+                                <td scope='col'> 14.740 </td>
+                                <td scope='col'> 14.230 </td>
+                                <td scope='col'> 14.099 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივლისი</td>
+                                <td scope='col'>9.028</td>
+                                <td scope='col'>9.301</td>
+                                <td scope='col'>11.914</td>
+                                <td scope='col'>8.888</td>
+                                <td scope='col'>13.603</td>
+                                <td scope='col'>15.035</td>
+                                <td scope='col'>11.150</td>
+                                <td scope='col'> 11.511 </td>
+                                <td scope='col'> 13.604 </td>
+                                <td scope='col'> 15.616 </td>
+                                <td scope='col'> 15.894 </td>
+                                <td scope='col'> 11.210 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აგვისტო</td>
+                                <td scope='col'>13.638</td>
+                                <td scope='col'>10.003</td>
+                                <td scope='col'>11.149</td>
+                                <td scope='col'>11.905</td>
+                                <td scope='col'>14.284</td>
+                                <td scope='col'>15.465</td>
+                                <td scope='col'>16.050</td>
+                                <td scope='col'> 15.234 </td>
+                                <td scope='col'> 13.644 </td>
+                                <td scope='col'> 15.474 </td>
+                                <td scope='col'> 16.659 </td>
+                                <td scope='col'> 16.899 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">სექტემბერი</td>
+                                <td scope='col'>13.673</td>
+                                <td scope='col'>10.120</td>
+                                <td scope='col'>11.781</td>
+                                <td scope='col'>11.611</td>
+                                <td scope='col'>14.837</td>
+                                <td scope='col'>16.639</td>
+                                <td scope='col'>16.959</td>
+                                <td scope='col'> 15.153 </td>
+                                <td scope='col'> 14.337 </td>
+                                <td scope='col'> 14.998 </td>
+                                <td scope='col'> 15.981 </td>
+                                <td scope='col'> 16.068 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ოქტომბერი</td>
+                                <td scope='col'>12.407</td>
+                                <td scope='col'>11.019</td>
+                                <td scope='col'>13.768</td>
+                                <td scope='col'>14.039</td>
+                                <td scope='col'>14.687</td>
+                                <td scope='col'>17.329</td>
+                                <td scope='col'>17.523</td>
+                                <td scope='col'> 17.065 </td>
+                                <td scope='col'> 15.002 </td>
+                                <td scope='col'> 14.434 </td>
+                                <td scope='col'> 15.855 </td>
+                                <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ნოემბერი</td>
+                                <td scope='col'>13.141</td>
+                                <td scope='col'>10.679</td>
+                                <td scope='col'>14.137</td>
+                                <td scope='col'>13.801</td>
+                                <td scope='col'>15.451</td>
+                                <td scope='col'>16.635</td>
+                                <td scope='col'>16.851</td>
+                                <td scope='col'> 14.456 </td>
+                                <td scope='col'> 14.932 </td>
+                                <td scope='col'> 15.497 </td>
+                                <td scope='col'> 14.949 </td>
+                                <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">დეკემბერი</td>
+                                <td scope='col'>13.133</td>
+                                <td scope='col'>11.230</td>
+                                <td scope='col'>12.664</td>
+                                <td scope='col'>14.038</td>
+                                <td scope='col'>14.730</td>
+                                <td scope='col'>15.738</td>
+                                <td scope='col'>16.821</td>
+                                <td scope='col'> 14.480 </td>
+                                <td scope='col'> 14.656 </td>
+                                <td scope='col'> 16.405 </td>
+                                <td scope='col'> 16.041 </td>
+                                <td scope='col'></td>
+                            </tr>
+                                                        </tbody>
+                            </table>
+
+                            <a href="https://data.gnerc.org/excel/საბალანსო ელექტროენერგიის ფასები 2015 - 2026 წლები.xlsx" download class="btn btn-secondary my-3 font-nino-caps">მონაცემების გადმოწერა</a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card animate__animated animate__slideInLeft">
+                        <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            დერეგულირებული ელექტროსადგურების საბალანსო ელექტროენერგიის ფასი
+                            </button>
+                        </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                        <table class="table table-striped font-nino-caps text-center">
+                            <thead>
+                                <tr>
+                                <th scope="col" class="text-left">თეთრი/კვტ.სთ</th>
+                                                                        <th scope="col">2015</th>
+                                                                        <th scope="col">2016</th>
+                                                                        <th scope="col">2017</th>
+                                                                        <th scope="col">2018</th>
+                                                                        <th scope="col">2019</th>
+                                                                        <th scope="col">2020</th>
+                                                                        <th scope="col">2021</th>
+                                                                        <th scope="col">2022</th>
+                                                                        <th scope="col">2023</th>
+                                                                        <th scope="col">2024</th>
+                                                                        <th scope="col">2025</th>
+                                                                        <th scope="col">2026</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                                        <tr>
+                                <td scope="row" class="text-left">იანვარი</td>
+                                <td scope='col'>7.397</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 4.653 </td>
+                                <td scope='col'> 12.611 </td>
+                                <td scope='col'> 18.581 </td>
+                                <td scope='col'> 12.447 </td>
+                                <td scope='col'> 11.460 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">თებერვალი</td>
+                                <td scope='col'>7.397</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 4.653 </td>
+                                <td scope='col'> 11.506 </td>
+                                <td scope='col'> 18.156 </td>
+                                <td scope='col'> 12.447 </td>
+                                <td scope='col'> 11.614 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მარტი</td>
+                                <td scope='col'>7.397</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 13.375 </td>
+                                <td scope='col'> 11.668 </td>
+                                <td scope='col'> 18.643 </td>
+                                <td scope='col'> 12.677 </td>
+                                <td scope='col'> 11.679 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აპრილი</td>
+                                <td scope='col'>7.397</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 13.854 </td>
+                                <td scope='col'> 11.668 </td>
+                                <td scope='col'> 12.778 </td>
+                                <td scope='col'> 12.677 </td>
+                                <td scope='col'> 11.478 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მაისი</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.496</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.358</td>
+                                <td scope='col'>1.857</td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 2.412 </td>
+                                <td scope='col'> 4.021 </td>
+                                <td scope='col'> 4.021 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივნისი</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.496</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.358</td>
+                                <td scope='col'>1.857</td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 2.412 </td>
+                                <td scope='col'> 4.021 </td>
+                                <td scope='col'> 4.021 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივლისი</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.496</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.358</td>
+                                <td scope='col'>1.857</td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 2.412 </td>
+                                <td scope='col'> 4.021 </td>
+                                <td scope='col'> 4.021 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აგვისტო</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.170</td>
+                                <td scope='col'>1.496</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.818</td>
+                                <td scope='col'>1.358</td>
+                                <td scope='col'>1.857</td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 1.857 </td>
+                                <td scope='col'> 2.412 </td>
+                                <td scope='col'> 4.021 </td>
+                                <td scope='col'> 4.021 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">სექტემბერი</td>
+                                <td scope='col'>10.871</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 8.613 </td>
+                                <td scope='col'> 11.668 </td>
+                                <td scope='col'> 12.126 </td>
+                                <td scope='col'> 11.781 </td>
+                                <td scope='col'> 11.655 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ოქტომბერი</td>
+                                <td scope='col'>10.871</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 12.368 </td>
+                                <td scope='col'> 11.733 </td>
+                                <td scope='col'> 12.713 </td>
+                                <td scope='col'> 11.677 </td>
+                                <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ნოემბერი</td>
+                                <td scope='col'>10.871</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>10.614</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 13.049 </td>
+                                <td scope='col'> 11.733 </td>
+                                <td scope='col'> 12.713 </td>
+                                <td scope='col'> 11.690 </td>
+                                <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">დეკემბერი</td>
+                                <td scope='col'>10.871</td>
+                                <td scope='col'>11.303</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>11.248</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'>12.304</td>
+                                <td scope='col'> 12.913 </td>
+                                <td scope='col'> 12.017 </td>
+                                <td scope='col'> 12.520 </td>
+                                <td scope='col'> 11.460 </td>
+                                <td scope='col'></td>
+                            </tr>
+                            
+                            </tbody>
+                            </table>
+
+                            <a href="https://data.gnerc.org/excel/დერეგულირებული სადგურების ფასები 2015 - 2026 წლები.xlsx" download class="btn btn-secondary my-3 font-nino-caps">მონაცემების გადმოწერა</a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card animate__animated animate__slideInRight">
+                        <div class="card-header" id="headingFour">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            გარანტირებული სიმძლავრის საფასური
+                            </button>
+                        </h2>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                        <div class="card-body">
+                        <table class="table table-striped font-nino-caps text-center">
+                            <thead>
+                                <tr>
+                                <th scope="col" class="text-left">თეთრი/კვტ.სთ</th>
+                                                                        <th scope="col">2015</th>
+                                                                        <th scope="col">2016</th>
+                                                                        <th scope="col">2017</th>
+                                                                        <th scope="col">2018</th>
+                                                                        <th scope="col">2019</th>
+                                                                        <th scope="col">2020</th>
+                                                                        <th scope="col">2021</th>
+                                                                        <th scope="col">2022</th>
+                                                                        <th scope="col">2023</th>
+                                                                        <th scope="col">2024</th>
+                                                                        <th scope="col">2025</th>
+                                                                        <th scope="col">2026</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                                        <tr>
+                                <td scope="row" class="text-left">იანვარი</td>
+                                <td scope='col'>0.592</td>
+                                <td scope='col'>2.045</td>
+                                <td scope='col'>1.771</td>
+                                <td scope='col'>1.778</td>
+                                <td scope='col'>1.843</td>
+                                <td scope='col'>1.944</td>
+                                <td scope='col'>2.072</td>
+                                <td scope='col'>  1.789 </td>
+                                <td scope='col'>  1.795 </td>
+                                <td scope='col'>  1.797 </td>
+                                <td scope='col'> 1.708 </td>
+                                 <td scope='col'> 1.458 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">თებერვალი</td>
+                                <td scope='col'>0.619</td>
+                                <td scope='col'>2.142</td>
+                                <td scope='col'>1.752</td>
+                                <td scope='col'>1.695</td>
+                                <td scope='col'>1.874</td>
+                                <td scope='col'>1.940</td>
+                                <td scope='col'>2.055</td>
+                                <td scope='col'>  1.805 </td>
+                                <td scope='col'>  1.698 </td>
+                                <td scope='col'>  1.821 </td>
+                                <td scope='col'> 1.537 </td>
+                                 <td scope='col'> 1.515 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მარტი</td>
+                                <td scope='col'>0.578</td>
+                                <td scope='col'>1.998</td>
+                                <td scope='col'>1.860</td>
+                                <td scope='col'>1.813</td>
+                                <td scope='col'>1.905</td>
+                                <td scope='col'>2.161</td>
+                                <td scope='col'>1.091</td>
+                                <td scope='col'>  1.755 </td>
+                                <td scope='col'>  1.995 </td>
+                                <td scope='col'>  1.946 </td>
+                                <td scope='col'> 1.702 </td>
+                                 <td scope='col'> 1.652 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აპრილი</td>
+                                <td scope='col'>0.575</td>
+                                <td scope='col'>2.081</td>
+                                <td scope='col'>1.923</td>
+                                <td scope='col'>1.783</td>
+                                <td scope='col'>2.010</td>
+                                <td scope='col'>2.412</td>
+                                <td scope='col'>1.791</td>
+                                <td scope='col'>  1.935 </td>
+                                <td scope='col'>  1.743 </td>
+                                <td scope='col'>  1.963 </td>
+                                <td scope='col'> 1.533 </td>
+                                 <td scope='col'> 1.112 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">მაისი</td>
+                                <td scope='col'>0.471</td>
+                                <td scope='col'>1.238</td>
+                                <td scope='col'>1.553</td>
+                                <td scope='col'>0.861</td>
+                                <td scope='col'>1.640</td>
+                                <td scope='col'>2.291</td>
+                                <td scope='col'>1.824</td>
+                                <td scope='col'>  1.448 </td>
+                                <td scope='col'>  1.438 </td>
+                                <td scope='col'>  1.413 </td>
+                                <td scope='col'> 1.190 </td>
+                                 <td scope='col'> 0.393 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივნისი</td>
+                                <td scope='col'>0.412</td>
+                                <td scope='col'>0.711</td>
+                                <td scope='col'>0.388</td>
+                                <td scope='col'>0.365</td>
+                                <td scope='col'>0.927</td>
+                                <td scope='col'>2.105</td>
+                                <td scope='col'>0.372</td>
+                                <td scope='col'>  1.322 </td>
+                                <td scope='col'>  1.086 </td>
+                                <td scope='col'>  1.152 </td>
+                                <td scope='col'> 0.154 </td>
+                                 <td scope='col'> 0.650 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ივლისი</td>
+                                <td scope='col'>0.369</td>
+                                <td scope='col'>1.512</td>
+                                <td scope='col'>1.010</td>
+                                <td scope='col'>0.932</td>
+                                <td scope='col'>0.301</td>
+                                <td scope='col'>0.320</td>
+                                <td scope='col'>0.273</td>
+                                <td scope='col'>  0.249 </td>
+                                <td scope='col'>  0.626 </td>
+                                <td scope='col'>  0.393 </td>
+                                <td scope='col'> 0.373 </td>
+                                 <td scope='col'> 1.134 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">აგვისტო</td>
+                                <td scope='col'>0.356</td>
+                                <td scope='col'>1.643</td>
+                                <td scope='col'>1.337</td>
+                                <td scope='col'>1.359</td>
+                                <td scope='col'>1.211</td>
+                                <td scope='col'>0.291</td>
+                                <td scope='col'>0.899</td>
+                                <td scope='col'>  0.578 </td>
+                                <td scope='col'>  0.445 </td>
+                                <td scope='col'>  0.603 </td>
+                                <td scope='col'> 1.272 </td>
+                                 <td scope='col'> 1.348 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">სექტემბერი</td>
+                                <td scope='col'>0.557</td>
+                                <td scope='col'>1.953</td>
+                                <td scope='col'>1.585</td>
+                                <td scope='col'>1.788</td>
+                                <td scope='col'>1.630</td>
+                                <td scope='col'>2.142</td>
+                                <td scope='col'>2.069</td>
+                                <td scope='col'>  1.776 </td>
+                                <td scope='col'>  1.740 </td>
+                                <td scope='col'>  1.828 </td>
+                                <td scope='col'> 1.680 </td>
+                                 <td scope='col'> 1.607 </td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ოქტომბერი</td>
+                                <td scope='col'>0.540</td>
+                                <td scope='col'>2.115</td>
+                                <td scope='col'>1.868</td>
+                                <td scope='col'>1.916</td>
+                                <td scope='col'>1.993</td>
+                                <td scope='col'>2.458</td>
+                                <td scope='col'>2.091</td>
+                                <td scope='col'>  2.099 </td>
+                                <td scope='col'>  2.004 </td>
+                                <td scope='col'>  1.995 </td>
+                                <td scope='col'> 1.753 </td>
+                                 <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">ნოემბერი</td>
+                                <td scope='col'>2.097</td>
+                                <td scope='col'>1.984</td>
+                                <td scope='col'>1.657</td>
+                                <td scope='col'>1.697</td>
+                                <td scope='col'>1.765</td>
+                                <td scope='col'>2.113</td>
+                                <td scope='col'>1.963</td>
+                                <td scope='col'>  1.852 </td>
+                                <td scope='col'>  1.847 </td>
+                                <td scope='col'>  1.894 </td>
+                                <td scope='col'> 1.672 </td>
+                                 <td scope='col'></td>
+                            </tr>
+                                                        <tr>
+                                <td scope="row" class="text-left">დეკემბერი</td>
+                                <td scope='col'>1.811</td>
+                                <td scope='col'>0.663</td>
+                                <td scope='col'>0.454</td>
+                                <td scope='col'>1.466</td>
+                                <td scope='col'>1.374</td>
+                                <td scope='col'>1.056</td>
+                                <td scope='col'>1.647</td>
+                                <td scope='col'>  0.472 </td>
+                                <td scope='col'>  1.358 </td>
+                                <td scope='col'>  0.266 </td>
+                                <td scope='col'> 1.120 </td>
+                                 <td scope='col'></td>
+                            </tr>
+                            
+                            </tbody>
+                            </table>
+
+                            <a href="https://data.gnerc.org/excel/გარანტირებული სიმძლავრის საფასური  2015 - 2026 წლები.xlsx" download class="btn btn-secondary my-3 font-nino-caps">მონაცემების გადმოწერა</a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card animate__animated animate__slideInLeft"  >
+                        <div class="card-header" id="headingFive">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
+                            ნეტო აღრიცხვის პროგრამა
+                            </button>
+                        </h2>
+                        </div>
+
+                        <div id="collapseFive" class="collapse " aria-labelledby="headingFive" data-parent="#accordionExample">
+                            <div class="card-body">
+                                <table class="table table-striped font-nino-caps text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class='col-3 text-left text-nowrap'>სიმძლავრე, კვტ</th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2016
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2017
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2018
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2019
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2020
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2021
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2022
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2023
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2024
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+                                            
+                                                                                                    (9 თვე)
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                          <th scope="col"  class='col-1 text-nowrap'>სულ</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">მზე</td>
+                                        <td scope='col' class="text-nowrap">50.0</td>
+                                        <td scope='col' class="text-nowrap">150.3</td>
+                                        <td scope='col' class="text-nowrap">490.2</td>
+                                        <td scope='col' class="text-nowrap">1 494.4</td>
+                                        <td scope='col' class="text-nowrap">1 967.3</td>
+                                        <td scope='col' class="text-nowrap">13 781.4</td>
+                                        <td scope='col' class="text-nowrap">16 858.7</td>
+                                        <td scope='col' class="text-nowrap">28 745.4</td>
+                                        <td scope='col' class="text-nowrap">74 073.8</td>
+                                        <td scope='col' class="text-nowrap">178 559.5</td>
+                                         <td scope='col' class="text-nowrap">41 247.0</td>
+                                        <td scope='col' class="text-nowrap">357 418.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ჰიდრო</td>
+                                        <td scope='col' class="text-nowrap">87.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">367.0</td>
+                                        <td scope='col' class="text-nowrap">2 703.0</td>
+                                        <td scope='col' class="text-nowrap">1 097.8</td>
+                                        <td scope='col' class="text-nowrap">315.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">4 569.8</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ქარი</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">10.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">10.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ბიომასა</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">100.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">100.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ჯამი</td>
+                                        <td scope='col' class="text-nowrap">137.0</td>
+                                        <td scope='col' class="text-nowrap">150.3</td>
+                                        <td scope='col' class="text-nowrap">490.2</td>
+                                        <td scope='col' class="text-nowrap">1 494.4</td>
+                                        <td scope='col' class="text-nowrap">1 967.3</td>
+                                        <td scope='col' class="text-nowrap">14 148.4</td>
+                                        <td scope='col' class="text-nowrap">19 561.7</td>
+                                        <td scope='col' class="text-nowrap">29 953.2</td>
+                                        <td scope='col' class="text-nowrap">74 388.8</td>
+                                        <td scope='col' class="text-nowrap">178 559.5</td>
+                                         <td scope='col' class="text-nowrap">41 247.0</td>
+                                        <td scope='col' class="text-nowrap">362 097.8</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <table class="table table-striped font-nino-caps mt-5 text-center">
+                                    <thead>
+                                    <tr>
+                                    <th scope="col" class='col-3 text-left text-nowrap'>მომხმარებელთა რაოდენობა</th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2016
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2017
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2018
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2019
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2020
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2021
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2022
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2023
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2024
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+
+                                                                                                    (9 თვე)
+                                                 
+                                            </th>
+                                                                       <th scope="col"  class='col-1 text-nowrap'>სულ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">მზე</td>
+                                    <td scope='col' class="text-nowrap">5</td>
+                                    <td scope='col' class="text-nowrap">22</td>
+                                    <td scope='col' class="text-nowrap">38</td>
+                                    <td scope='col' class="text-nowrap">89</td>
+                                    <td scope='col' class="text-nowrap">88</td>
+                                    <td scope='col' class="text-nowrap">122</td>
+                                    <td scope='col' class="text-nowrap">361</td>
+                                    <td scope='col' class="text-nowrap">377</td>
+                                    <td scope='col' class="text-nowrap">579</td>
+                                    <td scope='col' class="text-nowrap">796</td>
+                                     <td scope='col' class="text-nowrap">236</td>
+                                    <td scope='col' class="text-nowrap">2 713</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">ჰიდრო</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">2</td>
+                                    <td scope='col' class="text-nowrap">10</td>
+                                    <td scope='col' class="text-nowrap">3</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">17</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">ქარი</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">ბიომასა</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">1</td>
+                                    </tr>
+                                                                        <tr>
+                                    <td scope="row" class="text-left">ჯამი</td>
+                                    <td scope='col' class="text-nowrap">6</td>
+                                    <td scope='col' class="text-nowrap">22</td>
+                                    <td scope='col' class="text-nowrap">38</td>
+                                    <td scope='col' class="text-nowrap">89</td>
+                                    <td scope='col' class="text-nowrap">88</td>
+                                    <td scope='col' class="text-nowrap">124</td>
+                                    <td scope='col' class="text-nowrap">371</td>
+                                    <td scope='col' class="text-nowrap">382</td>
+                                    <td scope='col' class="text-nowrap">580</td>
+                                    <td scope='col' class="text-nowrap">796</td>
+                                     <td scope='col' class="text-nowrap">236</td>
+                                    <td scope='col' class="text-nowrap">2 732</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <a href="https://data.gnerc.org/excel/ნეტო აღრიცხვა.xlsx" download class="btn btn-secondary my-3 font-nino-caps">დეტალური მონაცემების გადმოწერა</a>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                     <div class="card animate__animated animate__slideInLeft"  >
+                        <div class="card-header" id="headingSeven">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseOne">
+                            ნეტო დარიცხვის პროგრამა
+                            </button>
+                        </h2>
+                        </div>
+
+                        <div id="collapseSeven" class="collapse " aria-labelledby="headingSeven" data-parent="#accordionExample">
+                            <div class="card-body">
+                                <table class="table table-striped font-nino-caps text-center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class='col-3 text-left text-nowrap'>სიმძლავრე, კვტ</th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+                                            
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+                                            
+                                                                                                    (9 თვე)
+                                                 
+                                           
+                                                
+                                            </th>
+                                                                                          <th scope="col"  class='col-1 text-nowrap'>სულ</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">მზე</td>
+                                        <td scope='col' class="text-nowrap">2 378.1</td>
+                                         <td scope='col' class="text-nowrap">5 599.6</td>
+                                        <td scope='col' class="text-nowrap">7 977.7</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ჰიდრო</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ქარი</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ბიომასა</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                         <td scope='col' class="text-nowrap">0.0</td>
+                                        <td scope='col' class="text-nowrap">0.0</td>
+                                    </tr>
+                                                                        <tr>
+                                        <td scope="row" class="text-left">ჯამი</td>
+                                        <td scope='col' class="text-nowrap">2 378.1</td>
+                                         <td scope='col' class="text-nowrap">5 599.6</td>
+                                        <td scope='col' class="text-nowrap">7 977.7</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <table class="table table-striped font-nino-caps mt-5 text-center">
+                                    <thead>
+                                    <tr>
+                                    <th scope="col" class='col-3 text-left text-nowrap'>მომხმარებელთა რაოდენობა</th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2025
+
+                                                 
+                                            </th>
+                                                                        <th scope="col"  class='col-1 text-nowrap'>2026
+
+                                                                                                    (9 თვე)
+                                                 
+                                            </th>
+                                                                       <th scope="col"  class='col-1 text-nowrap'>სულ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                                                        <tr>
+                                     <td scope="row" class="text-left">მზე</td>
+                                    <td scope='col' class="text-nowrap">89</td>
+                                     <td scope='col' class="text-nowrap">181</td>
+                                    <td scope='col' class="text-nowrap">270</td>
+                                    </tr>
+                                                                        <tr>
+                                     <td scope="row" class="text-left">ჰიდრო</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    </tr>
+                                                                        <tr>
+                                     <td scope="row" class="text-left">ქარი</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    </tr>
+                                                                        <tr>
+                                     <td scope="row" class="text-left">ბიომასა</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                     <td scope='col' class="text-nowrap">0</td>
+                                    <td scope='col' class="text-nowrap">0</td>
+                                    </tr>
+                                                                        <tr>
+                                     <td scope="row" class="text-left">ჯამი</td>
+                                    <td scope='col' class="text-nowrap">89</td>
+                                     <td scope='col' class="text-nowrap">181</td>
+                                    <td scope='col' class="text-nowrap">270</td>
+                                    </tr>
+                                                                        </tbody>
+                                </table>
+                                <a href="https://data.gnerc.org/excel/ნეტო დარიცხვა.xlsx" download class="btn btn-secondary my-3 font-nino-caps">დეტალური მონაცემების გადმოწერა</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="card animate__animated animate__slideInRight">
+                        <div class="card-header" id="headingSix">
+                        <h2 class="mb-0">
+                            <button class="btn btn-card btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseTwo">
+                            ელექტროენერგიის საცალო მომხმარებლებზე მიწოდება
+                            </button>
+                        </h2>
+                        </div>
+                        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-striped font-nino-caps text-center">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                <th scope="col" class="text-left">მლნ კვტ.სთ</th>
+                                                                        <th scope="col">2022
+                                                 
+                                    </th>
+                                                                        <th scope="col">2023
+                                                 
+                                    </th>
+                                                                        <th scope="col">2024
+                                                 
+                                    </th>
+                                                                        <th scope="col">2025
+                                                 
+                                    </th>
+                                                                        <th scope="col">2026
+                                                                                                    (9 თვე)
+                                                 
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            <tr class="font-weight-bold">
+                                <td scope="row" class="text-left">1</td>
+                                <td scope="row" class="text-left">მიწოდება, სულ</td>
+                                <td scope='col'> 6 644.0 </td>
+                                <td scope='col'> 6 800.0 </td>
+                                <td scope='col'> 7 325.1 </td>
+                                <td scope='col'> 7 601.2 </td>
+                                <td scope='col'> 5 800.3 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-bold">
+                                <td scope="row" class="text-left">2</td>
+                                <td scope="row" class="text-left">საყოფაცხოვრებო, სულ</td>
+                                <td scope='col'> 2 680.6 </td>
+                                <td scope='col'> 2 751.9 </td>
+                                <td scope='col'> 2 959.1 </td>
+                                <td scope='col'> 3 151.8 </td>
+                                <td scope='col'> 2 457.6 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">2.1</td>
+                                <td scope="row" class="text-left">220-380 ვოლტი, 101 კვტ.სთ-ის ჩათვლით</td>
+                                <td scope='col'> 441.5 </td>
+                                <td scope='col'> 450.7 </td>
+                                <td scope='col'> 440.6 </td>
+                                <td scope='col'> 438.5 </td>
+                                <td scope='col'> 333.3 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">2.2</td>
+                                <td scope="row" class="text-left">220-380 ვოლტი, 101-301 კვტ.სთ-ის ჩათვლით</td>
+                                <td scope='col'> 1 460.4 </td>
+                                <td scope='col'> 1 491.6 </td>
+                                <td scope='col'> 1 556.4 </td>
+                                <td scope='col'> 1 595.6 </td>
+                                <td scope='col'> 1 231.1 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">2.3</td>
+                                <td scope="row" class="text-left">220-380 ვოლტი, 301 კვტ.სთ-დან და მეტი</td>
+                                <td scope='col'> 773.8 </td>
+                                <td scope='col'> 805.7 </td>
+                                <td scope='col'> 958.3 </td>
+                                <td scope='col'> 1 113.1 </td>
+                                <td scope='col'> 889.9 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">2.4</td>
+                                <td scope="row" class="text-left">6-10 კილოვოლტი</td>
+                                <td scope='col'> 4.9 </td>
+                                <td scope='col'> 3.9 </td>
+                                <td scope='col'> 3.9 </td>
+                                <td scope='col'> 4.6 </td>
+                                <td scope='col'> 3.3 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-bold">
+                                <td scope="row" class="text-left">3</td>
+                                <td scope="row" class="text-left">არასაყოფაცხოვრებო, სულ</td>
+                                <td scope='col'> 3 963.5 </td>
+                                <td scope='col'> 4 048.1 </td>
+                                <td scope='col'> 4 365.9 </td>
+                                <td scope='col'> 4 449.4 </td>
+                                <td scope='col'> 3 342.7 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">3.1</td>
+                                <td scope="row" class="text-left">35-110 კილოვოლტი</td>
+                                <td scope='col'> 70.4 </td>
+                                <td scope='col'> 71.5 </td>
+                                <td scope='col'> 72.4 </td>
+                                <td scope='col'> 74.4 </td>
+                                <td scope='col'> 55.6 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">3.2</td>
+                                <td scope="row" class="text-left">3,3-6-10 კილოვოლტი</td>
+                                <td scope='col'> 1 714.9 </td>
+                                <td scope='col'> 1 634.7 </td>
+                                <td scope='col'> 1 697.5 </td>
+                                <td scope='col'> 1 645.8 </td>
+                                <td scope='col'> 1 209.1 </td>
+                            </tr>
+                            
+                            <tr class="font-weight-normal">
+                                <td scope="row" class="text-left">3.3</td>
+                                <td scope="row" class="text-left">220-380 ვოლტი</td>
+                                <td scope='col'> 2 178.2 </td>
+                                <td scope='col'> 2 341.9 </td>
+                                <td scope='col'> 2 596.0 </td>
+                                <td scope='col'> 2 729.2 </td>
+                                <td scope='col'> 2 078.0 </td>
+                            </tr>
+                                                        </tbody>
+                            </table>
+
+                            <a href="https://data.gnerc.org/excel/EPG + Telmico + Free 2022-2026.xlsx" download class="btn btn-secondary my-3 font-nino-caps">მონაცემების გადმოწერა</a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="footer small mt-3" >
+            <div class="row">
+                <p class="col text-right border-right">საქართველოს ენერგეტიკისა და წყალმომარაგების </br/>
+                მარეგულირებელი ეროვნული კომისია</p>
+                <p class="col text-left">&#169; ყველა უფლება დაცულია </br/>
+                2025</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+

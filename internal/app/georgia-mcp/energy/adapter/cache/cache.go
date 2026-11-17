@@ -1,5 +1,5 @@
-// Package cache keeps the grid reads of GSE in memory, in front of the port of the
-// context.
+// Package cache keeps the grid reads of GSE and the books of GNERC in memory, in front of
+// the ports of the context.
 package cache
 
 import (
