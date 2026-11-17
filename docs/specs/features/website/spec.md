@@ -463,7 +463,7 @@ The first exchange is a random example. The order is a shuffle of all examples, 
 | `parcels` | `napr`                                                        |
 | `permits` | `tas`                                                         |
 | `parliament` | `parliament`                                               |
-| `energy`  | `gse`                                                         |
+| `energy`  | `gse`, `gnerc`                                                |
 
 **Rationale:** The owner chose a list by hand, checked against the server. The names in Georgian come from the site, and the refresh catches a vendor that the site lacks.
 **Alternatives:** The list from the description alone. It gives no Georgian name, and a tool with no such sentence gives no list.

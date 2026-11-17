@@ -885,6 +885,68 @@
       "total": 1
     }
   },
+  "energy_get_balance.year": {
+    "tool": "energy_get_balance",
+    "example": "year",
+    "recordedAt": "2026-11-17T01:12:30.479Z",
+    "output": {
+      "as_of": "2026-10-21T13:45:18+04:00",
+      "consumption": {
+        "abkhazia": "2485.788",
+        "direct": "3429.481",
+        "stopped_stations": "19.313",
+        "suppliers": {
+          "free_market": "20.929",
+          "public_service": "2953.759",
+          "total": "7601.237",
+          "universal_service": "4626.549"
+        },
+        "total": "15125.294"
+      },
+      "domestic_consumption": "14884.008",
+      "export": {
+        "armenia": "52.412",
+        "azerbaijan": "50.159",
+        "russia": "7.180",
+        "total": "511.161",
+        "turkey": "401.409"
+      },
+      "generation": {
+        "hydro": "10986.626",
+        "solar": "4.564",
+        "thermal": "2767.078",
+        "total": "13837.643",
+        "wind": "79.376"
+      },
+      "import": {
+        "armenia": "128.489",
+        "azerbaijan": "417.301",
+        "into_abkhazia": "723.706",
+        "russia": "971.195",
+        "total": "1557.526",
+        "turkey": "40.541"
+      },
+      "losses": {
+        "distribution": "800.442",
+        "total": "1078.314",
+        "transmission": "277.872"
+      },
+      "months": 12,
+      "newest_month": "2026-09",
+      "period": "2025",
+      "source": "Georgian National Energy and Water Supply Regulatory Commission (GNERC)",
+      "stale": false,
+      "station_own_use": "269.875",
+      "supply": "15125.294",
+      "transit": {
+        "armenia_to_turkey": "44.886",
+        "azerbaijan_to_turkey": "594.147",
+        "russia_to_turkey": "231.129",
+        "total": "870.161"
+      },
+      "unit": "million kWh"
+    }
+  },
   "energy_get_grid.now": {
     "tool": "energy_get_grid",
     "example": "now",
@@ -997,6 +1059,38 @@
       "stale": false,
       "time": "2026-11-17T01:51:00+04:00",
       "values": 13
+    }
+  },
+  "energy_list_prices.summer": {
+    "tool": "energy_list_prices",
+    "example": "summer",
+    "recordedAt": "2026-11-17T01:12:32.354Z",
+    "output": {
+      "as_of": "2026-10-21T13:45:18+04:00",
+      "months": [
+        {
+          "balancing": "14.099",
+          "capacity_fee": "0.650",
+          "deregulated": "4.021",
+          "month": "2026-06"
+        },
+        {
+          "balancing": "11.210",
+          "capacity_fee": "1.134",
+          "deregulated": "4.021",
+          "month": "2026-07"
+        },
+        {
+          "balancing": "16.899",
+          "capacity_fee": "1.348",
+          "deregulated": "4.021",
+          "month": "2026-08"
+        }
+      ],
+      "newest_month": "2026-09",
+      "source": "Georgian National Energy and Water Supply Regulatory Commission (GNERC)",
+      "stale": false,
+      "unit": "tetri per kWh"
     }
   },
   "fuel_get_prices.premium": {
